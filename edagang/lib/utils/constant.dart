@@ -1,0 +1,119 @@
+import 'dart:typed_data';
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class Constants{
+
+  static Future getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
+
+  static String appName = "E-Dagang";
+  static String tokenGuest = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjJhN2NiM2U2NTllY2MwMTFlN2JiNjM4MDA3MWJkYWE5OTQxY2I5NzMwNjNmY2RhOGNlYmM1Mzc3ZWNmODM1MDljMGYyMGUwOWFkYzBkZWViIn0.eyJhdWQiOiIzIiwianRpIjoiMmE3Y2IzZTY1OWVjYzAxMWU3YmI2MzgwMDcxYmRhYTk5NDFjYjk3MzA2M2ZjZGE4Y2ViYzUzNzdlY2Y4MzUwOWMwZjIwZTA5YWRjMGRlZWIiLCJpYXQiOjE1NzA5Njg0NzUsIm5iZiI6MTU3MDk2ODQ3NSwiZXhwIjoxNjAyNTkwODc1LCJzdWIiOiI4Iiwic2NvcGVzIjpbXX0.rYqZDXoFnc-pMZecqieKqmuJG9rWgXKTf-2Ix09dcO52iACHZ-MaxhE1sjfms3VUHv0-klZqa8Q5ZblyqRTX6bWbK02fB28o8Mi0MDJYjjTsa-l6_Us-JxEJZPfaICWGitO6KGQ0kkiD-0l8VSsiBpZPtXOR5mgVCL4Ws15tdJ6bwwGskNcEg02E1EaMf-VdYZrjXpXN7C6Gq8UU73iJsO1NOSvVgfHlwFBbrl4Pby8KoVFYFvmq357wn8uwJiycU0Ggc6zmOe5u51AtoSbKVGoXBNoi80vKGVobUmWfCdYKhEZWth81HQyULQBRY4VvCz9NlfUvKJRs--LLLw0VXSWC3A3GtJKYuMp9adr84hfPSOV9sJE98dzVZwXQH0jkRd_owSq6Cq2daLuKk1SHgzZ_46BpLtTrwCWCeDDYnew-m5M1LJqeS8k96b3JftXtccnjUN1EIiai6MaIiZ9NI9P7oOLKA1H2ycp8eHwwixIsDBCoi_a1NTjOw-z84YeEz5QSUQ2dsgt9EVEtZEYujOCoraLW9y1uoKP1zMB5ApdxIaeeO3Ap0Lr25GxJI1U5enEx4m_mxIJgxhQ7IkjU-JkX0v4YAkuZhj-JqTk6nQFWJzjEOTmZMsLmHz6vOBZwKNqaRfSgKcWwETO9VIoHydIYzP3rmRFkFiSRo5ITzB4";
+
+  static String bizAPI = "https://bizapp.e-dagang.asia/api";
+  static String tuneupAPI = "https://upskillapp.e-dagang.asia/api";
+  static String shopAPI = "https://shopapp.e-dagang.asia/api";
+
+  static String apiRegister = shopAPI+"/register";
+  static String apiLogin = shopAPI+"/login";
+  static String apiLogout = shopAPI+"/logout";
+  static String urlImage = "https://shopapp.e-dagang.asia";
+  static String shopHome = shopAPI+"/home";
+  static String shopKoop = shopAPI+"/coop/list";
+  static String shopKoopProduct = shopAPI+"/coop/product";
+  static String shopNgo = shopAPI+"/ngo/list";
+  static String shopNgoProduct = shopAPI+"/ngo/product";
+  static String shopSingleProduct = shopAPI+"/product/";
+  static String shopProductCategory = shopAPI+"/product/category";
+  static String shopProductMerchant = shopAPI+"/product/merchant";
+  static String shopCart = shopAPI+"/cart";
+  static String postCheckout = shopAPI+"/cart/checkout?";
+  static String addressAPI = shopAPI+"/account/address";
+  static String getFpxbank = shopAPI+"/fpx/banklist";
+  static String getHistory = shopAPI+"/order/history";
+  static String getState = shopAPI+"/lookup/state";
+  static String getCity = shopAPI+"/lookup/city/";
+
+
+  static const androidUserAgent = 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Mobile Safari/537.36';
+
+  static const double padding =10;
+  static const double avatarRadius =15;
+
+  static Color lightPrimary = Colors.deepOrange.shade600;
+  static Color darkPrimary = Colors.deepOrange.shade300;
+  static Color lightAccent = Color(0xffF35533);
+  static Color darkAccent = Color(0xffF35533);
+  static Color lightBG = Color(0xfffcfcff);
+  static Color darkBG = Colors.blueGrey.shade200;
+  static Color ratingBG = Colors.yellow[600];
+
+  static Uint8List kTransparentImage = new Uint8List.fromList(<int>[
+    0x89,
+    0x50,
+    0x4E,
+    0x47,
+    0x0D,
+    0x0A,
+    0x1A,
+    0x0A,
+    0x00,
+    0x00,
+    0x00,
+    0x0D,
+    0x49,
+    0x48,
+    0x44,
+    0x52,
+    0x00,
+    0x00,
+    0x00,
+    0x01,
+    0x00,
+    0x00,
+    0x00,
+    0x01,
+    0x08,
+    0x06,
+    0x00,
+    0x00,
+    0x00,
+    0x1F,
+    0x15,
+    0xC4,
+    0x89,
+    0x00,
+    0x00,
+    0x00,
+    0x0A,
+    0x49,
+    0x44,
+    0x41,
+    0x54,
+    0x78,
+    0x9C,
+    0x63,
+    0x00,
+    0x01,
+    0x00,
+    0x00,
+    0x05,
+    0x00,
+    0x01,
+    0x0D,
+    0x0A,
+    0x2D,
+    0xB4,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x49,
+    0x45,
+    0x4E,
+    0x44,
+    0xAE,
+  ]);
+}
