@@ -8,6 +8,7 @@ import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/searchbar.dart';
+import 'package:edagang/widgets/square_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -166,7 +167,10 @@ class _BizPageState extends State<BizPage> {
           ),
 
           /*SliverToBoxAdapter(
-            child: _quickList(context),
+            child: Container(
+              padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+              child: _quickList(context),
+            ),
           ),*/
 
           SliverPadding(
@@ -232,204 +236,188 @@ class _BizPageState extends State<BizPage> {
       return Container();
     }else{
       return ScopedModelDescendant(builder: (BuildContext context, Widget child,MainScopedModel model){
-  return SliverGrid(
-  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-  crossAxisCount: 5,
-  mainAxisSpacing: 2.5,
-  crossAxisSpacing: 2.5,
-  childAspectRatio: MediaQuery
-      .of(context)
-      .size
-      .width / (MediaQuery
-      .of(context)
-      .size
-      .height / 1.25),
-  ),
-  delegate: SliverChildBuilderDelegate((BuildContext context,int index) {
-  var data = quick_menu[index];
-  return Container(
-  //color: Colors.grey.shade300,
-  alignment: Alignment.center,
-  child: Column(
-  children: <Widget>[
-  Container(
-  height: 67.0,
-  width: 67.0,
-  child: Material(
-  type: MaterialType.transparency,
-  child: Ink(
-  decoration: BoxDecoration(
-  shape: BoxShape.circle,
-  gradient: LinearGradient(
-  begin: Alignment.topLeft,
-  end: Alignment.topRight,
-  colors: [
-  Color(0xff2877EA),
-  Color(0xffA0CCE8),
-  ]
-  ),
-  ),
-  child: InkWell(
-  borderRadius: BorderRadius.circular(1000.0),
-  onTap: () {
-  if (data.id == 1) {
-  Navigator.push(context,
-  SlideRightRoute(page: BizCompanyPage()));
-  } else if (data.id == 2) {
-  Navigator.push(context, SlideRightRoute(
-  page: BizProductPage('2', 'Product')));
-  } else if (data.id == 3) {
-  Navigator.push(context, SlideRightRoute(
-  page: BizServicesPage('3', 'Services')));
-  } else if (data.id == 4) {
-  if(model.isAuthenticated) {
-  Navigator.push(context, SlideRightRoute(
-  page: WebviewQuot(
-  'https://smartbiz.e-dagang.asia/biz/quot/' +
-  model.getId().toString() + '/0',
-  'Quotation')));
-  }else{
-  Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
-  }
-  } else if (data.id == 5) {
-  Navigator.push(context, SlideRightRoute(
-  page: WebviewQuot(
-  'https://smartbiz.e-dagang.asia/biz/joinwebv',
-  'Join Us')));
-  }
-  },
-  child: Center(child: Image.asset(
-  data.imgPath, height: 32,
-  width: 32,
-  fit: BoxFit.cover,)),
-  ),
-  )
-  ),
-  ),
-  Container(
-  width: 70,
-  padding: EdgeInsets.fromLTRB(2.5, 5.0, 2.5, 5.0),
-  child: Column(
-  crossAxisAlignment: CrossAxisAlignment.center,
-  mainAxisAlignment: MainAxisAlignment.start,
-  children: <Widget>[
-  Align(
-  alignment: Alignment.topCenter,
-  child: Text(
-  data.title,
-  style: GoogleFonts.lato(
-  textStyle: TextStyle(
-  fontSize: 12, fontWeight: FontWeight.w600),
-  ),
-  maxLines: 2,
-  overflow: TextOverflow.ellipsis,
-  textAlign: TextAlign.center,
-  ),
-  ),
-  ],
-  ),
-  ),
-  ],
-  ),
-  );
-  },
-  childCount: quick_menu.length,
-  ),
-  );
-        /*return Container(
-          margin: EdgeInsets.only(left: 10, top: 0, right: 10, bottom: 10),
-          height: 105,
-          alignment: Alignment.topCenter,
-          child: ListView.builder(
-  shrinkWrap: true,
-  physics: ClampingScrollPhysics(),
-  scrollDirection: Axis.horizontal,
-  itemCount: quick_menu.length,
-  itemBuilder: (context, index) {
-  var data = quick_menu[index];
-  return Container(
-  padding: EdgeInsets.all(3.5),
-  alignment: Alignment.topCenter,
-  child: InkWell(
-  onTap: () {
-  if (data.id == 1) {
-  Navigator.push(context,
-  SlideRightRoute(page: BizCompanyPage()));
-  } else if (data.id == 2) {
-  Navigator.push(context, SlideRightRoute(
-  page: BizProductPage('2', 'Product')));
-  } else if (data.id == 3) {
-  Navigator.push(context, SlideRightRoute(
-  page: BizServicesPage('3', 'Services')));
-  } else if (data.id == 4) {
-  if(model.isAuthenticated) {
-  Navigator.push(context, SlideRightRoute(
-  page: WebviewQuot(
-  'https://smartbiz.e-dagang.asia/biz/quot/' +
-  model.getId().toString() + '/0',
-  'Quotation')));
-  }else{
-  Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
-  }
-  } else if (data.id == 5) {
-  Navigator.push(context, SlideRightRoute(
-  page: WebviewQuot(
-  'https://smartbiz.e-dagang.asia/biz/joinwebv',
-  'Join Us')));
-  }
-  },
-  child: Column(
-  mainAxisAlignment: MainAxisAlignment.center,
-  crossAxisAlignment: CrossAxisAlignment.center,
-  children: <Widget>[
-  Container(
-  height: 70.0,
-  width: 70.0,
-  decoration: new BoxDecoration(
-  shape: BoxShape.circle,
-  border: new Border.all(color: Color(0xffF45432), width: 0.0,),
-  gradient: LinearGradient(
-  begin: Alignment.topLeft,
-  end: Alignment.topRight,
-  colors: [
-  Color(0xff2877EA),
-  Color(0xffA0CCE8),
-  ]
-  ),
-  ),
-  child: ClipRRect(
-  borderRadius: BorderRadius.circular(50),
-  child: Center(
-  child: Image.asset(
-  data.imgPath, height: 32,
-  width: 32,
-  fit: BoxFit.cover,)
-  )
-  ),
-  ),
-
-  Container(
-  width: 70.0,
-  padding: EdgeInsets.all(2.5),
-  alignment: Alignment.topCenter,
-  child: Text(
-  data.title,
-  style: GoogleFonts.lato(
-  textStyle: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w600,),
-  ),
-  maxLines: 2,
-  overflow: TextOverflow.ellipsis,
-  textAlign: TextAlign.center,
-  ),
-  ),
-  ],
-  )
-  ),
-  );
-  },
-  )
-
-
+        return SliverGrid(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 5,
+          mainAxisSpacing: 2.5,
+          crossAxisSpacing: 2.5,
+          //childAspectRatio: MediaQuery
+          //    .of(context)
+          //    .size
+          //    .width / (MediaQuery
+          //    .of(context)
+          //    .size
+          //    .height / 1.45),
+          ),
+          delegate: SliverChildBuilderDelegate((BuildContext context,int index) {
+            var data = quick_menu[index];
+            return Container(
+            //color: Colors.grey.shade300,
+            alignment: Alignment.topCenter,
+            child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              SizedBox(
+                width: 34,
+                height: 34,
+                child: CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  borderRadius: BorderRadius.circular(8.0),
+                  onPressed: () {
+                    if (data.id == 1) {
+                      Navigator.push(context,SlideRightRoute(page: BizCompanyPage()));
+                    } else if (data.id == 2) {
+                      Navigator.push(context, SlideRightRoute(page: BizProductPage('2', 'Product')));
+                    } else if (data.id == 3) {
+                      Navigator.push(context, SlideRightRoute(page: BizServicesPage('3', 'Services')));
+                    } else if (data.id == 4) {
+                      if(model.isAuthenticated) {
+                        Navigator.push(context, SlideRightRoute(page: WebviewQuot('https://smartbiz.e-dagang.asia/biz/quot/' +
+                        model.getId().toString() + '/0',
+                        'Quotation')));
+                      }else{
+                        Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
+                      }
+                    } else if (data.id == 5) {
+                      Navigator.push(context, SlideRightRoute(page: WebviewQuot('https://smartbiz.e-dagang.asia/biz/joinwebv','Join Us')));
+                    }
+                  },
+                  color: Colors.transparent,
+                  child: Image.asset(data.imgPath,),
+                ),
+              ),
+              SizedBox(height: 8.0,),
+              Container(
+                height: 20.0,
+                child: Center(
+                  child: Text(
+                    data.title,
+                    style: Theme.of(context).textTheme.caption.copyWith(color: Colors.black),
+                  ),
+                ),
+              ),
+            ],
+            ),
+            );
+          },
+          childCount: quick_menu.length,
+          ),
+        );
+        /*return Flexible(
+          flex: 1,
+          fit: FlexFit.tight,
+          child: Row(
+            children: <Widget>[
+              Flexible(
+                flex: 1,
+                fit: FlexFit.tight,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.transparent,
+                  ),
+                  child: InkWell(
+                    onTap: () {Navigator.push(context,SlideRightRoute(page: BizCompanyPage()));},
+                    child: SquareButton(
+                    icon: Image.asset('assets/icons/biz_cat.png',),
+                    label: 'Company',
+                    lebar: 34,
+                    tinggi: 34,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 5,),
+              Flexible(
+                flex: 1,
+                fit: FlexFit.tight,
+                child: Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.transparent,
+                  ),
+                  child: InkWell(
+                  onTap: () {Navigator.push(context, SlideRightRoute(page: BizProductPage('2', 'Product')));},
+                  child: SquareButton(
+                  icon: Image.asset('assets/icons/biz_prod.png',),
+                  label: 'Products',
+                  lebar: 34,
+                  tinggi: 34,
+                  ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 5,),
+              Flexible(
+                flex: 1,
+                fit: FlexFit.tight,
+                child: Container(
+                  decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.transparent,
+                  ),
+                  child: InkWell(
+                  onTap: () {Navigator.push(context, SlideRightRoute(page: BizServicesPage('3', 'Services')));},
+                  child: SquareButton(
+                  icon: Image.asset('assets/icons/biz_svc.png',),
+                  label: 'Services',
+                  lebar: 34,
+                  tinggi: 34,
+                  ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 5,),
+              Flexible(
+                flex: 1,
+                fit: FlexFit.tight,
+                child: Container(
+                  decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.transparent,
+                  ),
+                  child: InkWell(
+                  onTap: () {
+                    if(model.isAuthenticated) {
+                      Navigator.push(context, SlideRightRoute(
+                      page: WebviewQuot('https://smartbiz.e-dagang.asia/biz/quot/' + model.getId().toString() + '/0','Quotation')));
+                    }else{
+                      Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
+                    }
+                  },
+                  child: SquareButton(
+                    icon: Image.asset('assets/icons/biz_quotation.png',),
+                    label: 'Quotation',
+                    lebar: 34,
+                    tinggi: 34,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 5,),
+              Flexible(
+                flex: 1,
+                fit: FlexFit.tight,
+                child: Container(
+                  decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.transparent,
+                  ),
+                  child: InkWell(
+                  onTap: () {Navigator.push(context, SlideRightRoute(page: WebviewQuot('https://smartbiz.e-dagang.asia/biz/joinwebv','Join Us')));},
+                  child: SquareButton(
+                  icon: Image.asset('assets/icons/biz_joinus.png',),
+                  label: 'Join Us',
+                  lebar: 34,
+                  tinggi: 34,
+                  ),
+                  ),
+                ),
+              ),
+            ],
+            mainAxisAlignment: MainAxisAlignment.center,
+          ),
         );*/
       });
     }

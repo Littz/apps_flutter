@@ -25,19 +25,19 @@ class SquareButton extends StatelessWidget {
         SizedBox(
           width: lebar,
           height: tinggi,
-          child: CupertinoButton(
+          child: Image(image: icon.image, ),
+          /*child: CupertinoButton(
             padding: EdgeInsets.zero,
             borderRadius: BorderRadius.circular(8.0),
             onPressed: () {},
-            color: Colors.white,
-            child: Image(image: icon.image,),
-          ),
+            color: Colors.transparent,
+            child: Image(image: icon.image, ),
+          ),*/
         ),
         SizedBox(
           height: 8.0,
         ),
         Container(
-          width: lebar,
           height: 20.0,
           child: Center(
             child: Text(

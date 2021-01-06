@@ -4,6 +4,7 @@ import 'package:edagang/screens/ads/ads_career_detail.dart';
 import 'package:edagang/screens/ads/ads_quick_access.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
+import 'package:edagang/widgets/square_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -40,9 +41,13 @@ class _AdvertPageState extends State<AdvertPage> {
             return null;
           },
           child: Scaffold(
+            backgroundColor: Colors.grey.shade200,
             body: CustomScrollView(slivers: <Widget>[
               SliverList(delegate: SliverChildListDelegate([
                 Container(
+                color: Colors.white,
+                padding: EdgeInsets.only(bottom: 5),
+                child: Container(
                     margin: EdgeInsets.only(left: 8, right: 8),
                     child: Card(
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
@@ -89,21 +94,85 @@ class _AdvertPageState extends State<AdvertPage> {
                             )
                         )
                     )
-                ),
+                )),
               ])),
+
+              /*SliverToBoxAdapter(
+                child: Container(
+                  padding: EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text('Quick Access',
+                        style: GoogleFonts.lato(
+                          textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600,),
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.fromLTRB(0,10,0,10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Colors.white,
+                        ),
+                        child: _quickList(context),
+                      ),
+                    ]
+                  ),
+                ),
+              ),*/
+
+              /*SliverToBoxAdapter(
+                child: Container(
+                  padding: EdgeInsets.fromLTRB(10, 16, 10, 0),
+                    child: Container(
+                      //alignment: Alignment.topLeft,
+                      padding: EdgeInsets.fromLTRB(5, 5, 0, 7),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.white,
+                      ),
+                      child: Column(
+                        //mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Text('Quick Access',
+                              //textAlign: TextAlign.left,
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600,),
+                              ),
+                            ),
+                          ),
+
+                          Container(
+                            alignment: Alignment.center,
+                            padding: EdgeInsets.fromLTRB(0,15,0,0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: Colors.white,
+                            ),
+                            child: _quickList(context),
+                          ),
+                        ]
+                      ),
+                    )
+                ),
+              ),*/
 
               SliverToBoxAdapter(
                 child: Container(
-                  padding: EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 0),
-                  child: Text('Category',
-                      style: GoogleFonts.lato(
-                        textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600,),
-                      ),
+                  padding: EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 10),
+                  child: Text('Quick Access',
+                    style: GoogleFonts.lato(
+                      textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600,),
+                    ),
                   ),
                 ),
               ),
               SliverPadding(
-                padding: EdgeInsets.fromLTRB(8, 16, 8, 0),
+                padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
                 sliver: _quickList(context),
               ),
 
@@ -226,18 +295,178 @@ class _AdvertPageState extends State<AdvertPage> {
     if(quick_menu.length == 0) {
       return Container();
     }else{
+      /*return Flexible(
+        flex: 1,
+        fit: FlexFit.tight,
+        child: Row(
+          children: <Widget>[
+            Flexible(
+              flex: 1,
+              fit: FlexFit.tight,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.transparent,
+                ),
+                child: InkWell(
+                  onTap: () {Navigator.push(context,SlideRightRoute(page: AdsCareerPage()));},
+                  child: SquareButton(
+                    icon: Image.asset('assets/icons/ads_jobs.png',),
+                    label: 'Career',
+                    lebar: 34,
+                    tinggi: 34,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(width: 5,),
+            Flexible(
+              flex: 1,
+              fit: FlexFit.tight,
+              child: Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.transparent,
+                ),
+                child: InkWell(
+                  onTap: () {Navigator.push(context, SlideRightRoute(
+                      page: AdsPropertyPage('2', 'Property')));},
+                  child: SquareButton(
+                    icon: Image.asset('assets/icons/ads_property.png',),
+                    label: 'Property',
+                    lebar: 34,
+                    tinggi: 34,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(width: 5,),
+            Flexible(
+              flex: 1,
+              fit: FlexFit.tight,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.transparent,
+                ),
+                child: InkWell(
+                  onTap: () {Navigator.push(context, SlideRightRoute(
+                      page: AdsVehiclePage('3', 'Vehicle')));},
+                  child: SquareButton(
+                    icon: Image.asset('assets/icons/ads_auto.png',),
+                    label: 'Vehicle',
+                    lebar: 34,
+                    tinggi: 34,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(width: 5,),
+            Flexible(
+              flex: 1,
+              fit: FlexFit.tight,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.transparent,
+                ),
+                child: InkWell(
+                  onTap: () {Navigator.push(context, SlideRightRoute(
+                      page: AdsServicePage('4', 'Services')));},
+                  child: SquareButton(
+                    icon: Image.asset('assets/icons/ads_svc.png',),
+                    label: 'Services',
+                    lebar: 34,
+                    tinggi: 34,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(width: 5,),
+            Flexible(
+              flex: 1,
+              fit: FlexFit.tight,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.transparent,
+                ),
+                child: InkWell(
+                  onTap: () {Navigator.push(context, SlideRightRoute(
+                      page: AdsRatePage('5', 'Rate')));},
+                  child: SquareButton(
+                    icon: Image.asset('assets/icons/ads_rate.png',),
+                    label: 'Rate',
+                    lebar: 34,
+                    tinggi: 34,
+                  ),
+                ),
+              ),
+            ),
+          ],
+          mainAxisAlignment: MainAxisAlignment.center,
+        ),
+      );*/
       return SliverGrid(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 5,
           mainAxisSpacing: 2.5,
           crossAxisSpacing: 2.5,
-          childAspectRatio: MediaQuery.of(context).size.width /(MediaQuery.of(context).size.height / 1.25),
+          //childAspectRatio: MediaQuery.of(context).size.width /(MediaQuery.of(context).size.height / 1.5),
         ),
         delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
           var data = quick_menu[index];
           return Container(
             alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: Colors.white,
+            ),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                SizedBox(
+                  width: 34,
+                  height: 34,
+                  child: CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    borderRadius: BorderRadius.circular(8.0),
+                    onPressed: () {
+                      if (data.id == 1) {
+                        Navigator.push(context,SlideRightRoute(page: AdsCareerPage()));
+                      } else if (data.id == 2) {
+                        Navigator.push(context, SlideRightRoute(
+                            page: AdsPropertyPage('2', 'Property')));
+                      } else if (data.id == 3) {
+                        Navigator.push(context, SlideRightRoute(
+                            page: AdsVehiclePage('3', 'Vehicle')));
+                      } else if (data.id == 4) {
+                        Navigator.push(context, SlideRightRoute(
+                            page: AdsServicePage('4', 'Services')));
+                      } else if (data.id == 5) {
+                        Navigator.push(context, SlideRightRoute(
+                            page: AdsRatePage('5', 'Rate')));
+                      }
+                    },
+                    color: Colors.transparent,
+                    child: Image.asset(data.imgPath,),
+                  ),
+                ),
+                SizedBox(height: 8.0,),
+                Container(
+                  height: 20.0,
+                  child: Center(
+                    child: Text(
+                      data.title,
+                      style: Theme.of(context).textTheme.caption.copyWith(color: Colors.black),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            /*Column(
               children: <Widget>[
                 Container(
                   height: 70.0,
@@ -246,8 +475,6 @@ class _AdvertPageState extends State<AdvertPage> {
                       type: MaterialType.transparency,
                       child: Ink(
                         decoration: BoxDecoration(
-                          //border: Border.all(color: Color(0xff2877EA), width: 2.0),
-                          //color:  Color(0xff2877EA),
                           shape: BoxShape.circle,
                           gradient: LinearGradient(
                               begin: Alignment.topLeft,
@@ -304,7 +531,7 @@ class _AdvertPageState extends State<AdvertPage> {
                   ),
                 ),
               ],
-            ),
+            ),*/
           );
         },
           childCount: quick_menu.length,

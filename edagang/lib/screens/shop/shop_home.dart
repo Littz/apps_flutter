@@ -219,7 +219,15 @@ class _ShopHomePageState extends State<ShopHomePage> {
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   padding: EdgeInsets.fromLTRB(10, 10, 10, 5),
-                  child: _newContentList(context),
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(0,0,0,10),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.white,
+                    ),
+                    child: _newContentList(context),
+                  )
                 ),
               ),
 
@@ -493,11 +501,6 @@ class _ShopHomePageState extends State<ShopHomePage> {
           decoration: new BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(8)),
-            /*border: Border.all(
-                      color: Colors.grey.shade300,
-                      style: BorderStyle.solid,
-                      width: 1.5,
-                    ),*/
           ),
           child: InkWell(
             onTap: () {Navigator.push(context, SlideRightRoute(page: KooperasiPage()));},
@@ -514,11 +517,6 @@ class _ShopHomePageState extends State<ShopHomePage> {
           decoration: new BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(8)),
-            /*border: Border.all(
-                      color: Colors.grey.shade300,
-                      style: BorderStyle.solid,
-                      width: 1.5,
-                    ),*/
           ),
           child: InkWell(
             onTap: () {Navigator.push(context, SlideRightRoute(page: NgoPage()));},
@@ -535,11 +533,6 @@ class _ShopHomePageState extends State<ShopHomePage> {
           decoration: new BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(8)),
-            /*border: Border.all(
-                      color: Colors.grey.shade300,
-                      style: BorderStyle.solid,
-                      width: 1.5,
-                    ),*/
           ),
           child: InkWell(
             onTap: () {Navigator.push(context, SlideRightRoute(page: DigitalPage()));},
@@ -556,11 +549,6 @@ class _ShopHomePageState extends State<ShopHomePage> {
           decoration: new BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(8)),
-            /*border: Border.all(
-                      color: Colors.grey.shade300,
-                      style: BorderStyle.solid,
-                      width: 1.5,
-                    ),*/
           ),
           child: InkWell(
             onTap: () {Navigator.push(context, SlideRightRoute(page: MerchantRegister('https://shopapp.e-dagang.asia/merchant/register', 'Join Us')));},
@@ -574,91 +562,96 @@ class _ShopHomePageState extends State<ShopHomePage> {
         ),
       ],
     );
-    //if(new_content.length == 0) {
-    //  return Container();
-    //}else{
-      /*return SliverGrid(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4,
-          mainAxisSpacing: 1.5,
-          crossAxisSpacing: 1.5,
-          childAspectRatio: MediaQuery.of(context).size.width /(MediaQuery.of(context).size.height / 1.25),
-        ),
-        delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-          var data = new_content[index];
-          return Container(
-            decoration: new BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-              border: Border.all(
-                color: Colors.grey.shade300,
-                style: BorderStyle.solid,
-                width: 1.5,
+
+    /*return Flexible(
+      flex: 1,
+      fit: FlexFit.tight,
+      child: Row(
+        children: <Widget>[
+          Flexible(
+            flex: 1,
+            fit: FlexFit.tight,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.transparent,
+              ),
+              child: InkWell(
+                onTap: () {Navigator.push(context, SlideRightRoute(page: KooperasiPage()));},
+                child: SquareButton(
+                  icon: Image.asset('assets/icons/shop_koop.png',),
+                  label: 'Koperasi',
+                  lebar: 76,
+                  tinggi: 76,
+                ),
               ),
             ),
-            alignment: Alignment.center,
-            child: Column(
-              children: <Widget>[
-                Container(
-                    height: 90.0,
-                    width: 90.0,
-                    alignment: Alignment.center,
-                    child: Card(
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                      child: InkWell(
-                        onTap: () {
-                          if(data.id == 1){
-                            Navigator.push(context, SlideRightRoute(page: KooperasiPage()));
-                          }else if(data.id == 2){
-                            Navigator.push(context, SlideRightRoute(page: NgoPage()));
-                          }else if(data.id == 3){
-                            Navigator.push(context, SlideRightRoute(page: DigitalPage()));
-                          }else if(data.id == 4){
-                            Navigator.push(context, SlideRightRoute(page: MerchantRegister('https://shopapp.e-dagang.asia/merchant/register', 'Join Us')));
-                          }
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade200,
-                            image: DecorationImage(
-                              image: AssetImage(data.imgPath), fit: BoxFit.cover,
-                            ),
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                          ),
-                        ),
-                      ),
-                    )
+          ),
+          SizedBox(width: 5,),
+          Flexible(
+            flex: 1,
+            fit: FlexFit.tight,
+            child: Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.transparent,
+              ),
+              child: InkWell(
+                onTap: () {Navigator.push(context, SlideRightRoute(page: NgoPage()));},
+                child: SquareButton(
+                  icon: Image.asset('assets/icons/shop_wholesale.png',),
+                  label: 'NGO',
+                  lebar: 76,
+                  tinggi: 76,
                 ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(2.5, 5.0, 2.5, 5.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Align(
-                        alignment: Alignment.topCenter,
-                        child: Text(
-                          data.title,
-                          style: GoogleFonts.lato(
-                            textStyle: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w700,),
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
-          );
-        },
-          childCount: new_content.length,
-        ),
-      );*/
-    //}
+          ),
+          SizedBox(width: 5,),
+          Flexible(
+            flex: 1,
+            fit: FlexFit.tight,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.transparent,
+              ),
+              child: InkWell(
+                onTap: () {Navigator.push(context, SlideRightRoute(page: DigitalPage()));},
+                child: SquareButton(
+                  icon: Image.asset('assets/icons/shop_digital.png',),
+                  label: 'Digital',
+                  lebar: 76,
+                  tinggi: 76,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(width: 5,),
+          Flexible(
+            flex: 1,
+            fit: FlexFit.tight,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.transparent,
+              ),
+              child: InkWell(
+                onTap: () {Navigator.push(context, SlideRightRoute(page: MerchantRegister('https://shopapp.e-dagang.asia/merchant/register', 'Join Us')));},
+                child: SquareButton(
+                  icon: Image.asset('assets/icons/shop_join.png',),
+                  label: 'Join Us',
+                  lebar: 76,
+                  tinggi: 76,
+                ),
+              ),
+            ),
+          ),
+        ],
+        mainAxisAlignment: MainAxisAlignment.center,
+      ),
+    );*/
   }
 
   Widget _fetchCategories() {
