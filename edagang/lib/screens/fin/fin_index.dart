@@ -1,12 +1,9 @@
 import 'package:edagang/data/datas.dart';
 import 'package:edagang/scoped/main_scoped.dart';
-import 'package:edagang/screens/biz/webview_quot.dart';
 import 'package:edagang/screens/fin/webview.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
-import 'package:edagang/widgets/webview_vr.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scoped_model/scoped_model.dart';

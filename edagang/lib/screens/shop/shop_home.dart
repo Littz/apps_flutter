@@ -3,7 +3,6 @@ import 'package:edagang/data/datas.dart';
 import 'package:edagang/models/shop_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/screens/shop/more_popular.dart';
-import 'package:edagang/screens/shop/more_promo.dart';
 import 'package:edagang/screens/shop/product_category.dart';
 import 'package:edagang/screens/shop/product_detail.dart';
 import 'package:edagang/screens/shop/product_merchant.dart';
@@ -88,7 +87,7 @@ class _ShopHomePageState extends State<ShopHomePage> {
                 ),
               ),
             ),
-            backgroundColor: Colors.grey.shade200,
+            backgroundColor: Colors.grey.shade100,
             body: CustomScrollView(slivers: <Widget>[
               SliverList(delegate: SliverChildListDelegate([
                 Container(
@@ -135,11 +134,11 @@ class _ShopHomePageState extends State<ShopHomePage> {
                                     },
                                     itemCount: model.banners.length,
                                     pagination: new SwiperPagination(
-                                        builder: new DotSwiperPaginationBuilder(
-                                          activeColor: Colors.deepOrange.shade500,
-                                          activeSize: 7.0,
-                                          size: 7.0,
-                                        )
+                                      builder: new DotSwiperPaginationBuilder(
+                                        activeColor: Colors.deepOrange.shade500,
+                                        activeSize: 7.0,
+                                        size: 7.0,
+                                      )
                                     ),
                                   )
                               )
@@ -164,33 +163,7 @@ class _ShopHomePageState extends State<ShopHomePage> {
                         ),
                       ),
                       Container(),
-                      /*InkWell(
-                        highlightColor: Colors.deepOrange.shade100,
-                        splashColor: Colors.deepOrange.shade100,
-                        onTap: () {
-                          MaterialPageRoute route = MaterialPageRoute(
-                            builder: (context) => ProductListPromotion(ctype: '4',catId: '0',catName: 'Promotions',total: model.promoProducts.length)
-                          );
-                          Navigator.push(context, route);
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Text(
-                              'See all ',
-                              style: GoogleFonts.lato(
-                                textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Color(0xffF45432)),
-                              ),
-                            ),
-                            Icon(
-                              CupertinoIcons.right_chevron,
-                              size: 17,
-                              color: Color(0xffF45432),
-                            ),
-                          ],
-                        ),
-                      ),*/
+
                     ],
                   ),
                 ),
@@ -551,7 +524,7 @@ class _ShopHomePageState extends State<ShopHomePage> {
             borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
           child: InkWell(
-            onTap: () {Navigator.push(context, SlideRightRoute(page: MerchantRegister('https://shopapp.e-dagang.asia/merchant/register', 'Join Us')));},
+            onTap: () {Navigator.push(context, SlideRightRoute(page: MerchantRegister('https://office.e-dagang.asia/cartsini/register', 'Join Us')));},
             child: SquareButton(
               icon: Image.asset('assets/icons/shop_join.png'),
               label: 'Join Us',

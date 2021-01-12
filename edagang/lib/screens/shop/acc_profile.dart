@@ -481,8 +481,7 @@ class _EditAccProfileState extends State<EditAccProfile> with SingleTickerProvid
                               padding: EdgeInsets.only(
                                   left: 0.0, top: 40.0, bottom: 20.0),
                               child: new RaisedButton(
-                                shape: new RoundedRectangleBorder(
-                                    borderRadius: new BorderRadius.circular(30.0)),
+                                shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
                                 onPressed: () => _submitForm(model),
                                 child: new Text(
                                   "SAVE INFO ",

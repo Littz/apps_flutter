@@ -191,11 +191,11 @@ class SimpleTab extends StatefulWidget {
 class _SimpleTabState extends State<SimpleTab> with SingleTickerProviderStateMixin {
   TabController controller;
   List<CustomTab> tabs = const <CustomTab>[
-    const CustomTab(title: 'FinTools', color: Color(0xffCC0E27)),
+    const CustomTab(title: 'FinTools', color: Color(0xffD81C3F)),
     const CustomTab(title: 'Cartsini', color: Color(0xffF35532)),
     const CustomTab(title: 'SmartBiz', color: Color(0xff2877EA)),
-    const CustomTab(title: 'GOilmu', color: Color(0xffD445D8)),
-    const CustomTab(title: 'Blurb', color: Color(0xff000000)),
+    const CustomTab(title: 'GOilmu', color: Color(0xff70286D)),
+    const CustomTab(title: 'Blurb', color: Color(0xff57585A)),
   ];
 
   int idx = 0;
@@ -234,10 +234,10 @@ class _SimpleTabState extends State<SimpleTab> with SingleTickerProviderStateMix
           labelPadding: EdgeInsets.only(left: 5.0, right: 5.0),
           labelColor: selectedTab.color, //Color(0xffCC0E27),
           labelStyle: GoogleFonts.roboto(
-            textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.w800,),
+            textStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.bold,),
           ),
           unselectedLabelStyle: GoogleFonts.roboto(
-            textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
+            textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w400,),
           ),
           tabs: tabs.map((e) => new Tab(
             text: e.title,

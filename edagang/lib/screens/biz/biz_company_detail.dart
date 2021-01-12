@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/models/biz_model.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/custom_dialog.dart';
-import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/html2text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +10,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:loading_gifs/loading_gifs.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 
@@ -25,9 +23,6 @@ class CompanyDetailPage extends StatefulWidget {
 
 class _BizCompanyDetailPageState extends State<CompanyDetailPage> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  SharedPref sharedPref = SharedPref();
-  Map<dynamic, dynamic> responseBody;
-  String _dl;
   bool isEnabled = true;
   Color color = Color(0xff2877EA);
 
@@ -44,10 +39,8 @@ class _BizCompanyDetailPageState extends State<CompanyDetailPage> with TickerPro
   Animation<Offset> _movieInformationSlidingAnimation;
 
   getDetails() async {
-
     try {
       //String id = await sharedPref.read("biz_id");
-
       setState(() {
         //_bizId = id;
         print("product ID : "+widget.bizId);
@@ -143,11 +136,6 @@ class _BizCompanyDetailPageState extends State<CompanyDetailPage> with TickerPro
     }
   }
 
-  Future<String> getDlink() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('biz_dl') ?? '';
-  }
-
   @override
   void initState() {
     getDetails();
@@ -160,40 +148,12 @@ class _BizCompanyDetailPageState extends State<CompanyDetailPage> with TickerPro
                 parent: _animationController));
   }
 
-  /*void launchWhatsApp(
-      {@required int phone,
-        @required String message,
-      }) async {
-    String url() {
-      if (Platform.isAndroid) {
-        return "https://wa.me/$phone/?text=${Uri.parse(message)}";
-      } else {
-        return "https://api.whatsapp.com/send?phone=$phone&text=${Uri.parse(message)}";
-      }
-    }
-
-    if (await canLaunch(url())) {
-      await launch(url());
-    } else {
-      throw 'Could not launch ${url()}';
-    }
-  }*/
-
   Future launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url, forceSafariVC: false, forceWebView: false);
     } else {
       print("Can't Launch ${url}");
     }
-  }
-
-  Future<void> share() async {
-    await FlutterShare.share(
-    title: 'SmartBiz',
-    text: '',
-    linkUrl: 'https://bizapp.e-dagang.asia/company/'+_id.toString(),
-    chooserTitle: widget.bizName,
-    );
   }
 
   @override
@@ -213,7 +173,7 @@ class _BizCompanyDetailPageState extends State<CompanyDetailPage> with TickerPro
             splashColor: Colors.deepOrange.shade100,
             child: Icon(Icons.arrow_back,),
           ),
-          title: new Text(company_name ?? "Company Name",
+          title: new Text(company_name ?? "Company",
             style: GoogleFonts.lato(
               textStyle: TextStyle(color: Colors.white, fontSize: 18),
             ),
@@ -281,7 +241,13 @@ class _BizCompanyDetailPageState extends State<CompanyDetailPage> with TickerPro
                                     shape: BoxShape.circle,
                                     border: new Border.all(color: Colors.blue, width: 1.5,),
                                   ),
-                                  child: _logoImage(_logo),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(50),
+                                    child: CachedNetworkImage(
+                                        imageUrl: _logo ?? "",
+                                        fit: BoxFit.fitWidth
+                                    ),
+                                  ),
                                 ),
                               ),
 
@@ -290,15 +256,14 @@ class _BizCompanyDetailPageState extends State<CompanyDetailPage> with TickerPro
                                 left: 95.0,
                                 child: Container(
                                   child: Text(company_name ?? "",
-                                  style: GoogleFonts.lato(
-                                  textStyle: TextStyle(fontStyle: FontStyle.normal, fontSize: 16, fontWeight: FontWeight.w700 ),
-                                  ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.lato(
+                                      textStyle: TextStyle(fontStyle: FontStyle.normal, fontSize: 16, fontWeight: FontWeight.w700 ),
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                               ),
-
                             ],
                           ),
                         ),
@@ -325,15 +290,15 @@ class _BizCompanyDetailPageState extends State<CompanyDetailPage> with TickerPro
                                   ),
                                   SizedBox(height: 1.0,),
                                   Text(office_phone ?? "",
-                                      style: GoogleFonts.lato(
-                                        textStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
-                                      ),
+                                    style: GoogleFonts.lato(
+                                      textStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
+                                    ),
                                   ),
                                   SizedBox(height: 1.0,),
                                   Text(email ?? "",
-                                      style: GoogleFonts.lato(
-                                        textStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
-                                      ),
+                                    style: GoogleFonts.lato(
+                                      textStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -341,74 +306,80 @@ class _BizCompanyDetailPageState extends State<CompanyDetailPage> with TickerPro
                           ],
                         ),
                       ),
-
                       Container(
-                          alignment: Alignment.centerLeft,
-                          margin: EdgeInsets.only(left: 5.0, top: 8.0,  bottom: 5),
-                          child: Row(
-                            children: <Widget>[
+                        alignment: Alignment.centerLeft,
+                        margin: EdgeInsets.only(left: 5.0, top: 8.0,  bottom: 5),
+                        child: Row(
+                          children: <Widget>[
                             Expanded(
-                            child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                            InkWell(
-                            onTap: () {launch("tel://"+office_phone, );},
-                            splashColor: Color(0xffA0CCE8),
-                            highlightColor: Color(0xffA0CCE8),
-                            child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                            Icon(Icons.phone, color: color),
-                            Container(
-                            margin: const EdgeInsets.only(top: 2),
-                            child: Text('CALL',
-                            style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: color,
-                            ),
-                            ),
-                            ),
-                            ],
-                            ),
-                            ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  InkWell(
+                                    onTap: () {launch("tel://"+office_phone, );},
+                                    splashColor: Color(0xffA0CCE8),
+                                    highlightColor: Color(0xffA0CCE8),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.phone, color: color),
+                                        Container(
+                                          margin: const EdgeInsets.only(top: 2),
+                                          child: Text('CALL',
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w600,
+                                              color: color,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
 
-                            VerticalDivider(),
+                                  VerticalDivider(),
 
-                            InkWell(
-                            onTap: () {share();},
-                            splashColor: Color(0xffA0CCE8),
-                            highlightColor: Color(0xffA0CCE8),
-                            child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                            Icon(Icons.share, color: color),
+                                  InkWell(
+                                    onTap: () async {
+                                      await FlutterShare.share(
+                                        title: 'SmartBiz',
+                                        text: '',
+                                        linkUrl: 'https://bizapp.e-dagang.asia/company/'+_id.toString(),
+                                        chooserTitle: widget.bizName,
+                                      );
+                                    },
+                                    splashColor: Color(0xffA0CCE8),
+                                    highlightColor: Color(0xffA0CCE8),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.share, color: color),
+                                        Container(
+                                          margin: const EdgeInsets.only(top: 2),
+                                          child: Text('SHARE',
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w600,
+                                              color: color,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ]
+                              )
+                            ),
                             Container(
-                            margin: const EdgeInsets.only(top: 2),
-                            child: Text('SHARE',
-                            style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: color,
+                              alignment: Alignment.centerRight,
+                              child: virtualBtn(context, vr_ofis, vr_room)
                             ),
-                            ),
-                            ),
-                            ],
-                            ),
-                            ),
-                            ]
-                            )
-                            ),
-                            Container(
-                            alignment: Alignment.centerRight,
-                            child:_virtualBtn(vr_ofis, vr_room)
-                            ),
-                            ],
-                          )
+                          ],
+                        )
                       ),
                     ],
                   ),
@@ -478,41 +449,10 @@ class _BizCompanyDetailPageState extends State<CompanyDetailPage> with TickerPro
           ),
         ],
       ),
-    ); // Here you direct access using widget
-  }
-
-  Widget _logoImage(String imgPath) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(50),
-      child: CachedNetworkImage(
-        placeholder: (context, url) => CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.grey), strokeWidth: 1.5),
-        imageUrl: imgPath ?? '',
-      ),
-
-      /*CachedNetworkImage(
-        fit: BoxFit.cover,
-        imageUrl: imgPath ?? '',
-        imageBuilder: (context, imageProvider) => Container(
-        decoration: BoxDecoration(
-        image: DecorationImage(
-        image: imageProvider,
-        fit: BoxFit.cover,
-        ),
-        borderRadius: BorderRadius.all(Radius.circular(5.0)),
-        ),
-        ),
-        placeholder: (context, url) => Container(
-        width: 30,
-        height: 30,
-        color: Colors.transparent,
-        child: CupertinoActivityIndicator(radius: 15,),
-        ),
-        errorWidget: (context, url, error) => Container(color: Colors.grey.shade200, child: Icon(Icons.image, color: Colors.white, size: 44,),),
-      ),*/
     );
   }
 
-  Widget _virtualBtn(String vr1, String vr2) {
+  virtualBtn(BuildContext context, String vr1, String vr2) {
     if(vr1 == 'null' && vr2 == 'null') {
       return Container();
     } else if(vr1 != 'null' && vr2 == 'null') {
@@ -535,55 +475,55 @@ class _BizCompanyDetailPageState extends State<CompanyDetailPage> with TickerPro
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 0.0),
         child: OutlineButton(
-        shape: StadiumBorder(),
-        color: Colors.transparent,
-        borderSide: BorderSide(color: color),
-        child: Text('VR SHOWROOM',
-        textAlign: TextAlign.center,
-        style: GoogleFonts.lato(
-        textStyle: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600,),
-        ),
-        ),
-        onPressed: () {launchURL(vr2);},
+          shape: StadiumBorder(),
+          color: Colors.transparent,
+          borderSide: BorderSide(color: color),
+          child: Text('VR SHOWROOM',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.lato(
+              textStyle: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600,),
+            ),
+          ),
+          onPressed: () {launchURL(vr2);},
         ),
       );
     } else {
       return Container(
-      alignment: Alignment.centerRight,
-      padding: const EdgeInsets.symmetric(horizontal: 0.0),
-      child: Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: <Widget>[
-      OutlineButton(
-      shape: StadiumBorder(),
-      color: Colors.transparent,
-      borderSide: BorderSide(color: color),
-      child: Text('VR OFFICE',
-      textAlign: TextAlign.center,
-      style: GoogleFonts.lato(
-      textStyle: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600,),
-      ),
-      ),
-      onPressed: () {launchURL(vr1);},
-      ),
+          alignment: Alignment.centerRight,
+          padding: const EdgeInsets.symmetric(horizontal: 0.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              OutlineButton(
+                shape: StadiumBorder(),
+                color: Colors.transparent,
+                borderSide: BorderSide(color: color),
+                child: Text('VR OFFICE',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.lato(
+                    textStyle: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600,),
+                  ),
+                ),
+                onPressed: () {launchURL(vr1);},
+              ),
 
-      VerticalDivider(),
+              VerticalDivider(),
 
-      OutlineButton(
-      shape: StadiumBorder(),
-      color: Colors.transparent,
-      borderSide: BorderSide(color: color),
-      child: Text('VR SHOWROOM',
-      textAlign: TextAlign.center,
-      style: GoogleFonts.lato(
-      textStyle: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600,),
-      ),
-      ),
-      onPressed: () {launchURL(vr2);},
-      ),
-      ],
-      )
+              OutlineButton(
+                shape: StadiumBorder(),
+                color: Colors.transparent,
+                borderSide: BorderSide(color: color),
+                child: Text('VR SHOWROOM',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.lato(
+                    textStyle: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600,),
+                  ),
+                ),
+                onPressed: () {launchURL(vr2);},
+              ),
+            ],
+          )
       );
     }
   }
@@ -607,63 +547,63 @@ class _BizCompanyDetailPageState extends State<CompanyDetailPage> with TickerPro
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 0.0),
         child: new SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              ListView.separated(
-                separatorBuilder: (context, index) => Divider(
-                  color: Colors.grey,
-                  indent: 10.0,
-                ),
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: products.length,
-                itemBuilder: (context, index) {
-                  var data = products[index];
-                  return InkWell(
-                    onTap: () {
-                      //Navigator.of(context).push(TutorialOverlay());
-                      showDialog(context: context,
-                        builder: (BuildContext context){
-                          return CustomDialogBox(
-                            title: data.product_name,
-                            descriptions: data.product_desc,
-                            text: "Close",
-                          );
-                        }
+            child: Column(
+                children: <Widget>[
+                  ListView.separated(
+                    separatorBuilder: (context, index) => Divider(
+                      color: Colors.grey,
+                      indent: 10.0,
+                    ),
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: products.length,
+                    itemBuilder: (context, index) {
+                      var data = products[index];
+                      return InkWell(
+                          onTap: () {
+                            //Navigator.of(context).push(TutorialOverlay());
+                            showDialog(context: context,
+                                builder: (BuildContext context){
+                                  return CustomDialogBox(
+                                    title: data.product_name,
+                                    descriptions: data.product_desc,
+                                    text: "Close",
+                                  );
+                                }
+                            );
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Expanded(
+                                flex: 4,
+                                child: Container(
+                                  margin: EdgeInsets.only(left: 5.0, top: 5.0),
+                                  alignment: Alignment.topLeft,
+                                  child: htmlText(data.product_name),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                  height: 50,
+                                  margin: EdgeInsets.only(right: 5.0, top: 5.0),
+                                  alignment: Alignment.topRight,
+                                  child: Icon(
+                                    CupertinoIcons.right_chevron,
+                                    size: 16,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
                       );
                     },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Expanded(
-                          flex: 4,
-                          child: Container(
-                            margin: EdgeInsets.only(left: 5.0, top: 5.0),
-                            alignment: Alignment.topLeft,
-                            child: htmlText(data.product_name),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            height: 50,
-                            margin: EdgeInsets.only(right: 5.0, top: 5.0),
-                            alignment: Alignment.topRight,
-                            child: Icon(
-                              CupertinoIcons.right_chevron,
-                              size: 16,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
-                  );
-                },
-              )
-            ]
-          )
+                  )
+                ]
+            )
         ),
       );
     }
@@ -688,42 +628,42 @@ class _BizCompanyDetailPageState extends State<CompanyDetailPage> with TickerPro
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 0.0),
         child: new SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              ListView.separated(
-                separatorBuilder: (context, index) => Divider(
-                  color: Colors.grey,
-                ),
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: awards.length,
-                itemBuilder: (context, index) {
-                  var data = awards[index];
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          height: 60,
-                          child: FadeInImage.assetNetwork(
-                            placeholder: cupertinoActivityIndicatorSmall,
-                            image: data.filename ?? '',
-                            fit: BoxFit.cover,
+            child: Column(
+                children: <Widget>[
+                  ListView.separated(
+                    separatorBuilder: (context, index) => Divider(
+                      color: Colors.grey,
+                    ),
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: awards.length,
+                    itemBuilder: (context, index) {
+                      var data = awards[index];
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Expanded(
+                            flex: 1,
+                            child: Container(
+                              height: 60,
+                              child: FadeInImage.assetNetwork(
+                                placeholder: cupertinoActivityIndicatorSmall,
+                                image: data.filename ?? '',
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 3,
-                        child: htmlText(data.award_desc),
-                      ),
-                    ],
-                  );
-                },
-              )
-            ]
-          )
+                          Expanded(
+                            flex: 3,
+                            child: htmlText(data.award_desc),
+                          ),
+                        ],
+                      );
+                    },
+                  )
+                ]
+            )
         ),
       );
     }
@@ -748,58 +688,53 @@ class _BizCompanyDetailPageState extends State<CompanyDetailPage> with TickerPro
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 0.0),
         child: new SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              ListView.separated(
-                separatorBuilder: (context, index) => Divider(
-                  color: Colors.grey,
-                ),
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: certs.length,
-                itemBuilder: (context, index) {
-                  var data = certs[index];
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Expanded(
-                        flex: 4,
-                        child: Container(
-                          margin: EdgeInsets.only(left: 5.0, top: 5.0),
-                          alignment: Alignment.topLeft,
-                          child: htmlText(data.cert_name),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          height: 50,
-                          margin: EdgeInsets.only(right: 5.0, top: 5.0),
-                          alignment: Alignment.topRight,
-                          child: Icon(
-                            CupertinoIcons.right_chevron,
-                            size: 16,
-                            color: Colors.grey,
+            child: Column(
+                children: <Widget>[
+                  ListView.separated(
+                    separatorBuilder: (context, index) => Divider(
+                      color: Colors.grey,
+                    ),
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: certs.length,
+                    itemBuilder: (context, index) {
+                      var data = certs[index];
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Expanded(
+                            flex: 4,
+                            child: Container(
+                              margin: EdgeInsets.only(left: 5.0, top: 5.0),
+                              alignment: Alignment.topLeft,
+                              child: htmlText(data.cert_name),
+                            ),
                           ),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              )
-            ]
-          )
+                          Expanded(
+                            flex: 1,
+                            child: Container(
+                              height: 50,
+                              margin: EdgeInsets.only(right: 5.0, top: 5.0),
+                              alignment: Alignment.topRight,
+                              child: Icon(
+                                CupertinoIcons.right_chevron,
+                                size: 16,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  )
+                ]
+            )
         ),
       );
 
     }
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _animationController.dispose();
-  }
-
 }
+

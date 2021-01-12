@@ -62,7 +62,7 @@ class ProductCardItem extends StatelessWidget {
                           ConstrainedBox(
                             constraints: const BoxConstraints(maxHeight: 190,),
                             child: Container(
-                              margin: EdgeInsets.all(1),
+                              margin: EdgeInsets.all(0),
                               alignment: Alignment.center,
                               child: CachedNetworkImage(
                                 fit: BoxFit.fitHeight,
@@ -175,130 +175,7 @@ class ProductCardItem extends StatelessWidget {
               )
           ),
         ),
-
       ),
-
-      /*Card(
-        elevation: 1.5,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(7.0),
-        ),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Container(
-                height: 210.0,
-                width: MediaQuery.of(context).size.width / 2.2,
-                margin: EdgeInsets.all(0),
-                alignment: Alignment.center,
-                child: CachedNetworkImage(
-                  placeholder: (context, url) => Container(
-                    width: 50,
-                    height: 50,
-                    color: Colors.transparent,
-                    child: CupertinoActivityIndicator(
-                      radius: 17,
-                    ),
-                  ),
-                  imageUrl: product.image,
-                  fit: BoxFit.fitHeight,
-                  height: 200,
-                ), //Image.network(product.image),
-                decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(1),
-                        topRight: Radius.circular(1))
-                ),
-              ),
-              SizedBox(height: 10,),
-              Container(
-                width: MediaQuery.of(context).size.width / 2.2,
-                margin: EdgeInsets.only(left: 4.0, right: 4.0, bottom: 2.0),
-                alignment: Alignment.bottomLeft,
-                child: Text(
-                  product.name,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.black,
-                    fontFamily: "Quicksand",
-                    fontWeight: FontWeight.w500,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width / 2.2,
-                margin: EdgeInsets.only(left: 4.0, right: 4.0, bottom: 2.0),
-                alignment: Alignment.bottomLeft,
-                child: Text(
-                  product.merchant_name,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.black54,
-                    fontFamily: "Quicksand",
-                    fontWeight: FontWeight.w500,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              SizedBox(height: 8,),
-              Container(
-                width: MediaQuery.of(context).size.width / 2.2,
-                margin: EdgeInsets.only(left: 4.0, right: 4.0, bottom: 2.0),
-                alignment: Alignment.centerLeft,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      alignment: Alignment.topLeft,
-                      child: product.ispromo == '1' ?
-                      Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              "RM"+hrgPromo,
-                              style: TextStyle(fontSize: 14.0, color: Colors.red),
-                            ),
-                            SizedBox(height: 2,),
-                            Text(
-                              "RM"+hrgOri,
-                              style: TextStyle(
-                                fontSize: 12.0,
-                                color: Colors.grey,
-                                decoration: TextDecoration.lineThrough,
-                              ),
-                            ),
-                          ]
-                      ) : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              "RM"+hrgOri,
-                              style: TextStyle(fontSize: 14.0, color: Colors.red),
-                            ),
-                            Text(
-                              "",
-                              style: TextStyle(
-                                fontSize: 12.0,
-                              ),
-                            ),
-                          ]
-                      ),
-                    ),
-                    Container(
-                      alignment: Alignment.topRight,
-                      child: product.delivery == '1' ? Image.asset('assets/icons/ic_truck_free.png', height: 15, width: 24,) : Container(),
-                    ),
-                  ],
-                ),
-              ),
-            ]
-        ),
-      ),*/
     );
   }
 

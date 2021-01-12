@@ -674,89 +674,8 @@ class _EditAddressState extends State<EditAddress> {
                       padding: EdgeInsets.only(left: 0.0, top: 40.0, bottom: 20.0),
                       child: RaisedButton(
                         shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-                        onPressed: () async {
-                          final SharedPreferences prefs = await SharedPreferences.getInstance();
-                          _formKeyE.currentState.save();
-
-                          print('Updated...');
-                          print(_formData['nama']);
-                          print(_formData['fuladdr']);
-                          if(_selectedNegeri != null) {
-                            print(_selectedNegeri.name);
-                            print(_selectedCity.ctname);
-                          }
-                          print(_formData['zipcode']);
-                          print(_formData['phone']);
-
-                          final http.Response response = await http.post(
-                            Constants.addressAPI + widget.addrid.toString(),
-                            body: {
-                              '_method': "PUT",
-                              'fullname': _formData['nama'],
-                              'address': _formData['fuladdr'],
-                              'state': _selectedNegeri == null ? '' : _selectedNegeri.id.toString(),
-                              'city': _selectedNegeri == null ? '' : _selectedCity.id.toString(),
-                              'postcode': _formData['zipcode'],
-                              'mobile_no': _formData['phone'],
-                              'default_billing': "n",
-                              'default_shipping': "n",
-                              'location_tag': "home"
-                            },
-                            headers: {
-                              'Authorization': 'Bearer ' + prefs.getString('token'),
-                              'Content-Type': 'application/x-www-form-urlencoded',
-                            },
-                          );
-
-                          print(response.body);
-                          print(response.statusCode.toString());
-
-                          if (response.statusCode == 200) {
-                            final Map<String, dynamic> responseData = json.decode(response.body);
-                            String message = 'Something went wrong.';
-                            bool hasError = true;
-                            print(responseData);
-                            if (responseData['message'] == 'success') {
-                              print('success >>>' + responseData['data']["addresses"][0]['address']);
-                              message = 'Update adsress successfuly.';
-                              hasError = false;
-                            } else {
-                              print('failed >>> ' + responseData["message"]);
-
-                              if(responseData['data'].containsKey('fullname')) {
-                                showStatusToast(responseData['data']['fullname'][0]);
-                              }
-                              if(responseData['data'].containsKey('address')) {
-                                showStatusToast(responseData['data']['address'][0]);
-                              }
-                              if(responseData['data'].containsKey('state')) {
-                                showStatusToast(responseData['data']['state'][0]);
-                              }
-                              if(responseData['data'].containsKey('city')) {
-                                showStatusToast(responseData['data']['city'][0]);
-                              }
-                              if(responseData['data'].containsKey('postcode')) {
-                                showStatusToast(responseData['data']['postcode'][0]);
-                              }
-                              if(responseData['data'].containsKey('mobile_no')) {
-                                showStatusToast(responseData['data']['mobile_no'][0]);
-                              }
-                            }
-
-                            final Map<String, dynamic> successInformation = {
-                              'success': !hasError,
-                              'message': message
-                            };
-                            if (successInformation['success']) {
-                              model.fetchAddressList();
-                              Navigator.pop(context, true);
-                              print("Address successfuly updated.");
-                            } else {
-                              print("Failed to update.");
-                            }
-                          } else {
-                            print('Server error code >>> ' + response.statusCode.toString());
-                          }
+                        onPressed: () {
+                          _submitUpdateAddr(model);
                         },
                         child: new Text(
                           "SAVE", style: new TextStyle(fontWeight: FontWeight.bold),
@@ -946,6 +865,110 @@ class _EditAddressState extends State<EditAddress> {
         });
   }
 
+
+  void _submitUpdateAddr(MainScopedModel model) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    _formKeyE.currentState.save();
+
+    print('Updated...');
+    print(_formData['nama']);
+    print(_formData['fuladdr']);
+    if(_selectedNegeri != null) {
+      print(_selectedNegeri.name);
+      print(_selectedCity.ctname);
+    }
+    print(_formData['zipcode']);
+    print(_formData['phone']);
+
+    final Map<String, dynamic> addrData = {
+      '_method': "PUT",
+      'fullname': _formData['nama'],
+      'address': _formData['fuladdr'],
+      'state': _selectedNegeri == null ? '' : _selectedNegeri.id.toString(),
+      'city': _selectedNegeri == null ? '' : _selectedCity.id.toString(),
+      'postcode': _formData['zipcode'],
+      'mobile_no': _formData['phone'],
+      'default_billing': "n",
+      'default_shipping': "n",
+      'location_tag': "home"
+    };
+
+    final http.Response response = await http.post(
+      Constants.addressAPI + '/' + widget.addrid.toString(),
+      body: json.encode(addrData), //{'fullname': 'Cartsini Sana', 'email': _formData['email'], 'password': _formData['password'], 'channel': 0},
+      headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
+    );
+
+    /*final http.Response response = await http.post(
+      Constants.addressAPI + widget.addrid.toString(),
+      body: {
+        '_method': "PUT",
+        'fullname': _formData['nama'],
+        'address': _formData['fuladdr'],
+        'state': _selectedNegeri == null ? '' : _selectedNegeri.id.toString(),
+        'city': _selectedNegeri == null ? '' : _selectedCity.id.toString(),
+        'postcode': _formData['zipcode'],
+        'mobile_no': _formData['phone'],
+        'default_billing': "n",
+        'default_shipping': "n",
+        'location_tag': "home"
+      },
+      headers: {
+        'Authorization': 'Bearer ' + prefs.getString('token'),
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    );*/
+
+    print(response.body);
+    print(response.statusCode.toString());
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = json.decode(response.body);
+      String message = 'Something went wrong.';
+      bool hasError = true;
+      print(responseData);
+      if (responseData['message'] == 'success') {
+        print('success >>>' + responseData['data']["addresses"][0]['address']);
+        message = 'Update adsress successfuly.';
+        hasError = false;
+      } else {
+        print('failed >>> ' + responseData["message"]);
+
+        if(responseData['data'].containsKey('fullname')) {
+          showStatusToast(responseData['data']['fullname'][0]);
+        }
+        if(responseData['data'].containsKey('address')) {
+          showStatusToast(responseData['data']['address'][0]);
+        }
+        if(responseData['data'].containsKey('state')) {
+          showStatusToast(responseData['data']['state'][0]);
+        }
+        if(responseData['data'].containsKey('city')) {
+          showStatusToast(responseData['data']['city'][0]);
+        }
+        if(responseData['data'].containsKey('postcode')) {
+          showStatusToast(responseData['data']['postcode'][0]);
+        }
+        if(responseData['data'].containsKey('mobile_no')) {
+          showStatusToast(responseData['data']['mobile_no'][0]);
+        }
+      }
+
+      final Map<String, dynamic> successInformation = {
+        'success': !hasError,
+        'message': message
+      };
+      if (successInformation['success']) {
+        model.fetchAddressList();
+        Navigator.pop(context, true);
+        print("Address successfuly updated.");
+      } else {
+        print("Failed to update.");
+      }
+    } else {
+      print('Server error code >>> ' + response.statusCode.toString());
+    }
+  }
 
 
   List<DropdownMenuItem<CityStates>> getDropDownCity_1() {
@@ -1372,6 +1395,7 @@ class _AddNewAddressState extends State<AddNewAddress> with SingleTickerProvider
           if (value.isEmpty) {
             return 'Please enter poscode';
           }
+          //return null;
         },
         onSaved: (String value) {
           _formData['poscode'] = value;

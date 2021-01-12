@@ -56,7 +56,7 @@ class _UpskillPageState extends State<UpskillPage> {
                 ),
               ),
             ),
-            backgroundColor: Colors.grey.shade200,
+            backgroundColor: Colors.grey.shade100,
             body: CustomScrollView(slivers: <Widget>[
               SliverList(delegate: SliverChildListDelegate([
                 Container(
@@ -169,7 +169,7 @@ class _UpskillPageState extends State<UpskillPage> {
                 ),
               ),
               SliverPadding(
-                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                padding: EdgeInsets.fromLTRB(10, 6, 10, 0),
                 sliver: _quickList(context),
               ),
 
@@ -203,11 +203,11 @@ class _UpskillPageState extends State<UpskillPage> {
 
                                   return Card(
                                       margin: EdgeInsets.all(5.0),
-                                      elevation: 2,
+                                      elevation: 1.5,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8.0),
                                       ),
-                                      shadowColor: Color(0xff2877EA),
+                                      //shadowColor: Color(0xff2877EA),
                                       child: Container(
                                         child: InkWell(
                                             onTap: () {
@@ -406,14 +406,14 @@ class _UpskillPageState extends State<UpskillPage> {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                color: Colors.white,
+                color: Colors.transparent,
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   SizedBox(
-                    width: 44,
-                    height: 44,
+                    width: 36,
+                    height: 36,
                     child: CupertinoButton(
                       padding: EdgeInsets.zero,
                       borderRadius: BorderRadius.circular(8.0),
@@ -442,7 +442,10 @@ class _UpskillPageState extends State<UpskillPage> {
                     child: Center(
                       child: Text(
                         data.title,
-                        style: Theme.of(context).textTheme.caption.copyWith(color: Colors.black),
+                        style: GoogleFonts.lato(
+                          textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                        ),
+                        //style: Theme.of(context).textTheme.caption.copyWith(color: Colors.black),
                       ),
                     ),
                   ),
