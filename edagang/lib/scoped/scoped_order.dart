@@ -85,15 +85,16 @@ mixin OrderScopedModel on Model {
         id: orders['id'],
         order_no: orders['order_no'].toString(), // after migration -> int to string
         total_price: orders['total_price'].toString(), // after migration -> int to string
+        status: orders['status'],
+        //payment_status: orders['payment_status'],
         payment_err_code: orders['payment_status'] != null ? orders['payment_status']['error_code'] : '99',
-        payment_err_desc: orders['payment_status'] != null ? orders['payment_status']['error_desc'] : 'na',
+        payment_err_desc: orders['payment_status'] != null ? orders['payment_status']['error_desc'] : 'Payment cancel by user.',
         payment_bank: orders['payment_bank'],
         payment_txn_date: orders['transaction_date'],
         order_group: orderGroup,
       );
       addToOrderList(_feat);
     });
-
     _isLoadingOrder = false;
     notifyListeners();
   }

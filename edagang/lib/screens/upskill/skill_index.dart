@@ -412,11 +412,11 @@ class _UpskillPageState extends State<UpskillPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   SizedBox(
-                    width: 36,
-                    height: 36,
+                    width: 44,
+                    height: 44,
                     child: CupertinoButton(
                       padding: EdgeInsets.zero,
-                      borderRadius: BorderRadius.circular(8.0),
+                      borderRadius: BorderRadius.circular(1.0),
                       onPressed: () {
                         if(model.skillcat[index].id == 1) {
                           Navigator.push(context, SlideRightRoute(
@@ -432,11 +432,11 @@ class _UpskillPageState extends State<UpskillPage> {
                               page: SkillTrainingPage(model.skillcat[index].name)));
                         }
                       },
-                      color: Colors.transparent,
-                      child: Image.asset(data.imgPath,),
+                      //color: Color(0xffA0CCE8),
+                      child: Image.asset(data.imgPath, height: 44, width: 44,),
                     ),
                   ),
-                  SizedBox(height: 8.0,),
+                  SizedBox(height: 5.0,),
                   Container(
                     height: 20.0,
                     child: Center(
@@ -451,78 +451,6 @@ class _UpskillPageState extends State<UpskillPage> {
                   ),
                 ],
               ),
-
-
-
-              /*Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    height: 80.0,
-                    width: 80.0,
-                    child: Material(
-                        type: MaterialType.transparency,
-                        child: Ink(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            *//*gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.topRight,
-                                colors: [
-                                  Color(0xff2877EA),
-                                  Color(0xffA0CCE8),
-                                ]
-                            ),*//*
-                          ),
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(1000.0),
-                            onTap: () {
-                              if(model.skillcat[index].id == 1) {
-                                Navigator.push(context, SlideRightRoute(
-                                    page: SkillProfessionalPage(model.skillcat[index].name)));
-                              }else if(model.skillcat[index].id == 2) {
-                                Navigator.push(context, SlideRightRoute(
-                                    page: SkillTechnicalPage(model.skillcat[index].name)));
-                              }else if(model.skillcat[index].id == 3) {
-                                Navigator.push(context, SlideRightRoute(
-                                    page: SkillSafetyPage(model.skillcat[index].name)));
-                              }else if(model.skillcat[index].id == 4) {
-                                Navigator.push(context, SlideRightRoute(
-                                    page: SkillTrainingPage(model.skillcat[index].name)));
-                              }
-                            },
-                            child: Center(child: Image.asset(
-                              data.imgPath, height: 44,
-                              width: 44,
-                              fit: BoxFit.cover,)),
-                          ),
-                        )
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(2.5, 5.0, 2.5, 5.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Align(
-                          alignment: Alignment.topCenter,
-                          child: Text(
-                            model.skillcat[index].name,
-                            style: GoogleFonts.lato(
-                              textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600,),
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),*/
             );
           },
             childCount: quick_menu.length,

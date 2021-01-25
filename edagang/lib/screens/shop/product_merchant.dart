@@ -88,13 +88,14 @@ class _ProductListMerchantState extends State<ProductListMerchant> {
       child: Scaffold(
         backgroundColor: Colors.grey.shade200,
         body: CustomScrollView(
+          //controller: _scrollController,
           slivers: <Widget>[
             SliverAppBar(
               elevation: 0.0,
               expandedHeight: xpandedHeight,
-              iconTheme: IconThemeData(
+              /*iconTheme: IconThemeData(
                 color: Colors.white,
-              ),
+              ),*/
               leading: InkWell(
                 onTap: () {Navigator.pop(context);},
                 splashColor: Colors.deepOrange.shade100,
@@ -109,7 +110,7 @@ class _ProductListMerchantState extends State<ProductListMerchant> {
                 child: Container(
                   child: Text(widget.mercName.replaceAll('%20', ' ') ?? '',
                     style: GoogleFonts.lato(
-                      textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: Colors.white),
+                      textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
                     ),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
@@ -141,7 +142,10 @@ class _ProductListMerchantState extends State<ProductListMerchant> {
             SliverPadding(
               padding: EdgeInsets.fromLTRB(8, 5, 8, 10),
               sliver: ProductsListMerchantBody(catId: int.parse(widget.mercId), filte: _currentlySelected),
-            )
+            ),
+            SliverFillRemaining(
+              child: new Container(color: Colors.transparent),
+            ),
           ],
         ),
       ),

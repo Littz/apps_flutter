@@ -1,9 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/screens/biz/biz_cat_list.dart';
 import 'package:edagang/screens/biz/biz_company_detail.dart';
 import 'package:edagang/utils/shared_prefs.dart';
-import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +23,7 @@ class _BizCompanyPageState extends State<BizCompanyPage> {
   void initState() {
     super.initState();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +70,7 @@ class _BizCompanyPageState extends State<BizCompanyPage> {
                         ListView.separated(
                           separatorBuilder: (context, index) => Divider(
                             color: Colors.grey,
-                            indent: 10.0,
+                            indent: 0.0,
                           ),
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
@@ -81,7 +80,7 @@ class _BizCompanyPageState extends State<BizCompanyPage> {
                             return InkWell(
                               onTap: () {
                                 sharedPref.save("biz_id", data.id.toString());
-                                Navigator.push(context,SlideRightRoute(page: CompanyDetailPage(data.id.toString(),data.company_name)));
+                                Navigator.push(context,SlideRightRoute(page: BizCompanyDetailPage(data.id.toString(),data.company_name)));
                               },
                               child: data.category.length > 0 ? Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -94,12 +93,12 @@ class _BizCompanyPageState extends State<BizCompanyPage> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: <Widget>[
                                         Expanded(
-                                          flex: 3,
+                                          flex: 4,
                                           child: Container(
                                             child: Text(
-                                              data.company_name,
+                                              data.company_name.toUpperCase(),
                                               style: GoogleFonts.lato(
-                                                textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600,),
+                                                textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
                                               ),
                                             ),
                                           ),
@@ -107,7 +106,7 @@ class _BizCompanyPageState extends State<BizCompanyPage> {
                                         Expanded(
                                           flex: 1,
                                           child: Container(
-                                            margin: EdgeInsets.only(right: 7.0, top: 7.0),
+                                            margin: EdgeInsets.only(right: 5.0, top: 0.0),
                                             alignment: Alignment.topRight,
                                             child: Icon(
                                               CupertinoIcons.chevron_forward,
@@ -130,18 +129,18 @@ class _BizCompanyPageState extends State<BizCompanyPage> {
                                   ),
                                 ],
                               ) : Container(
-                                margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 1.0),
+                                margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Expanded(
-                                      flex: 3,
+                                      flex: 4,
                                       child: Container(
                                         child: Text(
-                                          data.company_name,
+                                          data.company_name.toUpperCase(),
                                           style: GoogleFonts.lato(
-                                            textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600,),
+                                            textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
                                           ),
                                         ),
                                       ),
@@ -149,7 +148,7 @@ class _BizCompanyPageState extends State<BizCompanyPage> {
                                     Expanded(
                                       flex: 1,
                                       child: Container(
-                                        margin: EdgeInsets.only(right: 7.0, top: 7.0),
+                                        margin: EdgeInsets.only(right: 5.0, top: 0.0),
                                         alignment: Alignment.topRight,
                                         child: Icon(
                                           CupertinoIcons.chevron_forward,
@@ -177,10 +176,6 @@ class _BizCompanyPageState extends State<BizCompanyPage> {
   }
 
 }
-
-
-
-
 
 
 
@@ -247,7 +242,7 @@ class _BizProductPageState extends State<BizProductPage> {
                         ListView.separated(
                           separatorBuilder: (context, index) => Divider(
                             color: Colors.grey,
-                            indent: 10.0,
+                            indent: 0.0,
                           ),
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
@@ -373,7 +368,7 @@ class _BizServicesPageState extends State<BizServicesPage> {
                             ListView.separated(
                               separatorBuilder: (context, index) => Divider(
                                 color: Colors.grey,
-                                indent: 10.0,
+                                indent: 0.0,
                               ),
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),

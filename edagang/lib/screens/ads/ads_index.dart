@@ -72,13 +72,7 @@ class _AdvertPageState extends State<AdvertPage> {
                                 ),
                                 children: <Widget>[
                                   Image.asset(
-                                    'assets/edaganghome1.png', height: 150.0,
-                                    fit: BoxFit.cover,),
-                                  Image.asset(
-                                    'assets/edaganghome2.png', height: 150.0,
-                                    fit: BoxFit.cover,),
-                                  Image.asset(
-                                    'assets/edaganghome3.png', height: 150.0,
+                                    'assets/edagangblurb.png', height: 150.0,
                                     fit: BoxFit.cover,),
                                   Image.asset(
                                     'assets/cartsinishop1.png', height: 150.0,
@@ -96,70 +90,6 @@ class _AdvertPageState extends State<AdvertPage> {
                     )
                 )),
               ])),
-
-              /*SliverToBoxAdapter(
-                child: Container(
-                  padding: EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text('Quick Access',
-                        style: GoogleFonts.lato(
-                          textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600,),
-                        ),
-                      ),
-                      Container(
-                        alignment: Alignment.center,
-                        padding: EdgeInsets.fromLTRB(0,10,0,10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: Colors.white,
-                        ),
-                        child: _quickList(context),
-                      ),
-                    ]
-                  ),
-                ),
-              ),*/
-
-              /*SliverToBoxAdapter(
-                child: Container(
-                  padding: EdgeInsets.fromLTRB(10, 16, 10, 0),
-                    child: Container(
-                      //alignment: Alignment.topLeft,
-                      padding: EdgeInsets.fromLTRB(5, 5, 0, 7),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Colors.white,
-                      ),
-                      child: Column(
-                        //mainAxisAlignment: MainAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Text('Quick Access',
-                              //textAlign: TextAlign.left,
-                              style: GoogleFonts.lato(
-                                textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600,),
-                              ),
-                            ),
-                          ),
-
-                          Container(
-                            alignment: Alignment.center,
-                            padding: EdgeInsets.fromLTRB(0,15,0,0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: Colors.white,
-                            ),
-                            child: _quickList(context),
-                          ),
-                        ]
-                      ),
-                    )
-                ),
-              ),*/
 
               SliverToBoxAdapter(
                 child: Container(
@@ -427,11 +357,11 @@ class _AdvertPageState extends State<AdvertPage> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 SizedBox(
-                  width: 32,
-                  height: 32,
+                  width: 36,
+                  height: 36,
                   child: CupertinoButton(
                     padding: EdgeInsets.zero,
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(1.0),
                     onPressed: () {
                       if (data.id == 1) {
                         Navigator.push(context,SlideRightRoute(page: AdsCareerPage()));
@@ -449,8 +379,8 @@ class _AdvertPageState extends State<AdvertPage> {
                             page: AdsRatePage('5', 'Rate')));
                       }
                     },
-                    color: Colors.transparent,
-                    child: Image.asset(data.imgPath,),
+                    //color: Color(0xffA0CCE8),
+                    child: Image.asset(data.imgPath, height: 36, width: 36,),
                   ),
                 ),
                 SizedBox(height: 8.0,),
@@ -468,73 +398,6 @@ class _AdvertPageState extends State<AdvertPage> {
                 ),
               ],
             ),
-
-            /*Column(
-              children: <Widget>[
-                Container(
-                  height: 70.0,
-                  width: 70.0,
-                  child: Material(
-                      type: MaterialType.transparency,
-                      child: Ink(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.topRight,
-                              colors: [
-                                Color(0xff2877EA),
-                                Color(0xffA0CCE8),
-                              ]
-                          ),
-                        ),
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(1000.0),
-                          onTap: (){
-                            if (data.id == 1) {
-                              Navigator.push(context,SlideRightRoute(page: AdsCareerPage()));
-                            } else if (data.id == 2) {
-                              Navigator.push(context, SlideRightRoute(
-                                  page: AdsPropertyPage('2', 'Property')));
-                            } else if (data.id == 3) {
-                              Navigator.push(context, SlideRightRoute(
-                                  page: AdsVehiclePage('3', 'Vehicle')));
-                            } else if (data.id == 4) {
-                              Navigator.push(context, SlideRightRoute(
-                                  page: AdsServicePage('4', 'Services')));
-                            } else if (data.id == 5) {
-                              Navigator.push(context, SlideRightRoute(
-                                  page: AdsRatePage('5', 'Rate')));
-                            }
-                          },
-                          child: Center(child: Image.asset(data.imgPath, height: 34, width: 34, fit: BoxFit.fill,)),
-                        ),
-                      )
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(2.5, 5.0, 2.5, 5.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Align(
-                        alignment: Alignment.topCenter,
-                        child: Text(
-                          data.title,
-                          style: GoogleFonts.lato(
-                            textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.black),
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),*/
           );
         },
           childCount: quick_menu.length,

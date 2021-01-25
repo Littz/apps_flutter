@@ -197,7 +197,7 @@ class _ShopHomePageState extends State<ShopHomePage> {
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
-                      color: Colors.white,
+                      color: Colors.transparent,
                     ),
                     child: _newContentList(context),
                   )
@@ -472,7 +472,7 @@ class _ShopHomePageState extends State<ShopHomePage> {
         Container(
           padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
           decoration: new BoxDecoration(
-            color: Colors.white,
+            color: Colors.transparent,
             borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
           child: InkWell(
@@ -488,13 +488,13 @@ class _ShopHomePageState extends State<ShopHomePage> {
         Container(
           padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
           decoration: new BoxDecoration(
-            color: Colors.white,
+            color: Colors.transparent,
             borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
           child: InkWell(
             onTap: () {Navigator.push(context, SlideRightRoute(page: NgoPage()));},
             child: SquareButton(
-              icon: Image.asset('assets/icons/shop_wholesale.png'),
+              icon: Image.asset('assets/icons/shop_ngo.png'),
               label: 'NGO',
               lebar: 75,
               tinggi: 75,
@@ -504,7 +504,7 @@ class _ShopHomePageState extends State<ShopHomePage> {
         Container(
           padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
           decoration: new BoxDecoration(
-            color: Colors.white,
+            color: Colors.transparent,
             borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
           child: InkWell(
@@ -520,7 +520,7 @@ class _ShopHomePageState extends State<ShopHomePage> {
         Container(
           padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
           decoration: new BoxDecoration(
-            color: Colors.white,
+            color: Colors.transparent,
             borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
           child: InkWell(

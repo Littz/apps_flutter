@@ -291,6 +291,8 @@ class OdrHistory {
   int id;
   String order_no;
   String total_price;
+  String status;
+  //String payment_status;
   String payment_err_code;
   String payment_err_desc;
   String payment_bank;
@@ -301,6 +303,8 @@ class OdrHistory {
       {this.id,
         this.order_no,
         this.total_price,
+        this.status,
+        //this.payment_status,
         this.payment_err_code,
         this.payment_err_desc,
         this.payment_bank,

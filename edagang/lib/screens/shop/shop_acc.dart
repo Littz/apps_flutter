@@ -5,7 +5,6 @@ import 'package:edagang/screens/shop/acc_profile.dart';
 import 'package:edagang/screens/shop/cart_history.dart';
 import 'package:edagang/screens/shop/cart_review.dart';
 import 'package:edagang/screens/shop/change_paswd.dart';
-import 'package:edagang/screens/shop/product_detail.dart';
 import 'package:edagang/screens/shop/shop_policy.dart';
 import 'package:edagang/screens/shop/shop_support.dart';
 import 'package:edagang/sign_in.dart';

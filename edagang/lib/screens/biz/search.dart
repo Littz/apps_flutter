@@ -130,7 +130,7 @@ class _SearchState extends State<SearchList> {
     } else if (_error != null) {
       return CenterTitle(_error);
     } else if (_searchQuery.text.isEmpty) {
-      return CenterTitle('Begin Search by typing on search bar');
+      return CenterTitle('');
     } else if (_results.length > 0) {
       return ListView.builder(
           padding: EdgeInsets.symmetric(vertical: 5.0),
@@ -204,7 +204,7 @@ class SmartbizItem extends StatelessWidget {
       child: InkWell(
           onTap: () {
             sharedPref.save("biz_id", repo.bizId.toString());
-            Navigator.push(context, SlideRightRoute(page: CompanyDetailPage(repo.bizId.toString(),repo.company)));
+            Navigator.push(context, SlideRightRoute(page: BizCompanyDetailPage(repo.bizId.toString(),repo.company)));
           },
           highlightColor: Colors.lightBlueAccent,
           splashColor: Colors.red,

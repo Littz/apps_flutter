@@ -92,7 +92,6 @@ public class MainActivity extends FlutterActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 // NOTE: assuming intent.getAction() is Intent.ACTION_VIEW
-
                 String dataString = intent.getDataString();
 
                 if (dataString == null) {

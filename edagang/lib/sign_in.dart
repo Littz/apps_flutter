@@ -335,19 +335,12 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
                     height: 24,
                   ),
                   InkWell(
-                    onTap: () {
-                      /*Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => IndexPage(),
-                          ));*/
-                    },
+                    onTap: () {},
                     child: Stack(
                       children: <Widget>[
                         Container(
                             width: double.infinity,
                             margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
-                            //padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                             height: 40,
                             decoration: BoxDecoration(
                                 color: Color(0xff3B5998),
@@ -368,7 +361,6 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
                         ),
                         Container(
                           height: 40,
-                          //margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
                           child: Center(
                               child: Text('Sign in with Facebook',
                                   style: GoogleFonts.lato(
@@ -386,19 +378,12 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
                   ),
 
                   InkWell(
-                    onTap: () {
-                      /*Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => IndexPage(),
-                          ));*/
-                    },
+                    onTap: () {},
                     child: Stack(
                       children: <Widget>[
                         Container(
                             width: double.infinity,
                             margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
-                            //padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                             height: 40,
                             decoration: BoxDecoration(
                                 color: Colors.white,
@@ -430,10 +415,6 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
                         )
                       ],
                     ),
-                  ),
-
-                  SizedBox(
-                    height: 0,
                   ),
                 ],
               ),
@@ -689,26 +670,6 @@ class _RegisterState extends State<Register> with SingleTickerProviderStateMixin
       ),
       body: Stack(
         children: <Widget>[
-          /*Image.asset(
-            'assets/lg_edagang.png',
-            fit: BoxFit.contain,
-            height: double.infinity,
-            width: double.infinity,
-          ),*/
-          /*Container(
-            height: double.infinity,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-                colors: [
-                  Colors.grey.shade300.withOpacity(.9),
-                  Colors.grey.shade300.withOpacity(.1),
-                ]
-              )
-            ),
-          ),*/
 
           Container(
             height: double.infinity,

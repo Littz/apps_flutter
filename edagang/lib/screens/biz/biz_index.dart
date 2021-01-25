@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/data/datas.dart';
 import 'package:edagang/scoped/main_scoped.dart';
-import 'package:edagang/screens/biz/biz_company_detail.dart';
 import 'package:edagang/screens/biz/biz_quick_access.dart';
+import 'package:edagang/screens/biz/biz_vr_list.dart';
 import 'package:edagang/screens/biz/webview_quot.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/shared_prefs.dart';
@@ -14,7 +14,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:edagang/screens/biz/biz_company_detail.dart';
+
 
 class BizPage extends StatefulWidget {
   final TabController tabcontroler;
@@ -105,14 +106,12 @@ class _BizIdxPageState extends State<BizPage> {
                               ),
                               children: <Widget>[
                                 Image.asset(
+                                  'assets/edagangcekap.png', height: 150.0,
+                                  fit: BoxFit.cover,),
+                                Image.asset(
                                   'assets/cartsinibiz1.png', height: 150.0,
                                   fit: BoxFit.cover,),
-                                Image.asset(
-                                  'assets/cartsinibiz3.png', height: 150.0,
-                                  fit: BoxFit.cover,),
-                                Image.asset(
-                                  'assets/edaganghome3.png', height: 150.0,
-                                  fit: BoxFit.cover,),
+
                               ],
                             ),
                           )
@@ -143,9 +142,8 @@ class _BizIdxPageState extends State<BizPage> {
                     padding: EdgeInsets.only(left: 8, right: 8, top: 20),
                     height: 115,
                     child: InkWell(
-                      onTap: () async {
-                        final String url = 'https://smartbiz.e-dagang.asia/vr/paceup/office/index.htm';
-                        if (await canLaunch(url)) await launch(url, forceWebView: false, );
+                      onTap: () {
+                        Navigator.push(context,SlideRightRoute(page: BizVrListPage()));
                       },
                       child: Card(
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
@@ -215,12 +213,25 @@ class _BizIdxPageState extends State<BizPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
+                  /*Container(
+                    height: 32.0,
+                    width: 32.0,
+                    decoration: new BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(0xffA0CCE8),
+                      border: new Border.all(color: Colors.grey, width: 1.0,),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: Image.asset(data.imgPath, height: 32, width: 32,),
+                    ),
+                  ),*/
                   SizedBox(
-                    width: 32,
-                    height: 32,
+                    width: 36,
+                    height: 36,
                     child: CupertinoButton(
                       padding: EdgeInsets.zero,
-                      borderRadius: BorderRadius.circular(8.0),
+                      borderRadius: BorderRadius.circular(1),
                       onPressed: () {
                         if (data.id == 1) {
                           Navigator.push(context,SlideRightRoute(page: BizCompanyPage()));
@@ -238,8 +249,8 @@ class _BizIdxPageState extends State<BizPage> {
                           Navigator.push(context, SlideRightRoute(page: WebviewQuot('https://smartbiz.e-dagang.asia/biz/joinwebv','Join Us')));
                         }
                       },
-                      color: Colors.transparent,
-                      child: Image.asset(data.imgPath,),
+                      //color: Color(0xffA0CCE8),
+                      child: Image.asset(data.imgPath, height: 36, width: 36,),
                     ),
                   ),
                   SizedBox(height: 8.0,),
@@ -325,7 +336,7 @@ class _BizIdxPageState extends State<BizPage> {
                     onTap: () {
                       sharedPref.save("biz_id", data.id.toString());
                       sharedPref.save("biz_name", data.company_name);
-                      Navigator.push(context,SlideRightRoute(page: CompanyDetailPage(data.id.toString(),data.company_name)));
+                      Navigator.push(context,SlideRightRoute(page: BizCompanyDetailPage(data.id.toString(),data.company_name)));
                     },
                     child: Card(
                       elevation: 1.0,
@@ -355,7 +366,11 @@ class _BizIdxPageState extends State<BizPage> {
                                                   color: Colors.transparent,
                                                   borderRadius: BorderRadius.circular(7)
                                               ),
-                                              child: CachedNetworkImage(
+                                              child: data.logo == null ? Image.asset(
+                                                'assets/icons/ic_launcher_new.png', height: 80.0, width: 80.0,
+                                                fit: BoxFit.cover,)
+
+                                                  : CachedNetworkImage(
                                                 fit: BoxFit.fitWidth,
                                                 imageUrl: data.logo ?? '',
                                                 imageBuilder: (context, imageProvider) => Container(

@@ -128,7 +128,7 @@ class _SearchState extends State<SearchList2> {
     } else if (_error != null) {
       return CenterTitle(_error);
     } else if (_searchQuery.text.isEmpty) {
-      return CenterTitle('Begin Search by typing on search bar');
+      return CenterTitle('');
     } else if (_results.length == 0) {
       return CenterTitle('No result found.');
     } else {

@@ -1,28 +1,31 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/models/biz_model.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/custom_dialog.dart';
+import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:loading_gifs/loading_gifs.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-
-class CompanyDetailPage extends StatefulWidget {
+class BizCompanyDetailPage extends StatefulWidget {
   String bizId, bizName;
-  CompanyDetailPage(this.bizId, this.bizName);
+  BizCompanyDetailPage(this.bizId, this.bizName);
 
   @override
   _BizCompanyDetailPageState createState() => _BizCompanyDetailPageState();
 }
 
-class _BizCompanyDetailPageState extends State<CompanyDetailPage> with TickerProviderStateMixin {
+const xpandedHeight = 190.0;
+
+class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  ScrollController _scrollController;
+
   bool isEnabled = true;
   Color color = Color(0xff2877EA);
 
@@ -114,7 +117,7 @@ class _BizCompanyDetailPageState extends State<CompanyDetailPage> with TickerPro
             );
 
             _id = data.id;
-            company_name = data.company_name;
+            company_name = data.company_name.toUpperCase();
             overview = data.overview;
             address = data.address;
             office_phone = data.office_phone;
@@ -140,17 +143,23 @@ class _BizCompanyDetailPageState extends State<CompanyDetailPage> with TickerPro
   void initState() {
     getDetails();
     super.initState();
+    _scrollController = ScrollController()..addListener(() => setState(() {}));
     _animationController = AnimationController(vsync: this, duration: Duration(seconds: 2)) ..forward();
     _movieInformationSlidingAnimation =
         Tween<Offset>(begin: Offset(0, 1), end: Offset.zero).animate(
             CurvedAnimation(
                 curve: Interval(0.25, 1.0, curve: Curves.fastOutSlowIn),
-                parent: _animationController));
+                parent: _animationController)
+        );
+  }
+
+  bool get _showTitle {
+    return _scrollController.hasClients && _scrollController.offset > xpandedHeight - kToolbarHeight;
   }
 
   Future launchURL(String url) async {
     if (await canLaunch(url)) {
-      await launch(url, forceSafariVC: false, forceWebView: false);
+      await launch(url, forceSafariVC: true, forceWebView: false);
     } else {
       print("Can't Launch ${url}");
     }
@@ -159,295 +168,284 @@ class _BizCompanyDetailPageState extends State<CompanyDetailPage> with TickerPro
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
-      appBar: new PreferredSize(
-        preferredSize: Size.fromHeight(56.0),
-        child: new AppBar(
-          centerTitle: false,
-          elevation: 0.0,
-          iconTheme: IconThemeData(
-            color: Colors.white,
-          ),
-          leading: InkWell(
-            onTap: () {Navigator.pop(context);},
-            splashColor: Colors.deepOrange.shade100,
-            child: Icon(Icons.arrow_back,),
-          ),
-          title: new Text(company_name ?? "Company",
-            style: GoogleFonts.lato(
-              textStyle: TextStyle(color: Colors.white, fontSize: 18),
-            ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.topRight,
-                colors: [
-                  Color(0xff2877EA),
-                  Color(0xffA0CCE8),
-                ]
-              ),
-            )
-          ),
-        )
-      ),
-      backgroundColor: Colors.white,
       body: CustomScrollView(
-        slivers: <Widget>[
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                Container(
-                  padding: EdgeInsets.all(8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+          controller: _scrollController,
+          slivers: <Widget>[
+            SliverAppBar(
+              pinned: true,
+              expandedHeight: xpandedHeight,
+              leading: Hero(
+                  tag: "back",
+                  child: InkWell(
+                    onTap: () {Navigator.pop(context);},
+                    splashColor: Color(0xffA0CCE8),
+                    highlightColor: Color(0xffA0CCE8),
+                    child: BlurIconLight(
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: Colors.black,
+                      ),
+                    ),
+                  )
+              ),
+              title: SABT(
+                child: Container(
+                    child: Text(company_name ?? '',
+                      style: GoogleFonts.lato(
+                        textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w700,),
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    )
+                ),
+              ),
+              flexibleSpace: _showTitle ? null : FlexibleSpaceBar(
+                background: Column(
                     children: <Widget>[
-                      Container(
-                        height: 150,
-                        width: MediaQuery.of(context).size.width,
-                        child: GestureDetector(
-                          onTap: () {FocusScope.of(context).requestFocus(FocusNode());},
-                          child: Stack(
-                            overflow: Overflow.visible,
-                            alignment: Alignment.bottomLeft,
+                      Stack(
+                        overflow: Overflow.visible,
+                        alignment: Alignment.bottomLeft,
+                        children: <Widget>[
+                          Image.asset(
+                            'assets/edaganghome1.png', fit: BoxFit.fill,
+                            height: 175,
+                          ),
+                          FractionalTranslation(
+                            translation: Offset(0.1, 0.5),
+                            child: Container(
+                              height: 90,
+                              width: 90,
+                              decoration: new BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                                boxShadow: [BoxShadow(
+                                  color: Colors.grey,
+                                  blurRadius: 5.0,
+                                )],
+                                //border: new Border.all(color: Colors.blue, width: 1.5,),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: FadeInImage.assetNetwork(
+                                  placeholder: _logo ?? "",
+                                  image: _logo ?? "",
+                                  fit: BoxFit.fitWidth,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: -16.0,
+                            right: 16.0,
+                            child: vr_ofis == 'null' && vr_room == 'null' ? Container() : Container(
+                                alignment: Alignment.topRight,
+                                child: virtualBtn(context, vr_ofis, vr_room)
+                            ),
+                          ),
+                        ],
+                      ),
+                    ]
+                ),
+              ),
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  Container(
+                    padding: EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Container(
-                                width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.width,
-                                decoration: new BoxDecoration(
-                                  color: Colors.grey.shade200,
-                                  borderRadius: BorderRadius.all(Radius.circular(7)),
-                                ),
-                                child: ClipPath(
-                                  clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7))),
-                                  child: Image.asset(
-                                    'assets/edaganghome1.png', fit: BoxFit.cover,
-                                    height: 150,
-                                  ),
-                                )
-                              ),
-
-                              FractionalTranslation(
-                                translation: Offset(0.0, 0.5),
-                                child: Container(
-                                  height: 90,
-                                  width: 90,
-                                  decoration: new BoxDecoration(
-                                    color: Colors.white,
-                                    shape: BoxShape.circle,
-                                    border: new Border.all(color: Colors.blue, width: 1.5,),
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(50),
-                                    child: CachedNetworkImage(
-                                        imageUrl: _logo ?? "",
-                                        fit: BoxFit.fitWidth
-                                    ),
+                                padding: EdgeInsets.only(left: 2, right: 7, bottom: 3),
+                                alignment: Alignment.topLeft,
+                                child: Text(company_name ?? "",
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.lato(
+                                    textStyle: TextStyle(fontStyle: FontStyle.normal, fontSize: 14, fontWeight: FontWeight.w700 ),
                                   ),
                                 ),
                               ),
-
-                              Positioned(
-                                bottom: -22.0,
-                                left: 95.0,
-                                child: Container(
-                                  child: Text(company_name ?? "",
-                                    style: GoogleFonts.lato(
-                                      textStyle: TextStyle(fontStyle: FontStyle.normal, fontSize: 16, fontWeight: FontWeight.w700 ),
+                              Container(
+                                padding: EdgeInsets.only(left: 2, right: 7),
+                                child: htmlText2(address),
+                              ),
+                              Container(
+                                padding: EdgeInsets.only(left: 2, right: 7),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(website ?? "",
+                                      style: GoogleFonts.lato(
+                                        textStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
+                                      ),
                                     ),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
+                                    SizedBox(height: 1.0,),
+                                    Text(office_phone ?? "",
+                                      style: GoogleFonts.lato(
+                                        textStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
+                                      ),
+                                    ),
+                                    SizedBox(height: 1.0,),
+                                    Text(email ?? "",
+                                      style: GoogleFonts.lato(
+                                        textStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      ),
+                        Container(
+                            alignment: Alignment.centerLeft,
+                            margin: EdgeInsets.only(left: 5.0, top: 8.0,  bottom: 5),
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                    child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          InkWell(
+                                            onTap: () {launch("tel://"+office_phone, );},
+                                            splashColor: Color(0xffA0CCE8),
+                                            highlightColor: Color(0xffA0CCE8),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Icon(Icons.phone, color: color),
+                                                Container(
+                                                  margin: const EdgeInsets.only(top: 2),
+                                                  child: Text('CALL',
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight: FontWeight.w600,
+                                                      color: color,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
 
-                      Container(
-                        padding: EdgeInsets.only(top: 45),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Container(
-                              child: htmlText2(address),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 0.0, top: 0.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(website ?? "",
-                                    style: GoogleFonts.lato(
-                                      textStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
-                                    ),
-                                  ),
-                                  SizedBox(height: 1.0,),
-                                  Text(office_phone ?? "",
-                                    style: GoogleFonts.lato(
-                                      textStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
-                                    ),
-                                  ),
-                                  SizedBox(height: 1.0,),
-                                  Text(email ?? "",
-                                    style: GoogleFonts.lato(
-                                      textStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                                          VerticalDivider(),
+
+                                          InkWell(
+                                            onTap: () async {
+                                              await FlutterShare.share(
+                                                title: 'SmartBiz',
+                                                text: '',
+                                                linkUrl: 'https://bizapp.e-dagang.asia/company/'+_id.toString(),
+                                                chooserTitle: widget.bizName,
+                                              );
+                                            },
+                                            splashColor: Color(0xffA0CCE8),
+                                            highlightColor: Color(0xffA0CCE8),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Icon(Icons.share, color: color),
+                                                Container(
+                                                  margin: const EdgeInsets.only(top: 2),
+                                                  child: Text('SHARE',
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight: FontWeight.w600,
+                                                      color: color,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ]
+                                    )
+                                ),
+                              ],
+                            )
                         ),
-                      ),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        margin: EdgeInsets.only(left: 5.0, top: 8.0,  bottom: 5),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  InkWell(
-                                    onTap: () {launch("tel://"+office_phone, );},
-                                    splashColor: Color(0xffA0CCE8),
-                                    highlightColor: Color(0xffA0CCE8),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.phone, color: color),
-                                        Container(
-                                          margin: const EdgeInsets.only(top: 2),
-                                          child: Text('CALL',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600,
-                                              color: color,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-
-                                  VerticalDivider(),
-
-                                  InkWell(
-                                    onTap: () async {
-                                      await FlutterShare.share(
-                                        title: 'SmartBiz',
-                                        text: '',
-                                        linkUrl: 'https://bizapp.e-dagang.asia/company/'+_id.toString(),
-                                        chooserTitle: widget.bizName,
-                                      );
-                                    },
-                                    splashColor: Color(0xffA0CCE8),
-                                    highlightColor: Color(0xffA0CCE8),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.share, color: color),
-                                        Container(
-                                          margin: const EdgeInsets.only(top: 2),
-                                          child: Text('SHARE',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600,
-                                              color: color,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ]
-                              )
-                            ),
-                            Container(
-                              alignment: Alignment.centerRight,
-                              child: virtualBtn(context, vr_ofis, vr_room)
-                            ),
-                          ],
-                        )
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
 
-                AnimatedBuilder(
-                  animation: _animationController,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      CupertinoSegmentedControl(
-                        selectedColor: Color(0xff2877EA),
-                        borderColor: Color(0xff2877EA),
-                        groupValue: currentValue,
-                        children: const <int, Widget>{
-                          0: Text('Overview', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),),
-                          1: Text('Product', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),),
-                          2: Text('Award', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),),
-                          3: Text('Certificate', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),),
-                        },
-                        onValueChanged: (value) {
-                          if (value == 0) {
-                            currentTab = Padding(
+                  AnimatedBuilder(
+                    animation: _animationController,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        CupertinoSegmentedControl(
+                          selectedColor: Color(0xff2877EA),
+                          borderColor: Color(0xff2877EA),
+                          groupValue: currentValue,
+                          children: const <int, Widget>{
+                            0: Text('Overview', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),),
+                            1: Text('Product', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),),
+                            2: Text('Award', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),),
+                            3: Text('Registration', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),),
+                          },
+                          onValueChanged: (value) {
+                            if (value == 0) {
+                              currentTab = Padding(
+                                padding: EdgeInsets.only(left: 10, top: 10, right: 10),
+                                child: htmlText(overview),
+                              );
+                            } else if(value == 1) {
+                              currentTab = Padding(
+                                padding: EdgeInsets.only(left: 10, top: 10, right: 10),
+                                child: _productList(),
+                              );
+                            } else if(value == 2) {
+                              currentTab = Padding(
+                                padding: EdgeInsets.only(left: 10, top: 10, right: 10),
+                                child: _awardList(),
+                              );
+                            } else {
+                              currentTab = Padding(
+                                padding: EdgeInsets.only(left: 10, top: 10, right: 10),
+                                child: _certList(),
+                              );
+                            }
+                            setState(() {
+                              currentValue = value;
+                            });
+                          },
+                        ),
+                        currentTab ??
+                            Padding(
                               padding: EdgeInsets.only(left: 10, top: 10, right: 10),
                               child: htmlText(overview),
-                            );
-                          } else if(value == 1) {
-                            currentTab = Padding(
-                              padding: EdgeInsets.only(left: 10, top: 10, right: 10),
-                              child: _productList(),
-                            );
-                          } else if(value == 2) {
-                            currentTab = Padding(
-                              padding: EdgeInsets.only(left: 10, top: 10, right: 10),
-                              child: _awardList(),
-                            );
-                          } else {
-                            currentTab = Padding(
-                              padding: EdgeInsets.only(left: 10, top: 10, right: 10),
-                              child: _certList(),
-                            );
-                          }
-                          setState(() {
-                            currentValue = value;
-                          });
-                        },
-                      ),
-                      currentTab ??
-                          Padding(
-                            padding: EdgeInsets.only(left: 10, top: 10, right: 10),
-                            child: htmlText(overview),
-                          )
-                    ],
+                            )
+                      ],
+                    ),
+                    builder: (BuildContext context, Widget child) {
+                      return Opacity(
+                        opacity: _animationController.value,
+                        child: FractionalTranslation(
+                          translation: _movieInformationSlidingAnimation.value,
+                          child: child,
+                        ),
+                      );
+                    },
                   ),
-                  builder: (BuildContext context, Widget child) {
-                    return Opacity(
-                      opacity: _animationController.value,
-                      child: FractionalTranslation(
-                        translation: _movieInformationSlidingAnimation.value,
-                        child: child,
-                      ),
-                    );
-                  },
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+            SliverFillRemaining(
+              child: new Container(color: Colors.transparent),
+            ),
+          ]
       ),
     );
   }
@@ -456,38 +454,36 @@ class _BizCompanyDetailPageState extends State<CompanyDetailPage> with TickerPro
     if(vr1 == 'null' && vr2 == 'null') {
       return Container();
     } else if(vr1 != 'null' && vr2 == 'null') {
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 0.0),
-        child: OutlineButton(
+      return SizedBox(
+        height: 32,
+        child: RaisedButton(
           shape: StadiumBorder(),
-          color: Colors.transparent,
-          borderSide: BorderSide(color: color),
+          color: color,
           child: Text('VR OFFICE',
             textAlign: TextAlign.center,
             style: GoogleFonts.lato(
-              textStyle: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600,),
+              textStyle: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600,),
             ),
           ),
           onPressed: () {launchURL(vr1);},
         ),
       );
     } else if(vr1 == 'null' && vr2 != 'null') {
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 0.0),
-        child: OutlineButton(
+      return SizedBox(
+        height: 32,
+        child: RaisedButton(
           shape: StadiumBorder(),
-          color: Colors.transparent,
-          borderSide: BorderSide(color: color),
+          color: color,
           child: Text('VR SHOWROOM',
             textAlign: TextAlign.center,
             style: GoogleFonts.lato(
-              textStyle: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600,),
+              textStyle: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600,),
             ),
           ),
           onPressed: () {launchURL(vr2);},
         ),
       );
-    } else {
+    } else if(vr1 != 'null' && vr2 != 'null') {
       return Container(
           alignment: Alignment.centerRight,
           padding: const EdgeInsets.symmetric(horizontal: 0.0),
@@ -495,36 +491,42 @@ class _BizCompanyDetailPageState extends State<CompanyDetailPage> with TickerPro
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
-              OutlineButton(
-                shape: StadiumBorder(),
-                color: Colors.transparent,
-                borderSide: BorderSide(color: color),
-                child: Text('VR OFFICE',
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.lato(
-                    textStyle: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600,),
+              SizedBox(
+                height: 32,
+                child: RaisedButton(
+                  shape: StadiumBorder(),
+                  color: color,
+                  child: Text('VR OFFICE',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.lato(
+                      textStyle: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600,),
+                    ),
                   ),
+                  onPressed: () {launchURL(vr1);},
                 ),
-                onPressed: () {launchURL(vr1);},
               ),
 
-              VerticalDivider(),
+              SizedBox(width: 5,),
 
-              OutlineButton(
-                shape: StadiumBorder(),
-                color: Colors.transparent,
-                borderSide: BorderSide(color: color),
-                child: Text('VR SHOWROOM',
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.lato(
-                    textStyle: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600,),
+              SizedBox(
+                height: 32,
+                child: RaisedButton(
+                  shape: StadiumBorder(),
+                  color: color,
+                  child: Text('VR SHOWROOM',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.lato(
+                      textStyle: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600,),
+                    ),
                   ),
+                  onPressed: () {launchURL(vr2);},
                 ),
-                onPressed: () {launchURL(vr2);},
-              ),
+              )
             ],
           )
       );
+    } else {
+      return Container();
     }
   }
 
@@ -738,3 +740,86 @@ class _BizCompanyDetailPageState extends State<CompanyDetailPage> with TickerPro
 
 }
 
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+  _SliverAppBarDelegate(this._tabBar);
+
+  final TabBar _tabBar;
+
+  @override
+  double get minExtent => _tabBar.preferredSize.height;
+  @override
+  double get maxExtent => _tabBar.preferredSize.height;
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Align(
+        alignment: Alignment.center,
+        child: Container(
+          alignment: Alignment.center,
+          width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.only(bottom: 3),
+          color: Colors.white,
+          child: _tabBar,
+        )
+    );
+  }
+
+  @override
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
+    return false;
+  }
+}
+
+class SABT extends StatefulWidget {
+  final Widget child;
+  const SABT({
+    Key key,
+    @required this.child,
+  }) : super(key: key);
+  @override
+  _SABTState createState() {
+    return new _SABTState();
+  }
+}
+
+class _SABTState extends State<SABT> {
+  ScrollPosition _position;
+  bool _visible;
+  @override
+  void dispose() {
+    _removeListener();
+    super.dispose();
+  }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _removeListener();
+    _addListener();
+  }
+  void _addListener() {
+    _position = Scrollable.of(context)?.position;
+    _position?.addListener(_positionListener);
+    _positionListener();
+  }
+  void _removeListener() {
+    _position?.removeListener(_positionListener);
+  }
+  void _positionListener() {
+    final FlexibleSpaceBarSettings settings =
+    context.inheritFromWidgetOfExactType(FlexibleSpaceBarSettings);
+    bool visible = settings == null || settings.currentExtent <= settings.minExtent;
+    if (_visible != visible) {
+      setState(() {
+        _visible = visible;
+      });
+    }
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Visibility(
+      visible: _visible,
+      child: widget.child,
+    );
+  }
+}

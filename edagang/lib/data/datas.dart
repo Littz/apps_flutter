@@ -1,10 +1,13 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:line_awesome_icons/line_awesome_icons.dart';
 
 List<Menus> getBizQxcess() {
   List<Menus> quickMenu = new List();
   Menus menuModel = new Menus();
 
   menuModel.id = 1;
-  menuModel.imgPath = "assets/icons/biz_cat.png";
+  menuModel.imgPath = "assets/icons/biz_company.png";
   menuModel.title = "Company";
   quickMenu.add(menuModel);
   menuModel = new Menus();
@@ -118,12 +121,14 @@ List<Menus> getFinInsurans() {
 class Menus {
   int id;
   String imgPath;
+  IconData iconx;
   String title;
   String webviewUrl;
 
   Menus({
     this.id,
     this.imgPath,
+    this.iconx,
     this.title,
     this.webviewUrl,
   });
@@ -153,7 +158,7 @@ List<Menus> getAdsCategory() {
   menuModel = new Menus();
 
   menuModel.id = 4;
-  menuModel.imgPath = "assets/icons/ads_svc.png";
+  menuModel.imgPath = "assets/icons/biz_svc.png";
   menuModel.title = "Services";
   quickMenu.add(menuModel);
   menuModel = new Menus();
