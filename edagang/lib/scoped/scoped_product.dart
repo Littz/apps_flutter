@@ -244,7 +244,7 @@ class ProductScopedModel extends Model {
     company_no = dataFromResponse['data']['merchant']['company_no'];
     join_date = dataFromResponse['data']['merchant']['join_date'];
     state = dataFromResponse['data']['merchant']['state'];
-    profile_pic = dataFromResponse['data']['merchant']['user']['profile_pic'];
+    profile_pic = dataFromResponse['data']['merchant']['logo_url'];
     state_name = dataFromResponse['data']['merchant']['merchant_state']['state_name'];
 
     dataFromResponse["data"]["products"]["data"].forEach(

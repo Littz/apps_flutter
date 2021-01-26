@@ -1,10 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/scoped/main_scoped.dart';
-import 'package:edagang/screens/shop/product_merchant.dart';
 import 'package:edagang/screens/shop/product_ngo.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
-import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +59,7 @@ class _NgoPageState extends State<NgoPage> {
               ),
             )
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.grey.shade100,
           body: CustomScrollView(slivers: <Widget>[
             SliverPadding(
               padding: EdgeInsets.all(7),
@@ -80,8 +78,17 @@ class _NgoPageState extends State<NgoPage> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey[600]),
-                        borderRadius: BorderRadius.circular(7)
+                        //border: Border.all(color: Colors.grey[600]),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade500,
+                            blurRadius: 2.0,
+                            spreadRadius: 0.0,
+                            offset: Offset(2.0, 2.0), // shadow direction: bottom right
+                          )
+                        ],
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -91,7 +98,7 @@ class _NgoPageState extends State<NgoPage> {
                             child: Container(
                               decoration: BoxDecoration(
                                 color: Colors.transparent,
-                                borderRadius: BorderRadius.circular(7)
+                                borderRadius: BorderRadius.circular(10)
                               ),
                               child: CachedNetworkImage(
                                 fit: BoxFit.fitWidth,
@@ -104,13 +111,13 @@ class _NgoPageState extends State<NgoPage> {
                                       fit: BoxFit.fitWidth,
                                     ),
                                     borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(7.0),
-                                      topRight: Radius.circular(7.0)
+                                      topLeft: Radius.circular(10.0),
+                                      topRight: Radius.circular(10.0)
                                     )
                                   ),
                                 ),
                                 placeholder: (context, url) => Container(color: Colors.grey.shade200,),
-                                errorWidget: (context, url, error) => Icon(Icons.image, size: 32,),
+                                errorWidget: (context, url, error) => Icon(Icons.image, size: 36,),
                               ),
                             ),
                           ),
@@ -134,87 +141,6 @@ class _NgoPageState extends State<NgoPage> {
                 ),
               )
             ),
-            /*SliverPadding(
-              padding: EdgeInsets.only(left: 10, top: 10, right: 10, bottom: 15),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate(
-                  [
-                    Column(
-                        children: <Widget>[
-                          ListView.separated(
-                            separatorBuilder: (context, index) => Divider(
-                              color: Colors.grey,
-                              indent: 10.0,
-                            ),
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: model.ngo.length,
-                            itemBuilder: (context, index) {
-                              var data = model.ngo[index];
-                              return InkWell(
-                                  onTap: () {
-                                    sharedPref.save("mer_id", data.id.toString());
-                                    sharedPref.save("mer_title", data.associateName);
-                                    Navigator.push(context, SlideRightRoute(page: ProductNgoPage()));
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Expanded(
-                                        flex: 2,
-                                        child: Container(
-                                          height: 70.0,
-                                          child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(50),
-                                            child: SizedBox(
-                                              height: 70,
-                                              child: CachedNetworkImage(
-                                                placeholder: (context, url) => Container(
-                                                  width: 40,
-                                                  height: 40,
-                                                  color: Colors.transparent,
-                                                  child: CupertinoActivityIndicator(radius: 15,),
-                                                ),
-                                                imageUrl: Constants.urlImage + data.associateLogo,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 4,
-                                        child: Container(
-                                          margin: EdgeInsets.only(left: 5.0, top: 5.0),
-                                          alignment: Alignment.topLeft,
-                                          child: htmlText(data.associateName),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 1,
-                                        child: Container(
-                                          height: 44,
-                                          margin: EdgeInsets.only(right: 5.0, top: 5.0),
-                                          alignment: Alignment.topRight,
-                                          child: Icon(
-                                            CupertinoIcons.right_chevron,
-                                            size: 16,
-                                            color: Colors.grey,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                              );
-                            },
-                          )
-                        ]
-                    ),
-                  ],
-                ),
-              ),
-            ),*/
           ]),
         );
       }

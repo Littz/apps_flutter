@@ -2,10 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/main.dart';
 import 'package:edagang/models/shop_model.dart';
 import 'package:edagang/scoped/scoped_product.dart';
-import 'package:edagang/screens/shop/product_detail.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
-import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/product_grid_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,10 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:loading_gifs/loading_gifs.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+
 
 class MerchantDeeplink extends StatefulWidget {
   String mercId, mercName;
@@ -90,12 +86,7 @@ class _MerchantDeeplinkState extends State<MerchantDeeplink> {
           slivers: <Widget>[
             SliverAppBar(
               elevation: 0.0,
-              //backgroundColor: Colors.white,
-              //automaticallyImplyLeading: true,
               expandedHeight: xpandedHeight,
-              iconTheme: IconThemeData(
-                color: Colors.white,
-              ),
               leading: InkWell(
                 onTap: () {Navigator.pushReplacement(context, SlideRightRoute(page: SimpleTab(1,0)));},
                 splashColor: Colors.deepOrange.shade100,
@@ -110,7 +101,7 @@ class _MerchantDeeplinkState extends State<MerchantDeeplink> {
                 child: Container(
                   child: Text(widget.mercName.replaceAll('%20', ' ') ?? '',
                     style: GoogleFonts.lato(
-                      textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: Colors.white),
+                      textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
                     ),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
@@ -315,25 +306,6 @@ class ProfileMerchant extends StatelessWidget {
                             ],
                           ),
                         )
-                          /*Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Text('Member since:',
-                                style: GoogleFonts.lato(
-                                  textStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, fontStyle: FontStyle.italic, color: Colors.white),
-                                ),
-                                textAlign: TextAlign.start,
-                              ),
-                              Text(model.getJoinDate() ?? '',
-                                style: GoogleFonts.lato(
-                                  textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.white),
-                                ),
-                                textAlign: TextAlign.start,
-                              ),
-                            ]
-                        ),*/
                       ),
 
                       Container(
@@ -346,7 +318,6 @@ class ProfileMerchant extends StatelessWidget {
                             style: GoogleFonts.lato(
                               textStyle: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700,),
                             ),
-                            //textAlign: TextAlign.center,
                           ),
                           highlightedBorderColor: Colors.orange,
                           color: Colors.transparent,
@@ -356,15 +327,11 @@ class ProfileMerchant extends StatelessWidget {
                           )
                         ),
                       ),
-
-
                     ]
                 ),
-
               ],
             ),
           ),
-
         ],
       ),
     );

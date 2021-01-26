@@ -155,6 +155,10 @@ void createNewLineItem(String params) async {
 }
 
 
+void updateCourier() {
+  fetchCartsFromResponse();
+}
+
 Future<dynamic> _getCartCount() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   var response = await http.get(

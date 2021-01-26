@@ -48,13 +48,6 @@ class _FinancePageState extends State<FinancePage> {
                       floating: false,
                       pinned: false,
                       flexibleSpace: FlexibleSpaceBar(
-                        /*centerTitle: true,
-                        title: Text("Collapsing Toolbar",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.0,
-                          )
-                        ),*/
                         background: Container(
                             margin: EdgeInsets.only(left: 8, right: 8),
                             child: Card(
@@ -122,7 +115,6 @@ class _FinancePageState extends State<FinancePage> {
                       ),
                       pinned: true,
                     ),
-
                   ];
                 },
                 body: TabBarView(children: [
@@ -141,32 +133,6 @@ class _FinancePageState extends State<FinancePage> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Container(
-                                //padding: EdgeInsets.only(left: 8, right: 8, top: 8),
-                                width: MediaQuery.of(context).size.width,
-                                height: 145,
-                                child: InkWell(
-                                    onTap: () {},
-                                    child: Card(
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                                        elevation: 0.0,
-                                        child: Container(
-                                            decoration: new BoxDecoration(
-                                              color: Colors.grey.shade200,
-                                              borderRadius: BorderRadius.all(Radius.circular(8)),
-                                            ),
-                                            child: ClipPath(
-                                              clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-                                              child: Image.asset(
-                                                'assets/fintool_dd.png', fit: BoxFit.fitWidth,
-                                                height: 145,
-                                              ),
-                                            )
-                                        )
-                                    )
-                                )
-                            ),
-                            Divider(),
                             Container(
                                 //padding: EdgeInsets.only(left: 8, right: 8, top: 8),
                                 width: MediaQuery.of(context).size.width,
@@ -197,81 +163,40 @@ class _FinancePageState extends State<FinancePage> {
                                     )
                                 )
                             ),
+                            Container(
+                                width: MediaQuery.of(context).size.width,
+                                height: 145,
+                                child: InkWell(
+                                    onTap: () {},
+                                    child: Card(
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                                        elevation: 0.0,
+                                        child: Container(
+                                            decoration: new BoxDecoration(
+                                              color: Colors.grey.shade200,
+                                              borderRadius: BorderRadius.all(Radius.circular(8)),
+                                            ),
+                                            child: ClipPath(
+                                              clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                                              child: Image.asset(
+                                                'assets/fintool_dd.png', fit: BoxFit.fitWidth,
+                                                height: 145,
+                                              ),
+                                            )
+                                        )
+                                    )
+                                )
+                            ),
                           ]
                         ),
                       ),
                     )
                   ]),
-                  Icon(Icons.dashboard_sharp),
+                  Container(),
                 ]),
               ),
             ),
           )
-
-          /*Scaffold(
-            body: CustomScrollView(slivers: <Widget>[
-              SliverList(delegate: SliverChildListDelegate([
-                Container(
-                    margin: EdgeInsets.only(left: 8, right: 8),
-                    child: Card(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                        elevation: 1,
-                        child: ClipPath(
-                            clipper: ShapeBorderClipper(
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-                            child: Container(
-                              height: 150.0,
-                              decoration: new BoxDecoration(
-                                color: Colors.transparent,
-                                borderRadius: BorderRadius.all(Radius.circular(8)),
-                              ),
-                              child: Swiper.children(
-                                autoplay: true,
-                                pagination: new SwiperPagination(
-                                    margin: new EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 15.0),
-                                    builder: new DotSwiperPaginationBuilder(
-                                        color: Colors.white30,
-                                        activeColor: Colors.redAccent.shade400,
-                                        size: 7.0,
-                                        activeSize: 7.0)
-                                ),
-                                children: <Widget>[
-                                  Image.asset(
-                                    'assets/cartsinifinance1.png', height: 150.0,
-                                    fit: BoxFit.cover,),
-                                  Image.asset(
-                                    'assets/cartsinifinance2.png', height: 150.0,
-                                    fit: BoxFit.cover,),
-                                  Image.asset(
-                                    'assets/cartsinifinance3.png', height: 150.0,
-                                    fit: BoxFit.cover,),
-                                ],
-                              ),
-                            )
-                        )
-                    )
-                ),
-              ])),
-
-              SliverToBoxAdapter(
-                child: Container(
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 0),
-                    child: Text(
-                      'Insurance Packages',
-                      style: GoogleFonts.lato(
-                        textStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.w600,),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SliverPadding(
-                padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                sliver: _tabList(context, widget.tabcontroler),
-              ),
-            ]),
-          )*/
         );
       }
     );

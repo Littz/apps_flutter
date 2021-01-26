@@ -308,7 +308,7 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
                     height: 16,
                   ),
 
-                  Container(
+                  /*Container(
                     width: double.infinity,
                     margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
                     child: Row(
@@ -415,11 +415,11 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
                         )
                       ],
                     ),
-                  ),
+                  ),*/
                 ],
               ),
             ),
-            ),
+          ),
 
       );
     });

@@ -85,3 +85,21 @@ class Repo3 {
     ).toList();
   }
 }
+
+
+
+class Repo4 {
+  final int id;
+  final String name;
+  final String category;
+
+  Repo4(this.id, this.name, this.category);
+
+  static List<Repo4> mapJSONStringToList(List<dynamic> jsonList) {
+    return jsonList.map((r) =>Repo4(
+        r['id'],
+        r['company_name'],
+        r['category'])
+    ).toList();
+  }
+}

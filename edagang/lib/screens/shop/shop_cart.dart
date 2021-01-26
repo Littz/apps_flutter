@@ -506,7 +506,7 @@ class _ShopCartPageState extends State<ShopCartPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Expanded(
+                    /*Expanded(
                       flex: 1,
                       child: Container(
                         alignment: Alignment.bottomRight,
@@ -524,7 +524,7 @@ class _ShopCartPageState extends State<ShopCartPage> {
                           ),
                         ),
                       ),
-                    ),
+                    ),*/
                     Expanded(
                       flex: 2,
                       child: Container(
@@ -536,7 +536,7 @@ class _ShopCartPageState extends State<ShopCartPage> {
                           children: <Widget>[
                             Container(
                               child: Text(
-                                "Total :",
+                                "Subtotal :",
                                 style: GoogleFonts.lato(
                                   textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600,),
                                 ),
@@ -581,6 +581,7 @@ class _ShopCartPageState extends State<ShopCartPage> {
 
                     SharedPreferences prefs = await SharedPreferences.getInstance();
                     prefs.setStringList('list_cartid', cartIdListString);
+                    prefs.setString('courier_caj', model.cartList[0].courier_charges);
                     Navigator.push(context, SlideRightRoute(page: CheckoutActivity()));
                     //Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => CheckoutActivity()));
                   },

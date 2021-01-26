@@ -37,7 +37,8 @@ class _SearchState extends State<SearchList> {
       }
       debounceTimer = Timer(Duration(milliseconds: 500), () {
         if (this.mounted) {
-          performSearch(_searchQuery.text);
+          debounceTimer.cancel();
+          //performSearch(_searchQuery.text);
         }
       });
     });
@@ -80,20 +81,22 @@ class _SearchState extends State<SearchList> {
           backgroundColor: Colors.grey.shade400,
           centerTitle: true,
           title: Container(
-            height: 40,
+            height: 37,
             decoration: BoxDecoration(
               //border: Border.all(width: 1, color: Color(0xff2877EA),),
               borderRadius: BorderRadius.all(Radius.circular(25)),
               color: Colors.white,
             ),
-            child: TextField(
-              autofocus: true,
-              controller:_searchQuery,
-              style: GoogleFonts.lato(
-                textStyle: TextStyle(color: Colors.grey.shade700, fontSize: 16, fontWeight: FontWeight.w500,),
-              ),
-              cursorColor: Color(0xff2877EA),
-              decoration: InputDecoration(
+            child: SizedBox(
+              height: 37,
+              child: TextField(
+                autofocus: true,
+                controller:_searchQuery,
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(color: Colors.grey.shade700, fontSize: 16, fontWeight: FontWeight.w500,),
+                ),
+                cursorColor: Color(0xff2877EA),
+                decoration: InputDecoration(
                   border: InputBorder.none,
                   prefixIcon: Padding(
                     padding: EdgeInsetsDirectional.only(end: 10.0),
@@ -101,10 +104,11 @@ class _SearchState extends State<SearchList> {
                       CupertinoIcons.search,
                       color: Colors.grey.shade700,
                     )
-                ),
-
+                  ),
                   hintText: "Search ...",
-                  hintStyle: TextStyle(color: Colors.grey.shade500)),
+                  hintStyle: TextStyle(color: Colors.grey.shade500)
+                ),
+              )
             ),
           ),
           flexibleSpace: Container(

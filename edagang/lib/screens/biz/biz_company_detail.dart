@@ -159,7 +159,7 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
 
   Future launchURL(String url) async {
     if (await canLaunch(url)) {
-      await launch(url, forceSafariVC: true, forceWebView: false);
+      await launch(url, forceSafariVC: false, forceWebView: false);
     } else {
       print("Can't Launch ${url}");
     }

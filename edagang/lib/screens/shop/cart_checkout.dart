@@ -268,13 +268,9 @@ class CheckoutActivityState extends State<CheckoutActivity> {
 
             setState(() {
               selectedAddr = addr;
-              //params= "";
               print("addrID >>> "+prefs.getInt('addr_id').toString());
-              //params = params + "address_id=" + _addrId.toString();
-              //MaterialPageRoute route = MaterialPageRoute(builder: (context) => ListBanking2());
-              //Navigator.push(context, route);
             });
-
+            model.updateCourier();
           }
       );
       return gestureDetector;
@@ -338,30 +334,7 @@ class CheckoutActivityState extends State<CheckoutActivity> {
                     width: 205,
                   )
               ),
-
-
-              /*CachedNetworkImage(
-                placeholder: (context, url) => Container(
-                  width: 40,
-                  height: 40,
-                  color: Colors.transparent,
-                  child: CupertinoActivityIndicator(radius: 15,),
-                ),
-                imageUrl: Constants.urlImage+bank.bank_logo,
-                fit: BoxFit.fitWidth,
-                width: 205,
-              ),*/
             ),
-
-            /*Container(
-              alignment: Alignment.center,
-              height: 40,
-              child: selectedBank == bank ? Icon(
-                CupertinoIcons.check_mark_circled_solid,
-                color: Colors.green.shade600,
-                size: 32,
-              ) : null,
-            ),*/
           ],
         ),
       );
@@ -560,6 +533,78 @@ class CheckoutActivityState extends State<CheckoutActivity> {
             Expanded(
               flex: 3,
               child: Container(
+                  padding: const EdgeInsets.only(top: 5, right: 10),
+                  alignment: Alignment.bottomRight,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          alignment: Alignment.bottomRight,
+                          child: model.getTotalCourier() != null ? Text(
+                            "Shipping :  RM${model.getTotalCourier().toStringAsFixed(2)}",
+                            textAlign: TextAlign.start,
+                            style: GoogleFonts.lato(
+                              textStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.grey.shade500),
+                            ),
+                          ) : Text(
+                            "Shipping :  RM0.00",
+                            textAlign: TextAlign.start,
+                            style: GoogleFonts.lato(
+                              textStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.grey.shade500),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                          flex: 2,
+                          child: Container(
+                              alignment: Alignment.centerRight,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Container(
+                                    child: Text(
+                                      "Total :",
+                                      style: GoogleFonts.lato(
+                                        textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600,),
+                                      ),
+                                      textAlign: TextAlign.start,
+                                    ),
+                                  ),
+                                  SizedBox(width: 10,),
+                                  Container(
+                                      child: RichText(
+                                        text: TextSpan(
+                                          text: 'RM',
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black),
+                                          ),
+                                          children: <TextSpan>[
+                                            TextSpan(text: model.totalNett().toStringAsFixed(2),
+                                              style: GoogleFonts.lato(
+                                                textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.black),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        textAlign: TextAlign.start,
+                                      )
+                                  ),
+                                ],
+                              )
+                          )
+                      ),
+                    ],
+                  )
+              ),
+
+              /*Container(
                 margin: const EdgeInsets.only(right: 10),
                 alignment: Alignment.centerRight,
                 child: Row(
@@ -595,14 +640,10 @@ class CheckoutActivityState extends State<CheckoutActivity> {
                           ),
                           textAlign: TextAlign.start,
                         )
-                        /*child: Text(
-                          "RM${model.totalNett().toStringAsFixed(2)}",
-                          style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.deepOrange.shade600),
-                        )*/
                     ),
                   ],
                 ),
-              ),
+              ),*/
             ),
             Expanded(
               flex: 2,

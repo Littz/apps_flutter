@@ -61,7 +61,7 @@ class _KooperasiPageState extends State<KooperasiPage> {
               ),
             )
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.grey.shade100,
           body: CustomScrollView(slivers: <Widget>[
             SliverPadding(
               padding: EdgeInsets.all(7),
@@ -80,8 +80,17 @@ class _KooperasiPageState extends State<KooperasiPage> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey[600]),
-                          borderRadius: BorderRadius.circular(7)
+                        //border: Border.all(color: Colors.grey[600]),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade500,
+                            blurRadius: 2.0,
+                            spreadRadius: 0.0,
+                            offset: Offset(2.0, 2.0), // shadow direction: bottom right
+                          )
+                        ],
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -91,7 +100,7 @@ class _KooperasiPageState extends State<KooperasiPage> {
                             child: Container(
                               decoration: BoxDecoration(
                                   color: Colors.transparent,
-                                  borderRadius: BorderRadius.circular(7)
+                                  borderRadius: BorderRadius.circular(10)
                               ),
                               child: CachedNetworkImage(
                                 fit: BoxFit.fitWidth,
@@ -104,8 +113,8 @@ class _KooperasiPageState extends State<KooperasiPage> {
                                       fit: BoxFit.fitWidth,
                                     ),
                                     borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(7.0),
-                                      topRight: Radius.circular(7.0)
+                                      topLeft: Radius.circular(10.0),
+                                      topRight: Radius.circular(10.0)
                                     )
                                   ),
                                 ),
@@ -113,7 +122,7 @@ class _KooperasiPageState extends State<KooperasiPage> {
                                   color: Colors.grey.shade200,
                                   //child: CupertinoActivityIndicator(radius: 15,),
                                 ),
-                                errorWidget: (context, url, error) => Icon(Icons.image, size: 32,),
+                                errorWidget: (context, url, error) => Icon(Icons.image, size: 36,),
                               ),
                             ),
                           ),
