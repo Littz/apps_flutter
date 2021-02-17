@@ -245,23 +245,34 @@ class CartsiniItem extends StatelessWidget {
                           ),
                         ),
                         const Padding(padding: EdgeInsets.only(top: 2)),
-                        GestureDetector(
+                        Text(
+                          repo.company,
+                          style: GoogleFonts.lato(
+                            textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic,),
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+
+                        /*GestureDetector(
                           onTap: () {
                             Navigator.push(context, SlideRightRoute(page: ProductListMerchant(repo.bizId,repo.company)));
                           },
                           child: Text(
                             repo.company,
                             style: GoogleFonts.lato(
-                              textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, decoration: TextDecoration.underline, color: Color(0xffF45432),),
+                              textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, decoration: TextDecoration.underline, fontStyle: FontStyle.italic,),
                             ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
+                        ),*/
 
                         const Padding(padding: EdgeInsets.only(top: 3)),
                         Text(
                           repo.prodDesc != null ? repo.prodDesc : '',
                           style: GoogleFonts.lato(
-                            textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic),
+                            textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, fontStyle: FontStyle.italic),
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,

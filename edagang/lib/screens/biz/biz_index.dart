@@ -1,20 +1,27 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/data/datas.dart';
+import 'package:edagang/notification.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/screens/biz/biz_quick_access.dart';
 import 'package:edagang/screens/biz/biz_vr_list.dart';
 import 'package:edagang/screens/biz/webview_quot.dart';
+import 'package:edagang/settings.dart';
 import 'package:edagang/sign_in.dart';
+import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/searchbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:edagang/screens/biz/biz_company_detail.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 
 class BizPage extends StatefulWidget {
@@ -26,17 +33,38 @@ class BizPage extends StatefulWidget {
 }
 
 class _BizIdxPageState extends State<BizPage> {
+  GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
+  final facebookLogin = FacebookLogin();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   SharedPref sharedPref = SharedPref();
   BuildContext context;
   List<Menus> quick_menu = new List();
   List<Menus> tabs_menu = new List();
+  String _selectedItem = 'Notification';
+  List _options = ['Notification', 'Setting', 'About Us', 'Logout'];
+  String _logType,_photo = "";
+
+  loadPhoto() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    try {
+      setState(() {
+        _logType = prefs.getString("login_type");
+        _photo = prefs.getString("photo");
+        print("Sosmed photo : "+_photo);
+      });
+
+    } catch (Excepetion ) {
+      print("error!");
+    }
+  }
 
   @override
   void initState() {
     quick_menu = getBizQxcess();
     tabs_menu = getBizTabs();
     super.initState();
+    loadPhoto();
   }
 
   @override
@@ -53,7 +81,8 @@ class _BizIdxPageState extends State<BizPage> {
                   automaticallyImplyLeading: false,
                   backgroundColor: Colors.white,
                   elevation: 0.0,
-                  flexibleSpace: SafeArea(
+                  title: searchBar(context),
+                  /*flexibleSpace: SafeArea(
                     child: Padding(
                       padding: EdgeInsets.only(left: 10, right: 5),
                       child: Row(
@@ -64,14 +93,120 @@ class _BizIdxPageState extends State<BizPage> {
                             child: searchBar(context),
                           ),
                           IconButton(
-                            icon: Icon(CupertinoIcons.bell, color: Colors.grey.shade700,),
-                            tooltip: 'Nortification',
-                            onPressed: () {},
+                            icon: Icon(CupertinoIcons.bars, color: Colors.grey.shade700,),
+                            tooltip: 'Menu',
+                            onPressed: () {myPopMenu();},
                           ),
                         ],
                       ),
                     ),
-                  ),
+                  ),*/
+                  actions: model.isAuthenticated ? [
+                    Container(
+                      height: 36,
+                      width: 36,
+                      alignment: Alignment.centerRight,
+                      decoration: new BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade500,
+                            blurRadius: 0.5,
+                            spreadRadius: 0.0,
+                            offset: Offset(0.5, 0.5),
+                          )
+                        ],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: _logType == '0' ? Icon(CupertinoIcons.person_fill, size: 36,  color: Colors.grey.shade600,) :
+                        CachedNetworkImage(
+                          imageUrl: _photo ?? '',
+                          placeholder: (context, url) => CircularProgressIndicator(),
+                          errorWidget: (context, url, error) => Icon(Icons.error),
+                        ),
+                        //Image.network(_photo ?? '', width: 36, height: 36,),
+                      ),
+                    ),
+                    PopupMenuButton(
+                      itemBuilder: (BuildContext bc) => [
+                        PopupMenuItem(child: ListTile(
+                          leading: Icon(Icons.notifications),
+                          title: Text('Notification'),
+                        ), value: "1"),
+                        PopupMenuItem(child: ListTile(
+                          leading: Icon(Icons.settings),
+                          title: Text('Settings'),
+                        ), value: "2"),
+                        PopupMenuItem(child: model.isAuthenticated ? ListTile(
+                          leading: Icon(Icons.logout),
+                          title: Text('Logout'),
+                        ) : ListTile(
+                          leading: Icon(Icons.login),
+                          title: Text('Login'),
+                        ), value: model.isAuthenticated ? "3" : "4"),
+                      ],
+
+                      onSelected: (value) {
+                        setState(() {
+                          _selectedItem = value;
+                          print("Selected context menu: $_selectedItem");
+                          if(_selectedItem == '1'){
+                            Navigator.push(context, SlideRightRoute(page: NotificationPage()));
+                          }
+                          if(_selectedItem == '2'){
+                            Navigator.push(context, SlideRightRoute(page: SettingPage()));
+                          }
+                          if(_selectedItem == '3'){
+                            logoutUser(context, model);
+                          }
+                          if(_selectedItem == '4'){
+                            Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
+                          }
+                        });
+                      },
+                    ),
+                  ] : [
+                    PopupMenuButton(
+                      itemBuilder: (BuildContext bc) => [
+                        PopupMenuItem(child: ListTile(
+                          leading: Icon(Icons.notifications),
+                          title: Text('Notification'),
+                        ), value: "1"),
+                        PopupMenuItem(child: ListTile(
+                          leading: Icon(Icons.settings),
+                          title: Text('Settings'),
+                        ), value: "2"),
+                        PopupMenuItem(child: model.isAuthenticated ? ListTile(
+                          leading: Icon(Icons.logout),
+                          title: Text('Logout'),
+                        ) : ListTile(
+                          leading: Icon(Icons.login),
+                          title: Text('Login'),
+                        ), value: model.isAuthenticated ? "3" : "4"),
+                      ],
+
+                      onSelected: (value) {
+                        setState(() {
+                          _selectedItem = value;
+                          print("Selected context menu: $_selectedItem");
+                          if(_selectedItem == '1'){
+                            Navigator.push(context, SlideRightRoute(page: NotificationPage()));
+                          }
+                          if(_selectedItem == '2'){
+                            Navigator.push(context, SlideRightRoute(page: SettingPage()));
+                          }
+                          if(_selectedItem == '3'){
+                            logoutUser(context, model);
+                          }
+                          if(_selectedItem == '4'){
+                            Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
+                          }
+                        });
+                      },
+                    ),
+                  ],
                 ),
               ),
               backgroundColor: Colors.grey.shade100,
@@ -107,10 +242,10 @@ class _BizIdxPageState extends State<BizPage> {
                               children: <Widget>[
                                 Image.asset(
                                   'assets/edagangcekap.png', height: 150.0,
-                                  fit: BoxFit.cover,),
+                                  fit: BoxFit.fill,),
                                 Image.asset(
                                   'assets/cartsinibiz1.png', height: 150.0,
-                                  fit: BoxFit.cover,),
+                                  fit: BoxFit.fill,),
 
                               ],
                             ),
@@ -280,7 +415,6 @@ class _BizIdxPageState extends State<BizPage> {
     if(tabs_menu.length == 0) {
       return Container();
     }else{
-
       return SliverGrid(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
@@ -289,28 +423,28 @@ class _BizIdxPageState extends State<BizPage> {
         delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
           var data = tabs_menu[index];
           return Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(7)),
-              ),
-              child: Card(
-                elevation: 0,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
-                child: InkWell(
-                  onTap: () {
-                    widget.tabcontroler.animateTo(data.id);
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      image: DecorationImage(
-                        image: AssetImage(data.imgPath),
-                        fit: BoxFit.fitWidth,
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(7)),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(7)),
+            ),
+            child: Card(
+              elevation: 0,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
+              child: InkWell(
+                onTap: () {
+                  widget.tabcontroler.animateTo(data.id);
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    image: DecorationImage(
+                      image: AssetImage(data.imgPath),
+                      fit: BoxFit.fitWidth,
                     ),
+                    borderRadius: BorderRadius.all(Radius.circular(7)),
                   ),
                 ),
-              )
+              ),
+            )
           );
         }, childCount: tabs_menu.length,
         ),
@@ -419,6 +553,89 @@ class _BizIdxPageState extends State<BizPage> {
           );
         }
     );
+  }
+
+  Widget myPopMenu() {
+    return PopupMenuButton(
+        onSelected: (value) {
+          print("You have selected " + value.toString());
+          /*Fluttertoast.showToast(
+              msg: "You have selected " + value.toString(),
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.black,
+              textColor: Colors.white,
+              fontSize: 16.0
+          );*/
+        },
+        itemBuilder: (context) => [
+          PopupMenuItem(
+              value: 1,
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(2, 2, 8, 2),
+                    child: Icon(Icons.print),
+                  ),
+                  Text('Print')
+                ],
+              )),
+          PopupMenuItem(
+              value: 2,
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(2, 2, 8, 2),
+                    child: Icon(Icons.share),
+                  ),
+                  Text('Share')
+                ],
+              )),
+          PopupMenuItem(
+              value: 3,
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(2, 2, 8, 2),
+                    child: Icon(Icons.add_circle),
+                  ),
+                  Text('Add')
+                ],
+              )),
+        ]);
+  }
+
+  logoutUser(BuildContext context, MainScopedModel model) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String logtype = prefs.getString('login_type');
+
+    Map<String, String> headers = await getHeaders();
+    http.get(Constants.apiLogout, headers: headers).then((response) {
+      prefs.remove('token');
+      model.loggedInUser();
+    });
+
+    if(logtype == '1') {
+      _googleSignIn.signOut();
+    }else if(logtype == '2') {
+      facebookLogin.logOut();
+    }
+
+    Navigator.of(context).pushReplacementNamed("/Main");
+  }
+
+  Future<Map<String, String>> getHeaders() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'token-type': 'Bearer',
+      'ng-api': 'true',
+      'auth-token': prefs.getString('token') == null ? Constants.tokenGuest : prefs.getString('token'),
+      'Guest-Order-Token': Constants.tokenGuest
+    };
+    return headers;
   }
 
 }

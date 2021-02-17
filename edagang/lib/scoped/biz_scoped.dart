@@ -41,8 +41,9 @@ void addToCompanyList(Company lscompany) {
   _companylist.add(lscompany);
 }
 
-bool _isLoading = true;
-bool get isLoading => _isLoading;
+
+bool _isLoadingCo = false;
+bool get isLoadingCo => _isLoadingCo;
 
 Future<dynamic> _getBizcat() async {
   var response = await http.get(
@@ -225,9 +226,9 @@ Future<dynamic> _getCompanylist() async {
 }
 
 Future fetchCompanyList() async {
-
   companylist.clear();
   notifyListeners();
+  _isLoadingCo = true;
   var dataFromResponse = await _getCompanylist();
   print('BIZ COMPANY LIST==============================================');
   print(dataFromResponse);
@@ -242,7 +243,7 @@ Future fetchCompanyList() async {
     addToCompanyList(companies);
   },
   );
-
+  _isLoadingCo = false;
   notifyListeners();
 }
 

@@ -22,43 +22,39 @@ class SquareButton extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-
         Card(
           elevation: 1.5,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(7.0),
+            borderRadius: BorderRadius.circular(50.0),
           ),
-          child: ClipPath(
-            clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7))),
-            child: Center(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(7.0),
-                child: Container(
-                  decoration: new BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(7)),
-                  ),
-                  width: lebar,
-                  height: tinggi,
-                  child: Card(
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
-                    child: Image(image: icon.image, ),
-                  ),
-                  /*child: CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    borderRadius: BorderRadius.circular(8.0),
-                    onPressed: () {},
-                    color: Colors.transparent,
-                    child: Image(image: icon.image, ),
-                  ),*/
-                )
+
+          child: Center(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(50.0),
+              child: Container(
+                decoration: new BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  //borderRadius: BorderRadius.all(Radius.circular(7)),
+                ),
+                width: lebar,
+                height: tinggi,
+                child: Card(
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
+                  child: Image(image: icon.image, height: 62, width: 62,),
+                ),
+                /*child: CupertinoButton(
+                padding: EdgeInsets.zero,
+                borderRadius: BorderRadius.circular(8.0),
+                onPressed: () {},
+                color: Colors.transparent,
+                child: Image(image: icon.image, ),
+                ),*/
               )
             )
           )
         ),
-
-
 
         SizedBox(
           height: 8.0,

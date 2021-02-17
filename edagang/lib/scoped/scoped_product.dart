@@ -288,7 +288,7 @@ class ProductScopedModel extends Model {
           promoPrice: newProduct["promo_price"].toString() != null ? newProduct["promo_price"].toString() : '0.00', // after migration -> int to string
           delivery: newProduct["delivery_included"],
           ispromo: newProduct['ispromo'].toString(), // after migration -> int to string
-          image: Constants.urlImage+newProduct["main_image"],
+          image: Constants.urlImage+newProduct["main_image"].toString(),
           merchant_id: newProduct['merchant_id'],
           merchant_name: newProduct['merchant']['company_name'],
           reviews: reviewsList,

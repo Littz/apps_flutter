@@ -153,19 +153,20 @@ class _ShopCartPageState extends State<ShopCartPage> {
               children: <Widget>[
                 new Text(
                   'My Cart ',
-                  style: TextStyle(
-                    color: Color(0xff202020),
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: "Quicksand",
+                  style: GoogleFonts.lato(
+                    textStyle: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,),
                   ),
                 ),
                 new Text(
                   '('+model.getCartotal().toString()+')',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: "Quicksand",
+                  style: GoogleFonts.lato(
+                    textStyle: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      fontStyle: FontStyle.italic,
+                    ),
                   ),
                 ),
               ]
@@ -489,7 +490,7 @@ class _ShopCartPageState extends State<ShopCartPage> {
     return ScopedModelDescendant(builder: (BuildContext context, Widget child, MainScopedModel model){
       return Container(
         width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.all(5.0),
+        padding: EdgeInsets.all(2.5),
         height: 56.0,
         child: Row(
           mainAxisSize: MainAxisSize.max,
@@ -497,7 +498,7 @@ class _ShopCartPageState extends State<ShopCartPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Expanded(
-              flex: 3,
+              flex: 2,
               child: Container(
                 padding: const EdgeInsets.only(top: 5, right: 10),
                 alignment: Alignment.bottomRight,
@@ -529,32 +530,33 @@ class _ShopCartPageState extends State<ShopCartPage> {
                       flex: 2,
                       child: Container(
                         alignment: Alignment.centerRight,
-                        child: Row(
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             Container(
+                              alignment: Alignment.topRight,
                               child: Text(
-                                "Subtotal :",
+                                "Subtotal",
                                 style: GoogleFonts.lato(
-                                  textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600,),
+                                  textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500,),
                                 ),
                                 textAlign: TextAlign.start,
                               ),
                             ),
-                            SizedBox(width: 10,),
                             Container(
+                              alignment: Alignment.topRight,
                               child: RichText(
                                 text: TextSpan(
                                   text: 'RM',
                                   style: GoogleFonts.lato(
-                                    textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black),
+                                    textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.black),
                                   ),
                                   children: <TextSpan>[
-                                    TextSpan(text: model.totalNett().toStringAsFixed(2),
+                                    TextSpan(text: model.getTotalCost().toStringAsFixed(2),
                                         style: GoogleFonts.lato(
-                                          textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.black),
+                                          textStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: Colors.black),
                                         ),
                                     ),
                                   ],
@@ -581,7 +583,7 @@ class _ShopCartPageState extends State<ShopCartPage> {
 
                     SharedPreferences prefs = await SharedPreferences.getInstance();
                     prefs.setStringList('list_cartid', cartIdListString);
-                    prefs.setString('courier_caj', model.cartList[0].courier_charges);
+                    prefs.setDouble('subtotal', model.getTotalCost());
                     Navigator.push(context, SlideRightRoute(page: CheckoutActivity()));
                     //Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => CheckoutActivity()));
                   },

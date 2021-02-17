@@ -10,9 +10,7 @@ class DigitalPage extends StatefulWidget {
 class _DigitalPageState extends State<DigitalPage> {
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           elevation: 0.0,
           iconTheme: IconThemeData(
@@ -36,7 +34,7 @@ class _DigitalPageState extends State<DigitalPage> {
               ),
             ),
           ),
-          bottom: TabBar(
+          /*bottom: TabBar(
               labelColor: Colors.redAccent,
               unselectedLabelColor: Colors.white,
               indicatorSize: TabBarIndicatorSize.label,
@@ -67,15 +65,30 @@ class _DigitalPageState extends State<DigitalPage> {
                   ),
                 ),
               ]
-          ),
+          ),*/
         ),
-        body: TabBarView(
+        backgroundColor: Colors.white,
+        body: CustomScrollView(slivers: <Widget>[
+          SliverToBoxAdapter(
+            child: Container(
+              padding: EdgeInsets.all(8.0),
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(),
+                  ]
+              ),
+            ),
+          )
+        ]),
+        /*TabBarView(
           children: [
             Center( child: Text("Page 1")),
             Center( child: Text("Page 2")),
           ],
-        ),
-      ),
+        ),*/
     );
   }
 }

@@ -1,8 +1,12 @@
 import 'package:edagang/widgets/blur_icon.dart';
+import 'package:edagang/widgets/custom_tabs.dart';
+import 'package:edagang/widgets/product_grid_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:io' show Platform;
 import 'package:url_launcher/url_launcher.dart';
+
 
 
 class BizVrListPage extends StatefulWidget {
@@ -126,210 +130,96 @@ class _BizVrListPageState extends State<BizVrListPage> {
                   padding: EdgeInsets.all(8.0),
                   width: MediaQuery.of(context).size.width,
                   child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                            padding: EdgeInsets.only(bottom: 5),
-                            width: MediaQuery.of(context).size.width,
-                            height: 175,
-                            child: InkWell(
-                                onTap: () async {
-                                  final String url = 'https://smartbiz.e-dagang.asia/vr/mogsc/office/index.htm';
-                                  if (await canLaunch(url)) await launch(
-                                    url,
-                                    forceSafariVC: false,
-                                    forceWebView: false,
-                                  );
-                                },
-                                child: Card(
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                                    elevation: 0.0,
-                                    child: Container(
-                                        decoration: new BoxDecoration(
-                                          color: Colors.grey.shade200,
-                                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.grey.shade500,
-                                              blurRadius: 2.0,
-                                              spreadRadius: 0.0,
-                                              offset: Offset(2.0, 2.0), // shadow direction: bottom right
-                                            )
-                                          ],
-                                        ),
-                                        child: ClipPath(
-                                          clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-                                          child: Image.asset(
-                                            'assets/vr_mogsc.png', fit: BoxFit.fill,
-                                            height: 175,
-                                          ),
-                                        )
-                                    )
-                                )
-                            )
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 265,
+                        decoration: new BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
                         ),
-                        //Divider(),
-                        Container(
-                            padding: EdgeInsets.only(bottom: 5),
-                            width: MediaQuery.of(context).size.width,
-                            height: 175,
-                            child: InkWell(
-                                onTap: () async {
-                                  final String url = 'https://smartbiz.e-dagang.asia/vr/shapadu/office/index.htm';
-                                  if (await canLaunch(url)) await launch(
-                                    url,
-                                    forceSafariVC: false,
-                                    forceWebView: false,
-                                  );
-                                },
-                                child: Card(
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                                    elevation: 0.0,
-                                    child: Container(
-                                        decoration: new BoxDecoration(
-                                          color: Colors.grey.shade200,
-                                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.grey.shade500,
-                                              blurRadius: 2.0,
-                                              spreadRadius: 0.0,
-                                              offset: Offset(2.0, 2.0), // shadow direction: bottom right
-                                            )
-                                          ],
-                                        ),
-                                        child: ClipPath(
-                                          clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-                                          child: Image.asset(
-                                            'assets/vr_shapadu.png', fit: BoxFit.fill,
-                                            height: 175,
-                                          ),
-                                        )
-                                    )
-                                )
-                            )
+                        child: InkWell(
+                          onTap: () async {
+                            if(Platform.isAndroid) {
+                              CustomTabs.launchURL(context, 'https://smartbiz.e-dagang.asia/vr/mogsc/office/index.htm');
+                            }else{
+                              final String url = 'https://smartbiz.e-dagang.asia/vr/mogsc/office/index.htm';
+                              if (await canLaunch(url)) await launch(
+                                url,
+                                forceSafariVC: false,
+                                forceWebView: false,
+                              );
+                            }
+                          },
+                          child: VrCardItem(
+                            vrimg: Image.asset('assets/vr_mogsc.png'),
+                            label: 'MOGSC',
+                            sublabel: 'Malaysian Oil & Gas Services Council',
+                            footer: 'Virtual Office',
+                          ),
                         ),
-                        Container(
-                            padding: EdgeInsets.only(bottom: 5),
-                            width: MediaQuery.of(context).size.width,
-                            height: 175,
-                            child: InkWell(
-                                onTap: () async {
-                                  final String url = 'https://smartbiz.e-dagang.asia/vr/cekap/office/index.htm';
-                                  if (await canLaunch(url)) await launch(
-                                    url,
-                                    forceSafariVC: false,
-                                    forceWebView: false,
-                                  );
-                                },
-                                child: Card(
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                                    elevation: 0.0,
-                                    child: Container(
-                                        decoration: new BoxDecoration(
-                                          color: Colors.grey.shade200,
-                                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.grey.shade500,
-                                              blurRadius: 2.0,
-                                              spreadRadius: 0.0,
-                                              offset: Offset(2.0, 2.0), // shadow direction: bottom right
-                                            )
-                                          ],
-                                        ),
-                                        child: ClipPath(
-                                          clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-                                          child: Image.asset(
-                                            'assets/vr_cekap.png', fit: BoxFit.fill,
-                                            height: 175,
-                                          ),
-                                        )
-                                    )
-                                )
-                            )
-                        ),
-                      ]
-                  ),
-                ),
-              )
-            ]),
-            CustomScrollView(slivers: <Widget>[
-              SliverToBoxAdapter(
-                child: Container(
-                  padding: EdgeInsets.all(8.0),
-                  width: MediaQuery.of(context).size.width,
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                            padding: EdgeInsets.only(bottom: 5),
-                            width: MediaQuery.of(context).size.width,
-                            height: 175,
-                            child: InkWell(
-                                onTap: () async {
-                                  final String url = 'https://smartbiz.e-dagang.asia/vr/artgallery/hanimhassan/index.htm';
-                                  if (await canLaunch(url)) await launch(
-                                    url,
-                                    forceSafariVC: false,
-                                    forceWebView: false,
-                                  );
-                                },
-                                child: Card(
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                                    elevation: 0.0,
-                                    child: Container(
-                                        decoration: new BoxDecoration(
-                                          color: Colors.grey.shade200,
-                                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.grey.shade500,
-                                              blurRadius: 2.0,
-                                              spreadRadius: 0.0,
-                                              offset: Offset(2.0, 2.0), // shadow direction: bottom right
-                                            )
-                                          ],
-                                        ),
-                                        child: ClipPath(
-                                          clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-                                          child: Image.asset(
-                                            'assets/vr_hanim.png', fit: BoxFit.fill,
-                                            height: 175,
-                                          ),
-                                        )
-                                    )
-                                )
-                            )
-                        ),
-                        /*Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: 195,
-                            child: InkWell(
-                                onTap: () {},
-                                child: Card(
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                                    elevation: 0.0,
-                                    child: Container(
-                                        decoration: new BoxDecoration(
-                                          color: Colors.grey.shade200,
-                                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                                        ),
-                                        child: ClipPath(
-                                          clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-                                          child: Image.asset(
-                                            'assets/vrgallery2.png', fit: BoxFit.fill,
-                                            height: 195,
-                                          ),
-                                        )
-                                    )
-                                )
-                            )
-                        ),*/
+                      ),
 
-                      ]
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 265,
+                        decoration: new BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                        ),
+                        child: InkWell(
+                          onTap: () async {
+                            if(Platform.isAndroid) {
+                              CustomTabs.launchURL(context, 'https://smartbiz.e-dagang.asia/vr/shapadu/office/index.htm');
+                            }else{
+                              final String url = 'https://smartbiz.e-dagang.asia/vr/shapadu/office/index.htm';
+                              if (await canLaunch(url)) await launch(
+                                url,
+                                forceSafariVC: false,
+                                forceWebView: false,
+                              );
+                            }
+                          },
+                          child: VrCardItem(
+                            vrimg: Image.asset('assets/vr_shapadu.png'),
+                            label: 'SHAPADU Energy Services',
+                            sublabel: '',
+                            footer: 'Virtual Office',
+                          ),
+                        ),
+                      ),
+
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 265,
+                        decoration: new BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                        ),
+                        child: InkWell(
+                          onTap: () async {
+                            if(Platform.isAndroid) {
+                              CustomTabs.launchURL(context, 'https://smartbiz.e-dagang.asia/vr/cekap/office/index.htm');
+                            }else{
+                              final String url = 'https://smartbiz.e-dagang.asia/vr/cekap/office/index.htm';
+                              if (await canLaunch(url)) await launch(
+                                url,
+                                forceSafariVC: false,
+                                forceWebView: false,
+                              );
+                            }
+                          },
+                          child: VrCardItem(
+                            vrimg: Image.asset('assets/vr_cekap.png'),
+                            label: 'Cekap Technical Services Sdn Bhd',
+                            sublabel: '',
+                            footer: 'Virtual Office',
+                          ),
+                        ),
+                      ),
+                    ]
                   ),
                 ),
               )
@@ -340,43 +230,53 @@ class _BizVrListPageState extends State<BizVrListPage> {
                   padding: EdgeInsets.all(8.0),
                   width: MediaQuery.of(context).size.width,
                   child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                            padding: EdgeInsets.only(bottom: 5),
-                            width: MediaQuery.of(context).size.width,
-                            height: 175,
-                            child: InkWell(
-                                onTap: () {},
-                                child: Card(
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                                    elevation: 0.0,
-                                    child: Container(
-                                        decoration: new BoxDecoration(
-                                          color: Colors.grey.shade200,
-                                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.grey.shade500,
-                                              blurRadius: 2.0,
-                                              spreadRadius: 0.0,
-                                              offset: Offset(2.0, 2.0), // shadow direction: bottom right
-                                            )
-                                          ],
-                                        ),
-                                        child: ClipPath(
-                                          clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-                                          child: Image.asset(
-                                            'assets/vrgallery.png', fit: BoxFit.fill,
-                                            height: 175,
-                                          ),
-                                        )
-                                    )
-                                )
-                            )
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 265,
+                        decoration: new BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
                         ),
-                      ]
+                        child: InkWell(
+                          onTap: () async {
+                            if(Platform.isAndroid) {
+                              CustomTabs.launchURL(context, 'https://smartbiz.e-dagang.asia/vr/artgallery/hanimhassan/index.htm');
+                            }else{
+                              final String url = 'https://smartbiz.e-dagang.asia/vr/artgallery/hanimhassan/index.htm';
+                              if (await canLaunch(url)) await launch(
+                                url,
+                                forceSafariVC: false,
+                                forceWebView: false,
+                              );
+                            }
+                          },
+                          child: VrCardItem(
+                            vrimg: Image.asset('assets/vr_hanim.png'),
+                            label: 'Hanim Hassan',
+                            sublabel: 'Impressionist Art Gallore',
+                            footer: 'Virtual Gallery',
+                          ),
+                        ),
+                      ),
+                    ]
+                  ),
+                ),
+              )
+            ]),
+            CustomScrollView(slivers: <Widget>[
+              SliverToBoxAdapter(
+                child: Container(
+                  padding: EdgeInsets.all(8.0),
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(),
+                    ]
                   ),
                 ),
               )
@@ -386,6 +286,8 @@ class _BizVrListPageState extends State<BizVrListPage> {
       ),
     );
   }
+
+
 }
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {

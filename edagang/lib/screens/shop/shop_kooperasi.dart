@@ -64,12 +64,12 @@ class _KooperasiPageState extends State<KooperasiPage> {
           backgroundColor: Colors.grey.shade100,
           body: CustomScrollView(slivers: <Widget>[
             SliverPadding(
-              padding: EdgeInsets.all(7),
+              padding: EdgeInsets.all(10),
               sliver: SliverGrid(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  mainAxisSpacing: 7.0,
-                  crossAxisSpacing: 7.0,
+                  mainAxisSpacing: 1.5,
+                  crossAxisSpacing: 1.5,
                   childAspectRatio: 0.815,
                 ),
                 delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
@@ -78,9 +78,87 @@ class _KooperasiPageState extends State<KooperasiPage> {
                     onTap: () {
                       Navigator.push(context, SlideRightRoute(page: ProductKoopPage(data.id.toString(),data.associateName)));
                     },
+                    child: Card(
+                      elevation: 1.5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: ClipPath(
+                        clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                        child: Center(
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8.0),
+                                child: Container(
+                                  padding: const EdgeInsets.all(0.0),
+                                  color: Colors.white,
+                                  child: Card(
+                                    color: Colors.white,
+                                    elevation: 0.0,
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                                    child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Expanded(
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.transparent,
+                                                  borderRadius: BorderRadius.circular(8)
+                                              ),
+                                              child: data.associateLogo == null ? Image.asset(
+                                                'assets/icons/ic_launcher_new.png', height: 80.0, width: 80.0,
+                                                fit: BoxFit.cover,)
+                                                  : CachedNetworkImage(
+                                                fit: BoxFit.fitWidth,
+                                                alignment: Alignment.topCenter,
+                                                imageUrl: Constants.urlImage + data.associateLogo ?? '',
+                                                imageBuilder: (context, imageProvider) => Container(
+                                                  decoration: BoxDecoration(
+                                                      image: DecorationImage(
+                                                        image: imageProvider,
+                                                        fit: BoxFit.fitWidth,
+                                                      ),
+                                                      borderRadius: BorderRadius.only(
+                                                          topLeft: Radius.circular(8.0),
+                                                          topRight: Radius.circular(8.0)
+                                                      )
+                                                  ),
+                                                ),
+                                                placeholder: (context, url) => Container(
+                                                  color: Colors.grey.shade200,
+                                                ),
+                                                errorWidget: (context, url, error) => Icon(Icons.image, size: 36,),
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.all(7.0),
+                                            child: Text(data.associateName,
+                                              textAlign: TextAlign.center,
+                                              maxLines: 3,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: GoogleFonts.lato(
+                                                textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
+                                              ),
+                                            ),
+                                          ),
+                                        ]
+                                    ),
+                                  ),
+                                )
+                            )
+                        ),
+                      ),
+                    ),
+                  );
+
+                  /*return InkWell(
+                    onTap: () {
+                      Navigator.push(context, SlideRightRoute(page: ProductKoopPage(data.id.toString(),data.associateName)));
+                    },
                     child: Container(
                       decoration: BoxDecoration(
-                        //border: Border.all(color: Colors.grey[600]),
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: [
@@ -88,7 +166,7 @@ class _KooperasiPageState extends State<KooperasiPage> {
                             color: Colors.grey.shade500,
                             blurRadius: 2.0,
                             spreadRadius: 0.0,
-                            offset: Offset(2.0, 2.0), // shadow direction: bottom right
+                            offset: Offset(2.0, 2.0),
                           )
                         ],
                       ),
@@ -120,27 +198,28 @@ class _KooperasiPageState extends State<KooperasiPage> {
                                 ),
                                 placeholder: (context, url) => Container(
                                   color: Colors.grey.shade200,
-                                  //child: CupertinoActivityIndicator(radius: 15,),
                                 ),
                                 errorWidget: (context, url, error) => Icon(Icons.image, size: 36,),
                               ),
                             ),
                           ),
-                          SizedBox(height: 8.0),
+
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 8.0),
+                            padding: EdgeInsets.all(7.0),
                             child: Text(data.associateName,
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.lato(
-                                  textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600,),
-                                ),
+                              textAlign: TextAlign.center,
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
+                              ),
                             ),
                           ),
-                          SizedBox(height: 8.0)
+
                         ]
                       )
                     ),
-                  );
+                  );*/
                 },
                   childCount: model.kooperasi.length,
                 ),

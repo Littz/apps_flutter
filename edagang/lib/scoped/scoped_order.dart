@@ -9,13 +9,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 mixin OrderScopedModel on Model {
   List<OdrHistory> historyOrders = [];
-  bool _isLoadingOrder = true;
+  bool _isLoadingOrder = false;
   int totalOrder;
+  String orderSts;
 
   bool get isLoadingOrder => _isLoadingOrder;
 
   int getTotalOrder() {
     return totalOrder;
+  }
+
+  String getStatus() {
+    return orderSts;
   }
 
   List<OdrHistory> get _historyOrders => historyOrders;
@@ -36,8 +41,8 @@ mixin OrderScopedModel on Model {
   }
 
   Future fetchOrderHistoryResponse() async {
-    _isLoadingOrder = true;
     _historyOrders.clear();
+    _isLoadingOrder = true;
     notifyListeners();
     totalOrder = 0;
     var dataFromResponse = await _getOrdersJson();
@@ -75,7 +80,7 @@ mixin OrderScopedModel on Model {
             courier_id: ordergrp['courier_id'].toString(), // after migration -> int to string
             tracking_no: ordergrp['tracking_no'].toString(), // after migration -> int to string
             merchant_name: ordergrp['merchant']['company_name'],
-            courier_company: ordergrp['courier_company'],
+            courier_company: ordergrp['courier_company'] != null ? ordergrp['courier_company']['name'] : null,
             order_items: orderItems,
           ),
         );

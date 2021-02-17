@@ -28,8 +28,9 @@ class CheckoutActivityState extends State<CheckoutActivity> {
   int _addrId = 0;
   String _bank = '';
   int _bankId = 0;
+  double subtot = 0.0;
   bool _btnEnabled = false;
-  var listCartId = new List<int>();
+  //var listCartId = new List<String>();
 
   List<String> cartidList = new List();
   List<int> _cartidList = new List();
@@ -38,10 +39,10 @@ class CheckoutActivityState extends State<CheckoutActivity> {
   @override
   void initState() {
     super.initState();
+    //listCartId = List();
     _loadCartId();
     _loadAddress();
     _loadBankName();
-
   }
 
   void showAlertToast(String mesej) {
@@ -60,6 +61,7 @@ class CheckoutActivityState extends State<CheckoutActivity> {
       _cartidList = cartidList.map((i)=> int.parse(i)).toSet().toList();
       print('Cart Id list => $_cartidList');
       print(_cartidList.length);
+      subtot = prefs.getDouble('subtotal');
     });
   }
 
@@ -76,6 +78,8 @@ class CheckoutActivityState extends State<CheckoutActivity> {
           borderRadius: BorderRadius.all(Radius.circular(8)),
         );
       } else {
+        //model.cartResume[index].courier_charges = '0.00';
+        //model.totalCourierR = 0.00;
         boxDecoration = new BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -89,7 +93,7 @@ class CheckoutActivityState extends State<CheckoutActivity> {
                 child: Column(
                   children: <Widget>[
                     new Container(
-                      width: 235,
+                      width: 255,
                       //padding: const EdgeInsets.all(7),
                       margin: EdgeInsets.only(left: 8, top: 5, right: 8, bottom: 3.0),
                       child: new Text(
@@ -101,7 +105,7 @@ class CheckoutActivityState extends State<CheckoutActivity> {
                       ),
                     ),
                     new Container(
-                        width: 235,
+                        width: 255,
                         //padding: const EdgeInsets.only(left: 7, right: 7, bottom: 7.0),
                         margin: EdgeInsets.only(left: 8, right: 8, bottom: 5.0),
                         child: Row(
@@ -131,7 +135,7 @@ class CheckoutActivityState extends State<CheckoutActivity> {
                         )
                     ),
                     new Container(
-                      width: 235,
+                      width: 255,
                       //padding: const EdgeInsets.all(7),
                       margin: EdgeInsets.only(left: 8, right: 8, bottom: 3.0),
                       child: Column(
@@ -201,7 +205,7 @@ class CheckoutActivityState extends State<CheckoutActivity> {
                           child: Padding(
                             padding: EdgeInsets.only(bottom: 7.0),
                             child: Container(
-                                width: 235,
+                                width: 255,
                                 margin: EdgeInsets.only(left: 8, right: 8, top: 5.0),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -251,7 +255,7 @@ class CheckoutActivityState extends State<CheckoutActivity> {
       index = index + 1;
       final gestureDetector = GestureDetector(
           child: Card(
-            elevation: 3.0,
+            elevation: 2.0,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0),),
             child: container,
           ),
@@ -269,8 +273,8 @@ class CheckoutActivityState extends State<CheckoutActivity> {
             setState(() {
               selectedAddr = addr;
               print("addrID >>> "+prefs.getInt('addr_id').toString());
+              model.updShipping(addr_id: addr.id);
             });
-            model.updateCourier();
           }
       );
       return gestureDetector;
@@ -393,125 +397,158 @@ class CheckoutActivityState extends State<CheckoutActivity> {
             ),
           ),
         ),
-        backgroundColor: Colors.grey.shade300,
+        backgroundColor: Colors.grey.shade100,
         body: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 7, right: 7),
-                      child: Text(
-                        'Shipping Address.',
-                        style: GoogleFonts.lato(
-                          textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600,),
-                        ),
-                      ),
-                    )
-                ),
-                Container(
-                  width: _deviceSize.width,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(left: 7, top: 1, ),
-                        child: Text(
-                          'Please select shipping address.',
-                          style: GoogleFonts.lato(
-                            textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400,),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(right: 7, top: 3,),
-                        child: SizedBox(
-                          height: 20,
-                          child: RaisedButton(
-                            elevation: 0,
-                            color: Colors.white,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                            onPressed: () {Navigator.push(context,MaterialPageRoute(builder: (context) => AddNewAddress(frm: 'chk')));},
-                            child: Text("New Address", textAlign: TextAlign.center,
-                              style: GoogleFonts.lato(
-                                textStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.orangeAccent.shade700),
-                              ),
-                            ),
-                          )
-                        ),
-                      ),
-
-                    ],
-                  ),
-                ),
-
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 7.0, vertical: 7.0),
-                  height: MediaQuery.of(context).size.height * 0.26,
-                  child: ListView(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    children: _buildAddressListItems(model),
-                  ),
-                ),
-
-                SizedBox(height: 30,),
-
-                Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 7, right: 7),
-                      child: Text(
-                        'Online Banking.',
-                        style: GoogleFonts.lato(
-                          textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600,),
-                        ),
-                      ),
-                    )
-                ),
-                Container(
-                  width: _deviceSize.width,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(left: 7, top: 1, ),
-                        child: Text(
-                          'Please select online banking.',
-                          style: GoogleFonts.lato(
-                            textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400,),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 7.0, vertical: 7.0),
-                  height: MediaQuery.of(context).size.height * 0.15,
-                  child: ListView(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    children: _buildBankingListItems(model),
-                  ),
-                ),
-                SizedBox(height: 0,),
-                Padding(
-                  padding: EdgeInsets.all(7),
-                  child: new Text('',
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 7, right: 7),
+                  child: Text(
+                    'Shipping Address',
                     style: GoogleFonts.lato(
-                      textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w500,),
+                      textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600,),
                     ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 5,
+                  ),
+                )
+              ),
+              Container(
+                width: _deviceSize.width,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(left: 7, top: 1, ),
+                      child: Text(
+                        'Please select shipping address.',
+                        style: GoogleFonts.lato(
+                          textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400,),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(right: 7, top: 3,),
+                      child: SizedBox(
+                        height: 20,
+                        child: RaisedButton(
+                          elevation: 0,
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                          onPressed: () {Navigator.push(context,MaterialPageRoute(builder: (context) => AddNewAddress(frm: 'chk')));},
+                          child: Text("New Address", textAlign: TextAlign.center,
+                            style: GoogleFonts.lato(
+                              textStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.orangeAccent.shade700),
+                            ),
+                          ),
+                        )
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 7.0, vertical: 7.0),
+                height: model.addrList.length > 0 ? MediaQuery.of(context).size.height * 0.22 : MediaQuery.of(context).size.height * 0.14,
+                child: model.addrList.length > 0 ? ListView(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  children: _buildAddressListItems(model),
+                ) : GestureDetector(
+                  onTap: () {Navigator.push(context,MaterialPageRoute(builder: (context) => AddNewAddress(frm: 'chk')));},
+                  child: Container(
+                    margin: EdgeInsets.only(left: 7.0, right: 7.0),
+                    width: 255,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      border: new Border.all(
+                          color: Colors.orangeAccent.shade400,
+                          width: 1.0,
+                          style: BorderStyle.solid
+                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: Colors.orangeAccent.shade100,
+                      boxShadow: [
+                        BoxShadow(color: Colors.grey, blurRadius: 5.0),
+                      ],
+                    ),
+                    child: Center(
+                      child: new Text(
+                        '+ Add Address',
+                        style: GoogleFonts.lato(
+                          textStyle: TextStyle(color: Colors.orangeAccent.shade700, fontSize: 16, fontWeight: FontWeight.w700,),
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                   ),
                 ),
-              ],
-            )
+              ),
+
+              SizedBox(height: 16,),
+
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 7, right: 7),
+                    child: Text(
+                      'Ordered Item(s)',
+                      style: GoogleFonts.lato(
+                        textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600,),
+                      ),
+                    ),
+                  )
+              ),
+              orderedItem(model),
+
+              SizedBox(height: 16,),
+
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 7, right: 7),
+                  child: Text(
+                    'Payment Method',
+                    style: GoogleFonts.lato(
+                      textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600,),
+                    ),
+                  ),
+                )
+              ),
+              Container(
+                width: _deviceSize.width,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(left: 7, top: 1, ),
+                      child: Text(
+                        'FPX banking.',
+                        style: GoogleFonts.lato(
+                          textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400,),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 7.0, vertical: 7.0),
+                height: MediaQuery.of(context).size.height * 0.15,
+                child: ListView(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  children: _buildBankingListItems(model),
+                ),
+              ),
+
+            ],
+          )
         ),
         bottomNavigationBar: _buildBottomNavigationBar(),
       );
@@ -522,19 +559,18 @@ class CheckoutActivityState extends State<CheckoutActivity> {
     return ScopedModelDescendant(builder: (BuildContext context, Widget child, MainScopedModel model){
       return Container(
         width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.only(left: 2.0, right: 2.0),
-        //margin: EdgeInsets.all(4.0),
-        height: 48.0,
+        padding: EdgeInsets.all(2.5),
+        height: 56.0,
         child: Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Expanded(
-              flex: 3,
+              flex: 2,
               child: Container(
-                  padding: const EdgeInsets.only(top: 5, right: 10),
-                  alignment: Alignment.bottomRight,
+                  padding: const EdgeInsets.only(left: 5, top: 5, right: 10),
+                  alignment: Alignment.centerLeft,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -543,112 +579,77 @@ class CheckoutActivityState extends State<CheckoutActivity> {
                       Expanded(
                         flex: 1,
                         child: Container(
-                          alignment: Alignment.bottomRight,
+                          alignment: Alignment.centerLeft,
                           child: model.getTotalCourier() != null ? Text(
-                            "Shipping :  RM${model.getTotalCourier().toStringAsFixed(2)}",
+                            "Subtotal :  RM" + model.getTotalCostR().toStringAsFixed(2),
                             textAlign: TextAlign.start,
                             style: GoogleFonts.lato(
-                              textStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.grey.shade500),
+                              textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500,),
                             ),
                           ) : Text(
-                            "Shipping :  RM0.00",
+                            "Subtotal :  RM0.00",
                             textAlign: TextAlign.start,
                             style: GoogleFonts.lato(
-                              textStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.grey.shade500),
+                              textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500,),
                             ),
                           ),
                         ),
                       ),
                       Expanded(
-                          flex: 2,
-                          child: Container(
-                              alignment: Alignment.centerRight,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Container(
-                                    child: Text(
-                                      "Total :",
-                                      style: GoogleFonts.lato(
-                                        textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600,),
-                                      ),
-                                      textAlign: TextAlign.start,
-                                    ),
-                                  ),
-                                  SizedBox(width: 10,),
-                                  Container(
-                                      child: RichText(
-                                        text: TextSpan(
-                                          text: 'RM',
-                                          style: GoogleFonts.lato(
-                                            textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black),
-                                          ),
-                                          children: <TextSpan>[
-                                            TextSpan(text: model.totalNett().toStringAsFixed(2),
-                                              style: GoogleFonts.lato(
-                                                textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.black),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        textAlign: TextAlign.start,
-                                      )
-                                  ),
-                                ],
-                              )
-                          )
+                        flex: 1,
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: model.getTotalCourier() != null ? Text(
+                            "Shipping :  RM" + model.getTotalCourierR().toStringAsFixed(2),
+                            textAlign: TextAlign.start,
+                            style: GoogleFonts.lato(
+                              textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500,),
+                            ),
+                          ) : Text(
+                            "Shipping :  RM0.00",
+                            textAlign: TextAlign.start,
+                            style: GoogleFonts.lato(
+                              textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500,),
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   )
               ),
-
-              /*Container(
-                margin: const EdgeInsets.only(right: 10),
-                alignment: Alignment.centerRight,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(bottom: 0),
-                      child: Text(
-                        "Total :",
+            ),
+            /*Expanded(
+              flex: 1,
+              child: Container(
+                  padding: const EdgeInsets.only(left: 5, top: 5, right: 5),
+                  alignment: Alignment.bottomRight,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "Total",
+                        textAlign: TextAlign.start,
                         style: GoogleFonts.lato(
-                          textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
+                          textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500,),
                         ),
                       ),
-                    ),
-                    SizedBox(width: 10,),
-                    Container(
-                        margin: EdgeInsets.only(bottom: 0),
-                        child: RichText(
-                          text: TextSpan(
-                            text: 'RM',
-                            style: GoogleFonts.lato(
-                              textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.black),
-                            ),
-                            children: <TextSpan>[
-                              TextSpan(text: model.totalNett().toStringAsFixed(2),
-                                  style: GoogleFonts.lato(
-                                    textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Colors.black),
-                                  ),
-                               ),
-                            ],
-                          ),
-                          textAlign: TextAlign.start,
-                        )
-                    ),
-                  ],
-                ),
-              ),*/
-            ),
+                      Text(
+                        "RM"+model.totalNettR().toStringAsFixed(2),
+                        textAlign: TextAlign.start,
+                        style: GoogleFonts.lato(
+                          textStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.w600,),
+                        ),
+                      ),
+                    ],
+                  )
+              ),
+            ),*/
             Expanded(
-              flex: 2,
+              flex: 3,
               child: Padding(
-                  padding: const EdgeInsets.all(5.0),
+                  padding: const EdgeInsets.all(3.0),
                   child: RaisedButton(
                     onPressed: () async{
                       var params = "";
@@ -668,10 +669,10 @@ class CheckoutActivityState extends State<CheckoutActivity> {
                       if(_addrId == null) {
                         showAlertToast('Please select address.');
                       } else if(_bankId == null){
-                        showAlertToast('Please select online banking.');
+                        showAlertToast('Please select fpx banking.');
                       }else{
-                        sharedPref.save('paid_amount', "RM${model.totalNett().toStringAsFixed(2)}");
-                        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => WebViewContainer(Constants.postCheckout+params, prefs.getString('token'), _bank, model.totalNett().toStringAsFixed(2), _addr )));
+                        sharedPref.save('paid_amount', "RM${model.totalNettR().toStringAsFixed(2)}");
+                        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => WebViewContainer(Constants.postCheckout+params, prefs.getString('token'), _bank, model.totalNettR().toStringAsFixed(2), _addr )));
                       }
                     },
                     color: Colors.green.shade600,
@@ -679,6 +680,26 @@ class CheckoutActivityState extends State<CheckoutActivity> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
+                          Container(
+                              padding: const EdgeInsets.only(right: 15),
+                              //alignment: Alignment.bottomRight,
+                              child: RichText(
+                                text: TextSpan(
+                                  text: 'RM',
+                                  style: GoogleFonts.lato(
+                                    textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white),
+                                  ),
+                                  children: <TextSpan>[
+                                    TextSpan(text: model.totalNettR().toStringAsFixed(2),
+                                      style: GoogleFonts.lato(
+                                        textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                textAlign: TextAlign.start,
+                              )
+                          ),
                           Text(
                             "Place Order",
                             style: GoogleFonts.lato(
@@ -698,4 +719,174 @@ class CheckoutActivityState extends State<CheckoutActivity> {
     });
   }
 
+  orderedItem(MainScopedModel model){
+    return Padding(
+        padding: const EdgeInsets.all(7),
+        child: ListView.builder(
+          shrinkWrap: true,
+          physics: ScrollPhysics(),
+          itemCount: model.cartResume.length,
+          itemBuilder: (context, index) {
+            var data = model.cartResume[index];
+            //listCartId.add(data.courier_charges);
+
+            return Container(
+              padding: EdgeInsets.all(2.0),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                        border: Border.all(color: Colors.grey.shade300, ),
+                      ),
+                      child: Column(
+                        children: <Widget>[
+                          Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                padding: EdgeInsets.all(1),
+                                child: Text(
+                                  data.company_name,
+                                  style: GoogleFonts.lato(
+                                    textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              )
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 5, right: 5),
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              physics: ClampingScrollPhysics(),
+                              itemCount: data.cart_products.length,
+                              itemBuilder: (context, index) {
+                                var cart = data.cart_products[index];
+                                var hrgOri = double.tryParse(cart.price);
+                                var hrgShip = double.tryParse(data.courier_charges);
+
+                                return Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.only(left: 2, top: 2, right: 5, bottom: 2),
+                                              width: 50,
+                                              height: 50,
+                                              child: ClipRRect(
+                                                  borderRadius: new BorderRadius.circular(5.0),
+                                                  child: CachedNetworkImage(
+                                                    placeholder: (context, url) => Container(
+                                                      width: 40,
+                                                      height: 40,
+                                                      color: Colors.transparent,
+                                                      child: CupertinoActivityIndicator(radius: 15,),
+                                                    ),
+                                                    imageUrl: cart.main_image,
+                                                    width: 30,
+                                                    height: 30,
+                                                    fit: BoxFit.cover,
+                                                  )
+                                              ),
+                                            ),
+                                            Expanded(
+                                              //padding: EdgeInsets.all(2),
+                                              child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+                                                Expanded(
+                                                  child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: <Widget>[
+                                                        Text(
+                                                          cart.name,
+                                                          style: GoogleFonts.lato(
+                                                            textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w500,),
+                                                          ),
+                                                          maxLines: 2,
+                                                          overflow: TextOverflow.ellipsis,
+                                                        ),
+                                                        /*Container(
+                                                          child: cart.ispromo == '1' ? Text(
+                                                            'Price:  RM' + double.parse(cart.promo_price).toStringAsFixed(2) + '  (Qty: ' + cart.quantity +')',
+                                                            style: GoogleFonts.lato(
+                                                              textStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.w500,),
+                                                            ),
+                                                          ) : Text(
+                                                            'Price:  RM' +hrgOri.toStringAsFixed(2) + '  (Qty: ' + cart.quantity +')',
+                                                            style: GoogleFonts.lato(
+                                                              textStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.w500,),
+                                                            ),
+                                                          ),
+                                                        ),*/
+                                                        Container(
+                                                          child: Row(
+                                                              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                              //crossAxisAlignment: CrossAxisAlignment.start,
+                                                              //mainAxisSize: MainAxisSize.max,
+                                                              children: [
+                                                                Expanded(
+                                                                  child: cart.ispromo == '1' ? Text(
+                                                                    'RM' + double.parse(cart.promo_price).toStringAsFixed(2),
+                                                                    style: GoogleFonts.lato(
+                                                                      textStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.w500,),
+                                                                    ),
+                                                                  ) : Text(
+                                                                    'RM' +hrgOri.toStringAsFixed(2),
+                                                                    style: GoogleFonts.lato(
+                                                                      textStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.w500,),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Text(
+                                                                  'Qty: ' + cart.quantity +'',
+                                                                  style: GoogleFonts.lato(
+                                                                    textStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.w500,),
+                                                                  ),
+                                                                ),
+                                                              ]
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          padding: EdgeInsets.only(top: 3),
+                                                          child: Text(
+                                                            'Delivery:  RM' +hrgShip.toStringAsFixed(2),
+                                                            style: GoogleFonts.lato(
+                                                              textStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.w500,),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ]
+                                                  ),
+                                                ),
+                                                SizedBox(width: 5),
+                                              ]),
+                                            )
+                                          ]
+                                      )
+                                    ]
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ]
+              ),
+            );
+          },
+        )
+    );
+  }
 }

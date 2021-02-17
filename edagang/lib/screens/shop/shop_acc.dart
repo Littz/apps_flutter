@@ -207,9 +207,9 @@ class _StateAccount extends State<ShopAccountPage> {
                           }
                         }
                       ),
-                      Divider(color: Color(0xffF45432),),
 
-                      Column(
+                      //Divider(color: Color(0xffF45432),),
+                      /*Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Padding(
@@ -270,7 +270,7 @@ class _StateAccount extends State<ShopAccountPage> {
                               },
                             ),
                           ]
-                      ),
+                      ),*/
 
                       Divider(color: Color(0xffF45432),),
                       logOutButton(),
@@ -333,7 +333,7 @@ class _StateAccount extends State<ShopAccountPage> {
   Widget _title() {
     return ScopedModelDescendant(
       builder: (BuildContext context, Widget child,MainScopedModel model) {
-        if (model.isAuthenticated) {
+        /*if (model.isAuthenticated) {
           return Container(
             margin: EdgeInsets.only(left: 0, right: 10, bottom: 8, top: 8),
             height: 40,
@@ -357,24 +357,26 @@ class _StateAccount extends State<ShopAccountPage> {
 
                 Text('  '+model.getFname(),
                   style: GoogleFonts.lato(
-                    textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Color(0xff202020),),
+                    textStyle: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,),
                   ),
                 ),
               ],
             ),
           );
-        }else{
+        }else{*/
           return Container(
             margin: EdgeInsets.only(left: 0, right: 10, bottom: 8, top: 8),
             height: 40,
-            child: Text('Account & Profile',
+            child: Text('Account',
               style: GoogleFonts.lato(
                 textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Color(0xff202020),),
               ),
             ),
           );
 
-        }
+        //}
       },
     );
   }

@@ -89,13 +89,13 @@ class _UpskillPageState extends State<UpskillPage> {
                                 children: <Widget>[
                                   Image.asset(
                                     'assets/cartsiniupskill1.png', height: 150.0,
-                                    fit: BoxFit.cover,),
+                                    fit: BoxFit.fill,),
                                   Image.asset(
                                     'assets/cartsiniupskill2.png', height: 150.0,
-                                    fit: BoxFit.cover,),
+                                    fit: BoxFit.fill,),
                                   Image.asset(
                                     'assets/cartsiniupskill3.png', height: 150.0,
-                                    fit: BoxFit.cover,),
+                                    fit: BoxFit.fill,),
                                 ],
                               ),
                             )

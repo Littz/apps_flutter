@@ -1,16 +1,17 @@
 import 'package:edagang/models/upskill_model.dart';
+import 'package:edagang/scoped/main_scoped.dart';
+import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/html2text.dart';
+import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-import 'package:html/dom.dart' as dom;
 import 'dart:convert';
-
-import 'package:loading_gifs/loading_gifs.dart';
+import 'package:intl/intl.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class UpskillDetailPage extends StatefulWidget {
 
@@ -21,6 +22,7 @@ class UpskillDetailPage extends StatefulWidget {
 class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   SharedPref sharedPref = SharedPref();
+  DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
   Map<dynamic, dynamic> responseBody;
   String _skillId;
 
@@ -28,6 +30,8 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
   String title,descr,overview,attendees,key_modules,price,company_name,logo,cat_name;
   String date_start,date_end,time_start,time_end;
   List<CourseSchedule> schedule = [];
+  Color color = Color(0xff2877EA);
+  bool isLoading = false;
 
   Widget currentTab;
   int currentValue = 0;
@@ -36,6 +40,9 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
   Animation<Offset> _movieInformationSlidingAnimation;
 
   getDetails() async {
+    setState(() {
+      isLoading = true;
+    });
 
     try {
       String id = await sharedPref.read("skil_id");
@@ -64,10 +71,10 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
                   new CourseSchedule(
                     id: schedule['id'],
                     course_id: schedule['course_id'],
-                    date_start: schedule['date_start']+' to '+schedule['date_end'],
-                    date_end: schedule['date_end'],
-                    time_start: schedule['time_start']+' to '+schedule['time_end'],
-                    time_end: schedule['time_end'],
+                    date_start: schedule['date_start'] != null ? schedule['date_start'] : '',
+                    date_end: schedule['date_end'] != null ? schedule['date_end'] : '',
+                    time_start: schedule['time_start'] != null ? schedule['time_start'] : '',
+                    time_end: schedule['time_end'] != null ? schedule['time_end'] : '',
                   )
               );
             });
@@ -103,6 +110,7 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
             schedule = data.schedule;
 
           });
+          isLoading = false;
         });
       });
     } catch (Excepetion ) {
@@ -158,7 +166,7 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
           )
       ),
       backgroundColor: Colors.white,
-      body: CustomScrollView(
+      body: isLoading ? _buildCircularProgressIndicator() : CustomScrollView(
         slivers: <Widget>[
           SliverList(
             delegate: SliverChildListDelegate(
@@ -187,6 +195,9 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
                                 ),
                             ),
                             _scheduleList(),
+
+                            _reqBtn(),
+
                           ],
                         ),
                       ),
@@ -287,23 +298,54 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
                     itemCount: schedule.length,
                     itemBuilder: (context, index) {
                       var data = schedule[index];
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(data.date_start ?? "",
-                              style: GoogleFonts.lato(
-                                textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
-                              ),
+                      var d1 = data.date_start.split("-");
+                      String dd = d1[2];
+                      String mm = d1[1];
+                      String yy = d1[0];
+                      var dte1 = dd+'/'+mm+'/'+yy;
+
+                      var d2 = data.date_end.split("-");
+                      String dd2 = d2[2];
+                      String mm2 = d2[1];
+                      String yy2 = d2[0];
+                      var dte2 = dd2+'/'+mm2+'/'+yy2;
+
+                      if(data.time_start == ''){
+                        return Container(
+                          padding: EdgeInsets.only(bottom: 2),
+                          child: Text(dte1 + ' to ' + dte2,
+                            style: GoogleFonts.lato(
+                              textStyle: TextStyle(
+                                fontSize: 13, fontWeight: FontWeight.w500,),
+                            ),
                           ),
-                          SizedBox(height: 3.0,),
-                          Text(data.time_start ?? "",
-                              style: GoogleFonts.lato(
-                                textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
+                        );
+                      }else {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              padding: EdgeInsets.only(bottom: 2),
+                              child: Text(dte1 + ' to ' + dte2,
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500,),
+                                ),
                               ),
-                          ),
-                        ],
-                      );
+                            ),
+
+                            Container(
+                              child: Text(
+                                data.time_start + ' to ' + data.time_end,
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500,),
+                                ),
+                              )
+                            ),
+
+                          ],
+                        );
+                      }
                     },
                   )
                 ]
@@ -312,6 +354,63 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
       );
 
     }
+  }
+
+  Widget _reqBtn() {
+    return ScopedModelDescendant<MainScopedModel>(builder: (context, child, model){
+      //if(model.isAuthenticated){
+        return Container(
+          padding: EdgeInsets.only(left: 0,),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              RaisedButton(
+                shape: StadiumBorder(),
+                color: color,
+                child: Text('REQUEST',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.lato(
+                    textStyle: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600,),
+                  ),
+                ),
+                onPressed: () {
+                  model.isAuthenticated ? '' : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
+                },
+              ),
+            ],
+          ),
+        );
+      //}else{
+      //  return Container();
+      //}
+
+    });
+
+  }
+
+  _buildCircularProgressIndicator() {
+    return Center(
+      child: Container(
+          width: 75,
+          height: 75,
+          color: Colors.transparent,
+          child: Column(
+            children: <Widget>[
+              CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation(Color(0xff2877EA)),
+                strokeWidth: 1.7,
+              ),
+              SizedBox(height: 5.0,),
+              Text('Loading...',
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(color: Colors.grey.shade600, fontStyle: FontStyle.italic, fontSize: 13),
+                ),
+              ),
+            ],
+          )
+      ),
+    );
   }
 
   @override

@@ -53,39 +53,39 @@ class _AdvertPageState extends State<AdvertPage> {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
                         elevation: 1,
                         child: ClipPath(
-                            clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-                            child: Container(
-                              height: 150.0,
-                              decoration: new BoxDecoration(
-                                color: Colors.transparent,
-                                borderRadius: BorderRadius.all(Radius.circular(8)),
+                          clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                          child: Container(
+                            height: 150.0,
+                            decoration: new BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.all(Radius.circular(8)),
+                            ),
+                            child: Swiper.children(
+                              autoplay: true,
+                              pagination: new SwiperPagination(
+                                margin: new EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 15.0),
+                                builder: new DotSwiperPaginationBuilder(
+                                  color: Colors.white30,
+                                  activeColor: Colors.redAccent.shade400,
+                                  size: 7.0,
+                                  activeSize: 7.0)
                               ),
-                              child: Swiper.children(
-                                autoplay: true,
-                                pagination: new SwiperPagination(
-                                    margin: new EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 15.0),
-                                    builder: new DotSwiperPaginationBuilder(
-                                        color: Colors.white30,
-                                        activeColor: Colors.redAccent.shade400,
-                                        size: 7.0,
-                                        activeSize: 7.0)
-                                ),
-                                children: <Widget>[
-                                  Image.asset(
-                                    'assets/edagangblurb.png', height: 150.0,
-                                    fit: BoxFit.cover,),
-                                  Image.asset(
-                                    'assets/cartsinishop1.png', height: 150.0,
-                                    fit: BoxFit.cover,),
-                                  Image.asset(
-                                    'assets/cartsinishop2.png', height: 150.0,
-                                    fit: BoxFit.cover,),
-                                  Image.asset(
-                                    'assets/cartsinishop3.png', height: 150.0,
-                                    fit: BoxFit.cover,),
-                                ],
-                              ),
-                            )
+                              children: <Widget>[
+                                Image.asset(
+                                  'assets/edagangblurb.png', height: 150.0,
+                                  fit: BoxFit.fill,),
+                                /*Image.asset(
+                                  'assets/cartsinishop1.png', height: 150.0,
+                                  fit: BoxFit.fill,),
+                                Image.asset(
+                                  'assets/cartsinishop2.png', height: 150.0,
+                                  fit: BoxFit.fill,),
+                                Image.asset(
+                                  'assets/cartsinishop3.png', height: 150.0,
+                                  fit: BoxFit.fill,),*/
+                              ],
+                            ),
+                          )
                         )
                     )
                 )),

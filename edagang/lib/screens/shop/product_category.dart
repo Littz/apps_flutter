@@ -1,15 +1,12 @@
-import 'dart:math';
 import 'dart:ui';
 import 'package:edagang/scoped/scoped_product.dart';
-import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
-import 'package:edagang/widgets/products_list_item.dart';
+import 'package:edagang/widgets/product_grid_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class ProductListCategory extends StatefulWidget {
   String catId, catName;
@@ -96,8 +93,18 @@ class ProductListCategoryState extends State<ProductListCategory> {
             ),
           ],
         ),
-        body: ProductsListCategoryBody(catId: int.parse(widget.catId), filte: _currentlySelected),
-        backgroundColor: Colors.grey.shade200,
+        backgroundColor: Colors.grey.shade100,
+        body: CustomScrollView(
+          slivers: <Widget>[
+            SliverPadding(
+              padding: EdgeInsets.fromLTRB(8, 5, 8, 10),
+              sliver: ProductsListCategoryBody(catId: int.parse(widget.catId), filte: _currentlySelected),
+            ),
+            /*SliverFillRemaining(
+              child: new Container(color: Colors.transparent),
+            ),*/
+          ]
+        )
       ),
     );
   }
@@ -120,7 +127,8 @@ class ProductsListCategoryBody extends StatelessWidget {
     return ScopedModelDescendant<ProductScopedModel>(
       builder: (context, child, model) {
         this.model = model;
-        return model.isLoadingCat ? _buildCircularProgressIndicator() : _buildListView();
+        return _buildListView();
+        //return model.isLoadingCat ? _buildCircularProgressIndicator() : _buildListView();
       },
     );
   }
@@ -142,53 +150,55 @@ class ProductsListCategoryBody extends StatelessWidget {
     return MediaQuery.removePadding(
       removeTop: true,
       context: context,
-      child: model.getProductsCount() == 0 ? Center(child: Text("No products available."))
-          : ListView.builder(
-        //padding: EdgeInsets.only(top: 5, left: 15, right: 15),
-        //physics: NeverScrollableScrollPhysics(),
-        //shrinkWrap: true,
-        itemCount: model.getProductsCount() + 2,
-        itemBuilder: (context, index) {
-          if (index == model.getProductsCount()) {
-            if (model.hasMoreProducts) {
-              pageIndex++;
-              model.parseCategoryProductsFromResponse(catId, pageIndex, filte);
-              return Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: Center(
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      color: Colors.transparent,
-                      child: CupertinoActivityIndicator(
-                        radius: 17,
-                      ),
-                    ),
-                  )
-              );
-            }
-            return Container();
-          } else if (index == 0) {
-            //0th index would contain filter icons
-            return Container();
-            //return _buildFilterWidgets(screenSize);
-          } else if (index % 2 == 0) {
-            //2nd, 4th, 6th.. index would contain nothing since this would
-            //be handled by the odd indexes where the row contains 2 items
-            return Container();
-          } else {
-            //1st, 3rd, 5th.. index would contain a row containing 2 products
+      child: new SliverStaggeredGrid.countBuilder(
+        crossAxisCount: 4,
+        mainAxisSpacing: 0.5,
+        crossAxisSpacing: 0.5,
+        itemCount: model.productsList.length,
+        itemBuilder: (context, index) =>
+          ProductCardItem(
+            product: model.productsList[index],
+          ),
+        staggeredTileBuilder: (index) => StaggeredTile.fit(2),
 
-            if (index > model.getProductsCount() - 1) {
-              return Container();
-            }
+        /*GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 5.0,
+              crossAxisSpacing: 5.0,
+              childAspectRatio: 0.555,),
+            itemCount: model.getProductsCount(),
+            itemBuilder: (context, index) {
+              if (index == model.getProductsCount()) {
+                if (model.hasMoreProducts) {
+                  pageIndex++;
+                  model.parseCategoryProductsFromResponse(catId, pageIndex, filte);
+                  return Padding(
+                      padding: const EdgeInsets.only(top: 16.0),
+                      child: Center(
+                        child: Container(
+                          width: 50,
+                          height: 50,
+                          color: Colors.transparent,
+                          child: CupertinoActivityIndicator(
+                            radius: 17,
+                          ),
+                        ),
+                      )
+                  );
+                }
+                return Container();
+              } else {
 
-            return ProductsListItem(
-              product1: model.productsList[index - 1],
-              product2: model.productsList[index],
-            );
-          }
-        },
+                if (index > model.getProductsCount() - 1) {
+                  return Container();
+                }
+                return ProductCardItem(
+                  product: model.productsList[index],
+                );
+              }
+            }
+        ),*/
       ),
     );
   }

@@ -55,6 +55,7 @@ class FpxStatusState extends State<FpxStatus> {
             model.loggedInUser();
             model.fetchCartTotal();
             model.fetchCartsFromResponse();
+            model.fetchCartReload();
 
             return null;
           },
@@ -101,6 +102,7 @@ class FpxStatusState extends State<FpxStatus> {
                         model.loggedInUser();
                         model.fetchCartTotal();
                         model.fetchCartsFromResponse();
+                        model.fetchCartReload();
 
                       },
                       child: new Padding(

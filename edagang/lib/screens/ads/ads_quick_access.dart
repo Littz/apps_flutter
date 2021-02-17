@@ -1,7 +1,9 @@
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/screens/ads/ads_career_detail.dart';
+import 'package:edagang/screens/ads/webview.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
+import 'package:edagang/widgets/product_grid_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -198,8 +200,8 @@ class _AdsPropertyPageState extends State<AdsPropertyPage> {
                     begin: Alignment.topLeft,
                     end: Alignment.topRight,
                     colors: [
-                      Colors.grey,
-                      Colors.grey.shade200,
+                      Colors.grey.shade600,
+                      Colors.grey.shade400,
                     ]
                   ),
                 )
@@ -208,20 +210,50 @@ class _AdsPropertyPageState extends State<AdsPropertyPage> {
           ),
           backgroundColor: Colors.white,
           body: CustomScrollView(slivers: <Widget>[
-            SliverPadding(
-              padding: EdgeInsets.only(left: 10, top: 10, right: 10, bottom: 15),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate(
-                  [
-                    Column(
-                      children: <Widget>[
-                        Container(),
-                      ]
-                    ),
-                  ],
+            SliverToBoxAdapter(
+              child: Container(
+                padding: EdgeInsets.all(8.0),
+                width: MediaQuery.of(context).size.width,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 265,
+                        decoration: new BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(context, SlideRightRoute(
+                                page: WebviewBlurb(
+                                    'https://blurb.e-dagang.asia/property/pip',
+                                    'Pengerang Industrial Park')));
+                            /*if(Platform.isAndroid) {
+                              CustomTabs.launchURL(context, 'https://blurb.e-dagang.asia/property/pip');
+                            }else{
+                              final String url = 'https://blurb.e-dagang.asia/property/pip';
+                              if (await canLaunch(url)) await launch(
+                                url,
+                                forceSafariVC: false,
+                                forceWebView: false,
+                              );
+                            }*/
+                          },
+                          child: VrCardItem(
+                            vrimg: Image.asset('assets/pip.png'),
+                            label: 'Pengerang Industrial Park',
+                            sublabel: 'Land for sale.',
+                            footer: '',
+                          ),
+                        ),
+                      ),
+                    ]
                 ),
               ),
-            ),
+            )
           ]),
         );
       }
@@ -275,7 +307,7 @@ class _AdsVehiclePageState extends State<AdsVehiclePage> {
                             begin: Alignment.topLeft,
                             end: Alignment.topRight,
                             colors: [
-                              Colors.grey,
+                              Colors.grey.shade600,
                               Colors.grey.shade200,
                             ]
                         ),
@@ -351,7 +383,7 @@ class _AdsServicePageState extends State<AdsServicePage> {
                             begin: Alignment.topLeft,
                             end: Alignment.topRight,
                             colors: [
-                              Colors.grey,
+                              Colors.grey.shade600,
                               Colors.grey.shade200,
                             ]
                         ),
@@ -422,7 +454,7 @@ class _AdsRatePageState extends State<AdsRatePage> {
                             begin: Alignment.topLeft,
                             end: Alignment.topRight,
                             colors: [
-                              Colors.grey,
+                              Colors.grey.shade600,
                               Colors.grey.shade200,
                             ]
                         ),

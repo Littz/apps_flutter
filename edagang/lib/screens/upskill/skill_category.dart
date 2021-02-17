@@ -69,11 +69,7 @@ class _SkillProfessionalPageState extends State<SkillProfessionalPage> {
                     [
                       Column(
                           children: <Widget>[
-                            ListView.separated(
-                              separatorBuilder: (context, index) => Divider(
-                                color: Colors.grey,
-                                indent: 10.0,
-                              ),
+                            ListView.builder(
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
                               itemCount: model.skillProfessional.length,
@@ -101,40 +97,23 @@ class _SkillProfessionalPageState extends State<SkillProfessionalPage> {
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: <Widget>[
                                                   Expanded(
-                                                    flex: 4,
+                                                    flex: 3,
                                                     child: Container(
-                                                      margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 3.0),
+                                                      padding: EdgeInsets.only(left: 7.0, right: 0.0, bottom: 5.0),
                                                       child: Text(
                                                         data.title,
+                                                        overflow: TextOverflow.ellipsis,
                                                         style: GoogleFonts.lato(
-                                                          textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w700,),
+                                                          textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
                                                         ),
+                                                        maxLines: 2,
                                                       ),
                                                     ),
-                                                    /*Container(
-                                                      margin: EdgeInsets.only(left: 7.0, right: 7.0, top: 7.0),
-                                                      alignment: Alignment.topLeft,
-                                                      height: 60,
-                                                      child: FadeInImage(
-                                                        imageErrorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
-                                                          print('Error Handler');
-                                                          return Container(
-                                                            width: 60.0,
-                                                            height: 60.0,
-                                                            child: Image.asset('assets/lg_edagang.png'),
-                                                          );
-                                                        },
-                                                        placeholder: AssetImage('assets/lg_edagang.png'),
-                                                        image: NetworkImage(data.logo),
-                                                        fit: BoxFit.fill,
-                                                        height: 60.0,
-                                                      ),
-                                                    ),*/
                                                   ),
                                                   Expanded(
                                                     flex: 1,
                                                     child: Container(
-                                                      margin: EdgeInsets.only(right: 7.0, top: 7.0),
+                                                      margin: EdgeInsets.only(right: 7.0, top: 5.0),
                                                       alignment: Alignment.topRight,
                                                       child: Icon(
                                                         CupertinoIcons.chevron_forward,
@@ -145,23 +124,28 @@ class _SkillProfessionalPageState extends State<SkillProfessionalPage> {
                                                   ),
                                                 ],
                                               ),
-
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 10.0),
-                                                child: Text(
-                                                  data.company_name,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: GoogleFonts.lato(
-                                                    textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
-                                                  ),
-                                                  maxLines: 2,
-                                                ),
-                                              ),
                                               Padding(
                                                 padding: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
                                                 child: Text(
                                                   data.descr,
-                                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'Quicksand'),
+                                                  style: GoogleFonts.lato(
+                                                    textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                                                  ),
+                                                ),
+                                              ),
+                                              Container(
+                                                margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
+                                                child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.end,
+                                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                                    children: <Widget>[
+                                                      Text(
+                                                        data.company_name,
+                                                        style: GoogleFonts.lato(
+                                                          textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, fontStyle: FontStyle.italic),
+                                                        ),
+                                                      ),
+                                                    ]
                                                 ),
                                               ),
                                             ],
@@ -278,31 +262,23 @@ class _SkillTechnicalPageState extends State<SkillTechnicalPage> {
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: <Widget>[
                                                   Expanded(
-                                                    flex: 2,
+                                                    flex: 3,
                                                     child: Container(
-                                                      margin: EdgeInsets.only(left: 7.0, right: 7.0, top: 7.0),
-                                                      alignment: Alignment.topLeft,
-                                                      height: 60,
-                                                      child: FadeInImage(
-                                                        imageErrorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
-                                                          print('Error Handler');
-                                                          return Container(
-                                                            width: 60.0,
-                                                            height: 60.0,
-                                                            child: Image.asset('assets/lg_edagang.png'),
-                                                          );
-                                                        },
-                                                        placeholder: AssetImage('assets/lg_edagang.png'),
-                                                        image: NetworkImage(data.logo),
-                                                        fit: BoxFit.fill,
-                                                        height: 60.0,
+                                                      padding: EdgeInsets.only(left: 7.0, right: 0.0, bottom: 5.0),
+                                                      child: Text(
+                                                        data.title,
+                                                        overflow: TextOverflow.ellipsis,
+                                                        style: GoogleFonts.lato(
+                                                          textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
+                                                        ),
+                                                        maxLines: 2,
                                                       ),
                                                     ),
                                                   ),
                                                   Expanded(
-                                                    flex: 3,
+                                                    flex: 1,
                                                     child: Container(
-                                                      margin: EdgeInsets.only(right: 7.0, top: 7.0),
+                                                      margin: EdgeInsets.only(right: 7.0, top: 5.0),
                                                       alignment: Alignment.topRight,
                                                       child: Icon(
                                                         CupertinoIcons.chevron_forward,
@@ -313,33 +289,30 @@ class _SkillTechnicalPageState extends State<SkillTechnicalPage> {
                                                   ),
                                                 ],
                                               ),
-                                              Container(
-                                                margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
-                                                child: Text(
-                                                  data.company_name,
-                                                  style: GoogleFonts.lato(
-                                                    textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
-                                                  ),
-                                                ),
-                                              ),
                                               Padding(
-                                                padding: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 5.0),
-                                                child: Text(
-                                                  data.title,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: GoogleFonts.lato(
-                                                    textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w700,),
-                                                  ),
-                                                  maxLines: 2,
-                                                ),
-                                              ),
-                                              /*Padding(
                                                 padding: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
                                                 child: Text(
                                                   data.descr,
-                                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, fontFamily: 'Quicksand'),
+                                                  style: GoogleFonts.lato(
+                                                    textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                                                  ),
                                                 ),
-                                              ),*/
+                                              ),
+                                              Container(
+                                                margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
+                                                child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.end,
+                                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                                    children: <Widget>[
+                                                      Text(
+                                                        data.company_name,
+                                                        style: GoogleFonts.lato(
+                                                          textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, fontStyle: FontStyle.italic),
+                                                        ),
+                                                      ),
+                                                    ]
+                                                ),
+                                              ),
                                             ],
                                           )
                                       ),
@@ -422,11 +395,11 @@ class _SkillSafetyPageState extends State<SkillSafetyPage> {
                     [
                       Column(
                           children: <Widget>[
-                            ListView.separated(
-                              separatorBuilder: (context, index) => Divider(
+                            ListView.builder(
+                              /*separatorBuilder: (context, index) => Divider(
                                 color: Colors.grey,
-                                indent: 10.0,
-                              ),
+                                indent: 0.0,
+                              ),*/
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
                               itemCount: model.skillSafety.length,
@@ -454,31 +427,23 @@ class _SkillSafetyPageState extends State<SkillSafetyPage> {
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: <Widget>[
                                                   Expanded(
-                                                    flex: 2,
+                                                    flex: 3,
                                                     child: Container(
-                                                      margin: EdgeInsets.only(left: 7.0, right: 7.0, top: 7.0),
-                                                      alignment: Alignment.topLeft,
-                                                      height: 60,
-                                                      child: FadeInImage(
-                                                        imageErrorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
-                                                          print('Error Handler');
-                                                          return Container(
-                                                            width: 60.0,
-                                                            height: 60.0,
-                                                            child: Image.asset('assets/lg_edagang.png'),
-                                                          );
-                                                        },
-                                                        placeholder: AssetImage('assets/lg_edagang.png'),
-                                                        image: NetworkImage(data.logo),
-                                                        fit: BoxFit.fill,
-                                                        height: 60.0,
+                                                      padding: EdgeInsets.only(left: 7.0, right: 0.0, bottom: 5.0),
+                                                      child: Text(
+                                                        data.title,
+                                                        overflow: TextOverflow.ellipsis,
+                                                        style: GoogleFonts.lato(
+                                                          textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
+                                                        ),
+                                                        maxLines: 2,
                                                       ),
                                                     ),
                                                   ),
                                                   Expanded(
-                                                    flex: 3,
+                                                    flex: 1,
                                                     child: Container(
-                                                      margin: EdgeInsets.only(right: 7.0, top: 7.0),
+                                                      margin: EdgeInsets.only(right: 7.0, top: 5.0),
                                                       alignment: Alignment.topRight,
                                                       child: Icon(
                                                         CupertinoIcons.chevron_forward,
@@ -489,33 +454,30 @@ class _SkillSafetyPageState extends State<SkillSafetyPage> {
                                                   ),
                                                 ],
                                               ),
-                                              Container(
-                                                margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
-                                                child: Text(
-                                                  data.company_name,
-                                                  style: GoogleFonts.lato(
-                                                    textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
-                                                  ),
-                                                ),
-                                              ),
                                               Padding(
-                                                padding: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 5.0),
-                                                child: Text(
-                                                  data.title,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: GoogleFonts.lato(
-                                                    textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w700,),
-                                                  ),
-                                                  maxLines: 2,
-                                                ),
-                                              ),
-                                              /*Padding(
                                                 padding: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
                                                 child: Text(
                                                   data.descr,
-                                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, fontFamily: 'Quicksand'),
+                                                  style: GoogleFonts.lato(
+                                                    textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                                                  ),
                                                 ),
-                                              ),*/
+                                              ),
+                                              Container(
+                                                margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.end,
+                                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      data.company_name,
+                                                      style: GoogleFonts.lato(
+                                                        textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, fontStyle: FontStyle.italic),
+                                                      ),
+                                                    ),
+                                                  ]
+                                                ),
+                                              ),
                                             ],
                                           )
                                       ),
@@ -598,11 +560,7 @@ class _SkillTrainingPageState extends State<SkillTrainingPage> {
                     [
                       Column(
                           children: <Widget>[
-                            ListView.separated(
-                              separatorBuilder: (context, index) => Divider(
-                                color: Colors.grey,
-                                indent: 10.0,
-                              ),
+                            ListView.builder(
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
                               itemCount: model.skillTraining.length,
@@ -630,31 +588,23 @@ class _SkillTrainingPageState extends State<SkillTrainingPage> {
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: <Widget>[
                                                   Expanded(
-                                                    flex: 2,
+                                                    flex: 3,
                                                     child: Container(
-                                                      margin: EdgeInsets.only(left: 7.0, right: 7.0, top: 7.0),
-                                                      alignment: Alignment.topLeft,
-                                                      height: 60,
-                                                      child: FadeInImage(
-                                                        imageErrorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
-                                                          print('Error Handler');
-                                                          return Container(
-                                                            width: 60.0,
-                                                            height: 60.0,
-                                                            child: Image.asset('assets/lg_edagang.png'),
-                                                          );
-                                                        },
-                                                        placeholder: AssetImage('assets/lg_edagang.png'),
-                                                        image: NetworkImage(data.logo),
-                                                        fit: BoxFit.fill,
-                                                        height: 60.0,
+                                                      padding: EdgeInsets.only(left: 7.0, right: 0.0, bottom: 5.0),
+                                                      child: Text(
+                                                        data.title,
+                                                        overflow: TextOverflow.ellipsis,
+                                                        style: GoogleFonts.lato(
+                                                          textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
+                                                        ),
+                                                        maxLines: 2,
                                                       ),
                                                     ),
                                                   ),
                                                   Expanded(
-                                                    flex: 3,
+                                                    flex: 1,
                                                     child: Container(
-                                                      margin: EdgeInsets.only(right: 7.0, top: 7.0),
+                                                      margin: EdgeInsets.only(right: 7.0, top: 5.0),
                                                       alignment: Alignment.topRight,
                                                       child: Icon(
                                                         CupertinoIcons.chevron_forward,
@@ -665,33 +615,30 @@ class _SkillTrainingPageState extends State<SkillTrainingPage> {
                                                   ),
                                                 ],
                                               ),
-                                              Container(
-                                                margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
-                                                child: Text(
-                                                  data.company_name,
-                                                  style: GoogleFonts.lato(
-                                                    textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
-                                                  ),
-                                                ),
-                                              ),
                                               Padding(
-                                                padding: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 5.0),
-                                                child: Text(
-                                                  data.title,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: GoogleFonts.lato(
-                                                    textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w700,),
-                                                  ),
-                                                  maxLines: 2,
-                                                ),
-                                              ),
-                                              /*Padding(
                                                 padding: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
                                                 child: Text(
                                                   data.descr,
-                                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, fontFamily: 'Quicksand'),
+                                                  style: GoogleFonts.lato(
+                                                    textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                                                  ),
                                                 ),
-                                              ),*/
+                                              ),
+                                              Container(
+                                                margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
+                                                child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.end,
+                                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                                    children: <Widget>[
+                                                      Text(
+                                                        data.company_name,
+                                                        style: GoogleFonts.lato(
+                                                          textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, fontStyle: FontStyle.italic),
+                                                        ),
+                                                      ),
+                                                    ]
+                                                ),
+                                              ),
                                             ],
                                           )
                                       ),

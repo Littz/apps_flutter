@@ -56,6 +56,7 @@ class _MyAppPageState extends State<MyApp> {
       _model.fetchProfile();
       _model.fetchCartTotal();
       _model.fetchCartsFromResponse();
+      _model.fetchCartReload();
       _model.fetchAddressList();
       _model.fetchBankList();
       _model.fetchOrderHistoryResponse();

@@ -75,13 +75,13 @@ class _FinancePageState extends State<FinancePage> {
                                         children: <Widget>[
                                           Image.asset(
                                             'assets/cartsinifinance1.png', height: 150.0,
-                                            fit: BoxFit.cover,),
+                                            fit: BoxFit.fill,),
                                           Image.asset(
                                             'assets/cartsinifinance2.png', height: 150.0,
-                                            fit: BoxFit.cover,),
+                                            fit: BoxFit.fill,),
                                           Image.asset(
                                             'assets/cartsinifinance3.png', height: 150.0,
-                                            fit: BoxFit.cover,),
+                                            fit: BoxFit.fill,),
                                         ],
                                       ),
                                     )

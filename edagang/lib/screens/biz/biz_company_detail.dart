@@ -20,7 +20,7 @@ class BizCompanyDetailPage extends StatefulWidget {
   _BizCompanyDetailPageState createState() => _BizCompanyDetailPageState();
 }
 
-const xpandedHeight = 190.0;
+const xpandedHeight = 195.0;
 
 class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -37,15 +37,18 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
 
   Widget currentTab;
   int currentValue = 0;
+  bool isLoading = false;
 
   AnimationController _animationController;
   Animation<Offset> _movieInformationSlidingAnimation;
 
   getDetails() async {
+    setState(() {
+      isLoading = true;
+    });
+
     try {
-      //String id = await sharedPref.read("biz_id");
       setState(() {
-        //_bizId = id;
         print("product ID : "+widget.bizId);
 
         http.post(
@@ -132,6 +135,7 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
             certs = data.cert;
 
           });
+          isLoading = false;
         });
       });
     } catch (Excepetion ) {
@@ -168,7 +172,7 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
+      body: isLoading ? _buildCircularProgressIndicator() : CustomScrollView(
           controller: _scrollController,
           slivers: <Widget>[
             SliverAppBar(
@@ -208,7 +212,7 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                         children: <Widget>[
                           Image.asset(
                             'assets/edaganghome1.png', fit: BoxFit.fill,
-                            height: 175,
+                            height: 165,
                           ),
                           FractionalTranslation(
                             translation: Offset(0.1, 0.5),
@@ -218,10 +222,14 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                               decoration: new BoxDecoration(
                                 color: Colors.white,
                                 shape: BoxShape.circle,
-                                boxShadow: [BoxShadow(
-                                  color: Colors.grey,
-                                  blurRadius: 5.0,
-                                )],
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.shade500,
+                                    blurRadius: 2.5,
+                                    spreadRadius: 0.0,
+                                    offset: Offset(2.5, 2.5),
+                                  )
+                                ],
                                 //border: new Border.all(color: Colors.blue, width: 1.5,),
                               ),
                               child: ClipRRect(
@@ -229,7 +237,7 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                                 child: FadeInImage.assetNetwork(
                                   placeholder: _logo ?? "",
                                   image: _logo ?? "",
-                                  fit: BoxFit.fitWidth,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                             ),
@@ -252,7 +260,7 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
               delegate: SliverChildListDelegate(
                 [
                   Container(
-                    padding: EdgeInsets.all(8.0),
+                    padding: EdgeInsets.only(left: 8.0, top: 1.0, right: 8.0, bottom: 8.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -450,6 +458,30 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
     );
   }
 
+  _buildCircularProgressIndicator() {
+    return Center(
+      child: Container(
+        width: 75,
+        height: 75,
+        color: Colors.transparent,
+        child: Column(
+          children: <Widget>[
+            CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation(Color(0xff2877EA)),
+              strokeWidth: 1.7,
+            ),
+            SizedBox(height: 5.0,),
+            Text('Loading...',
+              style: GoogleFonts.lato(
+                textStyle: TextStyle(color: Colors.grey.shade600, fontStyle: FontStyle.italic, fontSize: 13),
+              ),
+            ),
+          ],
+        )
+      ),
+    );
+  }
+
   virtualBtn(BuildContext context, String vr1, String vr2) {
     if(vr1 == 'null' && vr2 == 'null') {
       return Container();
@@ -458,11 +490,11 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
         height: 32,
         child: RaisedButton(
           shape: StadiumBorder(),
-          color: color,
+          color: Colors.white,
           child: Text('VR OFFICE',
             textAlign: TextAlign.center,
             style: GoogleFonts.lato(
-              textStyle: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600,),
+              textStyle: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600,),
             ),
           ),
           onPressed: () {launchURL(vr1);},
@@ -473,11 +505,11 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
         height: 32,
         child: RaisedButton(
           shape: StadiumBorder(),
-          color: color,
+          color: Colors.white,
           child: Text('VR SHOWROOM',
             textAlign: TextAlign.center,
             style: GoogleFonts.lato(
-              textStyle: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600,),
+              textStyle: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600,),
             ),
           ),
           onPressed: () {launchURL(vr2);},
@@ -495,11 +527,11 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                 height: 32,
                 child: RaisedButton(
                   shape: StadiumBorder(),
-                  color: color,
+                  color: Colors.white,
                   child: Text('VR OFFICE',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.lato(
-                      textStyle: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600,),
+                      textStyle: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600,),
                     ),
                   ),
                   onPressed: () {launchURL(vr1);},
@@ -512,11 +544,11 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                 height: 32,
                 child: RaisedButton(
                   shape: StadiumBorder(),
-                  color: color,
+                  color: Colors.white,
                   child: Text('VR SHOWROOM',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.lato(
-                      textStyle: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600,),
+                      textStyle: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600,),
                     ),
                   ),
                   onPressed: () {launchURL(vr2);},

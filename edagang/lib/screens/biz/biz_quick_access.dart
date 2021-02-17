@@ -29,6 +29,29 @@ class _BizCompanyPageState extends State<BizCompanyPage> {
     super.initState();
   }
 
+  _buildCircularProgressIndicator() {
+    return Center(
+      child: Container(
+          width: 75,
+          height: 75,
+          color: Colors.transparent,
+          child: Column(
+            children: <Widget>[
+              CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation(Color(0xff2877EA)),
+                strokeWidth: 1.7,
+              ),
+              SizedBox(height: 5.0,),
+              Text('Loading...',
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(color: Colors.grey.shade600, fontStyle: FontStyle.italic, fontSize: 13),
+                ),
+              ),
+            ],
+          )
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +87,7 @@ class _BizCompanyPageState extends State<BizCompanyPage> {
             )
           ),
           backgroundColor: Colors.white,
-          body: CustomScrollView(slivers: <Widget>[
+          body: model.isLoadingCo ? _buildCircularProgressIndicator() : CustomScrollView(slivers: <Widget>[
             SliverPadding(
               padding: EdgeInsets.only(left: 10, top: 10, right: 10, bottom: 15),
               sliver: SliverList(

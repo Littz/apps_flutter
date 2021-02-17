@@ -27,6 +27,7 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
   Map<dynamic, dynamic> responseBody;
   String _dl;
   bool isEnabled = true ;
+  bool isLoading = false;
 
   int _id,_compid,_yrxperience;
   String title,city,state,salary,descr,requirement,overview,email,company,logo;
@@ -38,6 +39,9 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
   Animation<Offset> _movieInformationSlidingAnimation;
 
   getDetails() async {
+    setState(() {
+      isLoading = true;
+    });
 
     try {
       //String id = await sharedPref.read("biz_id");
@@ -91,6 +95,7 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
             email = data.contact_email;
 
           });
+          isLoading = false;
         });
       });
     } catch (Excepetion ) {
@@ -160,7 +165,7 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
             Icons.arrow_back,
             ),
           ),
-          title: new Text(title ?? '',
+          title: new Text('Career Vacancy',
             style: GoogleFonts.lato(
               textStyle: TextStyle(color: Colors.white, fontSize: 18),
             ),
@@ -182,7 +187,7 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
         )
       ),
       backgroundColor: Colors.white,
-      body: CustomScrollView(
+      body: isLoading ? _buildCircularProgressIndicator() : CustomScrollView(
         slivers: <Widget>[
           SliverList(
             delegate: SliverChildListDelegate(
@@ -194,42 +199,50 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
 
-                      Container(
-                        margin: EdgeInsets.only(left: 0.0, top: 0.0),
-                        height: 100,
-                        width: 200,
-                        child: CachedNetworkImage(
-                          fit: BoxFit.cover,
-                          imageUrl: logo ?? '',
-                          imageBuilder: (context, imageProvider) => Container(
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: imageProvider,
-                                fit: BoxFit.cover,
-                              ),
-                              borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                            ),
-                          ),
-                          placeholder: (context, url) => Container(
-                            width: 30,
-                            height: 30,
-                            color: Colors.transparent,
-                            child: CupertinoActivityIndicator(radius: 15,),
-                          ),
-                          errorWidget: (context, url, error) => Container(color: Colors.grey.shade200, child: Icon(Icons.image, color: Colors.white, size: 44,),),
-                        ),
-
-                        /*FadeInImage.assetNetwork(
-                          placeholder: cupertinoActivityIndicatorSmall,
-                          image: logo ?? "",
-                        ),*/
-                      ),
+//                      Container(
+//                        margin: EdgeInsets.only(left: 0.0, top: 0.0),
+//                        height: 100,
+//                        width: 200,
+//                        child: CachedNetworkImage(
+//                          fit: BoxFit.cover,
+//                          imageUrl: logo ?? '',
+//                          imageBuilder: (context, imageProvider) => Container(
+//                            decoration: BoxDecoration(
+//                              image: DecorationImage(
+//                                image: imageProvider,
+//                                fit: BoxFit.cover,
+//                              ),
+//                              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+//                            ),
+//                          ),
+//                          placeholder: (context, url) => Container(
+//                            width: 30,
+//                            height: 30,
+//                            color: Colors.transparent,
+//                            child: CupertinoActivityIndicator(radius: 15,),
+//                          ),
+//                          errorWidget: (context, url, error) => Container(color: Colors.grey.shade200, child: Icon(Icons.image, color: Colors.white, size: 44,),),
+//                        ),
+//
+//                        /*FadeInImage.assetNetwork(
+//                          placeholder: cupertinoActivityIndicatorSmall,
+//                          image: logo ?? "",
+//                        ),*/
+//                      ),
 
                       Container(
                         padding: EdgeInsets.only(top: 4),
+                        child: Text(widget.jobName ?? '',
+                          style: GoogleFonts.lato(
+                          textStyle: TextStyle(fontStyle: FontStyle.normal, fontSize: 15, fontWeight: FontWeight.w600 ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(top: 2),
                         child: Text(company ?? '',
                           style: GoogleFonts.lato(
-                            textStyle: TextStyle(fontStyle: FontStyle.normal, fontSize: 15, fontWeight: FontWeight.w700 ),
+                            textStyle: TextStyle(fontStyle: FontStyle.normal, fontSize: 13, fontWeight: FontWeight.w500 ),
                           ),
                         ),
                       ),
@@ -443,6 +456,30 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
         ],
       ),
     ); // Here you direct access using widget
+  }
+
+  _buildCircularProgressIndicator() {
+    return Center(
+      child: Container(
+          width: 75,
+          height: 75,
+          color: Colors.transparent,
+          child: Column(
+            children: <Widget>[
+              CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation(Color(0xff2877EA)),
+                strokeWidth: 1.7,
+              ),
+              SizedBox(height: 5.0,),
+              Text('Loading...',
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(color: Colors.grey.shade600, fontStyle: FontStyle.italic, fontSize: 13),
+                ),
+              ),
+            ],
+          )
+      ),
+    );
   }
 
   @override

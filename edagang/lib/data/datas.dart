@@ -214,7 +214,7 @@ List<Menus> getShopNewContent() {
   menuModel = new Menus();
 
   menuModel.id = 2;
-  menuModel.imgPath = "assets/icons/shop_wholesale.png";
+  menuModel.imgPath = "assets/icons/shop_ngo.png";
   menuModel.title = "NGO";
   quickMenu.add(menuModel);
   menuModel = new Menus();

@@ -247,15 +247,6 @@ class _ProductDeeplinkPageState extends State<ProductDeeplink> with TickerProvid
     );
   }
 
-  Future<void> share() async {
-    await FlutterShare.share(
-      title: 'Cartsini',
-      text: '',
-      linkUrl: 'https://shopapp.e-dagang.asia/product/'+pid.toString(),
-      chooserTitle: merchant_name,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final coverImageHeightCalc = MediaQuery.of(context).size.height / 2.6 + bottomSheetCornerRadius;
@@ -298,7 +289,14 @@ class _ProductDeeplinkPageState extends State<ProductDeeplink> with TickerProvid
               Hero(
                 tag: "share",
                 child: InkWell(
-                  onTap: () {share();},
+                  onTap: () async {
+                    await FlutterShare.share(
+                      title: 'Cartsini',
+                      text: '',
+                      linkUrl: 'https://shopapp.e-dagang.asia/product/'+pid.toString(),
+                      chooserTitle: merchant_name,
+                    );
+                  },
                   splashColor: Colors.deepOrange.shade100,
                   highlightColor: Colors.deepOrange.shade100,
                   child: BlurIcon(
@@ -660,7 +658,7 @@ class _ProductDeeplinkPageState extends State<ProductDeeplink> with TickerProvid
               ),
             ),
             imageUrl: image ?? "",
-            fit: BoxFit.cover,
+            fit: merchant_name.contains('NI HSIN') || merchant_name.contains('Hijrah Water') ? BoxFit.fitWidth : BoxFit.cover,
           ),
         ),
       );
@@ -699,7 +697,7 @@ class _ProductDeeplinkPageState extends State<ProductDeeplink> with TickerProvid
                               ),
                             ),
                             imageUrl: image.imageURL,
-                            fit: BoxFit.cover,
+                            fit: merchant_name.contains('NI HSIN') || merchant_name.contains('Hijrah Water') ? BoxFit.fitWidth : BoxFit.cover,
                           ),
                         ),
                         /*Container(

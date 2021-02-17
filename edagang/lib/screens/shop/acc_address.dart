@@ -272,6 +272,7 @@ class _AddressBookState extends State<AddressBook> {
                                                         listAddrs.removeWhere((item) => item == data);
 
                                                         model.fetchAddressList();
+                                                        model.fetchCartReload();
                                                         Navigator.popAndPushNamed(context, '/Address');
                                                         //listAddrs.remove(data.id);
                                                       });
@@ -960,6 +961,7 @@ class _EditAddressState extends State<EditAddress> {
       };
       if (successInformation['success']) {
         model.fetchAddressList();
+        model.fetchCartReload();
         Navigator.pop(context, true);
         print("Address successfuly updated.");
       } else {
@@ -1438,8 +1440,8 @@ class _AddNewAddressState extends State<AddNewAddress> with SingleTickerProvider
       'city': _selectedNegeri == null ? '' : _selectedCity.id.toString(),
       'postcode': _formData['poscode'],
       'mobile_no': _formData['phone'],
-      'default_shipping': 'y',
-      'default_billing': 'y',
+      'default_shipping': 'Y',
+      'default_billing': 'Y',
       'location_tag': 'home'
     };
 
@@ -1490,6 +1492,7 @@ class _AddNewAddressState extends State<AddNewAddress> with SingleTickerProvider
       };
       if (successInformation['success']) {
         model.fetchAddressList();
+        model.fetchCartReload();
         Navigator.pop(context, true);
         print("Address successfuly updated.");
       } else {

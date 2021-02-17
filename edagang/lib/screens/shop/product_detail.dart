@@ -219,9 +219,7 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
 
           isLoading = false;
         });
-
       });
-
     } catch (Excepetion ) {
       print("error!");
     }
@@ -241,80 +239,6 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
         backgroundColor: sts == false ? Colors.red.shade700 : Colors.green.shade700,
         textColor: Colors.white,
         gravity: ToastGravity.CENTER
-    );
-  }
-
-  void _showAuthDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          //title: new Text("Conversation Request"),
-          content: Container(
-            width: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.only(left: 16.0, right: 16.0),
-            child: new Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-
-                new Image.asset(
-                  "assets/cartsini_logo.png",
-                  height: 120.0,
-                  //width: 210.0,
-                  fit: BoxFit.scaleDown,
-                ),
-                SizedBox(height: 10,),
-                new Padding(
-                  padding: EdgeInsets.only(top: 40.0, bottom: 20.0),
-                  child: new RaisedButton(
-                    shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-                    onPressed: () {
-                      Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
-                    },
-                    child: new Text(
-                      "SIGN-IN",
-                      style: GoogleFonts.lato(
-                        textStyle: TextStyle(fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                    color: Colors.deepOrange,
-                    textColor: Colors.white,
-                    elevation: 5.0,
-                  ),
-                ),
-                new Column(
-                  children: <Widget>[
-                    new FlatButton(
-                      onPressed: () {
-                        //Navigator.push(context,MaterialPageRoute(builder: (context){return SignUpPage();}));
-                      },
-                      child: new Padding(
-                          padding: EdgeInsets.only(top: 10.0, bottom: 20.0),
-                          child: new Text(
-                            "SIGN-UP an account",
-                            style: TextStyle( decoration: TextDecoration.underline, fontSize: 15.0),
-                          )
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(height: 10,),
-              ],
-            ),
-          ),
-
-        );
-      },
-    );
-  }
-
-  Future<void> share(String nama) async {
-    await FlutterShare.share(
-      title: 'Cartsini',
-      text: '',
-      linkUrl: 'https://shopapp.e-dagang.asia/product/'+pid.toString(),
-      chooserTitle: nama,
     );
   }
 
@@ -360,7 +284,14 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
               Hero(
                 tag: "share",
                 child: InkWell(
-                  onTap: () {share(_title);},
+                  onTap: () async {
+                    await FlutterShare.share(
+                      title: 'Cartsini',
+                      text: '',
+                      linkUrl: 'https://shopapp.e-dagang.asia/product/'+pid.toString(),
+                      chooserTitle: _title,
+                    );
+                  },
                   splashColor: Colors.deepOrange.shade100,
                   highlightColor: Colors.deepOrange.shade100,
                   child: BlurIcon(
@@ -557,14 +488,48 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
                             height: 1.0,
                           ),
                           SizedBox(height: 10,),
-                          Row(
+                          /*Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
-                              //Icon(Icons.rate_review),
                               Text('Ratings & Reviews  ('+reviews.length.toString()+')',
                                 style: GoogleFonts.lato(
                                   textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                            ],
+                          ),*/
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Expanded(
+                                child: Text('Ratings & Reviews  ('+reviews.length.toString()+')',
+                                  style: GoogleFonts.lato(
+                                    textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600,),
+                                  ),
+                                ),
+                              ),
+                              InkWell(
+                                highlightColor: Colors.deepOrange.shade100,
+                                splashColor: Colors.deepOrange.shade100,
+                                onTap: () {},
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Text(
+                                      'See all ',
+                                      style: GoogleFonts.lato(
+                                        textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Color(0xffF45432)),
+                                      ),
+                                    ),
+                                    Icon(
+                                      CupertinoIcons.right_chevron,
+                                      size: 17,
+                                      color: Color(0xffF45432),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
@@ -717,7 +682,7 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
               ),
             ),
             imageUrl: image ?? "",
-            fit: BoxFit.cover,
+            fit: merchant_name.contains('NI HSIN') || merchant_name.contains('Hijrah Water') ? BoxFit.fitWidth : BoxFit.cover,
           ),
         ),
       );
@@ -753,7 +718,7 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
                               ),
                             ),
                             imageUrl: image.imageURL,
-                            fit: BoxFit.cover,
+                            fit: merchant_name.contains('NI HSIN') || merchant_name.contains('Hijrah Water') ? BoxFit.fitWidth : BoxFit.cover,
                           ),
                         ),
                     );
@@ -769,7 +734,6 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
   Widget _productVariation() {
     if(have_variation == 'Y'){
       return Container(
-        //height: 65,
           width: MediaQuery.of(context).size.width,
           child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -778,12 +742,12 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
           for (int i = 0; i < listProdVar.length; i++) ...[
       Padding(
       padding: EdgeInsets.only(left: 0),
-      child: Text(
-        listProdVar[i].variation_name+' :',
-        style: GoogleFonts.lato(
-          textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Colors.grey.shade600),
-        ),
-      ),
+    child: Text(
+    listProdVar[i].variation_name+' :',
+    style: GoogleFonts.lato(
+    textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Colors.grey.shade600),
+    ),
+    ),
     ),
 
     new Wrap(
@@ -797,11 +761,11 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
     child: ChoiceChip(
     label: Text(
     listProdVar[i].variation_option[j].option_name.length == 1 ? ' '+listProdVar[i].variation_option[j].option_name.toUpperCase()+' '  : listProdVar[i].variation_option[j].option_name.toUpperCase(),
-      style: GoogleFonts.lato(
-      textStyle: TextStyle(fontSize: 12,
-      color: _value == listProdVar[i].variation_option[j].id ? Colors.deepOrange.shade600 : Colors.grey.shade600,
-      fontWeight: _value == listProdVar[i].variation_option[j].id ? FontWeight.bold : FontWeight.w500,),
-      ),
+    style: GoogleFonts.lato(
+    textStyle: TextStyle(fontSize: 12,
+    color: _value == listProdVar[i].variation_option[j].id ? Colors.deepOrange.shade600 : Colors.grey.shade600,
+    fontWeight: _value == listProdVar[i].variation_option[j].id ? FontWeight.bold : FontWeight.w500,),
+    ),
     ),
     pressElevation: 5,
     selected: _value == listProdVar[i].variation_option[j].id,
@@ -892,46 +856,65 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
       );
     }else{
       return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          padding: const EdgeInsets.symmetric(horizontal: 0.0),
           child: new SingleChildScrollView(
-            child: ListView.builder(
+            child: ListView.separated(
+              separatorBuilder: (context, index) => Divider(
+                color: Colors.grey,
+              ),
               shrinkWrap: true,
-              itemCount: reviews.length,
+              itemCount: reviews.length > 3 ? 3 : reviews.length,
               itemBuilder: (context, index) {
                 var data = reviews[index];
-                return Column(
+                return Row(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
                       Container(
-                        margin: EdgeInsets.only(left: 4.0, right: 4.0, bottom: 0.0),
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          data.userName,
-                          style: GoogleFonts.lato(
-                            textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-                          ),
-                          overflow: TextOverflow.ellipsis,
+                        padding: EdgeInsets.only(right: 5),
+                        width: 40,
+                        height: 40,
+                        child: CircleAvatar(
+                          backgroundColor: Colors.grey.shade300,
+                          maxRadius: 40,
+                          child: Icon(CupertinoIcons.person_fill, size: 36,  color: Colors.grey.shade600,),
                         ),
                       ),
-
-                      /*Container(
-                        margin: EdgeInsets.only(left: 4.0, right: 4.0, bottom: 2.0),
-                        alignment: Alignment.centerLeft,
-                        child: ratingBar(double.parse(data.rating), 20),
-                      ),*/
-
-                      Container(
-                        margin: EdgeInsets.only(left: 4.0, right: 4.0),
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          data.review_text,
-                          style: GoogleFonts.lato(
-                            textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
-                          ),
-                          overflow: TextOverflow.ellipsis,
+                      Expanded(
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Text(
+                                        data.userName,
+                                        style: GoogleFonts.lato(
+                                          textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500,),
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.only(top: 2),
+                                        child: Text(
+                                          data.review_text,
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, fontStyle: FontStyle.italic),
+                                          ),
+                                        ),
+                                      ),
+                                    ]
+                                ),
+                              ),
+                            ]
                         ),
-                      ),
+                      )
                     ]
                 );
               },
@@ -988,8 +971,8 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
                                 params = params + "&quantity=" + quantity.toString();
 
                                 model.addProduct(param: params);
-                                //showStatusToast('Adding '+name+' to cart', true);
-                                Navigator.of(context).pushReplacementNamed("/ShopCart");
+                                showStatusToast('Added '+name+' to cart.', true);
+                                //Navigator.of(context).pushReplacementNamed("/ShopCart");
                               }
                               print(params);
                             }else{
@@ -1031,6 +1014,14 @@ class PhotoViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0.0,
+        iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.black.withAlpha(240),
+      ),
+      backgroundColor: Colors.black.withAlpha(240),
       body: PhotoView(
         imageProvider: NetworkImage(imej),
         minScale: PhotoViewComputedScale.contained * 0.8,

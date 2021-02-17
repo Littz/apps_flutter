@@ -110,14 +110,15 @@ class _MerchantDeeplinkState extends State<MerchantDeeplink> {
               ),
               flexibleSpace: DecoratedBox(
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
+                  color: Colors.white
+                  /*gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.topRight,
                     colors: <Color>[
                       Color(0xffF45432),
                       Colors.deepOrangeAccent.shade100,
                     ],
-                  ),
+                  ),*/
                 ),
                 child: _showTitle ? null : FlexibleSpaceBar(
                   background: ProfileMerchant(catId: int.parse(widget.mercId)),
@@ -133,7 +134,10 @@ class _MerchantDeeplinkState extends State<MerchantDeeplink> {
             SliverPadding(
               padding: EdgeInsets.fromLTRB(8, 5, 8, 10),
               sliver: ProductsListMerchantBody(catId: int.parse(widget.mercId), filte: _currentlySelected),
-            )
+            ),
+            SliverFillRemaining(
+              child: new Container(color: Colors.transparent),
+            ),
           ],
         ),
       ),
@@ -201,16 +205,6 @@ class ProfileMerchant extends StatelessWidget {
   //final String filte;
   ProfileMerchant({@required this.catId});
 
-
-  Future<void> share() async {
-  await FlutterShare.share(
-  title: 'Cartsini',
-  text: '',
-  linkUrl: 'https://shopapp.e-dagang.asia/merchant/'+model.getMid().toString(),
-  chooserTitle: model.getCompanyName(),
-  );
-  }
-
   @override
   Widget build(BuildContext context) {
     this.context = context;
@@ -240,7 +234,7 @@ class ProfileMerchant extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(left: 0.0, right: 10.0, top: 0.0),
                   child: ClipOval(
-                    child: model.getProfilePic() == null ? Container(width: 75,height: 75,color: Colors.grey.shade200,) : CachedNetworkImage(
+                    child: model.getProfilePic().toString() == 'null' ? Image.asset('assets/icons/ic_launcher_new.png', height: 75, width: 75, fit: BoxFit.cover,) : CachedNetworkImage(
                       fit: BoxFit.cover,
                       height: 75,
                       width: 75,
@@ -255,12 +249,9 @@ class ProfileMerchant extends StatelessWidget {
                         ),
                       ),
                       placeholder: (context, url) => Container(
-                        width: 75,
-                        height: 75,
-                        color: Colors.grey.shade200,
-                        //child: CupertinoActivityIndicator(radius: 15,),
+                        child: CupertinoActivityIndicator(radius: 15,),
                       ),
-                      errorWidget: (context, url, error) => Icon(CupertinoIcons.photo, size: 36, color: Colors.grey.shade200,),
+                      errorWidget: (context, url, error) => ClipOval(child: Image.asset('assets/icons/ic_image_error.png', height: 70, width: 70, fit: BoxFit.cover,)),
                     ),
                   ),
                 ),
@@ -293,7 +284,7 @@ class ProfileMerchant extends StatelessWidget {
                         padding: const EdgeInsets.only(left: 0.0, right: 0.0, top: 3.0),
                         child: RichText(
                           text: TextSpan(
-                            text: "Members since ",
+                            text: "Joined : ",
                             style: GoogleFonts.lato(
                               textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic, color: Colors.white),
                             ),
@@ -311,19 +302,24 @@ class ProfileMerchant extends StatelessWidget {
                       Container(
                         height: 40,
                         padding: const EdgeInsets.only(top: 12,),
-                        child: OutlineButton.icon(
-                          onPressed: () => share(),
-                          icon: Icon(Icons.share, size: 20, color: Colors.white,),
+                        child: RaisedButton.icon(
+                          onPressed: () async {
+                            await FlutterShare.share(
+                              title: 'Cartsini',
+                              text: '',
+                              linkUrl: 'https://shopapp.e-dagang.asia/merchant/'+model.getMid().toString(),
+                              chooserTitle: model.getCompanyName(),
+                            );
+                          },
+                          icon: Icon(Icons.share, size: 22, color: Colors.white,),
                           label: Text('SHARE',
                             style: GoogleFonts.lato(
-                              textStyle: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700,),
+                              textStyle: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w700,),
                             ),
                           ),
-                          highlightedBorderColor: Colors.orange,
                           color: Colors.transparent,
-                          borderSide: new BorderSide(color: Colors.white),
                           shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(5.0)
+                          borderRadius: new BorderRadius.circular(20.0)
                           )
                         ),
                       ),
