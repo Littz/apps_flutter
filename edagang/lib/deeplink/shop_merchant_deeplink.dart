@@ -233,25 +233,42 @@ class ProfileMerchant extends StatelessWidget {
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.only(left: 0.0, right: 10.0, top: 0.0),
-                  child: ClipOval(
-                    child: model.getProfilePic().toString() == 'null' ? Image.asset('assets/icons/ic_launcher_new.png', height: 75, width: 75, fit: BoxFit.cover,) : CachedNetworkImage(
-                      fit: BoxFit.cover,
-                      height: 75,
-                      width: 75,
-                      imageUrl: Constants.urlImage + model.getProfilePic() ?? '',
-                      imageBuilder: (context, imageProvider) => Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
+                  child: Container(
+                    height: 75,
+                    width: 75,
+                    decoration: new BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.shade500,
+                          blurRadius: 2.5,
+                          spreadRadius: 0.0,
+                          offset: Offset(2.5, 2.5),
+                        )
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: model.getProfilePic().toString() == 'null' ? Image.asset('assets/icons/ic_launcher_new.png', height: 75, width: 75, fit: BoxFit.cover,) : CachedNetworkImage(
+                        fit: BoxFit.cover,
+                        height: 75,
+                        width: 75,
+                        imageUrl: Constants.urlImage + model.getProfilePic().toString() ?? '',
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            ),
+                            borderRadius: BorderRadius.all(Radius.circular(7.0)),
                           ),
-                          borderRadius: BorderRadius.all(Radius.circular(7.0)),
                         ),
+                        placeholder: (context, url) => Container(
+                          child: CupertinoActivityIndicator(radius: 15,),
+                        ),
+                        errorWidget: (context, url, error) => ClipOval(child: Image.asset('assets/icons/ic_image_error.png', height: 75, width: 75, fit: BoxFit.cover,)),
                       ),
-                      placeholder: (context, url) => Container(
-                        child: CupertinoActivityIndicator(radius: 15,),
-                      ),
-                      errorWidget: (context, url, error) => ClipOval(child: Image.asset('assets/icons/ic_image_error.png', height: 70, width: 70, fit: BoxFit.cover,)),
                     ),
                   ),
                 ),
@@ -265,7 +282,7 @@ class ProfileMerchant extends StatelessWidget {
                         //padding: const EdgeInsets.only(left: 0.0, right: 0.0, top: 0.0),
                         child: Text(model.getCompanyName() ?? '',
                           style: GoogleFonts.lato(
-                            textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Colors.white),
+                            textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Colors.black),
                           ),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
@@ -275,7 +292,7 @@ class ProfileMerchant extends StatelessWidget {
                         padding: const EdgeInsets.only(left:0.0, top: 3.0,),
                         child: Text(model.getStateName() ?? '',
                           style: GoogleFonts.lato(
-                            textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic, color: Colors.white),
+                            textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic, color: Colors.black),
                           ),
                           textAlign: TextAlign.start,
                         ),
@@ -286,12 +303,12 @@ class ProfileMerchant extends StatelessWidget {
                           text: TextSpan(
                             text: "Joined : ",
                             style: GoogleFonts.lato(
-                              textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic, color: Colors.white),
+                              textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic, color: Colors.black),
                             ),
                             children: <TextSpan>[
                               TextSpan(text: model.getJoinDate() ?? '',
                                 style: GoogleFonts.lato(
-                                  textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),
+                                  textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black),
                                 ),
                               ),
                             ],
@@ -303,24 +320,25 @@ class ProfileMerchant extends StatelessWidget {
                         height: 40,
                         padding: const EdgeInsets.only(top: 12,),
                         child: RaisedButton.icon(
-                          onPressed: () async {
-                            await FlutterShare.share(
-                              title: 'Cartsini',
-                              text: '',
-                              linkUrl: 'https://shopapp.e-dagang.asia/merchant/'+model.getMid().toString(),
-                              chooserTitle: model.getCompanyName(),
-                            );
-                          },
-                          icon: Icon(Icons.share, size: 22, color: Colors.white,),
-                          label: Text('SHARE',
-                            style: GoogleFonts.lato(
-                              textStyle: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w700,),
+                            onPressed: () async {
+                              await FlutterShare.share(
+                                title: 'Cartsini',
+                                text: '',
+                                linkUrl: 'https://shopapp.e-dagang.asia/merchant/'+model.getMid().toString(),
+                                chooserTitle: model.getCompanyName(),
+                              );
+                            },
+                            icon: Icon(Icons.share, size: 22, color: Colors.white,),
+                            label: Text('SHARE',
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w700,),
+                              ),
+                              //textAlign: TextAlign.center,
                             ),
-                          ),
-                          color: Colors.transparent,
-                          shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(20.0)
-                          )
+                            color: Colors.deepOrange,
+                            shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(20.0)
+                            )
                         ),
                       ),
                     ]

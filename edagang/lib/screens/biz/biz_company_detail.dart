@@ -1,13 +1,18 @@
 import 'package:edagang/models/biz_model.dart';
+import 'package:edagang/scoped/main_scoped.dart';
+import 'package:edagang/screens/biz/webview_quot.dart';
+import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/custom_dialog.dart';
 import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
+import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_gifs/loading_gifs.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -313,7 +318,9 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                             ],
                           ),
                         ),
-                        Container(
+                        _reqBtn(),
+
+                        /*Container(
                             alignment: Alignment.centerLeft,
                             margin: EdgeInsets.only(left: 5.0, top: 8.0,  bottom: 5),
                             child: Row(
@@ -383,7 +390,7 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                                 ),
                               ],
                             )
-                        ),
+                        ),*/
                       ],
                     ),
                   ),
@@ -560,6 +567,103 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
     } else {
       return Container();
     }
+  }
+
+  Widget _reqBtn() {
+    return ScopedModelDescendant<MainScopedModel>(builder: (context, child, model){
+      //if(model.isAuthenticated){
+      return Container(
+        padding: EdgeInsets.only(left: 8.0, top: 3.0, right: 8.0, bottom: 8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  InkWell(
+                    onTap: () {launch("tel://"+office_phone, );},
+                    splashColor: Color(0xffA0CCE8),
+                    highlightColor: Color(0xffA0CCE8),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.phone, color: color),
+                        Container(
+                          margin: const EdgeInsets.only(top: 2),
+                          child: Text('CALL',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: color,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  VerticalDivider(),
+
+                  InkWell(
+                    onTap: () async {
+                      await FlutterShare.share(
+                        title: 'SmartBiz',
+                        text: '',
+                        linkUrl: 'https://bizapp.e-dagang.asia/company/'+_id.toString(),
+                        chooserTitle: widget.bizName,
+                      );
+                    },
+                    splashColor: Color(0xffA0CCE8),
+                    highlightColor: Color(0xffA0CCE8),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.share, color: color),
+                        Container(
+                          margin: const EdgeInsets.only(top: 2),
+                          child: Text('SHARE',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: color,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ]
+              ),
+            ),
+            RaisedButton(
+              shape: StadiumBorder(),
+              color: color,
+              child: Text('QUOTATION',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600,),
+                ),
+              ),
+              onPressed: () {
+                model.isAuthenticated ? Navigator.push(context, SlideRightRoute(page: WebviewQuot('https://smartbiz.e-dagang.asia/biz/quot/' + model.getId().toString() + '/' + widget.bizId, 'Quotation'))) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
+              },
+            ),
+          ],
+        ),
+      );
+      //}else{
+      //  return Container();
+      //}
+
+    });
+
   }
 
   Widget _productList() {
@@ -770,37 +874,6 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
     }
   }
 
-}
-
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  _SliverAppBarDelegate(this._tabBar);
-
-  final TabBar _tabBar;
-
-  @override
-  double get minExtent => _tabBar.preferredSize.height;
-  @override
-  double get maxExtent => _tabBar.preferredSize.height;
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Align(
-        alignment: Alignment.center,
-        child: Container(
-          alignment: Alignment.center,
-          width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.only(bottom: 3),
-          color: Colors.white,
-          child: _tabBar,
-        )
-    );
-  }
-
-  @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return false;
-  }
 }
 
 class SABT extends StatefulWidget {

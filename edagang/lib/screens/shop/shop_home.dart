@@ -15,7 +15,6 @@ import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/product_grid_card.dart';
 import 'package:edagang/widgets/searchbar.dart';
-import 'package:edagang/widgets/square_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';

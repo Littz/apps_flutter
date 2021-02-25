@@ -3,10 +3,12 @@ import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_share/flutter_share.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -19,8 +21,11 @@ class UpskillDetailPage extends StatefulWidget {
   _UpskillDetailPageState createState() => _UpskillDetailPageState();
 }
 
+const xpandedHeight = 195.0;
+
 class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  ScrollController _scrollController;
   SharedPref sharedPref = SharedPref();
   DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
   Map<dynamic, dynamic> responseBody;
@@ -105,7 +110,7 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
             price = data.price;
             course_category_id = data.course_category_id;
             company_name = data.company_name;
-            logo = 'https://bizapp.e-dagang.asia'+data.logo;
+            logo = 'https://upskillapp.e-dagang.asia'+data.logo;
             cat_name = data.cat_name;
             schedule = data.schedule;
 
@@ -122,6 +127,7 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
   void initState() {
     getDetails();
     super.initState();
+    _scrollController = ScrollController()..addListener(() => setState(() {}));
     _animationController = AnimationController(vsync: this, duration: Duration(seconds: 2)) ..forward();
     _movieInformationSlidingAnimation =
         Tween<Offset>(begin: Offset(0, 1), end: Offset.zero).animate(
@@ -132,10 +138,14 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
 
   }
 
+  bool get _showTitle {
+    return _scrollController.hasClients && _scrollController.offset > xpandedHeight - kToolbarHeight;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: new PreferredSize(
+      /*appBar: new PreferredSize(
           preferredSize: Size.fromHeight(56.0),
           child: new AppBar(
             centerTitle: false,
@@ -164,15 +174,103 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
                 )
             ),
           )
-      ),
+      ),*/
       backgroundColor: Colors.white,
       body: isLoading ? _buildCircularProgressIndicator() : CustomScrollView(
+        controller: _scrollController,
         slivers: <Widget>[
+          SliverAppBar(
+            pinned: true,
+            expandedHeight: xpandedHeight,
+            leading: Hero(
+                tag: "back",
+                child: InkWell(
+                  onTap: () {Navigator.pop(context);},
+                  splashColor: Color(0xffA0CCE8),
+                  highlightColor: Color(0xffA0CCE8),
+                  child: BlurIconLight(
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: Colors.black,
+                    ),
+                  ),
+                )
+            ),
+            title: SABT(
+              child: Container(
+                  child: Text(title ?? '',
+                    style: GoogleFonts.lato(
+                      textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w700,),
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                  )
+              ),
+            ),
+            flexibleSpace: _showTitle ? null : FlexibleSpaceBar(
+              background: Column(
+                  children: <Widget>[
+                    Stack(
+                      overflow: Overflow.visible,
+                      alignment: Alignment.bottomLeft,
+                      children: <Widget>[
+                        Image.asset(
+                          'assets/bggoilmu.png', fit: BoxFit.fill,
+                          height: 165,
+                        ),
+                        FractionalTranslation(
+                          translation: Offset(0.1, 0.5),
+                          child: Container(
+                            height: 90,
+                            width: 90,
+                            decoration: new BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade500,
+                                  blurRadius: 2.5,
+                                  spreadRadius: 0.0,
+                                  offset: Offset(2.5, 2.5),
+                                )
+                              ],
+                              //border: new Border.all(color: Colors.blue, width: 1.5,),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: FadeInImage.assetNetwork(
+                                placeholder: logo ?? "",
+                                image: logo ?? "",
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
+                        /*Positioned(
+                          bottom: -16.0,
+                          right: 16.0,
+                          child: vr_ofis == 'null' && vr_room == 'null' ? Container() : Container(
+                              alignment: Alignment.topRight,
+                              child: virtualBtn(context, vr_ofis, vr_room)
+                          ),
+                        ),*/
+                      ],
+                    ),
+                  ]
+              ),
+            ),
+            /*flexibleSpace: _showTitle ? null : FlexibleSpaceBar(
+              background: Image.asset(
+                'assets/bggoilmu.png', fit: BoxFit.fill,
+                height: 150,
+              ),
+            ),*/
+          ),
           SliverList(
             delegate: SliverChildListDelegate(
               [
                 Container(
-                  padding: EdgeInsets.all(15.0),
+                  padding: EdgeInsets.only(left: 8.0, top: 1.0, right: 8.0, bottom: 8.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -180,12 +278,13 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
 
                       Container(
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Container(
                               child: Text(title ?? "",
                                   style: GoogleFonts.lato(
-                                    textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w700,),
+                                    textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w700,),
                                   ),
                               ),
                             ),
@@ -194,6 +293,7 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
                                   textStyle: TextStyle(fontSize: 13, fontStyle: FontStyle.italic,),
                                 ),
                             ),
+
                             _scheduleList(),
 
                             _reqBtn(),
@@ -263,6 +363,9 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
               ],
             ),
           ),
+          SliverFillRemaining(
+            child: new Container(color: Colors.transparent),
+          ),
         ],
       ),
     ); // Here you direct access using widget
@@ -270,22 +373,10 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
 
   Widget _scheduleList() {
     if(schedule.length == 0) {
-      return Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Container(
-          child: Text(
-            "",
-            style: GoogleFonts.lato(
-              textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic),
-            ),
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.left,
-          ),
-        ),
-      );
+      return Container();
     }else{
       return Padding(
-        padding: const EdgeInsets.only(top: 7.0),
+        padding: const EdgeInsets.only(top: 5.0),
         child: new SingleChildScrollView(
             child: Column(
                 children: <Widget>[
@@ -360,11 +451,50 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
     return ScopedModelDescendant<MainScopedModel>(builder: (context, child, model){
       //if(model.isAuthenticated){
         return Container(
-          padding: EdgeInsets.only(left: 0,),
+          padding: EdgeInsets.only(left: 2, top: 5, right: 2),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
             children: [
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    InkWell(
+                      onTap: () async {
+                        await FlutterShare.share(
+                          title: 'GOilmu',
+                          text: '',
+                          linkUrl: 'https://upskillapp.e-dagang.asia/course/'+_id.toString(),
+                          chooserTitle: title ?? '',
+                        );
+                      },
+                      splashColor: Color(0xffA0CCE8),
+                      highlightColor: Color(0xffA0CCE8),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.share, color: color),
+                          Container(
+                            margin: const EdgeInsets.only(top: 2),
+                            child: Text('SHARE',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: color,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ]
+                ),
+              ),
               RaisedButton(
                 shape: StadiumBorder(),
                 color: color,
@@ -417,5 +547,58 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
   void dispose() {
     super.dispose();
     _animationController.dispose();
+  }
+}
+
+class SABT extends StatefulWidget {
+  final Widget child;
+  const SABT({
+    Key key,
+    @required this.child,
+  }) : super(key: key);
+  @override
+  _SABTState createState() {
+    return new _SABTState();
+  }
+}
+
+class _SABTState extends State<SABT> {
+  ScrollPosition _position;
+  bool _visible;
+  @override
+  void dispose() {
+    _removeListener();
+    super.dispose();
+  }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _removeListener();
+    _addListener();
+  }
+  void _addListener() {
+    _position = Scrollable.of(context)?.position;
+    _position?.addListener(_positionListener);
+    _positionListener();
+  }
+  void _removeListener() {
+    _position?.removeListener(_positionListener);
+  }
+  void _positionListener() {
+    final FlexibleSpaceBarSettings settings =
+    context.inheritFromWidgetOfExactType(FlexibleSpaceBarSettings);
+    bool visible = settings == null || settings.currentExtent <= settings.minExtent;
+    if (_visible != visible) {
+      setState(() {
+        _visible = visible;
+      });
+    }
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Visibility(
+      visible: _visible,
+      child: widget.child,
+    );
   }
 }

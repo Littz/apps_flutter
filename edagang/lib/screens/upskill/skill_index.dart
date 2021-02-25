@@ -392,16 +392,89 @@ class _UpskillPageState extends State<UpskillPage> {
             crossAxisCount: 4,
             mainAxisSpacing: 2.5,
             crossAxisSpacing: 2.5,
-            //childAspectRatio: MediaQuery
-            //    .of(context)
-            //    .size
-            //    .width / (MediaQuery
-            //    .of(context)
-            //    .size
-            //    .height / 1.50),
           ),
           delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
             var data = quick_menu[index];
+            /*return Padding(
+              //padding: EdgeInsets.only(left: 3.6, top: 8, right: 3.6,),
+              padding: EdgeInsets.symmetric(
+                horizontal: 5.0,
+                vertical: 5.0,
+              ),
+              *//*alignment: Alignment.center,
+                decoration: new BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                  border: Border.all(
+                    color: Colors.white,
+                    style: BorderStyle.solid,
+                    width: 0.0,
+                  ),
+                ),*//*
+              child: InkWell(
+                onTap: () {
+                  if(model.skillcat[index].id == 1) {
+                    Navigator.push(context, SlideRightRoute(
+                        page: SkillProfessionalPage(model.skillcat[index].name)));
+                  }else if(model.skillcat[index].id == 2) {
+                    Navigator.push(context, SlideRightRoute(
+                        page: SkillTechnicalPage(model.skillcat[index].name)));
+                  }else if(model.skillcat[index].id == 3) {
+                    Navigator.push(context, SlideRightRoute(
+                        page: SkillSafetyPage(model.skillcat[index].name)));
+                  }else if(model.skillcat[index].id == 4) {
+                    Navigator.push(context, SlideRightRoute(
+                        page: SkillTrainingPage(model.skillcat[index].name)));
+                  }
+                },
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      height: 70.0,
+                      width: 70.0,
+                      decoration: new BoxDecoration(
+                        color: Colors.grey.shade100,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade500,
+                            blurRadius: 2.5,
+                            spreadRadius: 0.0,
+                            offset: Offset(2.5, 2.5),
+                          )
+                        ],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Image.asset(data.imgPath, height: 44, width: 44,),
+                      ),
+                    ),
+                    Container(
+                      width: 70.0,
+                      padding: EdgeInsets.all(2.5),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.topCenter,
+                            child: Text(
+                              data.title,
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500,),
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                )
+              ),
+            );*/
             return Container(
               alignment: Alignment.center,
               decoration: BoxDecoration(
@@ -432,7 +505,6 @@ class _UpskillPageState extends State<UpskillPage> {
                               page: SkillTrainingPage(model.skillcat[index].name)));
                         }
                       },
-                      //color: Color(0xffA0CCE8),
                       child: Image.asset(data.imgPath, height: 44, width: 44,),
                     ),
                   ),
@@ -445,7 +517,6 @@ class _UpskillPageState extends State<UpskillPage> {
                         style: GoogleFonts.lato(
                           textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                         ),
-                        //style: Theme.of(context).textTheme.caption.copyWith(color: Colors.black),
                       ),
                     ),
                   ),

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:line_awesome_icons/line_awesome_icons.dart';
 
 List<Menus> getBizQxcess() {
   List<Menus> quickMenu = new List();
@@ -73,41 +72,48 @@ List<Menus> getFinInsurans() {
   Menus menuTab = new Menus();
 
   menuTab.id = 0;
+  menuTab.imgPath = "assets/images/medical.png";
+  menuTab.title = "Medical Insurance";
+  menuTab.webviewUrl = "https://fintools.e-dagang.asia/insPackage7";
+  tabMenu.add(menuTab);
+  menuTab = new Menus();
+
+  menuTab.id = 1;
   menuTab.imgPath = "assets/images/fin_personal_director.png";
   menuTab.title = "Personal Director's & Officer's Liabilty Insurance";
   menuTab.webviewUrl = "https://fintools.e-dagang.asia/insPackage1";
   tabMenu.add(menuTab);
   menuTab = new Menus();
 
-  menuTab.id = 1;
+  menuTab.id = 2;
   menuTab.imgPath = "assets/images/fin_accident.png";
   menuTab.title = "Individual Personal Insurance";
   menuTab.webviewUrl = "https://fintools.e-dagang.asia/insPackage2";
   tabMenu.add(menuTab);
   menuTab = new Menus();
 
-  menuTab.id = 2;
+  menuTab.id = 3;
   menuTab.imgPath = "assets/images/fin_home.png";
   menuTab.title = "SMARTHOME All-Risk Insurance";
   menuTab.webviewUrl = "https://fintools.e-dagang.asia/insPackage3";
   tabMenu.add(menuTab);
   menuTab = new Menus();
 
-  menuTab.id = 3;
+  menuTab.id = 4;
   menuTab.imgPath = "assets/images/fin_health.png";
   menuTab.title = "Top-up Medical Scheme A Health Maximiser";
   menuTab.webviewUrl = "https://fintools.e-dagang.asia/insPackage4";
   tabMenu.add(menuTab);
   menuTab = new Menus();
 
-  menuTab.id = 4;
+  menuTab.id = 5;
   menuTab.imgPath = "assets/images/fin_car.png";
   menuTab.title = "Car Insurance";
   menuTab.webviewUrl = "https://fintools.e-dagang.asia/insPackage5";
   tabMenu.add(menuTab);
   menuTab = new Menus();
 
-  menuTab.id = 5;
+  menuTab.id = 6;
   menuTab.imgPath = "assets/images/fin_fire.png";
   menuTab.title = "Fire Insurance";
   menuTab.webviewUrl = "https://fintools.e-dagang.asia/insPackage6";

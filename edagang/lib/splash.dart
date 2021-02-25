@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:edagang/index.dart';
+import 'package:edagang/stct.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intro_slider/intro_slider.dart';
@@ -56,45 +57,116 @@ class _IntroScreenState extends State<IntroScreen> {
 
     slides.add(
       new Slide(
-        title: "INTRODUCTION",
+        title: "FINTOOLS",
         styleTitle: GoogleFonts.lato(
           textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.red.shade600),
         ),
-        description: "Allow miles wound place the leave had. To sitting subject no improve studied limited",
+        //marginTitle: EdgeInsets.all(16.0),
+        description: "Offers a range of financial services on an online platform to meet any business or personal financial requirements.",
         styleDescription: GoogleFonts.lato(
           textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
         ),
-        pathImage: "assets/lg_edagang.png",
+        //marginDescription: EdgeInsets.all(16.0),
+        //backgroundImage: "assets/images/fintest.png",
+        //backgroundImageFit: BoxFit.fill,
+        //backgroundOpacity: 0.1,
+        //backgroundOpacityColor: Colors.white,
+        pathImage: "assets/images/intro_fintools.png",
         backgroundColor: Colors.white,
+        foregroundImageFit: BoxFit.fill,
+        heightImage: 257,
+        widthImage: 380
+        //backgroundColor: Color(0xff454545),
       ),
     );
     slides.add(
       new Slide(
-        title: "PENCIL",
-        styleTitle: GoogleFonts.lato(
-          textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.red.shade600),
-        ),
-        description: "Ye indulgence unreserved connection alteration appearance",
-        styleDescription: GoogleFonts.lato(
-          textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
-        ),
-        pathImage: "assets/lg_edagang.png",
-        backgroundColor: Colors.white,
-      ),
-    );
-    slides.add(
-      new Slide(
-        title: "RULER",
-        styleTitle: GoogleFonts.lato(
-          textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.red.shade600),
-        ),
-        description:"Much evil soon high in hope do view. Out may few northward believing attempted. Yet timed being songs marry one defer men our. Although finished blessing do of",
-        styleDescription: GoogleFonts.lato(
-          textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
-        ),
-        pathImage: "assets/lg_edagang.png",
-        backgroundColor: Colors.white,
+          title: "CARTSINI",
+          styleTitle: GoogleFonts.lato(
+            textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.red.shade600),
+          ),
+          description: "Traditional marketplace but with a totally modern online shopping experience that broadens the horizon for both customers and providers of products and services.",
+          styleDescription: GoogleFonts.lato(
+            textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
+          ),
 
+          pathImage: "assets/images/intro_cartsini.png",
+          backgroundColor: Colors.white,
+          foregroundImageFit: BoxFit.fill,
+          heightImage: 257,
+          widthImage: 380
+      ),
+    );
+    slides.add(
+      new Slide(
+          title: "SMARTBIZ",
+          styleTitle: GoogleFonts.lato(
+            textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.red.shade600),
+          ),
+          description: "An excellent online platform promoting products, services, businesses and events, transforming visibility into business opportunities.",
+          styleDescription: GoogleFonts.lato(
+            textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
+          ),
+
+          pathImage: "assets/images/intro_smartbiz.png",
+          backgroundColor: Colors.white,
+          foregroundImageFit: BoxFit.fill,
+          heightImage: 257,
+          widthImage: 380
+      ),
+    );
+    slides.add(
+      new Slide(
+          title: "GOILMU",
+          styleTitle: GoogleFonts.lato(
+            textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.red.shade600),
+          ),
+          description: "The go-to for career transformation and new opportunities through training and upskilling for professionals and non professionals using immersive tools and techniques.",
+          styleDescription: GoogleFonts.lato(
+            textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
+          ),
+
+          pathImage: "assets/images/intro_goilmu.png",
+          backgroundColor: Colors.white,
+          foregroundImageFit: BoxFit.fill,
+          heightImage: 257,
+          widthImage: 380
+      ),
+    );
+    slides.add(
+      new Slide(
+          title: "BLURB",
+          styleTitle: GoogleFonts.lato(
+            textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.red.shade600),
+          ),
+          description: "A virtual business world to conduct business-as -usual but within an immersive online ecosystem, enhancing the business process in pursuit of success.",
+          styleDescription: GoogleFonts.lato(
+            textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
+          ),
+
+          pathImage: "assets/images/intro_blurb.png",
+          backgroundColor: Colors.white,
+          foregroundImageFit: BoxFit.fill,
+          heightImage: 257,
+          widthImage: 380
+      ),
+    );
+    slides.add(
+      new Slide(
+          title: "VIRTUAL TRADE",
+          styleTitle: GoogleFonts.lato(
+            textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.red.shade600),
+          ),
+          description: "The day-to-day office environment is transformed into a virtual office to seamlessly continue the usiness experience and enhance the effectiveness to pursue success. Also provides a virtual Convention and Exhibition Centre.",
+          styleDescription: GoogleFonts.lato(
+            textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
+          ),
+
+          pathImage: "assets/images/intro_vrtrade.png",
+          backgroundColor: Colors.white,
+          foregroundImageFit: BoxFit.fill,
+          heightImage: 257,
+          widthImage: 380
       ),
     );
 
@@ -109,11 +181,11 @@ class _IntroScreenState extends State<IntroScreen> {
   Widget build(BuildContext context) {
     return new IntroSlider(
       slides: this.slides,
-      colorSkipBtn: Colors.red,
+      colorSkipBtn: Color(0xffDD0000),
       onSkipPress: this.onDonePress,
-      colorDoneBtn: Colors.red,
+      colorDoneBtn: Color(0xffDD0000),
       onDonePress: this.onDonePress,
-      colorActiveDot: Colors.red,
+      colorActiveDot: Color(0xffDD0000),
       colorDot: Colors.grey,
 
     );

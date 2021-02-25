@@ -174,13 +174,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
-  flutter_custom_tabs:
-    dependency: "direct main"
-    description:
-      name: flutter_custom_tabs
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.6.0"
   flutter_facebook_login:
     dependency: "direct main"
     description:
@@ -247,13 +240,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "7.1.1"
-  focused_menu:
-    dependency: "direct main"
-    description:
-      name: focused_menu
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.2"
   google_fonts:
     dependency: "direct main"
     description:
@@ -331,13 +317,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.2"
-  line_awesome_icons:
-    dependency: "direct main"
-    description:
-      name: line_awesome_icons
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.4+2"
   loading_gifs:
     dependency: "direct main"
     description:
@@ -352,13 +331,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.12.10-nullsafety.1"
-  material_design_icons_flutter:
-    dependency: "direct main"
-    description:
-      name: material_design_icons_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.0.5755"
   meta:
     dependency: transitive
     description:
@@ -436,20 +408,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.9.2"
-  permission_handler:
-    dependency: "direct main"
-    description:
-      name: permission_handler
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "5.0.1+1"
-  permission_handler_platform_interface:
-    dependency: transitive
-    description:
-      name: permission_handler_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.1"
   petitparser:
     dependency: transitive
     description:
@@ -513,13 +471,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
-  screenshot:
-    dependency: "direct main"
-    description:
-      name: screenshot
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.1"
   shared_preferences:
     dependency: "direct main"
     description:

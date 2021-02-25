@@ -1,17 +1,12 @@
 import 'package:edagang/widgets/blur_icon.dart';
-import 'package:edagang/widgets/custom_tabs.dart';
 import 'package:edagang/widgets/product_grid_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:io' show Platform;
 import 'package:url_launcher/url_launcher.dart';
 
 
-
 class BizVrListPage extends StatefulWidget {
-  //String mercId, mercName;
-  //BizVrListPage(this.mercId, this.mercName);
 
   @override
   _BizVrListPageState createState() {
@@ -142,16 +137,12 @@ class _BizVrListPageState extends State<BizVrListPage> {
                         ),
                         child: InkWell(
                           onTap: () async {
-                            if(Platform.isAndroid) {
-                              CustomTabs.launchURL(context, 'https://smartbiz.e-dagang.asia/vr/mogsc/office/index.htm');
-                            }else{
-                              final String url = 'https://smartbiz.e-dagang.asia/vr/mogsc/office/index.htm';
-                              if (await canLaunch(url)) await launch(
-                                url,
-                                forceSafariVC: false,
-                                forceWebView: false,
-                              );
-                            }
+                            final String url = 'https://smartbiz.e-dagang.asia/vr/mogsc/office/index.htm';
+                            if (await canLaunch(url)) await launch(
+                              url,
+                              forceSafariVC: false,
+                              forceWebView: false,
+                            );
                           },
                           child: VrCardItem(
                             vrimg: Image.asset('assets/vr_mogsc.png'),
@@ -171,16 +162,12 @@ class _BizVrListPageState extends State<BizVrListPage> {
                         ),
                         child: InkWell(
                           onTap: () async {
-                            if(Platform.isAndroid) {
-                              CustomTabs.launchURL(context, 'https://smartbiz.e-dagang.asia/vr/shapadu/office/index.htm');
-                            }else{
-                              final String url = 'https://smartbiz.e-dagang.asia/vr/shapadu/office/index.htm';
-                              if (await canLaunch(url)) await launch(
-                                url,
-                                forceSafariVC: false,
-                                forceWebView: false,
-                              );
-                            }
+                            final String url = 'https://smartbiz.e-dagang.asia/vr/shapadu/office/index.htm';
+                            if (await canLaunch(url)) await launch(
+                              url,
+                              forceSafariVC: false,
+                              forceWebView: false,
+                            );
                           },
                           child: VrCardItem(
                             vrimg: Image.asset('assets/vr_shapadu.png'),
@@ -200,16 +187,12 @@ class _BizVrListPageState extends State<BizVrListPage> {
                         ),
                         child: InkWell(
                           onTap: () async {
-                            if(Platform.isAndroid) {
-                              CustomTabs.launchURL(context, 'https://smartbiz.e-dagang.asia/vr/cekap/office/index.htm');
-                            }else{
-                              final String url = 'https://smartbiz.e-dagang.asia/vr/cekap/office/index.htm';
-                              if (await canLaunch(url)) await launch(
-                                url,
-                                forceSafariVC: false,
-                                forceWebView: false,
-                              );
-                            }
+                            final String url = 'https://smartbiz.e-dagang.asia/vr/cekap/office/index.htm';
+                            if (await canLaunch(url)) await launch(
+                              url,
+                              forceSafariVC: false,
+                              forceWebView: false,
+                            );
                           },
                           child: VrCardItem(
                             vrimg: Image.asset('assets/vr_cekap.png'),
@@ -242,16 +225,12 @@ class _BizVrListPageState extends State<BizVrListPage> {
                         ),
                         child: InkWell(
                           onTap: () async {
-                            if(Platform.isAndroid) {
-                              CustomTabs.launchURL(context, 'https://smartbiz.e-dagang.asia/vr/artgallery/hanimhassan/index.htm');
-                            }else{
-                              final String url = 'https://smartbiz.e-dagang.asia/vr/artgallery/hanimhassan/index.htm';
-                              if (await canLaunch(url)) await launch(
-                                url,
-                                forceSafariVC: false,
-                                forceWebView: false,
-                              );
-                            }
+                            final String url = 'https://smartbiz.e-dagang.asia/vr/artgallery/hanimhassan/index.htm';
+                            if (await canLaunch(url)) await launch(
+                              url,
+                              forceSafariVC: false,
+                              forceWebView: false,
+                            );
                           },
                           child: VrCardItem(
                             vrimg: Image.asset('assets/vr_hanim.png'),

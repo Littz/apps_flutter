@@ -102,6 +102,21 @@ class _BizIdxPageState extends State<BizPage> {
                     ),
                   ),*/
                   actions: model.isAuthenticated ? [
+                    /*CachedNetworkImage(
+                      imageUrl: _photo ?? '',
+                      fit: BoxFit.cover,
+                      height: 36,
+                      width: 36,
+                      alignment: Alignment.centerRight,
+                      placeholder: (context, url) => const CircleAvatar(
+                        backgroundColor: Colors.white70,
+                        radius: 50,
+                      ),
+                      imageBuilder: (context, image) => CircleAvatar(
+                        backgroundImage: image,
+                        radius: 50,
+                      ),
+                    ),*/
                     Container(
                       height: 36,
                       width: 36,
@@ -109,24 +124,11 @@ class _BizIdxPageState extends State<BizPage> {
                       decoration: new BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.shade500,
-                            blurRadius: 0.5,
-                            spreadRadius: 0.0,
-                            offset: Offset(0.5, 0.5),
-                          )
-                        ],
                       ),
-                      child: ClipRRect(
+                      child: _logType == '0' ? Icon(CupertinoIcons.person_crop_circle, size: 36, color: Colors.grey.shade700,) :
+                      ClipRRect(
                         borderRadius: BorderRadius.circular(50),
-                        child: _logType == '0' ? Icon(CupertinoIcons.person_fill, size: 36,  color: Colors.grey.shade600,) :
-                        CachedNetworkImage(
-                          imageUrl: _photo ?? '',
-                          placeholder: (context, url) => CircularProgressIndicator(),
-                          errorWidget: (context, url, error) => Icon(Icons.error),
-                        ),
-                        //Image.network(_photo ?? '', width: 36, height: 36,),
+                        child: Image(image: NetworkImage(_photo ?? '',))
                       ),
                     ),
                     PopupMenuButton(
@@ -418,7 +420,7 @@ class _BizIdxPageState extends State<BizPage> {
       return SliverGrid(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          childAspectRatio: MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height / 4),
+          childAspectRatio: MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height / 4.5),
         ),
         delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
           var data = tabs_menu[index];

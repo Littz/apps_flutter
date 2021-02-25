@@ -622,7 +622,7 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
       prefs.setString('token', responseData['data']['token']);
       prefs.setString('email', responseData['data']['email']);
       prefs.setString('login_type', '2');
-      prefs.setString('photo', userProfile["picture"]["data"]["url"]);
+      prefs.setString('photo', userProfile["picture"]["data"]["url"].toString());
 
       model.loggedInUser();
       model.fetchProfile();
@@ -729,7 +729,7 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
       prefs.setString('token', responseData['data']['token']);
       prefs.setString('email', responseData['data']['email']);
       prefs.setString('login_type', '1');
-      prefs.setString('photo', _googleSignIn.currentUser.photoUrl);
+      prefs.setString('photo', _googleSignIn.currentUser.photoUrl.toString());
 
       model.loggedInUser();
       model.fetchProfile();

@@ -1,3 +1,23 @@
+
+class Banner_biz {
+  final String imageUrl;
+  final String title;
+  final String type;
+  final String itemId;
+
+  Banner_biz({this.imageUrl, this.title, this.type, this.itemId});
+
+  factory Banner_biz.fromJson(Map<String, dynamic> parsedJson){
+    return Banner_biz(
+        imageUrl:parsedJson['image_url'],
+        title:parsedJson['title'],
+        type:parsedJson['type'],
+        itemId:parsedJson['item_id']
+    );
+  }
+
+}
+
 class BizCat {
   final int id;
   final String name;

@@ -7,6 +7,7 @@ import 'package:edagang/screens/shop/shop_index.dart';
 import 'package:edagang/screens/upskill/skill_index.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/splash.dart';
+import 'package:edagang/stct.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,6 +19,9 @@ import 'package:edagang/deeplink/deeplink_bloc.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -108,9 +112,9 @@ class _MyAppPageState extends State<MyApp> {
   @override
   void initState() {
     _model.loggedInUser();
-    _model.fetchBizCat();
-    _model.fetchBizProd();
-    _model.fetchBizSvc();
+    //_model.fetchBizCat();
+    //_model.fetchBizProd();
+    //_model.fetchBizSvc();
     _model.fetchVisitedList();
     _model.fetchCompanyList();
     _model.fetchSkillCat();

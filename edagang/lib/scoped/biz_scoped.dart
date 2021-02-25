@@ -136,7 +136,6 @@ Future fetchBizSvc() async {
 }
 
 
-
 Future<dynamic> _getVisitlist() async {
   var response = await http.get(
     Constants.bizAPI+'/biz/latest',
@@ -247,6 +246,62 @@ Future fetchCompanyList() async {
   notifyListeners();
 }
 
+
+
+List<Banner_biz> bbanners = [];
+
+List<Banner_biz> get _banners => bbanners;
+void addToBannerBizList(Banner_biz baner) {
+  _banners.add(baner);
+}
+
+Future<dynamic> _getHomeBizJson() async {
+  var response = await http.get(
+    'http://bizapp.e-dagang.asia/api/biz/home',
+    headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
+  ).catchError((error) {
+    print(error.toString());
+    return false;
+  },
+  );
+  return json.decode(response.body);
+}
+
+Future fetchHomeBizResponse() async {
+  _banners.clear();
+
+  notifyListeners();
+  var dataFromResponse = await _getHomeBizJson();
+
+
+//DATA BANNER =========================================================================================
+  print('BIZ BANNERRRRRR #####################################');
+  print(dataFromResponse["data"]["banner"]);
+
+  dataFromResponse["data"]["banner"].forEach((dataBaner) {
+    Banner_biz _banner = new Banner_biz(
+      title: dataBaner['title'],
+      imageUrl: dataBaner['image_url'],
+      type: dataBaner['type'],
+      itemId: dataBaner['item_id'],
+      //remark: dataBaner['remark'],
+    );
+    addToBannerBizList(_banner);
+  });
+
+//DATA CATEGORY =========================================================================================
+  /*dataFromResponse["data"]["category"].forEach((dataCat) {
+    Category _cat = new Category(
+      catid: dataCat['id'],
+      catimage: dataCat['image'],
+      catname: dataCat['name'],
+    );
+    addToCategoryList(_cat);
+  });*/
+
+  //_isLoading2 = false;
+  notifyListeners();
+}
 
 }
 

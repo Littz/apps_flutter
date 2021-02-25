@@ -1,8 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/main.dart';
 import 'package:edagang/models/ads_model.dart';
+import 'package:edagang/scoped/main_scoped.dart';
+import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +14,8 @@ import 'package:flutter_share/flutter_share.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import 'package:scoped_model/scoped_model.dart';
 
 
 class CareerDetailPage extends StatefulWidget {
@@ -21,13 +26,17 @@ class CareerDetailPage extends StatefulWidget {
   _CareerDetailPageState createState() => _CareerDetailPageState();
 }
 
+const xpandedHeight = 195.0;
+
 class _CareerDetailPageState extends State<CareerDetailPage> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  ScrollController _scrollController;
   SharedPref sharedPref = SharedPref();
   Map<dynamic, dynamic> responseBody;
   String _dl;
   bool isEnabled = true ;
   bool isLoading = false;
+  Color color = Color(0xff2877EA);
 
   int _id,_compid,_yrxperience;
   String title,city,state,salary,descr,requirement,overview,email,company,logo;
@@ -107,12 +116,17 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
   void initState() {
     getDetails();
     super.initState();
+    _scrollController = ScrollController()..addListener(() => setState(() {}));
     _animationController = AnimationController(vsync: this, duration: Duration(seconds: 2)) ..forward();
     _movieInformationSlidingAnimation =
         Tween<Offset>(begin: Offset(0, 1), end: Offset.zero).animate(
             CurvedAnimation(
                 curve: Interval(0.25, 1.0, curve: Curves.fastOutSlowIn),
                 parent: _animationController));
+  }
+
+  bool get _showTitle {
+    return _scrollController.hasClients && _scrollController.offset > xpandedHeight - kToolbarHeight;
   }
 
   /*void launchWhatsApp(
@@ -134,9 +148,7 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
     }
   }*/
 
-  Color color = Colors.grey.shade700;
-
-  Future<void> share() async {
+  Future share() async {
     await FlutterShare.share(
     title: 'Blurb',
     text: '',
@@ -149,7 +161,7 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: new PreferredSize(
+      /*appBar: new PreferredSize(
         preferredSize: Size.fromHeight(56.0),
         child: new AppBar(
           centerTitle: false,
@@ -185,15 +197,104 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
             )
           ),
         )
-      ),
+      ),*/
       backgroundColor: Colors.white,
       body: isLoading ? _buildCircularProgressIndicator() : CustomScrollView(
+        controller: _scrollController,
         slivers: <Widget>[
+          SliverAppBar(
+            pinned: true,
+            expandedHeight: xpandedHeight,
+            leading: Hero(
+                tag: "back",
+                child: InkWell(
+                  onTap: () {Navigator.pop(context);},
+                  splashColor: Color(0xffA0CCE8),
+                  highlightColor: Color(0xffA0CCE8),
+                  child: BlurIconLight(
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: Colors.black,
+                    ),
+                  ),
+                )
+            ),
+            title: SABT(
+              child: Container(
+                  child: Text(title ?? '',
+                    style: GoogleFonts.lato(
+                      textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w700,),
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                  )
+              ),
+            ),
+            flexibleSpace: _showTitle ? null : FlexibleSpaceBar(
+              background: Column(
+                  children: <Widget>[
+                    Stack(
+                      overflow: Overflow.visible,
+                      alignment: Alignment.bottomLeft,
+                      children: <Widget>[
+                        Image.asset(
+                          'assets/bgblurb.png', fit: BoxFit.fill,
+                          height: 165,
+                        ),
+                        FractionalTranslation(
+                          translation: Offset(0.1, 0.5),
+                          child: Container(
+                            height: 90,
+                            width: 90,
+                            decoration: new BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade500,
+                                  blurRadius: 2.5,
+                                  spreadRadius: 0.0,
+                                  offset: Offset(2.5, 2.5),
+                                )
+                              ],
+                              //border: new Border.all(color: Colors.blue, width: 1.5,),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: FadeInImage.assetNetwork(
+                                placeholder: logo ?? "",
+                                image: logo ?? "",
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
+                        /*Positioned(
+                          bottom: -16.0,
+                          right: 16.0,
+                          child: vr_ofis == 'null' && vr_room == 'null' ? Container() : Container(
+                              alignment: Alignment.topRight,
+                              child: virtualBtn(context, vr_ofis, vr_room)
+                          ),
+                        ),*/
+                      ],
+                    ),
+                  ]
+              ),
+            ),
+            /*flexibleSpace: _showTitle ? null : FlexibleSpaceBar(
+              background: Image.asset(
+                'assets/bgblurb.png', fit: BoxFit.fill,
+                height: 150,
+              ),
+            ),*/
+
+          ),
           SliverList(
             delegate: SliverChildListDelegate(
               [
                 Container(
-                  padding: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.only(left: 8.0, top: 1.0, right: 8.0, bottom: 8.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -286,19 +387,19 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
                                       Text('Experience: ',
-                                      style: GoogleFonts.lato(
-                                      textStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
-                                      ),
+                                        style: GoogleFonts.lato(
+                                          textStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
+                                        ),
                                       ),
                                       Text(_yrxperience.toString() ?? '',
-                                      style: GoogleFonts.lato(
-                                      textStyle: TextStyle(fontSize: 13),
-                                      ),
+                                        style: GoogleFonts.lato(
+                                          textStyle: TextStyle(fontSize: 13),
+                                        ),
                                       ),
                                       Text('years',
-                                      style: GoogleFonts.lato(
-                                      textStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
-                                      ),
+                                        style: GoogleFonts.lato(
+                                          textStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -326,6 +427,9 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
                                         textStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
                                       ),
                                   ),*/
+
+                                  _reqBtn(),
+
                                 ],
                               ),
                             ),
@@ -333,7 +437,7 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
                         ),
                       ),
 
-                      Container(
+                      /*Container(
                           alignment: Alignment.topLeft,
                           margin: EdgeInsets.only(left: 5.0, top: 8.0,  bottom: 5),
                           child: Row(
@@ -341,31 +445,6 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
-                                /*InkWell(
-                                  onTap: () {launch("tel://"+office_phone, );},
-                                  splashColor: Color(0xffA0CCE8),
-                                  highlightColor: Color(0xffA0CCE8),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.phone, color: color),
-                                      Container(
-                                        margin: const EdgeInsets.only(top: 2),
-                                        child: Text('CALL',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w600,
-                                            color: color,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),*/
-
-                                //VerticalDivider(),
-
                                 InkWell(
                                   onTap: () {share();},
                                   splashColor: Color(0xffA0CCE8),
@@ -388,11 +467,9 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
                                     ],
                                   ),
                                 ),
-
-
                               ]
                           )
-                      ),
+                      ),*/
                     ],
                   ),
                 ),
@@ -434,10 +511,10 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
                         },
                       ),
                       currentTab ??
-                          Padding(
-                            padding: EdgeInsets.only(left: 10, top: 10, right: 10),
-                            child: htmlText(descr ?? ''),
-                          )
+                        Padding(
+                          padding: EdgeInsets.only(left: 10, top: 10, right: 10),
+                          child: htmlText(descr ?? ''),
+                        ),
                     ],
                   ),
                   builder: (BuildContext context, Widget child) {
@@ -453,9 +530,84 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
               ],
             ),
           ),
+          SliverFillRemaining(
+            child: new Container(color: Colors.transparent),
+          ),
         ],
       ),
     ); // Here you direct access using widget
+  }
+
+  Widget _reqBtn() {
+    return ScopedModelDescendant<MainScopedModel>(builder: (context, child, model){
+      //if(model.isAuthenticated){
+      return Container(
+        padding: EdgeInsets.only(left: 2, top: 5, right: 2),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    InkWell(
+                      onTap: () async {
+                        await FlutterShare.share(
+                          title: 'GOilmu',
+                          text: '',
+                          linkUrl: 'https://blurbapp.e-dagang.asia/career/'+_id.toString(),
+                          chooserTitle: title ?? '',
+                        );
+                      },
+                      splashColor: Color(0xffA0CCE8),
+                      highlightColor: Color(0xffA0CCE8),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.share, color: color),
+                          Container(
+                            margin: const EdgeInsets.only(top: 2),
+                            child: Text('SHARE',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: color,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ]
+              ),
+            ),
+            RaisedButton(
+              shape: StadiumBorder(),
+              color: color,
+              child: Text('REQUEST',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600,),
+                ),
+              ),
+              onPressed: () {
+                model.isAuthenticated ? '' : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
+              },
+            ),
+          ],
+        ),
+      );
+      //}else{
+      //  return Container();
+      //}
+
+    });
+
   }
 
   _buildCircularProgressIndicator() {
@@ -490,3 +642,55 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
 
 }
 
+class SABT extends StatefulWidget {
+  final Widget child;
+  const SABT({
+    Key key,
+    @required this.child,
+  }) : super(key: key);
+  @override
+  _SABTState createState() {
+    return new _SABTState();
+  }
+}
+
+class _SABTState extends State<SABT> {
+  ScrollPosition _position;
+  bool _visible;
+  @override
+  void dispose() {
+    _removeListener();
+    super.dispose();
+  }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _removeListener();
+    _addListener();
+  }
+  void _addListener() {
+    _position = Scrollable.of(context)?.position;
+    _position?.addListener(_positionListener);
+    _positionListener();
+  }
+  void _removeListener() {
+    _position?.removeListener(_positionListener);
+  }
+  void _positionListener() {
+    final FlexibleSpaceBarSettings settings =
+    context.inheritFromWidgetOfExactType(FlexibleSpaceBarSettings);
+    bool visible = settings == null || settings.currentExtent <= settings.minExtent;
+    if (_visible != visible) {
+      setState(() {
+        _visible = visible;
+      });
+    }
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Visibility(
+      visible: _visible,
+      child: widget.child,
+    );
+  }
+}
