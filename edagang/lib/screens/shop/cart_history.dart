@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:edagang/main.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/screens/shop/cart_review.dart';
 import 'package:edagang/screens/shop/product_detail.dart';
@@ -397,7 +398,7 @@ class HistoryOrdersBody extends StatelessWidget {
               new FlatButton(
                 color: Colors.transparent,
                 onPressed: () {
-                  Navigator.push(context,MaterialPageRoute(builder: (context){return ShopIndexPage();}));
+                  Navigator.push(context,MaterialPageRoute(builder: (context){return NewHomePage(1,0);}));
                 },
                 child: new Padding(
                     padding: EdgeInsets.only(top: 10.0, bottom: 10.0),

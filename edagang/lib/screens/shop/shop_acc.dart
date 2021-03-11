@@ -5,6 +5,7 @@ import 'package:edagang/screens/shop/acc_profile.dart';
 import 'package:edagang/screens/shop/cart_history.dart';
 import 'package:edagang/screens/shop/cart_review.dart';
 import 'package:edagang/screens/shop/change_paswd.dart';
+import 'package:edagang/screens/shop/shop_index.dart';
 import 'package:edagang/screens/shop/shop_policy.dart';
 import 'package:edagang/screens/shop/shop_support.dart';
 import 'package:edagang/sign_in.dart';
@@ -18,6 +19,8 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ShopAccountPage extends StatefulWidget {
+  final int tabcontroler;
+  ShopAccountPage({this.tabcontroler});
 
   @override
   State<StatefulWidget> createState() {return new _StateAccount();}
@@ -137,7 +140,7 @@ class _StateAccount extends State<ShopAccountPage> {
             return null;
           },
           child: Scaffold(
-            appBar: AppBar(
+            /*appBar: AppBar(
               automaticallyImplyLeading: false,
               brightness: Brightness.light,
               backgroundColor: Colors.transparent,
@@ -145,7 +148,8 @@ class _StateAccount extends State<ShopAccountPage> {
               title: _title(),
               elevation: 0,
             ),
-            backgroundColor: Colors.grey.shade100,
+            backgroundColor: Colors.grey.shade100,*/
+            backgroundColor: Color(0xffEEEEEE),
             body: SafeArea(
               top: true,
               child: SingleChildScrollView(
@@ -187,7 +191,7 @@ class _StateAccount extends State<ShopAccountPage> {
                         trailing: Icon(Icons.chevron_right, color: Color(0xffF45432)),
                         onTap: () {
                           if(model.isAuthenticated) {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (_) => SimpleTab(1,1)));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (_) => NewHomePage(1,1)));
                           }else{
                             Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
                           }
@@ -272,9 +276,9 @@ class _StateAccount extends State<ShopAccountPage> {
                           ]
                       ),*/
 
-                      Divider(color: Color(0xffF45432),),
+                      /*Divider(color: Color(0xffF45432),),
                       logOutButton(),
-                      SizedBox(height: 15,),
+                      SizedBox(height: 15,),*/
                     ],
                   ),
                 ),

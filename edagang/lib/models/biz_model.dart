@@ -1,30 +1,77 @@
 
-class Banner_biz {
+class Home_banner {
   final String imageUrl;
   final String title;
-  final String type;
-  final String itemId;
+  final int type;
+  final int itemId;
 
-  Banner_biz({this.imageUrl, this.title, this.type, this.itemId});
+  Home_banner({this.imageUrl, this.title, this.type, this.itemId});
+}
 
-  factory Banner_biz.fromJson(Map<String, dynamic> parsedJson){
-    return Banner_biz(
-        imageUrl:parsedJson['image_url'],
-        title:parsedJson['title'],
-        type:parsedJson['type'],
-        itemId:parsedJson['item_id']
-    );
-  }
+class Home_category {
+  final int cat_id;
+  final String cat_name;
+  final String cat_image;
 
+  Home_category({this.cat_id, this.cat_name, this.cat_image});
+}
+
+class Home_business {
+  int id;
+  String company_name;
+  String overview;
+  String address;
+  String office_phone;
+  String office_fax;
+  String email;
+  String website;
+  String logo;
+  List<Product> product;
+  List<Award> award;
+  List<Cert> cert;
+
+  Home_business({
+    this.id,
+    this.company_name,
+    this.overview,
+    this.address,
+    this.office_phone,
+    this.office_fax,
+    this.email,
+    this.website,
+    this.logo,
+    this.product,
+    this.award,
+    this.cert,
+  });
+}
+
+class Home_virtual {
+  int vr_id;
+  String vr_desc;
+  List<VRList> vr_list;
+
+  Home_virtual({this.vr_id, this.vr_desc, this.vr_list});
+}
+
+class VRList {
+  int vr_type;
+  String vr_name;
+  String vr_url;
+  String vr_image;
+
+  VRList({this.vr_type, this.vr_name, this.vr_url, this.vr_image});
 }
 
 class BizCat {
-  final int id;
-  final String name;
-  final descr;
+  int id;
+  String name;
+  String logo;
+  String website;
 
-  BizCat({this.id, this.name, this.descr});
+  BizCat({this.id, this.name, this.logo, this.website});
 }
+
 
 class BizList {
   int id;

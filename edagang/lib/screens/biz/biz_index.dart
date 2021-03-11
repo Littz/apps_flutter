@@ -2,15 +2,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/data/datas.dart';
 import 'package:edagang/notification.dart';
 import 'package:edagang/scoped/main_scoped.dart';
-import 'package:edagang/screens/biz/biz_quick_access.dart';
+import 'package:edagang/screens/biz/biz_home.dart';
 import 'package:edagang/screens/biz/biz_vr_list.dart';
+import 'package:edagang/screens/biz/search.dart';
 import 'package:edagang/screens/biz/webview_quot.dart';
 import 'package:edagang/settings.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
-import 'package:edagang/widgets/searchbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +22,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:edagang/screens/biz/biz_company_detail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 
 class BizPage extends StatefulWidget {
@@ -46,7 +47,6 @@ class _BizIdxPageState extends State<BizPage> {
 
   loadPhoto() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
     try {
       setState(() {
         _logType = prefs.getString("login_type");
@@ -59,8 +59,35 @@ class _BizIdxPageState extends State<BizPage> {
     }
   }
 
+  ScrollController _scrollController;
+  bool lastStatus = true;
+
+  _scrollListener() {
+    if (isShrink != lastStatus) {
+      setState(() {
+        lastStatus = isShrink;
+      });
+    }
+  }
+
+  bool get isShrink {
+    return _scrollController.hasClients &&
+        _scrollController.offset > (200 - kToolbarHeight);
+  }
+
+  int _currentIndex = 0;
+  PageController _pageController = PageController(
+    viewportFraction: 0.92,
+    initialPage: 0,
+  );
+
   @override
   void initState() {
+    _pageController.addListener(() {
+      setState(() => _currentIndex = _pageController.page.round());
+    });
+    _scrollController = ScrollController();
+    _scrollController.addListener(_scrollListener);
     quick_menu = getBizQxcess();
     tabs_menu = getBizTabs();
     super.initState();
@@ -68,13 +95,306 @@ class _BizIdxPageState extends State<BizPage> {
   }
 
   @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    /*SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.white,
+    ));*/
+
     return ScopedModelDescendant<MainScopedModel>(
       builder: (context, child, model) {
-        return WillPopScope(key: _scaffoldKey, onWillPop: () {
-          SystemNavigator.pop();
-          return Future.value(true); },
-            child: Scaffold(
+        return WillPopScope(
+          key: _scaffoldKey,
+          onWillPop: () {
+            SystemNavigator.pop();
+            return Future.value(true);
+          },
+          child: NestedScrollView(
+            controller: _scrollController,
+            headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+              return <Widget>[
+                SliverAppBar(
+                  elevation: 0.0,
+                  expandedHeight: 210.0,
+                  floating: false,
+                  pinned: true,
+                  backgroundColor: Colors.white,
+                  automaticallyImplyLeading: false,
+                  iconTheme: IconThemeData(
+                    color: Color(0xff084B8C),
+                  ),
+                  /*leading: IconButton(
+                    icon: Icon(Icons.dehaze),
+                    onPressed: () {},
+                  ),*/
+                  leading: model.isAuthenticated ? Padding(
+                    padding: EdgeInsets.all(13),
+                    child:  _logType == '0' ? Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.scaleDown) : ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: Image.network(_photo ?? '', fit: BoxFit.fill,),
+                    )
+                  ) : //Container(),
+
+                  CircleAvatar(
+                    backgroundColor: Colors.transparent,
+                    child: IconButton(
+                      icon: Icon(
+                        CupertinoIcons.power,
+                        color: Color(0xff084B8C),
+                      ),
+                      onPressed: () {Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));},
+                    ),
+                  ),
+                  centerTitle: true,
+                  title: SizedBox(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        //Image.asset('assets/icons/ic_edagang.png', height: 28, width: 30,),
+                        Image.asset('assets/icons/ic_smartbiz.png', height: 24, width: 107,),
+                      ],
+                    ),
+                  ),
+
+                  actions: [
+                    CircleAvatar(
+                      backgroundColor: Colors.grey[200],
+                      child: IconButton(
+                        icon: Icon(
+                          CupertinoIcons.search,
+                          //color: Color(0xff084B8C),
+                        ),
+                        onPressed: () { Navigator.push(context, SlideRightRoute(page: SearchList()));},
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 2,),
+                      child: CircleAvatar(
+                        backgroundColor: Colors.grey[200],
+                        child: IconButton(
+                          icon: Icon(
+                            CupertinoIcons.bell_fill,
+                            //color: Color(0xff084B8C),
+                          ),
+                          onPressed: () {Navigator.push(context, SlideRightRoute(page: NotificationPage()));},
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 2, right: 10,),
+                      child: CircleAvatar(
+                        backgroundColor: Colors.grey[200],
+                        child: PopupMenuButton(
+                          itemBuilder: (BuildContext bc) => [
+                            PopupMenuItem(child: ListTile(
+                              //leading: Icon(Icons.notifications),
+                              title: Text('Join Us'),
+                            ), value: "1"),
+                            PopupMenuItem(child: ListTile(
+                              //leading: Icon(Icons.settings),
+                              title: Text('Settings'),
+                            ), value: "2"),
+                            PopupMenuItem(child: model.isAuthenticated ? ListTile(
+                              //leading: Icon(Icons.logout),
+                              title: Text('Logout'),
+                            ) : ListTile(
+                              //leading: Icon(Icons.login),
+                              title: Text('Login'),
+                            ), value: model.isAuthenticated ? "3" : "4"),
+                          ],
+
+                          onSelected: (value) {
+                            setState(() {
+                              _selectedItem = value;
+                              print("Selected context menu: $_selectedItem");
+                              if(_selectedItem == '1'){
+                                Navigator.push(context, SlideRightRoute(page: WebviewQuot('https://smartbiz.e-dagang.asia/biz/joinwebv','Join Us')));
+                              }
+                              if(_selectedItem == '2'){
+                                Navigator.push(context, SlideRightRoute(page: SettingPage()));
+                              }
+                              if(_selectedItem == '3'){
+                                logoutUser(context, model);
+                              }
+                              if(_selectedItem == '4'){
+                                Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
+                              }
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+
+                  ],
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: Container(
+                        color: Colors.white,
+                        padding: EdgeInsets.only(bottom: 5, top: 90),
+                        child: Container(
+                            margin: EdgeInsets.only(left: 8, right: 8),
+                            child: Card(
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0),),
+                                elevation: 1,
+                                child: ClipPath(
+                                    clipper: ShapeBorderClipper(
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))
+                                    ),
+                                    child: Container(
+                                        height: 150.0,
+                                        decoration: new BoxDecoration(
+                                          color: Colors.transparent,
+                                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                                        ),
+                                        child: Swiper(
+                                          autoplay: true,
+                                          itemBuilder: (BuildContext context, int index) {
+                                            return InkWell(
+                                              onTap: () {
+                                                //goToDetailsPage(context, model.banners[index]);
+                                              },
+                                              child: ClipRRect(
+                                                  borderRadius: new BorderRadius.circular(8.0),
+                                                  child: CachedNetworkImage(
+                                                    placeholder: (context, url) => Container(
+                                                      width: 40,
+                                                      height: 40,
+                                                      color: Colors.transparent,
+                                                      child: CupertinoActivityIndicator(radius: 15,),
+                                                    ),
+                                                    imageUrl: 'http://bizapp.e-dagang.asia' + model.bbanners[index].imageUrl ?? '',
+                                                    fit: BoxFit.fill,
+                                                    height: 150,
+                                                    width: MediaQuery.of(context).size.width,
+                                                  )
+                                              ),
+                                            );
+                                          },
+                                          itemCount: model.bbanners.length,
+                                          pagination: new SwiperPagination(
+                                              builder: new DotSwiperPaginationBuilder(
+                                                activeColor: Colors.deepOrange.shade500,
+                                                activeSize: 7.0,
+                                                size: 7.0,
+                                              )
+                                          ),
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    ),
+                  ),
+                ),
+              ];
+            },
+            body: CustomScrollView(slivers: <Widget>[
+              SliverToBoxAdapter(
+                child: Container(
+                  padding: EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Biz Category',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xff084B8C),
+                        ),
+                      ),
+                      /*Icon(
+                        Icons.more_horiz,
+                        color: Colors.grey[800],
+                      ),*/
+                    ],
+                  ),
+                ),
+              ),
+
+              SliverToBoxAdapter(
+                child: model.bcategory.length == 0 ? Container() : _fetchCategories(),
+              ),
+
+              SliverToBoxAdapter(
+                child: Container(
+                  padding: EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Virtual Trade',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xff084B8C),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 0,),
+                        child: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.more_horiz,
+                              color: Color(0xff357FEB),
+                            ),
+                            onPressed: () {Navigator.push(context,SlideRightRoute(page: BizVrListPage()));},
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              SliverToBoxAdapter(
+                child: model.bvirtual.length == 0 ? Container() : _fetchVirtualList(),
+              ),
+
+              SliverToBoxAdapter(
+                child: Container(
+                  padding: EdgeInsets.only(left: 10, right: 10, top: 24, bottom: 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Highlighted Company',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xff084B8C),
+                        ),
+                      ),
+                      /*Padding(
+                        padding: EdgeInsets.only(left: 0,),
+                        child: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.more_horiz,
+                              color: Color(0xff357FEB),
+                            ),
+                            onPressed: () {},
+                          ),
+                        ),
+                      ),*/
+                    ],
+                  ),
+                ),
+              ),
+
+              topList(),
+
+            ]),
+          )
+
+          /*Scaffold(
               appBar: PreferredSize(
                 preferredSize: Size.fromHeight(45.0),
                 child: AppBar(
@@ -82,41 +402,7 @@ class _BizIdxPageState extends State<BizPage> {
                   backgroundColor: Colors.white,
                   elevation: 0.0,
                   title: searchBar(context),
-                  /*flexibleSpace: SafeArea(
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 10, right: 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Expanded(
-                            child: searchBar(context),
-                          ),
-                          IconButton(
-                            icon: Icon(CupertinoIcons.bars, color: Colors.grey.shade700,),
-                            tooltip: 'Menu',
-                            onPressed: () {myPopMenu();},
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),*/
                   actions: model.isAuthenticated ? [
-                    /*CachedNetworkImage(
-                      imageUrl: _photo ?? '',
-                      fit: BoxFit.cover,
-                      height: 36,
-                      width: 36,
-                      alignment: Alignment.centerRight,
-                      placeholder: (context, url) => const CircleAvatar(
-                        backgroundColor: Colors.white70,
-                        radius: 50,
-                      ),
-                      imageBuilder: (context, image) => CircleAvatar(
-                        backgroundImage: image,
-                        radius: 50,
-                      ),
-                    ),*/
                     Container(
                       height: 36,
                       width: 36,
@@ -322,136 +608,212 @@ class _BizIdxPageState extends State<BizPage> {
                 topList(),
 
               ]),
-            )
+            )*/
         );
       }
     );
   }
 
-  Widget quickLink(BuildContext context) {
-    if(quick_menu.length == 0) {
-      return Container();
-    }else{
-      return ScopedModelDescendant<MainScopedModel>(builder: (context, child, model){
-        return SliverGrid(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 5,
-            mainAxisSpacing: 1.5,
-            crossAxisSpacing: 1.5,
-          ),
-          delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-            var data = quick_menu[index];
-            return Container(
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: Colors.transparent,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  /*Container(
-                    height: 32.0,
-                    width: 32.0,
-                    decoration: new BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Color(0xffA0CCE8),
-                      border: new Border.all(color: Colors.grey, width: 1.0,),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(5),
-                      child: Image.asset(data.imgPath, height: 32, width: 32,),
-                    ),
-                  ),*/
-                  SizedBox(
-                    width: 36,
-                    height: 36,
-                    child: CupertinoButton(
-                      padding: EdgeInsets.zero,
-                      borderRadius: BorderRadius.circular(1),
-                      onPressed: () {
-                        if (data.id == 1) {
-                          Navigator.push(context,SlideRightRoute(page: BizCompanyPage()));
-                        } else if (data.id == 2) {
-                          Navigator.push(context, SlideRightRoute(page: BizProductPage('2', 'Product')));
-                        } else if (data.id == 3) {
-                          Navigator.push(context, SlideRightRoute(page: BizServicesPage('3', 'Services')));
-                        } else if (data.id == 4) {
-                          if(model.isAuthenticated) {
-                            Navigator.push(context, SlideRightRoute(page: WebviewQuot('https://smartbiz.e-dagang.asia/biz/quot/' + model.getId().toString() + '/0', 'Quotation')));
-                          }else{
-                            Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
-                          }
-                        } else if (data.id == 5) {
-                          Navigator.push(context, SlideRightRoute(page: WebviewQuot('https://smartbiz.e-dagang.asia/biz/joinwebv','Join Us')));
-                        }
-                      },
-                      //color: Color(0xffA0CCE8),
-                      child: Image.asset(data.imgPath, height: 36, width: 36,),
-                    ),
+  Widget _fetchCategories() {
+    return ScopedModelDescendant<MainScopedModel>(
+        builder: (context, child, model){
+          return Container(
+            padding: EdgeInsets.only(left: 8, top: 0, right: 8, bottom: 0),
+            color: Colors.transparent,
+            height: 125,
+            alignment: Alignment.center,
+            child: ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: model.bcategory.length,
+              itemBuilder: (context, index) {
+                var data = model.bcategory[index];
+                return Padding(
+                  //padding: EdgeInsets.only(left: 3.6, top: 8, right: 3.6,),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 5.0,
+                    vertical: 5.0,
                   ),
-                  SizedBox(height: 8.0,),
-                  Container(
-                    height: 20.0,
-                    child: Center(
-                      child: Text(data.title,
-                        style: GoogleFonts.lato(
-                          textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                        ),
-                        //style: Theme.of(context).textTheme.caption.copyWith(color: Colors.black),
+                  child: InkWell(
+                      onTap: () {
+                        print("category name : " + data.cat_name);
+                        //sharedPref.save("cat_id", data.cat_id.toString());
+                        //sharedPref.save("cat_title", data.cat_name);
+                        Navigator.push(context, SlideRightRoute(page: BizCategoryPage(data.cat_id.toString(),data.cat_name)));
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            height: 65.0,
+                            width: 65.0,
+                            decoration: new BoxDecoration(
+                              color: Colors.grey.shade100,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade500,
+                                  blurRadius: 1.5,
+                                  spreadRadius: 0.0,
+                                  offset: Offset(1.5, 1.5),
+                                )
+                              ],
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: CachedNetworkImage(
+                                fit: BoxFit.cover,
+                                height: 65.0,
+                                width: 65.0,
+                                imageUrl: 'http://bizapp.e-dagang.asia' + data.cat_image ?? '',
+                                imageBuilder: (context, imageProvider) => Container(
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    borderRadius: BorderRadius.all(Radius.circular(35.0)),
+                                  ),
+                                ),
+                                placeholder: (context, url) => Container(
+                                  width: 30,
+                                  height: 30,
+                                  color: Colors.transparent,
+                                  child: CupertinoActivityIndicator(radius: 15,),
+                                ),
+                                errorWidget: (context, url, error) => Icon(Icons.image_rounded, size: 36,),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 70.0,
+                            padding: EdgeInsets.only(top: 5, right: 5),
+                            child: Align(
+                              alignment: Alignment.topCenter,
+                              child: Text(
+                                data.cat_name ?? '',
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w600,),
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                  ),
+                );
+              },
+            ),
+          );
+        }
+    );
+  }
+
+  Widget _fetchVirtualList() {
+    return ScopedModelDescendant<MainScopedModel>(
+        builder: (context, child, model){
+          return Container(
+            margin: EdgeInsets.only(left: 8, right: 8),
+            height: 235,
+            width: 165,
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: ClampingScrollPhysics(),
+              scrollDirection: Axis.horizontal,
+              itemCount: model.bvirtual[0].vr_list.length,
+              itemBuilder: (context, index) {
+                var data = model.bvirtual[0];
+                return Container(
+                  width: 165,
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(7.0),),
+                    ),
+                    elevation: 1.0,
+                    child: InkWell(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(7.0),
+                      ),
+                      onTap: () async {
+                        final String url = data.vr_list[index].vr_url ?? '';
+                        if (await canLaunch(url)) await launch(
+                          url,
+                          forceSafariVC: false,
+                          forceWebView: false,
+                        );
+                      },
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              height: 165,
+                              width: 165,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.only(topLeft: Radius.circular(7), topRight: Radius.circular(7)),
+                                child: CachedNetworkImage(
+                                  imageUrl: 'https://bizapp.e-dagang.asia'+data.vr_list[index].vr_image ?? '',
+                                  placeholder: (context, url) => Container(
+                                    width: 30,
+                                    height: 30,
+                                    color: Colors.transparent,
+                                    child: CupertinoActivityIndicator(radius: 15,),
+                                  ),
+                                  errorWidget: (context, url, error) => Image.asset(
+                                    'assets/icons/ic_image_error.png',
+                                    fit: BoxFit.cover,
+                                  ),
+                                  fit: BoxFit.cover,
+                                  height: 165,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: 165,
+                              padding: EdgeInsets.only(left: 5.0,right: 5.0,top: 7.0),
+                              alignment: Alignment.bottomLeft,
+                              decoration: new BoxDecoration(
+                                color: Colors.transparent,
+                                borderRadius: BorderRadius.all(Radius.circular(7)),
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    data.vr_list[index].vr_name ?? '',
+                                    style: GoogleFonts.lato(
+                                      textStyle: TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.w600,),
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  SizedBox(
+                                    height: 3.0,
+                                  ),
+                                  Text(
+                                    data.vr_desc ?? '',
+                                    style: GoogleFonts.lato(
+                                      textStyle: TextStyle(color: Colors.blue.shade600, fontSize: 12, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ]
                       ),
                     ),
                   ),
-                ],
-              ),
-            );
-          },
-            childCount: quick_menu.length,
-          ),
-        );
-      });
-    }
-  }
-
-  Widget gridMenu(BuildContext context, TabController tabcontroler) {
-    if(tabs_menu.length == 0) {
-      return Container();
-    }else{
-      return SliverGrid(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height / 4.5),
-        ),
-        delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-          var data = tabs_menu[index];
-          return Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(7)),
+                );
+              }
             ),
-            child: Card(
-              elevation: 0,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
-              child: InkWell(
-                onTap: () {
-                  widget.tabcontroler.animateTo(data.id);
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    image: DecorationImage(
-                      image: AssetImage(data.imgPath),
-                      fit: BoxFit.fitWidth,
-                    ),
-                    borderRadius: BorderRadius.all(Radius.circular(7)),
-                  ),
-                ),
-              ),
-            )
           );
-        }, childCount: tabs_menu.length,
-        ),
-      );
-    }
+        }
+    );
   }
 
   Widget topList() {
@@ -467,7 +829,7 @@ class _BizIdxPageState extends State<BizPage> {
                   childAspectRatio: 0.815,
                 ),
                 delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-                  var data = model.visitedlist[index];
+                  var data = model.bbusiness[index];
                   return InkWell(
                     onTap: () {
                       sharedPref.save("biz_id", data.id.toString());
@@ -508,7 +870,7 @@ class _BizIdxPageState extends State<BizPage> {
 
                                                   : CachedNetworkImage(
                                                 fit: BoxFit.fitWidth,
-                                                imageUrl: data.logo ?? '',
+                                                imageUrl: 'http://bizapp.e-dagang.asia'+data.logo ?? '',
                                                 imageBuilder: (context, imageProvider) => Container(
                                                   decoration: BoxDecoration(
                                                       image: DecorationImage(
@@ -523,7 +885,7 @@ class _BizIdxPageState extends State<BizPage> {
                                                   ),
                                                 ),
                                                 placeholder: (context, url) => Container(color: Colors.grey.shade200,),
-                                                errorWidget: (context, url, error) => Icon(Icons.image, size: 32,),
+                                                errorWidget: (context, url, error) => Icon(Icons.image_rounded, size: 36,),
                                               ),
                                             ),
                                           ),
@@ -549,7 +911,7 @@ class _BizIdxPageState extends State<BizPage> {
                     ),
                   );
                 },
-                  childCount: model.visitedlist.length,
+                  childCount: model.bbusiness.length,
                 ),
               )
           );
@@ -557,56 +919,6 @@ class _BizIdxPageState extends State<BizPage> {
     );
   }
 
-  Widget myPopMenu() {
-    return PopupMenuButton(
-        onSelected: (value) {
-          print("You have selected " + value.toString());
-          /*Fluttertoast.showToast(
-              msg: "You have selected " + value.toString(),
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.black,
-              textColor: Colors.white,
-              fontSize: 16.0
-          );*/
-        },
-        itemBuilder: (context) => [
-          PopupMenuItem(
-              value: 1,
-              child: Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(2, 2, 8, 2),
-                    child: Icon(Icons.print),
-                  ),
-                  Text('Print')
-                ],
-              )),
-          PopupMenuItem(
-              value: 2,
-              child: Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(2, 2, 8, 2),
-                    child: Icon(Icons.share),
-                  ),
-                  Text('Share')
-                ],
-              )),
-          PopupMenuItem(
-              value: 3,
-              child: Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(2, 2, 8, 2),
-                    child: Icon(Icons.add_circle),
-                  ),
-                  Text('Add')
-                ],
-              )),
-        ]);
-  }
 
   logoutUser(BuildContext context, MainScopedModel model) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();

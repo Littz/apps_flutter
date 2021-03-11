@@ -30,7 +30,7 @@ class _AdsCareerPageState extends State<AdsCareerPage> {
     return ScopedModelDescendant<MainScopedModel>(
       builder: (context, child, model){
         return Scaffold(
-          appBar: new PreferredSize(
+          /*appBar: new PreferredSize(
             preferredSize: Size.fromHeight(56.0),
             child: new AppBar(
               centerTitle: false,
@@ -57,97 +57,96 @@ class _AdsCareerPageState extends State<AdsCareerPage> {
                 )
               ),
             )
-          ),
-          backgroundColor: Colors.white,
-          body: CustomScrollView(slivers: <Widget>[
-            SliverPadding(
-              padding: EdgeInsets.only(left: 10, top: 10, right: 10, bottom: 15),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate(
-                  [
-                    Column(
-                      children: <Widget>[
-                        ListView.separated(
-                          separatorBuilder: (context, index) => Divider(
-                            color: Colors.grey,
-                            indent: 10.0,
-                          ),
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: model.jobcat.length,
-                          itemBuilder: (context, index) {
-                            var data = model.jobcat[index];
-                            return InkWell(
-                              onTap: () {
-                                sharedPref.save("job_id", data.id.toString());
-                                Navigator.push(context,SlideRightRoute(page: CareerDetailPage(data.id.toString(),data.title)));
-                              },
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 1.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Expanded(
-                                          flex: 3,
-                                          child: Container(
-                                            child: Text(
-                                              data.title,
-                                              style: GoogleFonts.lato(
-                                                textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600,),
-                                              ),
-                                            ),
+          ),*/
+          backgroundColor: Color(0xffEEEEEE),
+          body: MediaQuery.removePadding(
+            context: context,
+            removeTop: true,
+            child: ListView.builder(
+                itemCount: model.jobcat.length,
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (BuildContext context, int index) {
+                  var data = model.jobcat[index];
+
+                  return Card(
+                      margin: EdgeInsets.all(5.0),
+                      elevation: 1.5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      //shadowColor: Color(0xff2877EA),
+                      child: Container(
+                        margin: EdgeInsets.all(5.0),
+                        child: InkWell(
+                            onTap: () {
+                              sharedPref.save("job_id", data.id.toString());
+                              Navigator.push(context,SlideRightRoute(page: CareerDetailPage(data.id.toString(),data.title)));
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Expanded(
+                                      flex: 4,
+                                      child: Container(
+                                        margin: EdgeInsets.only(left: 7.0, right: 7.0, top: 10.0),
+                                        alignment: Alignment.topLeft,
+                                        child: Text(
+                                          data.title,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w700,),
                                           ),
+                                          maxLines: 2,
                                         ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: Container(
-                                            margin: EdgeInsets.only(right: 7.0, top: 7.0),
-                                            alignment: Alignment.topRight,
-                                            child: Icon(
-                                              CupertinoIcons.chevron_forward,
-                                              size: 16,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(left: 7.0, right: 7.0,),
-                                    child: Text(
-                                      data.company,
-                                      style: GoogleFonts.lato(
-                                        textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500,),
                                       ),
                                     ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(left: 7.0, right: 7.0,),
-                                    child: Text(
-                                      data.state,
-                                      style: GoogleFonts.lato(
-                                        textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w400,),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        margin: EdgeInsets.only(left: 5, right: 7.0, top: 10.0),
+                                        alignment: Alignment.topRight,
+                                        child: Icon(
+                                          CupertinoIcons.chevron_forward,
+                                          size: 18,
+                                          color: Colors.grey,
+                                        ),
                                       ),
                                     ),
+                                  ],
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
+                                  child: Text(
+                                    data.company,
+                                    style: GoogleFonts.lato(
+                                      textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
+                                    ),
                                   ),
-                                ],
-                              )
-                            );
-                          },
-                        )
-                      ]
-                    ),
-                  ],
-                ),
-              ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
+                                  child: Text(
+                                    data.state,
+                                    style: GoogleFonts.lato(
+                                      textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500,),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                        ),
+                      )
+                  );
+                }
             ),
-          ]),
+          )
+
         );
       }
     );
@@ -180,7 +179,7 @@ class _AdsPropertyPageState extends State<AdsPropertyPage> {
     return ScopedModelDescendant<MainScopedModel>(
       builder: (context, child, model){
         return Scaffold(
-          appBar: new PreferredSize(
+          /*appBar: new PreferredSize(
             preferredSize: Size.fromHeight(56.0),
             child: new AppBar(
               centerTitle: false,
@@ -207,8 +206,8 @@ class _AdsPropertyPageState extends State<AdsPropertyPage> {
                 )
               ),
             )
-          ),
-          backgroundColor: Colors.white,
+          ),*/
+          backgroundColor: Color(0xffEEEEEE),
           body: CustomScrollView(slivers: <Widget>[
             SliverToBoxAdapter(
               child: Container(
@@ -231,16 +230,6 @@ class _AdsPropertyPageState extends State<AdsPropertyPage> {
                                 page: WebviewBlurb(
                                     'https://blurb.e-dagang.asia/property/pip',
                                     'Pengerang Industrial Park')));
-                            /*if(Platform.isAndroid) {
-                              CustomTabs.launchURL(context, 'https://blurb.e-dagang.asia/property/pip');
-                            }else{
-                              final String url = 'https://blurb.e-dagang.asia/property/pip';
-                              if (await canLaunch(url)) await launch(
-                                url,
-                                forceSafariVC: false,
-                                forceWebView: false,
-                              );
-                            }*/
                           },
                           child: VrCardItem(
                             vrimg: Image.asset('assets/pip.png'),

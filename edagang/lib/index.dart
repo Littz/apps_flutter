@@ -8,15 +8,21 @@ class Index extends StatelessWidget {
   final MainScopedModel _model = MainScopedModel();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
 
     DeepLinkBloc _bloc = DeepLinkBloc();
     return Scaffold(
         body: Provider<DeepLinkBloc>(
-            builder: (context) => _bloc,
+            create: (context) => _bloc,
             dispose: (context, bloc) => bloc.dispose(),
             child: DeeplinkWidget()
         )
+
+        /*Provider<DeepLinkBloc>(
+            builder: (context) => _bloc,
+            dispose: (context, bloc) => bloc.dispose(),
+            child: DeeplinkWidget()
+        )*/
     );
   }
 

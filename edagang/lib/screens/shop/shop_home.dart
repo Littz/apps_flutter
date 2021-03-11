@@ -23,7 +23,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class ShopHomePage extends StatefulWidget {
-  final TabController tabcontroler;
+  final int tabcontroler;
   ShopHomePage({this.tabcontroler});
 
   @override
@@ -68,11 +68,11 @@ class _ShopHomePageState extends State<ShopHomePage> {
     return ScopedModelDescendant<MainScopedModel>(
         builder: (context, child, model){
           return WillPopScope(key: _scaffoldKey, onWillPop: () {
-            widget.tabcontroler.animateTo(2);
-            return null;
+            Navigator.of(context).pushReplacementNamed("/Main");
+            return Future.value(true);
           },
           child: Scaffold(
-            appBar: PreferredSize(
+            /*appBar: PreferredSize(
               preferredSize: Size.fromHeight(45.0),
               child: AppBar(
                 automaticallyImplyLeading: false,
@@ -85,8 +85,9 @@ class _ShopHomePageState extends State<ShopHomePage> {
                   ),
                 ),
               ),
-            ),
-            backgroundColor: Colors.grey.shade100,
+            ),*/
+
+            backgroundColor: Color(0xffEEEEEE),
             body: CustomScrollView(slivers: <Widget>[
               SliverList(delegate: SliverChildListDelegate([
                 Container(
@@ -310,8 +311,8 @@ class _ShopHomePageState extends State<ShopHomePage> {
   Widget _newContentList(BuildContext context) {
     return SliverGrid(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 4,
-        childAspectRatio: 0.75,
+        crossAxisCount: 3,
+        //childAspectRatio: 0.75,
       ),
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
         var data = new_content[index];
@@ -319,13 +320,13 @@ class _ShopHomePageState extends State<ShopHomePage> {
           child: Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
-                Radius.circular(7.0),
+                Radius.circular(8.0),
               ),
             ),
-            elevation: 1.7,
+            elevation: 1.5,
             child: InkWell(
               borderRadius: BorderRadius.all(
-                Radius.circular(7.0),
+                Radius.circular(8.0),
               ),
               onTap: () {
                 if(data.id == 1) {
@@ -336,9 +337,6 @@ class _ShopHomePageState extends State<ShopHomePage> {
                       context, SlideRightRoute(page: NgoPage()));
                 }else if(data.id == 3) {
                   Navigator.push(
-                      context, SlideRightRoute(page: DigitalPage()));
-                }else if(data.id == 4) {
-                  Navigator.push(
                       context, SlideRightRoute(page: MerchantRegister('https://office.e-dagang.asia/cartsini/register', 'Join Us')));
                 }
               },
@@ -346,19 +344,22 @@ class _ShopHomePageState extends State<ShopHomePage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Container(
-                      height: 70,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.only(topLeft: Radius.circular(7), topRight: Radius.circular(7)),
-                        child: Image.asset(
-                          data.imgPath,
-                          fit: BoxFit.cover,
+                    Expanded(
+                      child: Container(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8)),
+                          child: Image.asset(
+                            data.imgPath,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),
-                    SizedBox(height: 7,),
+
+                    //SizedBox(height: 5,),
                     Container(
-                      margin: EdgeInsets.only(left: 5.0,right: 5.0,top: 5.0),
+                      height: 25,
+                      margin: EdgeInsets.all(5.0),
                       child: Text(
                         data.title,
                         textAlign: TextAlign.center,
@@ -373,7 +374,7 @@ class _ShopHomePageState extends State<ShopHomePage> {
             ),
           ),
         );
-      }, childCount: 4,
+      }, childCount: 3,
       ),
     );
   }
@@ -384,7 +385,7 @@ class _ShopHomePageState extends State<ShopHomePage> {
         return Container(
           padding: EdgeInsets.only(left: 8, top: 5, right: 8, bottom: 0),
           color: Colors.transparent,
-          height: 127,
+          height: 125,
           alignment: Alignment.center,
           child: ListView.builder(
             shrinkWrap: true,
@@ -417,10 +418,12 @@ class _ShopHomePageState extends State<ShopHomePage> {
                     Navigator.push(context, SlideRightRoute(page: ProductListCategory(model.categories[index].catid.toString(),model.categories[index].catname)));
                   },
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Container(
-                        height: 70.0,
-                        width: 70.0,
+                        height: 65.0,
+                        width: 65.0,
                         decoration: new BoxDecoration(
                           color: Colors.grey.shade100,
                           shape: BoxShape.circle,
@@ -437,8 +440,8 @@ class _ShopHomePageState extends State<ShopHomePage> {
                           borderRadius: BorderRadius.circular(50),
                           child: CachedNetworkImage(
                             fit: BoxFit.cover,
-                            height: 70.0,
-                            width: 70.0,
+                            height: 65.0,
+                            width: 65.0,
                             imageUrl: Constants.urlImage + data.catimage ?? '',
                             imageBuilder: (context, imageProvider) => Container(
                               decoration: BoxDecoration(
@@ -461,24 +464,18 @@ class _ShopHomePageState extends State<ShopHomePage> {
                       ),
                       Container(
                         width: 70.0,
-                        padding: EdgeInsets.all(2.5),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Align(
-                              alignment: Alignment.topCenter,
-                              child: Text(
-                                data.catname,
-                                style: GoogleFonts.lato(
-                                  textStyle: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w500,),
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.center,
-                              ),
+                        padding: EdgeInsets.only(top: 5, right: 5),
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: Text(
+                            data.catname,
+                            style: GoogleFonts.lato(
+                              textStyle: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w500,),
                             ),
-                          ],
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
                     ],

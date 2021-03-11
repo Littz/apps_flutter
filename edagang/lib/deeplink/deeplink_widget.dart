@@ -31,7 +31,7 @@ class DeeplinkWidgetState extends State<DeeplinkWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     DeepLinkBloc _bloc = Provider.of<DeepLinkBloc>(context);
     return StreamBuilder<String>(
       stream: _bloc.state,
@@ -102,7 +102,8 @@ class DeeplinkWidgetState extends State<DeeplinkWidget> {
                 break;
             }
         }else {
-          return SimpleTab(2,0);
+          //return SimpleTab(2,0);
+          return NewHomePage(2,0);
         }
       },
     );

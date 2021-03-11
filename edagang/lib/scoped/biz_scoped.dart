@@ -8,29 +8,11 @@ import 'package:scoped_model/scoped_model.dart';
 
 mixin BizAppScopedModel on Model {
 
-List<BizCat> bizcat = [];
-List<BizCat> bizcat2 = [];
-List<BizCat> bizcat3 = [];
 List<BizList> visitedlist = [];
 List<Company> companylist = [];
 
-List<BizCat> get _bizcat => bizcat;
-List<BizCat> get _bizcat2 => bizcat2;
-List<BizCat> get _bizcat3 => bizcat3;
 List<BizList> get _visitedlist => visitedlist;
 List<Company> get _companylist => companylist;
-
-void addToBizCategory(BizCat cat) {
-  _bizcat.add(cat);
-}
-
-void addToBizCategory2(BizCat cat2) {
-  _bizcat2.add(cat2);
-}
-
-void addToBizCategory3(BizCat cat3) {
-  _bizcat3.add(cat3);
-}
 
 
 void addToVisitedList(BizList lsvisited) {
@@ -41,99 +23,8 @@ void addToCompanyList(Company lscompany) {
   _companylist.add(lscompany);
 }
 
-
 bool _isLoadingCo = false;
 bool get isLoadingCo => _isLoadingCo;
-
-Future<dynamic> _getBizcat() async {
-  var response = await http.get(
-    Constants.bizAPI+'/biz/category',
-  ).catchError((error) {
-    print(error.toString());
-    return false;
-  });
-  return json.decode(response.body);
-}
-
-Future fetchBizCat() async {
-  bizcat.clear();
-  notifyListeners();
-
-  var dataFromResponse = await _getBizcat();
-  print('BIZ Category==============================================');
-  print(dataFromResponse);
-
-  dataFromResponse["data"]["category"].forEach((dataCat) {
-    BizCat _cat = new BizCat(
-      id: dataCat['id'],
-      name: dataCat['category_name'],
-      descr: dataCat['category_desc'],
-    );
-    addToBizCategory(_cat);
-  });
-
-  notifyListeners();
-}
-
-Future<dynamic> _getBizprod() async {
-  var response = await http.get(
-    Constants.bizAPI+'/biz/category_product',
-  ).catchError((error) {
-    print(error.toString());
-    return false;
-  });
-  return json.decode(response.body);
-}
-
-Future fetchBizProd() async {
-  bizcat2.clear();
-  notifyListeners();
-
-  var dataFromResponse = await _getBizprod();
-  print('BIZ Category==============================================');
-  print(dataFromResponse);
-
-  dataFromResponse["data"]["category"].forEach((dataCat) {
-    BizCat _cat = new BizCat(
-      id: dataCat['id'],
-      name: dataCat['category_name'],
-      descr: dataCat['category_desc'],
-    );
-    addToBizCategory2(_cat);
-  });
-
-  notifyListeners();
-}
-
-Future<dynamic> _getBizsvc() async {
-  var response = await http.get(
-    Constants.bizAPI+'/biz/category_services',
-  ).catchError((error) {
-    print(error.toString());
-    return false;
-  });
-  return json.decode(response.body);
-}
-
-Future fetchBizSvc() async {
-  bizcat3.clear();
-  notifyListeners();
-
-  var dataFromResponse = await _getBizsvc();
-  print('BIZ Category==============================================');
-  print(dataFromResponse);
-
-  dataFromResponse["data"]["category"].forEach((dataCat) {
-    BizCat _cat = new BizCat(
-      id: dataCat['id'],
-      name: dataCat['category_name'],
-      descr: dataCat['category_desc'],
-    );
-    addToBizCategory3(_cat);
-  });
-
-  notifyListeners();
-}
 
 
 Future<dynamic> _getVisitlist() async {
@@ -248,12 +139,22 @@ Future fetchCompanyList() async {
 
 
 
-List<Banner_biz> bbanners = [];
+List<Home_banner> bbanners = [];
+List<Home_banner> get _banners => bbanners;
+void addHomeBannerList(Home_banner baner) {_banners.add(baner);}
 
-List<Banner_biz> get _banners => bbanners;
-void addToBannerBizList(Banner_biz baner) {
-  _banners.add(baner);
-}
+List<Home_category> bcategory = [];
+List<Home_category> get _bcategory => bcategory;
+void addHomeCategoryList(Home_category category) {_bcategory.add(category);}
+
+List<Home_business> bbusiness = [];
+List<Home_business> get _bbusiness => bbusiness;
+void addHomeBusinessList(Home_business business) {_bbusiness.add(business);}
+
+List<Home_virtual> bvirtual = [];
+List<Home_virtual> get _bvirtual => bvirtual;
+void addHomeVirtualList(Home_virtual vr) {_bvirtual.add(vr);}
+
 
 Future<dynamic> _getHomeBizJson() async {
   var response = await http.get(
@@ -262,44 +163,88 @@ Future<dynamic> _getHomeBizJson() async {
   ).catchError((error) {
     print(error.toString());
     return false;
-  },
-  );
+  });
   return json.decode(response.body);
 }
 
 Future fetchHomeBizResponse() async {
   _banners.clear();
+  _bcategory.clear();
+  _bbusiness.clear();
+  _bvirtual.clear();
 
   notifyListeners();
   var dataFromResponse = await _getHomeBizJson();
 
-
-//DATA BANNER =========================================================================================
-  print('BIZ BANNERRRRRR #####################################');
+  print('HOME BIZ BANNERRRRRR #####################################');
   print(dataFromResponse["data"]["banner"]);
 
   dataFromResponse["data"]["banner"].forEach((dataBaner) {
-    Banner_biz _banner = new Banner_biz(
+    Home_banner _banner = new Home_banner(
       title: dataBaner['title'],
       imageUrl: dataBaner['image_url'],
       type: dataBaner['type'],
       itemId: dataBaner['item_id'],
-      //remark: dataBaner['remark'],
     );
-    addToBannerBizList(_banner);
+    addHomeBannerList(_banner);
   });
 
-//DATA CATEGORY =========================================================================================
-  /*dataFromResponse["data"]["category"].forEach((dataCat) {
-    Category _cat = new Category(
-      catid: dataCat['id'],
-      catimage: dataCat['image'],
-      catname: dataCat['name'],
-    );
-    addToCategoryList(_cat);
-  });*/
+  print('HOME BIZ CATEGORYYY #####################################');
+  print(dataFromResponse["data"]["banner"]);
 
-  //_isLoading2 = false;
+  dataFromResponse["data"]["category"].forEach((dataCat) {
+    Home_category _cat = new Home_category(
+      cat_id: dataCat['id'],
+      cat_image: dataCat['image'],
+      cat_name: dataCat['category_name'],
+    );
+    addHomeCategoryList(_cat);
+  });
+
+  print('HOME BIZ BUSINESSSS #####################################');
+  print(dataFromResponse["data"]["businesses"]);
+
+  dataFromResponse["data"]["businesses"].forEach((dataBiz) {
+    Home_business _cat = new Home_business(
+      id: dataBiz['id'],
+      company_name: dataBiz['company_name'],
+      overview: dataBiz['overview'],
+      address: dataBiz['address'],
+      office_phone: dataBiz['office_phone'],
+      office_fax: dataBiz['office_fax'],
+      email: dataBiz['email'],
+      website: dataBiz['website'],
+      logo: dataBiz['logo'],
+    );
+    addHomeBusinessList(_cat);
+  });
+
+  print('HOME BIZ VIRTUALLL #####################################');
+  print(dataFromResponse["data"]["virtual"]);
+
+  dataFromResponse["data"]["virtual"].forEach((dataVr) {
+
+    List<VRList> vrList = [];
+    dataVr["vr_list"].forEach((newVr) {
+      vrList.add(
+        new VRList(
+            vr_type: newVr["vr_type"], // after migration -> int to string
+            vr_name: newVr["vr_name"], // after migration -> int to string
+            vr_url: newVr["vr_url"],
+            vr_image: newVr["vr_image"], // after migration -> int to string
+        ),
+      );
+    });
+
+    Home_virtual _vr = new Home_virtual(
+      vr_id: dataVr['id'],
+      vr_desc: dataVr['desc'],
+      vr_list: vrList,
+    );
+    addHomeVirtualList(_vr);
+  });
+
+
   notifyListeners();
 }
 

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:edagang/index.dart';
-import 'package:edagang/stct.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intro_slider/intro_slider.dart';
@@ -57,29 +56,40 @@ class _IntroScreenState extends State<IntroScreen> {
 
     slides.add(
       new Slide(
+          /*title: "SMARTBIZ",
+          styleTitle: GoogleFonts.lato(
+            textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.red.shade600),
+          ),
+          description: "An excellent online platform promoting products, services, businesses and events, transforming visibility into business opportunities.",
+          styleDescription: GoogleFonts.lato(
+            textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
+          ),*/
+
+          pathImage: "assets/sample.gif",
+          //backgroundColor: Colors.white,
+          //foregroundImageFit: BoxFit.fill,
+          heightImage: 676,
+          widthImage: 380
+      ),
+    );
+    /*slides.add(
+      new Slide(
         title: "FINTOOLS",
         styleTitle: GoogleFonts.lato(
           textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.red.shade600),
         ),
-        //marginTitle: EdgeInsets.all(16.0),
         description: "Offers a range of financial services on an online platform to meet any business or personal financial requirements.",
         styleDescription: GoogleFonts.lato(
           textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
         ),
-        //marginDescription: EdgeInsets.all(16.0),
-        //backgroundImage: "assets/images/fintest.png",
-        //backgroundImageFit: BoxFit.fill,
-        //backgroundOpacity: 0.1,
-        //backgroundOpacityColor: Colors.white,
         pathImage: "assets/images/intro_fintools.png",
         backgroundColor: Colors.white,
         foregroundImageFit: BoxFit.fill,
         heightImage: 257,
         widthImage: 380
-        //backgroundColor: Color(0xff454545),
       ),
-    );
-    slides.add(
+    );*/
+    /*slides.add(
       new Slide(
           title: "CARTSINI",
           styleTitle: GoogleFonts.lato(
@@ -168,7 +178,7 @@ class _IntroScreenState extends State<IntroScreen> {
           heightImage: 257,
           widthImage: 380
       ),
-    );
+    );*/
 
   }
 

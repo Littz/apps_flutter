@@ -129,7 +129,7 @@ class _CareerDeeplinkPageState extends State<CareerDeeplinkPage> with TickerProv
             color: Colors.white,
           ),
           leading: InkWell(
-            onTap: () {Navigator.pushReplacement(context, SlideRightRoute(page: SimpleTab(2,0)));},
+            onTap: () {Navigator.pushReplacement(context, SlideRightRoute(page: NewHomePage(2,0)));},
             splashColor: Colors.grey.shade100,
             highlightColor: Colors.deepOrange.shade100,
             child: Icon(

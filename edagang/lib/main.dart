@@ -7,8 +7,8 @@ import 'package:edagang/screens/shop/shop_index.dart';
 import 'package:edagang/screens/upskill/skill_index.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/splash.dart';
-import 'package:edagang/stct.dart';
 import 'package:edagang/utils/constant.dart';
+import 'package:ff_navigation_bar/ff_navigation_bar.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:edagang/scoped/main_scoped.dart';
@@ -19,7 +19,7 @@ import 'package:edagang/deeplink/deeplink_bloc.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'dart:math';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -115,6 +115,7 @@ class _MyAppPageState extends State<MyApp> {
     //_model.fetchBizCat();
     //_model.fetchBizProd();
     //_model.fetchBizSvc();
+    _model.fetchHomeBizResponse();
     _model.fetchVisitedList();
     _model.fetchCompanyList();
     _model.fetchSkillCat();
@@ -166,9 +167,9 @@ class _MyAppPageState extends State<MyApp> {
         ),*/
 
         routes: <String, WidgetBuilder>{
-          "/Main": (BuildContext context) => new SimpleTab(2,0),
-          "/ShopIndex": (BuildContext context) => new SimpleTab(1,0),
-          "/ShopCart": (BuildContext context) => new SimpleTab(1,2),
+          "/Main": (BuildContext context) => new NewHomePage(2,0),
+          "/ShopIndex": (BuildContext context) => new NewHomePage(1,0),
+          "/ShopCart": (BuildContext context) => new NewHomePage(1,2),
           "/Address": (BuildContext context) => new AddressBook(),
           "/Checkout": (BuildContext context) => new CheckoutActivity(),
           "/Login": (BuildContext context) => new SignInOrRegister(),
@@ -178,85 +179,114 @@ class _MyAppPageState extends State<MyApp> {
   }
 }
 
-class CustomTab {
-  const CustomTab({this.title, this.color});
-
-  final String title;
-  final Color color;
-}
-
-class SimpleTab extends StatefulWidget {
-  int selectedPage, pgIdx;
-  SimpleTab(this.selectedPage, this.pgIdx);
+class NewHomePage extends StatefulWidget {
+  int selectedPage;
+  int pgIdx;
+  NewHomePage(this.selectedPage, this.pgIdx);
 
   @override
-  _SimpleTabState createState() => _SimpleTabState();
+  _NewHomePageState createState() => _NewHomePageState();
 }
 
-class _SimpleTabState extends State<SimpleTab> with SingleTickerProviderStateMixin {
-  TabController controller;
-  List<CustomTab> tabs = const <CustomTab>[
-    const CustomTab(title: 'FinTools', color: Color(0xffD81C3F)),
-    const CustomTab(title: 'Cartsini', color: Color(0xffF35532)),
-    const CustomTab(title: 'SmartBiz', color: Color(0xff2877EA)),
-    const CustomTab(title: 'GOilmu', color: Color(0xff70286D)),
-    const CustomTab(title: 'Blurb', color: Color(0xff57585A)),
-  ];
+class _NewHomePageState extends State<NewHomePage> {
 
-  int idx = 0;
-  CustomTab selectedTab;
+  bool navBarMode = false;
+  int selectedIndex = 2;
+  List<Widget> listBottomWidget = new List();
 
   @override
   void initState() {
     super.initState();
-    controller = new TabController(length: tabs.length, vsync: this, initialIndex: widget.selectedPage,);
-    controller.addListener(_select);
-    selectedTab = tabs[widget.selectedPage];
-  }
-
-  void _select() {
-    setState(() {
-      selectedTab = tabs[controller.index];
-    });
+    //MainScopedModel xmodel = ScopedModel.of(context);
+    selectedIndex = widget.selectedPage;
+    addHomePage();
   }
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        elevation: 0.0,
-        automaticallyImplyLeading: false,
-        centerTitle: true,
-        backgroundColor: Colors.white, //selectedTab.color,
-        title: new TabBar(
-          controller: controller,
-          isScrollable: true,
-          //indicatorPadding: EdgeInsets.all(0.5),
-          indicatorSize: TabBarIndicatorSize.label,
-          indicatorWeight: 3.0,
-          indicatorColor: selectedTab.color,  //(0xffC2202D),
-          unselectedLabelColor: Color(0xff9A9A9A),
-          labelPadding: EdgeInsets.only(left: 5.0, right: 5.0),
-          labelColor: selectedTab.color, //Color(0xffCC0E27),
-          labelStyle: GoogleFonts.roboto(
-            textStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.bold,),
+    return Scaffold(
+      backgroundColor: Color(0xffEEEEEE),
+      /*body: ClipPath(
+        clipper: MyClipper(),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          height: MediaQuery.of(context).size.height / 3,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [
+                Color(0xFF3383CD),
+                Color(0xFF11249F),
+              ],
+            ),
           ),
-          unselectedLabelStyle: GoogleFonts.roboto(
-            textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w400,),
-          ),
-          tabs: tabs.map((e) => new Tab(
-            text: e.title,
-          )).toList()
         ),
+      ),*/
+      body: Builder(builder: (context) {
+        return listBottomWidget[selectedIndex];
+      }),
+      bottomNavigationBar: FFNavigationBar(
+        theme: FFNavigationBarTheme(
+          barBackgroundColor: Colors.white,
+          selectedItemBorderColor: Color(0xFFEEEEEE),
+          //selectedItemBackgroundColor: Color(0xFF11249F),
+          //selectedItemIconColor: Colors.white,
+          //selectedItemLabelColor: Color(0xFF11249F),
+          barHeight: 64,
+          showSelectedItemShadow: false,
+        ),
+        selectedIndex: selectedIndex,
+        onSelectTab: (index) {
+          setState(() {
+            selectedIndex = index;
+          });
+        },
+        items: [
+          FFNavigationBarItem(
+            iconData: CupertinoIcons.money_dollar,
+            label: 'Fintools',
+            selectedBackgroundColor: Color(0xffD91B3E),
+            selectedLabelColor: Color(0xffD91B3E),
+          ),
+          FFNavigationBarItem(
+            iconData: CupertinoIcons.cart,
+            label: 'Cartsini',
+            selectedBackgroundColor: Color(0xffF3552E),
+            selectedLabelColor: Colors.black,
+          ),
+          FFNavigationBarItem(
+            iconData: CupertinoIcons.chart_bar_alt_fill,
+            label: 'Smartbiz',
+            selectedBackgroundColor: Color(0xff357FEB),
+            selectedLabelColor: Color(0xff084B8C),
+          ),
+          FFNavigationBarItem(
+            iconData: CupertinoIcons.book,
+            label: 'GOilmu',
+            selectedBackgroundColor: Color(0xff930894),
+            selectedLabelColor: Color(0xff70286D),
+          ),
+          FFNavigationBarItem(
+            iconData: CupertinoIcons.tv,
+            label: 'Blurb',
+            selectedBackgroundColor: Color(0xff57585A),
+            selectedLabelColor: Color(0xff57585A),
+          ),
+        ],
       ),
-      backgroundColor: Colors.grey.shade200,
-      body: TabBarView(controller: controller, children: <Widget>[
-          FinancePage(tabcontroler: controller),
-          ShopIndexPage(tabcontroler: controller, navibar_idx: widget.pgIdx,),
-          BizPage(tabcontroler: controller),
-          UpskillPage(tabcontroler: controller),
-          AdvertPage(tabcontroler: controller),
-      ])
+
     );
   }
+
+  void addHomePage() {
+    listBottomWidget.add(FinancePage());
+    listBottomWidget.add(ShopIndexPage(selectedPage: widget.selectedPage, tabcontroler: widget.pgIdx));
+    listBottomWidget.add(BizPage());
+    listBottomWidget.add(UpskillPage());
+    listBottomWidget.add(AdvertPage());
+  }
+
 }
+

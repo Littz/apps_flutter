@@ -45,21 +45,25 @@ List<Menus> getBizTabs() {
 
   menuTab.id = 1;
   menuTab.imgPath = "assets/images/marketplace.png";
+  menuTab.title = "Category 2";
   tabMenu.add(menuTab);
   menuTab = new Menus();
 
   menuTab.id = 0;
   menuTab.imgPath = "assets/images/financing.png";
+  menuTab.title = "Category 2";
   tabMenu.add(menuTab);
   menuTab = new Menus();
 
   menuTab.id = 3;
   menuTab.imgPath = "assets/images/upskilling.png";
+  menuTab.title = "Category 3";
   tabMenu.add(menuTab);
   menuTab = new Menus();
 
   menuTab.id = 4;
   menuTab.imgPath = "assets/images/business.png";
+  menuTab.title = "Category 4";
   tabMenu.add(menuTab);
   menuTab = new Menus();
 
@@ -214,25 +218,25 @@ List<Menus> getShopNewContent() {
   Menus menuModel = new Menus();
 
   menuModel.id = 1;
-  menuModel.imgPath = "assets/icons/shop_koop.png";
+  menuModel.imgPath = "assets/images/koperasi.png";
   menuModel.title = "Koperasi";
   quickMenu.add(menuModel);
   menuModel = new Menus();
 
   menuModel.id = 2;
-  menuModel.imgPath = "assets/icons/shop_ngo.png";
+  menuModel.imgPath = "assets/images/ngo.png";
   menuModel.title = "NGO";
   quickMenu.add(menuModel);
   menuModel = new Menus();
 
-  menuModel.id = 3;
+  /*menuModel.id = 3;
   menuModel.imgPath = "assets/icons/shop_digital.png";
   menuModel.title = "Digital";
   quickMenu.add(menuModel);
-  menuModel = new Menus();
+  menuModel = new Menus();*/
 
-  menuModel.id = 4;
-  menuModel.imgPath = "assets/icons/shop_join.png";
+  menuModel.id = 3;
+  menuModel.imgPath = "assets/images/join.png";
   menuModel.title = "Join Us";
   quickMenu.add(menuModel);
   menuModel = new Menus();

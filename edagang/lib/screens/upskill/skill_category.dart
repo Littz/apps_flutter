@@ -32,7 +32,7 @@ class _SkillProfessionalPageState extends State<SkillProfessionalPage> {
     return ScopedModelDescendant<MainScopedModel>(
         builder: (context, child, model){
           return Scaffold(
-            appBar: new PreferredSize(
+            /*appBar: new PreferredSize(
                 preferredSize: Size.fromHeight(56.0),
                 child: new AppBar(
                   centerTitle: false,
@@ -59,109 +59,102 @@ class _SkillProfessionalPageState extends State<SkillProfessionalPage> {
                       )
                   ),
                 )
-            ),
-            backgroundColor: Colors.white,
-            body: CustomScrollView(slivers: <Widget>[
-              SliverPadding(
-                padding: EdgeInsets.only(left: 10, top: 10, right: 10, bottom: 15),
-                sliver: SliverList(
-                  delegate: SliverChildListDelegate(
-                    [
-                      Column(
-                          children: <Widget>[
-                            ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: model.skillProfessional.length,
-                              itemBuilder: (context, index) {
-                                var data = model.skillProfessional[index];
-                                return Card(
-                                    margin: EdgeInsets.all(5.0),
-                                    elevation: 2,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    shadowColor: Color(0xff2877EA),
-                                    child: Container(
-                                      child: InkWell(
-                                          onTap: () {
-                                            sharedPref.save("skil_id", data.id.toString());
-                                            Navigator.push(context, SlideRightRoute(page: UpskillDetailPage()));
-                                          },
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: <Widget>[
-                                                  Expanded(
-                                                    flex: 3,
-                                                    child: Container(
-                                                      padding: EdgeInsets.only(left: 7.0, right: 0.0, bottom: 5.0),
-                                                      child: Text(
-                                                        data.title,
-                                                        overflow: TextOverflow.ellipsis,
-                                                        style: GoogleFonts.lato(
-                                                          textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
-                                                        ),
-                                                        maxLines: 2,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: Container(
-                                                      margin: EdgeInsets.only(right: 7.0, top: 5.0),
-                                                      alignment: Alignment.topRight,
-                                                      child: Icon(
-                                                        CupertinoIcons.chevron_forward,
-                                                        size: 20,
-                                                        color: Colors.grey,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
-                                                child: Text(
-                                                  data.descr,
-                                                  style: GoogleFonts.lato(
-                                                    textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-                                                  ),
-                                                ),
-                                              ),
-                                              Container(
-                                                margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
-                                                child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-                                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                                    children: <Widget>[
-                                                      Text(
-                                                        data.company_name,
-                                                        style: GoogleFonts.lato(
-                                                          textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, fontStyle: FontStyle.italic),
-                                                        ),
-                                                      ),
-                                                    ]
-                                                ),
-                                              ),
-                                            ],
-                                          )
-                                      ),
-                                    )
-                                );
-                              },
-                            )
-                          ]
+            ),*/
+            backgroundColor: Color(0xffEEEEEE),
+            body: MediaQuery.removePadding(
+              context: context,
+              removeTop: true,
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: model.skillProfessional.length,
+                itemBuilder: (context, index) {
+                  var data = model.skillProfessional[index];
+                  return Card(
+                      margin: EdgeInsets.all(7.0),
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
-                    ],
-                  ),
-                ),
+                      shadowColor: Color(0xff2877EA),
+                      child: Container(
+                        margin: EdgeInsets.all(5.0),
+                        child: InkWell(
+                            onTap: () {
+                              sharedPref.save("skil_id", data.id.toString());
+                              Navigator.push(context, SlideRightRoute(page: UpskillDetailPage()));
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Expanded(
+                                      flex: 3,
+                                      child: Container(
+                                        padding: EdgeInsets.only(left: 7.0, right: 0.0, bottom: 5.0),
+                                        child: Text(
+                                          data.title,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
+                                          ),
+                                          maxLines: 2,
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        margin: EdgeInsets.only(right: 7.0, top: 5.0),
+                                        alignment: Alignment.topRight,
+                                        child: Icon(
+                                          CupertinoIcons.chevron_forward,
+                                          size: 20,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
+                                  child: Text(
+                                    data.company_name,
+                                    style: GoogleFonts.lato(
+                                      textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
+                                  child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: <Widget>[
+                                        Text(
+                                          data.cat_name,
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, fontStyle: FontStyle.italic),
+                                          ),
+                                        ),
+                                      ]
+                                  ),
+                                ),
+                              ],
+                            )
+                        ),
+                      )
+                  );
+                },
               ),
-            ]),
+            )
+
+
+
           );
         }
     );
@@ -193,7 +186,7 @@ class _SkillTechnicalPageState extends State<SkillTechnicalPage> {
     return ScopedModelDescendant<MainScopedModel>(
         builder: (context, child, model){
           return Scaffold(
-            appBar: new PreferredSize(
+            /*appBar: new PreferredSize(
                 preferredSize: Size.fromHeight(56.0),
                 child: new AppBar(
                   centerTitle: false,
@@ -220,113 +213,100 @@ class _SkillTechnicalPageState extends State<SkillTechnicalPage> {
                       )
                   ),
                 )
-            ),
-            backgroundColor: Colors.white,
-            body: CustomScrollView(slivers: <Widget>[
-              SliverPadding(
-                padding: EdgeInsets.only(left: 10, top: 10, right: 10, bottom: 15),
-                sliver: SliverList(
-                  delegate: SliverChildListDelegate(
-                    [
-                      Column(
-                          children: <Widget>[
-                            ListView.separated(
-                              separatorBuilder: (context, index) => Divider(
-                                color: Colors.grey,
-                                indent: 10.0,
-                              ),
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: model.skillTechnical.length,
-                              itemBuilder: (context, index) {
-                                var data = model.skillTechnical[index];
-                                return Card(
-                                    margin: EdgeInsets.all(5.0),
-                                    elevation: 2,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    shadowColor: Color(0xff2877EA),
-                                    child: Container(
-                                      child: InkWell(
-                                          onTap: () {
-                                            sharedPref.save("skil_id", data.id.toString());
-                                            Navigator.push(context, SlideRightRoute(page: UpskillDetailPage()));
-                                          },
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: <Widget>[
-                                                  Expanded(
-                                                    flex: 3,
-                                                    child: Container(
-                                                      padding: EdgeInsets.only(left: 7.0, right: 0.0, bottom: 5.0),
-                                                      child: Text(
-                                                        data.title,
-                                                        overflow: TextOverflow.ellipsis,
-                                                        style: GoogleFonts.lato(
-                                                          textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
-                                                        ),
-                                                        maxLines: 2,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: Container(
-                                                      margin: EdgeInsets.only(right: 7.0, top: 5.0),
-                                                      alignment: Alignment.topRight,
-                                                      child: Icon(
-                                                        CupertinoIcons.chevron_forward,
-                                                        size: 20,
-                                                        color: Colors.grey,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
-                                                child: Text(
-                                                  data.descr,
-                                                  style: GoogleFonts.lato(
-                                                    textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-                                                  ),
-                                                ),
-                                              ),
-                                              Container(
-                                                margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
-                                                child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-                                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                                    children: <Widget>[
-                                                      Text(
-                                                        data.company_name,
-                                                        style: GoogleFonts.lato(
-                                                          textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, fontStyle: FontStyle.italic),
-                                                        ),
-                                                      ),
-                                                    ]
-                                                ),
-                                              ),
-                                            ],
-                                          )
-                                      ),
-                                    )
-                                );
-                              },
-                            )
-                          ]
+            ),*/
+            backgroundColor: Color(0xffEEEEEE),
+            body: MediaQuery.removePadding(
+              context: context,
+              removeTop: true,
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: model.skillTechnical.length,
+                itemBuilder: (context, index) {
+                  var data = model.skillTechnical[index];
+                  return Card(
+                      margin: EdgeInsets.all(7.0),
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
-                    ],
-                  ),
-                ),
+                      shadowColor: Color(0xff2877EA),
+                      child: Container(
+                        margin: EdgeInsets.all(5.0),
+                        child: InkWell(
+                            onTap: () {
+                              sharedPref.save("skil_id", data.id.toString());
+                              Navigator.push(context, SlideRightRoute(page: UpskillDetailPage()));
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Expanded(
+                                      flex: 3,
+                                      child: Container(
+                                        padding: EdgeInsets.only(left: 7.0, right: 0.0, bottom: 5.0),
+                                        child: Text(
+                                          data.title,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
+                                          ),
+                                          maxLines: 2,
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        margin: EdgeInsets.only(right: 7.0, top: 5.0),
+                                        alignment: Alignment.topRight,
+                                        child: Icon(
+                                          CupertinoIcons.chevron_forward,
+                                          size: 20,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
+                                  child: Text(
+                                    data.company_name,
+                                    style: GoogleFonts.lato(
+                                      textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
+                                  child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: <Widget>[
+                                        Text(
+                                          data.cat_name,
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, fontStyle: FontStyle.italic),
+                                          ),
+                                        ),
+                                      ]
+                                  ),
+                                ),
+                              ],
+                            )
+                        ),
+                      )
+                  );
+                },
               ),
-            ]),
+            )
+
           );
         }
     );
@@ -358,7 +338,7 @@ class _SkillSafetyPageState extends State<SkillSafetyPage> {
     return ScopedModelDescendant<MainScopedModel>(
         builder: (context, child, model){
           return Scaffold(
-            appBar: new PreferredSize(
+            /*appBar: new PreferredSize(
                 preferredSize: Size.fromHeight(56.0),
                 child: new AppBar(
                   centerTitle: false,
@@ -385,113 +365,100 @@ class _SkillSafetyPageState extends State<SkillSafetyPage> {
                       )
                   ),
                 )
-            ),
-            backgroundColor: Colors.white,
-            body: CustomScrollView(slivers: <Widget>[
-              SliverPadding(
-                padding: EdgeInsets.only(left: 10, top: 10, right: 10, bottom: 15),
-                sliver: SliverList(
-                  delegate: SliverChildListDelegate(
-                    [
-                      Column(
-                          children: <Widget>[
-                            ListView.builder(
-                              /*separatorBuilder: (context, index) => Divider(
-                                color: Colors.grey,
-                                indent: 0.0,
-                              ),*/
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: model.skillSafety.length,
-                              itemBuilder: (context, index) {
-                                var data = model.skillSafety[index];
-                                return Card(
-                                    margin: EdgeInsets.all(5.0),
-                                    elevation: 2,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    shadowColor: Color(0xff2877EA),
-                                    child: Container(
-                                      child: InkWell(
-                                          onTap: () {
-                                            sharedPref.save("skil_id", data.id.toString());
-                                            Navigator.push(context, SlideRightRoute(page: UpskillDetailPage()));
-                                          },
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: <Widget>[
-                                                  Expanded(
-                                                    flex: 3,
-                                                    child: Container(
-                                                      padding: EdgeInsets.only(left: 7.0, right: 0.0, bottom: 5.0),
-                                                      child: Text(
-                                                        data.title,
-                                                        overflow: TextOverflow.ellipsis,
-                                                        style: GoogleFonts.lato(
-                                                          textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
-                                                        ),
-                                                        maxLines: 2,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: Container(
-                                                      margin: EdgeInsets.only(right: 7.0, top: 5.0),
-                                                      alignment: Alignment.topRight,
-                                                      child: Icon(
-                                                        CupertinoIcons.chevron_forward,
-                                                        size: 20,
-                                                        color: Colors.grey,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
-                                                child: Text(
-                                                  data.descr,
-                                                  style: GoogleFonts.lato(
-                                                    textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-                                                  ),
-                                                ),
-                                              ),
-                                              Container(
-                                                margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.end,
-                                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                                  children: <Widget>[
-                                                    Text(
-                                                      data.company_name,
-                                                      style: GoogleFonts.lato(
-                                                        textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, fontStyle: FontStyle.italic),
-                                                      ),
-                                                    ),
-                                                  ]
-                                                ),
-                                              ),
-                                            ],
-                                          )
-                                      ),
-                                    )
-                                );
-                              },
-                            )
-                          ]
+            ),*/
+            backgroundColor: Color(0xffEEEEEE),
+            body: MediaQuery.removePadding(
+              context: context,
+              removeTop: true,
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: model.skillSafety.length,
+                itemBuilder: (context, index) {
+                  var data = model.skillSafety[index];
+                  return Card(
+                      margin: EdgeInsets.all(7.0),
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
-                    ],
-                  ),
-                ),
+                      shadowColor: Color(0xff2877EA),
+                      child: Container(
+                        margin: EdgeInsets.all(5.0),
+                        child: InkWell(
+                            onTap: () {
+                              sharedPref.save("skil_id", data.id.toString());
+                              Navigator.push(context, SlideRightRoute(page: UpskillDetailPage()));
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Expanded(
+                                      flex: 3,
+                                      child: Container(
+                                        padding: EdgeInsets.only(left: 7.0, right: 0.0, bottom: 5.0),
+                                        child: Text(
+                                          data.title,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
+                                          ),
+                                          maxLines: 2,
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        margin: EdgeInsets.only(right: 7.0, top: 5.0),
+                                        alignment: Alignment.topRight,
+                                        child: Icon(
+                                          CupertinoIcons.chevron_forward,
+                                          size: 20,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
+                                  child: Text(
+                                    data.company_name,
+                                    style: GoogleFonts.lato(
+                                      textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
+                                  child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: <Widget>[
+                                        Text(
+                                          data.cat_name,
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, fontStyle: FontStyle.italic),
+                                          ),
+                                        ),
+                                      ]
+                                  ),
+                                ),
+                              ],
+                            )
+                        ),
+                      )
+                  );
+                },
               ),
-            ]),
+            )
+
           );
         }
     );
@@ -523,7 +490,7 @@ class _SkillTrainingPageState extends State<SkillTrainingPage> {
     return ScopedModelDescendant<MainScopedModel>(
         builder: (context, child, model){
           return Scaffold(
-            appBar: new PreferredSize(
+            /*appBar: new PreferredSize(
                 preferredSize: Size.fromHeight(56.0),
                 child: new AppBar(
                   centerTitle: false,
@@ -550,109 +517,99 @@ class _SkillTrainingPageState extends State<SkillTrainingPage> {
                       )
                   ),
                 )
-            ),
-            backgroundColor: Colors.white,
-            body: CustomScrollView(slivers: <Widget>[
-              SliverPadding(
-                padding: EdgeInsets.only(left: 10, top: 10, right: 10, bottom: 15),
-                sliver: SliverList(
-                  delegate: SliverChildListDelegate(
-                    [
-                      Column(
-                          children: <Widget>[
-                            ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: model.skillTraining.length,
-                              itemBuilder: (context, index) {
-                                var data = model.skillTraining[index];
-                                return Card(
-                                    margin: EdgeInsets.all(5.0),
-                                    elevation: 2,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    shadowColor: Color(0xff2877EA),
-                                    child: Container(
-                                      child: InkWell(
-                                          onTap: () {
-                                            sharedPref.save("skil_id", data.id.toString());
-                                            Navigator.push(context, SlideRightRoute(page: UpskillDetailPage()));
-                                          },
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: <Widget>[
-                                                  Expanded(
-                                                    flex: 3,
-                                                    child: Container(
-                                                      padding: EdgeInsets.only(left: 7.0, right: 0.0, bottom: 5.0),
-                                                      child: Text(
-                                                        data.title,
-                                                        overflow: TextOverflow.ellipsis,
-                                                        style: GoogleFonts.lato(
-                                                          textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
-                                                        ),
-                                                        maxLines: 2,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: Container(
-                                                      margin: EdgeInsets.only(right: 7.0, top: 5.0),
-                                                      alignment: Alignment.topRight,
-                                                      child: Icon(
-                                                        CupertinoIcons.chevron_forward,
-                                                        size: 20,
-                                                        color: Colors.grey,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
-                                                child: Text(
-                                                  data.descr,
-                                                  style: GoogleFonts.lato(
-                                                    textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-                                                  ),
-                                                ),
-                                              ),
-                                              Container(
-                                                margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
-                                                child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-                                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                                    children: <Widget>[
-                                                      Text(
-                                                        data.company_name,
-                                                        style: GoogleFonts.lato(
-                                                          textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, fontStyle: FontStyle.italic),
-                                                        ),
-                                                      ),
-                                                    ]
-                                                ),
-                                              ),
-                                            ],
-                                          )
-                                      ),
-                                    )
-                                );
-                              },
-                            )
-                          ]
+            ),*/
+            backgroundColor: Color(0xffEEEEEE),
+            body: MediaQuery.removePadding(
+              context: context,
+              removeTop: true,
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: model.skillTraining.length,
+                itemBuilder: (context, index) {
+                  var data = model.skillTraining[index];
+                  return Card(
+                      margin: EdgeInsets.all(7.0),
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
-                    ],
-                  ),
-                ),
+                      shadowColor: Color(0xff2877EA),
+                      child: Container(
+                        margin: EdgeInsets.all(5.0),
+                        child: InkWell(
+                            onTap: () {
+                              sharedPref.save("skil_id", data.id.toString());
+                              Navigator.push(context, SlideRightRoute(page: UpskillDetailPage()));
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Expanded(
+                                      flex: 3,
+                                      child: Container(
+                                        padding: EdgeInsets.only(left: 7.0, right: 0.0, bottom: 5.0),
+                                        child: Text(
+                                          data.title,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
+                                          ),
+                                          maxLines: 2,
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        margin: EdgeInsets.only(right: 7.0, top: 5.0),
+                                        alignment: Alignment.topRight,
+                                        child: Icon(
+                                          CupertinoIcons.chevron_forward,
+                                          size: 20,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
+                                  child: Text(
+                                    data.company_name,
+                                    style: GoogleFonts.lato(
+                                      textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
+                                  child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: <Widget>[
+                                        Text(
+                                          data.cat_name,
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, fontStyle: FontStyle.italic),
+                                          ),
+                                        ),
+                                      ]
+                                  ),
+                                ),
+                              ],
+                            )
+                        ),
+                      )
+                  );
+                },
               ),
-            ]),
+            )
           );
         }
     );

@@ -7,6 +7,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class ShopMessagePage extends StatefulWidget {
+  final int tabcontroler;
+  ShopMessagePage({this.tabcontroler});
 
   @override
   _MessagesState createState() => new _MessagesState();
@@ -102,7 +104,7 @@ class _MessagesState extends State<ShopMessagePage> {
                 key: _scaffoldKey,
                 resizeToAvoidBottomPadding: false,
                 resizeToAvoidBottomInset: false,
-                backgroundColor: Colors.grey.shade100,
+                /*backgroundColor: Colors.grey.shade100,
                 appBar: AppBar(
                   backgroundColor: Colors.transparent,
                   automaticallyImplyLeading: false,
@@ -132,7 +134,8 @@ class _MessagesState extends State<ShopMessagePage> {
                         ),
                       ]
                   ),
-                ),
+                ),*/
+                backgroundColor: Color(0xffEEEEEE),
                 body: Center(
                     child: new Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -169,7 +172,7 @@ class _MessagesState extends State<ShopMessagePage> {
                 key: _scaffoldKey,
                 resizeToAvoidBottomPadding: false,
                 resizeToAvoidBottomInset: false,
-                backgroundColor: Colors.white,
+                backgroundColor: Color(0xffEEEEEE),
                 body: _showLoginFirst(),
               ));
 

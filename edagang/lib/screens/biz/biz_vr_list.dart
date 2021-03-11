@@ -14,7 +14,7 @@ class BizVrListPage extends StatefulWidget {
   }
 }
 
-const xpandedHeight = 185.0;
+const xpandedHeight = 155.0;
 
 class _BizVrListPageState extends State<BizVrListPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -37,17 +37,17 @@ class _BizVrListPageState extends State<BizVrListPage> {
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
       body: DefaultTabController(
-        length: 3,
+        length: 2,
         child: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
               SliverAppBar(
                 elevation: 0.0,
                 expandedHeight: xpandedHeight,
-                /*iconTheme: IconThemeData(
-                  color: Colors.white,
-                ),*/
-                leading: Hero(
+                iconTheme: IconThemeData(
+                  color: Color(0xff357FEB),
+                ),
+                /*leading: Hero(
                   tag: "back",
                   child: InkWell(
                     onTap: () {Navigator.pop(context);},
@@ -60,7 +60,7 @@ class _BizVrListPageState extends State<BizVrListPage> {
                       ),
                     ),
                   )
-                ),
+                ),*/
                 pinned: true,
                 primary: true,
                 title: SABT(
@@ -85,7 +85,7 @@ class _BizVrListPageState extends State<BizVrListPage> {
                         borderRadius: BorderRadius.all(Radius.circular(0)),
                       ),
                       child: Image.asset(
-                        'assets/images/virtual_trade.png', fit: BoxFit.cover,
+                        'assets/images/virtual_trade.png', fit: BoxFit.fitHeight,
                         height: 150,
                       ),
                     )
@@ -96,10 +96,10 @@ class _BizVrListPageState extends State<BizVrListPage> {
                 delegate: _SliverAppBarDelegate(
                   TabBar(
                     isScrollable: true,
-                    indicatorColor: Colors.transparent,
+                    indicatorColor: Color(0xff357FEB),
                     labelPadding: EdgeInsets.only(left: 8, right: 8, top: 3),
                     indicatorSize: TabBarIndicatorSize.label,
-                    labelColor: Color(0xff2877EA),
+                    labelColor: Color(0xff357FEB),
                     unselectedLabelColor: Colors.grey,
                     labelStyle: GoogleFonts.lato(
                       textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w700,),
@@ -110,7 +110,7 @@ class _BizVrListPageState extends State<BizVrListPage> {
                     tabs: [
                       Tab(text: "Company"),
                       Tab(text: "Gallery"),
-                      Tab(text: "Exhibition"),
+                      //Tab(text: "Exhibition"),
                     ],
                   ),
                 ),
@@ -128,6 +128,30 @@ class _BizVrListPageState extends State<BizVrListPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 265,
+                        decoration: new BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                        ),
+                        child: InkWell(
+                          onTap: () async {
+                            final String url = 'https://smartbiz.e-dagang.asia/vr/pengasih/office/index.htm';
+                            if (await canLaunch(url)) await launch(
+                              url,
+                              forceSafariVC: false,
+                              forceWebView: false,
+                            );
+                          },
+                          child: VrCardItem(
+                            vrimg: Image.asset('assets/vr_pengasih.png'),
+                            label: 'Persatuan PENGASIH',
+                            sublabel: '',
+                            footer: 'Virtual Office',
+                          ),
+                        ),
+                      ),
                       Container(
                         width: MediaQuery.of(context).size.width,
                         height: 265,
@@ -202,6 +226,31 @@ class _BizVrListPageState extends State<BizVrListPage> {
                           ),
                         ),
                       ),
+
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 265,
+                        decoration: new BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                        ),
+                        child: InkWell(
+                          onTap: () async {
+                            final String url = 'https://smartbiz.e-dagang.asia/vr/paceup/office/index.htm';
+                            if (await canLaunch(url)) await launch(
+                              url,
+                              forceSafariVC: false,
+                              forceWebView: false,
+                            );
+                          },
+                          child: VrCardItem(
+                            vrimg: Image.asset('assets/vr_paceup.png'),
+                            label: 'Paceup Sdn Bhd',
+                            sublabel: '',
+                            footer: 'Virtual Office',
+                          ),
+                        ),
+                      ),
                     ]
                   ),
                 ),
@@ -245,7 +294,7 @@ class _BizVrListPageState extends State<BizVrListPage> {
                 ),
               )
             ]),
-            CustomScrollView(slivers: <Widget>[
+            /*CustomScrollView(slivers: <Widget>[
               SliverToBoxAdapter(
                 child: Container(
                   padding: EdgeInsets.all(8.0),
@@ -259,7 +308,7 @@ class _BizVrListPageState extends State<BizVrListPage> {
                   ),
                 ),
               )
-            ]),
+            ]),*/
           ]),
         ),
       ),

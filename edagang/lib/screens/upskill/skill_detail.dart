@@ -1,5 +1,6 @@
 import 'package:edagang/models/upskill_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
+import 'package:edagang/screens/upskill/webview.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
@@ -380,10 +381,10 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
         child: new SingleChildScrollView(
             child: Column(
                 children: <Widget>[
-                  ListView.separated(
-                    separatorBuilder: (context, index) => Divider(
+                  ListView.builder(
+                    /*separatorBuilder: (context, index) => Divider(
                       color: Colors.grey,
-                    ),
+                    ),*/
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: schedule.length,
@@ -505,7 +506,9 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
                   ),
                 ),
                 onPressed: () {
-                  model.isAuthenticated ? '' : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
+                  model.isAuthenticated ? Navigator.push(context, SlideRightRoute(
+                      page: WebviewGoilmu(
+                          'https://goilmu.e-dagang.asia/ups/quot/'+model.getId().toString()+'/'+_id.toString(), title))) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
                 },
               ),
             ],

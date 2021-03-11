@@ -598,3 +598,4 @@ class VrCardItem extends StatelessWidget {
     );
   }
 }
+

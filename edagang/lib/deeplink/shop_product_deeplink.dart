@@ -271,7 +271,7 @@ class _ProductDeeplinkPageState extends State<ProductDeeplink> with TickerProvid
             leading: Hero(
                 tag: "back",
                 child: InkWell(
-                  onTap: () {Navigator.pushReplacement(context, SlideRightRoute(page: SimpleTab(1,0)));},
+                  onTap: () {Navigator.pushReplacement(context, SlideRightRoute(page: NewHomePage(2,0)));},
                   splashColor: Colors.deepOrange.shade100,
                   highlightColor: Colors.deepOrange.shade100,
                   child: BlurIcon(
@@ -606,7 +606,7 @@ class _ProductDeeplinkPageState extends State<ProductDeeplink> with TickerProvid
                 child: InkWell(
                   onTap: () {
                     //Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ShopCartPage()));
-                    Navigator.push(context, SlideRightRoute(page: SimpleTab(1,2)));
+                    Navigator.push(context, SlideRightRoute(page: NewHomePage(2,0)));
                   },
                   splashColor: Colors.deepOrange.shade100,
                   highlightColor: Colors.deepOrange.shade100,

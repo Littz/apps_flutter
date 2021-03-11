@@ -182,7 +182,7 @@ class _CompanyDeeplinkPageState extends State<CompanyDeeplinkPage> with TickerPr
             color: Colors.white,
           ),
           leading: InkWell(
-            onTap: () {Navigator.pushReplacement(context, SlideRightRoute(page: SimpleTab(2,0)));},
+            onTap: () {Navigator.pushReplacement(context, SlideRightRoute(page: NewHomePage(2,0)));},
             splashColor: Colors.deepOrange.shade100,
             child: Icon(Icons.arrow_back,),
           ),

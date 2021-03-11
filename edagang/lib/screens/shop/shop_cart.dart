@@ -10,6 +10,8 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ShopCartPage extends StatefulWidget {
+  final int tabcontroler;
+  ShopCartPage({this.tabcontroler});
 
   @override
   _ShopCartPageState createState() => _ShopCartPageState();
@@ -134,16 +136,9 @@ class _ShopCartPageState extends State<ShopCartPage> {
         key: _scaffoldKey,
         resizeToAvoidBottomPadding: false,
         resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.grey.shade100,
+        /*backgroundColor: Colors.grey.shade100,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          /*flexibleSpace: Container(
-            decoration: BoxDecoration(gradient: GradientUtil.whiteYellow(
-              begin: AlignmentDirectional.bottomStart,
-              end: AlignmentDirectional.topEnd,
-              opacity: 0.5)
-            ),
-          ),*/
           automaticallyImplyLeading: false,
           elevation: 0.0,
           centerTitle: true,
@@ -171,7 +166,8 @@ class _ShopCartPageState extends State<ShopCartPage> {
                 ),
               ]
           ),
-        ),
+        ),*/
+        backgroundColor: Color(0xffEEEEEE),
         body: model.isLoading3 ? _buildCircularProgressIndicator() : model.getCartotal() > 0 ? _cartItems(model) : _emptyContent(),
         //body: _cartItems(model),
 
@@ -180,7 +176,7 @@ class _ShopCartPageState extends State<ShopCartPage> {
         key: _scaffoldKey,
         resizeToAvoidBottomPadding: false,
         resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xffEEEEEE),
         body: _showLoginFirst(),
       ));
     });
