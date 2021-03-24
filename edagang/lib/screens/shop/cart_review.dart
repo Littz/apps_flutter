@@ -94,14 +94,17 @@ class _MyReviewState extends State<MyReview> {
             appBar: AppBar(
               backgroundColor: Colors.white,
               elevation: 0.0,
+              iconTheme: IconThemeData(
+                color: Color(0xff084B8C),
+              ),
               title: new Text(
                 'My Reviews',
                 style: GoogleFonts.lato(
-                  textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Color(0xff202020),),
+                  textStyle: TextStyle(fontSize: 18, color: Colors.black,),
                 ),
               ),
             ),
-            backgroundColor: Colors.grey.shade100,
+            backgroundColor: Color(0xffEEEEEE),
             body: model.isAuthenticated ?
 
             /*model.historyOrders.length > 0 ?

@@ -1,14 +1,12 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:edagang/main.dart';
 import 'package:edagang/models/ads_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
-import 'package:edagang/screens/ads/webview.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
+import 'package:edagang/widgets/webview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
@@ -165,44 +163,7 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
     {
       return Scaffold(
         key: _scaffoldKey,
-        /*appBar: new PreferredSize(
-        preferredSize: Size.fromHeight(56.0),
-        child: new AppBar(
-          centerTitle: false,
-          elevation: 1.0,
-          iconTheme: IconThemeData(
-            color: Colors.white,
-          ),
-          leading: InkWell(
-            onTap: () {Navigator.pop(context);},
-            splashColor: Colors.grey.shade100,
-            highlightColor: Colors.deepOrange.shade100,
-            child: Icon(
-            Icons.arrow_back,
-            ),
-          ),
-          title: new Text('Career Vacancy',
-            style: GoogleFonts.lato(
-              textStyle: TextStyle(color: Colors.white, fontSize: 18),
-            ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.topRight,
-                colors: [
-                  Colors.grey.shade600,
-                  Colors.grey.shade200,
-                ]
-              ),
-            )
-          ),
-        )
-      ),*/
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xffEEEEEE),
         body: isLoading ? _buildCircularProgressIndicator() : CustomScrollView(
           controller: _scrollController,
           slivers: <Widget>[
@@ -220,7 +181,7 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
                     child: BlurIconLight(
                       icon: Icon(
                         Icons.arrow_back,
-                        color: Colors.black,
+                        color: Color(0xff084B8C),
                       ),
                     ),
                   )
@@ -230,7 +191,7 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
                     child: Text(title ?? '',
                       style: GoogleFonts.lato(
                         textStyle: TextStyle(
-                          fontSize: 15, fontWeight: FontWeight.w700,),
+                          fontSize: 18, color: Color(0xff084B8C)),
                       ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
@@ -251,7 +212,7 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
                       _selectedItem = value;
                       print("Selected context menu: $_selectedItem");
                       Navigator.push(context, SlideRightRoute(
-                          page: WebviewBlurb(
+                          page: WebviewWidget(
                               'https://blurb.e-dagang.asia/wv/career/profile/' +
                                   model.getId().toString(), 'Career Profile')));
                     });
@@ -591,7 +552,7 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
               ),
               onPressed: () {
                 model.isAuthenticated ? Navigator.push(context, SlideRightRoute(
-                page: WebviewBlurb(
+                page: WebviewWidget(
                 'https://blurb.e-dagang.asia/wv/job/apply/'+model.getId().toString()+'/'+_id.toString(), title))) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
               },
             ),

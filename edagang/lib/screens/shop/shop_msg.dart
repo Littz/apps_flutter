@@ -104,10 +104,8 @@ class _MessagesState extends State<ShopMessagePage> {
                 key: _scaffoldKey,
                 resizeToAvoidBottomPadding: false,
                 resizeToAvoidBottomInset: false,
-                /*backgroundColor: Colors.grey.shade100,
                 appBar: AppBar(
-                  backgroundColor: Colors.transparent,
-                  automaticallyImplyLeading: false,
+                  backgroundColor: Colors.white,
                   elevation: 0.0,
                   centerTitle: true,
                   title: Row(
@@ -118,15 +116,14 @@ class _MessagesState extends State<ShopMessagePage> {
                           'Messages ',
                           style: GoogleFonts.lato(
                             textStyle: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,),
+                              fontSize: 18,),
                           ),
                         ),
                         new Text(
                           '(0)',
                           style: GoogleFonts.lato(
                             textStyle: TextStyle(
-                              fontSize: 15,
+                              fontSize: 16,
                               fontWeight: FontWeight.w500,
                               fontStyle: FontStyle.italic,
                             ),
@@ -134,7 +131,7 @@ class _MessagesState extends State<ShopMessagePage> {
                         ),
                       ]
                   ),
-                ),*/
+                ),
                 backgroundColor: Color(0xffEEEEEE),
                 body: Center(
                     child: new Column(

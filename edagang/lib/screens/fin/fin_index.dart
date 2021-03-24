@@ -1,9 +1,8 @@
 import 'package:edagang/data/datas.dart';
-import 'package:edagang/main.dart';
-import 'package:edagang/notification.dart';
 import 'package:edagang/scoped/main_scoped.dart';
-import 'package:edagang/screens/fin/webview.dart';
+import 'package:edagang/sign_in.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
+import 'package:edagang/widgets/webview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -91,24 +90,54 @@ class _FinancePageState extends State<FinancePage> {
                             floating: false,
                             pinned: true,
                             backgroundColor: Colors.white,
-                            leading: model.isAuthenticated ? Padding(
+                            automaticallyImplyLeading: false,
+                            /*leading: model.isAuthenticated ? Padding(
                                 padding: EdgeInsets.all(13),
                                 child:  _logType == '0' ? Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.scaleDown) : ClipRRect(
                                   borderRadius: BorderRadius.circular(50),
                                   child: Image.network(_photo ?? '', fit: BoxFit.fill,),
                                 )
-                            ) : Container(),
-                            centerTitle: true,
-                            title: SizedBox(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  //Image.asset('assets/icons/ic_edagang.png', height: 28, width: 30,),
-                                  Image.asset('assets/icons/ic_fintool.png', height: 24, width: 107,),
-                                ],
+                            ) : CircleAvatar(
+                              backgroundColor: Colors.transparent,
+                              child: IconButton(
+                                icon: Icon(
+                                  CupertinoIcons.power,
+                                  color: Color(0xff084B8C),
+                                ),
+                                onPressed: () {Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));},
                               ),
-                            ),
+                            ),*/
+                            centerTitle: true,
+                            title: Image.asset('assets/icons/ic_fintool.png', height: 24, width: 107,),
+                            actions: [
+                              Padding(
+                                padding: EdgeInsets.only(left: 2, right: 10,),
+                                child: model.isAuthenticated ?
+                                _logType == '0' ?
+                                CircleAvatar(
+                                  backgroundColor: Colors.transparent,
+                                  child: Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.fill, height: 27, width: 27),
+                                )
+                                    : CircleAvatar(
+                                    backgroundColor: Colors.transparent,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(50),
+                                      child: Image.network(_photo ?? '', fit: BoxFit.fill, height: 27, width: 27,),
+                                    )
+                                )
+                                    : CircleAvatar(
+                                  backgroundColor: Colors.transparent,
+                                  child: IconButton(
+                                    icon: Icon(
+                                      CupertinoIcons.power,
+                                      color: Color(0xff084B8C),
+                                    ),
+                                    onPressed: () {Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));},
+                                  ),
+                                ),
+                              ),
+
+                            ],
                             /*actions: [
                               Padding(
                                 padding: EdgeInsets.only(left: 2, right: 10,),
@@ -217,7 +246,7 @@ class _FinancePageState extends State<FinancePage> {
                                           child: InkWell(
                                               onTap: () {
                                                 Navigator.push(context, SlideRightRoute(
-                                                    page: Webview(
+                                                    page: WebviewWidget(
                                                         'http://ktpb.org/application-form/',
                                                         'KTP Membership')));
                                               },
@@ -519,7 +548,7 @@ class _FinancePageState extends State<FinancePage> {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
                     child: InkWell(
                       onTap: () {
-                        Navigator.push(context, SlideRightRoute(page: Webview(data.webviewUrl, data.title)));
+                        Navigator.push(context, SlideRightRoute(page: WebviewWidget(data.webviewUrl, data.title)));
                         //Navigator.push(context, SlideRightRoute(page: WebviewGeneral(data.webviewUrl, data.title)));
                       },
                       child: Container(
@@ -534,7 +563,32 @@ class _FinancePageState extends State<FinancePage> {
                         ),
                         child: Padding(
                           padding: EdgeInsets.only(left: 7.0, right: 7.0),
-                          child: Text(
+                            child: Stack(
+                              children: <Widget>[
+                                Text(data.title ?? '',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.lato(
+                                    textStyle: TextStyle(fontSize: 14,
+                                        foreground: Paint()
+                                          ..style = PaintingStyle.stroke
+                                          ..strokeWidth = 4
+                                          ..color = Colors.black38, fontWeight: FontWeight.w600),
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+
+                                Text(data.title ?? '',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.lato(
+                                    textStyle: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                )
+                              ],
+                            )
+                          /*child: Text(
                             data.title,
                             textAlign: TextAlign.center,
                             style: GoogleFonts.lato(
@@ -542,7 +596,7 @@ class _FinancePageState extends State<FinancePage> {
                             ),
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,
-                          ),
+                          ),*/
                         )
                       ),
                     ),

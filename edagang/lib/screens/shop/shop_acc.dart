@@ -1,12 +1,7 @@
 import 'package:edagang/main.dart';
 import 'package:edagang/scoped/main_scoped.dart';
-import 'package:edagang/screens/shop/acc_address.dart';
-import 'package:edagang/screens/shop/acc_profile.dart';
 import 'package:edagang/screens/shop/cart_history.dart';
 import 'package:edagang/screens/shop/cart_review.dart';
-import 'package:edagang/screens/shop/change_paswd.dart';
-import 'package:edagang/screens/shop/shop_index.dart';
-import 'package:edagang/screens/shop/shop_policy.dart';
 import 'package:edagang/screens/shop/shop_support.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/constant.dart';
@@ -191,7 +186,7 @@ class _StateAccount extends State<ShopAccountPage> {
                         trailing: Icon(Icons.chevron_right, color: Color(0xffF45432)),
                         onTap: () {
                           if(model.isAuthenticated) {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (_) => NewHomePage(1,1)));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (_) => NewHomePage(1)));
                           }else{
                             Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
                           }

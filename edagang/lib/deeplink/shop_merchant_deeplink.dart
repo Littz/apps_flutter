@@ -88,7 +88,7 @@ class _MerchantDeeplinkState extends State<MerchantDeeplink> {
               elevation: 0.0,
               expandedHeight: xpandedHeight,
               leading: InkWell(
-                onTap: () {Navigator.pushReplacement(context, SlideRightRoute(page: NewHomePage(2,0)));},
+                onTap: () {Navigator.pushReplacement(context, SlideRightRoute(page: NewHomePage(1)));},
                 splashColor: Colors.deepOrange.shade100,
                 highlightColor: Colors.deepOrange.shade100,
                 child: Icon(

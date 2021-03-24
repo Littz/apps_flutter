@@ -62,12 +62,13 @@ class KeyValuePairDropdownState3 extends State<ProductListPromotion> {
           elevation: 0,
           centerTitle: false,
           backgroundColor: Colors.white,
+          iconTheme: IconThemeData(
+            color: Color(0xff084B8C),
+          ),
           title: Text(
             widget.catName, //+' - '+widget.total.toString(),
             style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              fontFamily: "Quicksand",
+              fontSize: 18, color: Colors.black,
             ),
           ),
           actions: <Widget>[
@@ -77,7 +78,7 @@ class KeyValuePairDropdownState3 extends State<ProductListPromotion> {
             ),
           ],
         ),
-        backgroundColor: Colors.grey.shade100,
+        backgroundColor: Color(0xffEEEEEE),
         body: CustomScrollView(
           slivers: <Widget>[
             SliverPadding(

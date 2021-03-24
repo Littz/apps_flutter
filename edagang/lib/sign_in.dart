@@ -23,7 +23,6 @@ class SignInOrRegister extends StatefulWidget {
 }
 
 class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerProviderStateMixin {
-  //final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final Map<String, dynamic> _formData = {'email': null, 'password': null};
   final GlobalKey<FormState> _formKeyForLogin = GlobalKey<FormState>();
   final TextEditingController _emailTextController = TextEditingController();
@@ -76,7 +75,6 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
 
   @override
   Widget build(BuildContext context) {
-
     return ScopedModelDescendant<MainScopedModel>(
         builder: (BuildContext context, Widget child, MainScopedModel model)
     {
@@ -88,15 +86,286 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
             backgroundColor: Colors.transparent,
             elevation: 0.0,
             centerTitle: true,
-            title: Image.asset(
-              'assets/lg_edagang.png',
-              fit: BoxFit.fill,
-              height: 50,
-              width: 127,
+            title: Text(
+              'Sign In',
+              style: GoogleFonts.lato(
+                textStyle: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w600,),
+              ),
             ),
           ),
         ),
-        body: Center(
+        body: Stack(
+          children: <Widget>[
+            Container(
+              height: double.infinity,
+              /*decoration: new BoxDecoration(
+                image: new DecorationImage(
+                    fit: BoxFit.cover,
+                    image: new NetworkImage(
+                        'https://i.pinimg.com/originals/c2/47/e9/c247e913a0214313045a8a5c39f8522b.jpg'))),*/
+            ),
+            Center(
+              child: Form(
+                key: _formKeyForLogin,
+                autovalidate: false,
+                child: new SingleChildScrollView(
+                  padding: EdgeInsets.all(40.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      CircleAvatar(
+                        radius: 58.0,
+                        child: Image.asset(
+                          'assets/red_edagang.png',
+                          fit: BoxFit.fill,
+                          height: 69,
+                          width: 165,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 24,
+                      ),
+                      Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            /*Text(
+                      'Sign In',
+                      style: GoogleFonts.lato(
+                        textStyle: TextStyle(color: Colors.black, fontSize: 19, fontWeight: FontWeight.w700,),
+                      ),
+                    ),*/
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Text(
+                              'Login with email and password.',
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(color: Colors.grey.shade700, fontSize: 16, fontWeight: FontWeight.w500,),
+                              ),
+                            ),
+                          ]
+                      ),
+                      SizedBox(
+                        height: 24,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                            alignment: Alignment.bottomCenter,
+                            padding: EdgeInsets.only(right: 7),
+                            child: Icon(
+                              Icons.email,
+                              color: Colors.grey.shade600,
+                              size: 20,
+                            ),
+                          ),
+                          new Expanded(
+                            child: TextFormField(
+                              textAlignVertical: TextAlignVertical.center,
+                              decoration: const InputDecoration(
+                                labelText: 'Email',
+                                hintText: 'Enter your email address',
+                                hintStyle: TextStyle(color: Colors.grey),
+                                contentPadding: EdgeInsets.symmetric(vertical: 7, horizontal: 7),
+                                isDense: true,
+                              ),
+                              keyboardType: TextInputType.emailAddress,
+                              validator: (value) {
+                                if (!emailRegex.hasMatch(value)) {
+                                  return 'Please enter valid email';
+                                }
+                                return null;
+                              },
+                              onSaved: (value) {
+                                _formData['email'] = value;
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                            alignment: Alignment.bottomCenter,
+                            padding: EdgeInsets.only(right: 7),
+                            child: Icon(
+                              Icons.vpn_key,
+                              color: Colors.grey.shade600,
+                              size: 20,
+                            ),
+                          ),
+                          new Expanded(
+                            child: TextFormField(
+                              obscureText: true,
+                              textAlignVertical: TextAlignVertical.center,
+                              decoration: const InputDecoration(
+                                  hintText: 'Please enter password',
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                  contentPadding: EdgeInsets.symmetric(vertical: 7, horizontal: 7),
+                                  isDense: true,
+                                  labelText: 'Password'),
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Password is required';
+                                }
+                                return null;
+                              },
+                              onSaved: (value) {
+                                _formData['password'] = value;
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+
+                      _buildForgotPasswordBtn(),
+
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        child: RaisedButton(
+                          shape: StadiumBorder(),
+                          color: Color(0xff272264),
+                          onPressed: () {
+                            _submitLoginEmail(model);
+                          },
+                          child: Text('Login',
+                            style: GoogleFonts.lato(
+                              textStyle: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushReplacement(context,
+                              MaterialPageRoute(builder: (context) => Register()));
+                        },
+                        child: Container(
+                          height: 24,
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+                          alignment: Alignment.center,
+                          child: Center(
+                              child: RichText(
+                                text: TextSpan(
+                                  text: "Don't have an account? ",
+                                  style: GoogleFonts.lato(
+                                    textStyle: TextStyle(color: Colors.grey.shade600, fontSize: 15,),
+                                  ),
+                                  children: <TextSpan>[
+                                    TextSpan(text: 'Sign up',
+                                      style: GoogleFonts.lato(
+                                        textStyle: TextStyle(color: Color(0xffCE0E27), fontSize: 16, fontWeight: FontWeight.w700,),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(
+                        height: 24,
+                      ),
+
+                      Container(
+                        width: double.infinity,
+                        //margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Expanded(
+                              flex: 2,
+                              child: horizontalLine(),
+                            ),
+                            Text(' Or access with ',
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(color: Colors.grey.shade700, fontSize: 12, fontWeight: FontWeight.normal,),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: horizontalLine(),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 30.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            GestureDetector(
+                              onTap: () {
+                                _facebookLogin(model);
+                              },
+                              child: Container(
+                                height: 60.0,
+                                width: 60.0,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black26,
+                                      offset: Offset(0, 2),
+                                      blurRadius: 6.0,
+                                    ),
+                                  ],
+                                  image: DecorationImage(
+                                    image: AssetImage('assets/icons/facebook.jpg',),
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            GestureDetector(
+                              onTap: () {
+                                _googleLogin(model);
+                              },
+                              child: Container(
+                                height: 60.0,
+                                width: 60.0,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black26,
+                                      offset: Offset(0, 2),
+                                      blurRadius: 6.0,
+                                    ),
+                                  ],
+                                  image: DecorationImage(
+                                    image: AssetImage('assets/icons/google.jpg',),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        color: Colors.transparent,
+                        height: 56,
+                      ),
+                    ],
+                  )
+                )
+              ),
+            ),
+          ],
+        ),
+
+        /*body: Center(
           child: Form(
             key: _formKeyForLogin,
             autovalidate: false,
@@ -233,7 +502,6 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
                     height: 24,
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
                     alignment: Alignment.center,
-                    //margin: EdgeInsets.fromLTRB(40, 10, 40, 0),
                     child: Center(
                       child: RichText(
                         text: TextSpan(
@@ -336,17 +604,10 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
                     ],
                   ),
                 ),
-                //_buildSocialBtnRow(model),
-                /*OutlineButton(
-                  child: Text("Logout Facebook"),
-                  onPressed: () {
-                    _logoutFb();
-                  },
-                ),*/
               ],
             )
           )
-        ),
+        ),*/
       );
     });
   }
@@ -903,7 +1164,247 @@ class _RegisterState extends State<Register> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //key: _scaffoldKey,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(55.0),
+        child: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          centerTitle: true,
+          title: Text(
+            'Sign Up',
+            style: GoogleFonts.lato(
+              textStyle: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w600,),
+            ),
+          ),
+        ),
+      ),
+      body: Stack(
+        children: <Widget>[
+          Container(
+            height: double.infinity,
+            /*decoration: new BoxDecoration(
+                image: new DecorationImage(
+                    fit: BoxFit.cover,
+                    image: new NetworkImage(
+                        'https://i.pinimg.com/originals/c2/47/e9/c247e913a0214313045a8a5c39f8522b.jpg'))),*/
+          ),
+          Center(
+            child: Form(
+              key: _formKey,
+              autovalidate: false,
+              child: new SingleChildScrollView(
+                padding: EdgeInsets.all(40.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 58.0,
+                      child: Image.asset(
+                        'assets/red_edagang.png',
+                        fit: BoxFit.fill,
+                        height: 69,
+                        width: 165,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 24,
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        /*Text(
+                          'Sign Up',
+                          style: GoogleFonts.lato(
+                            textStyle: TextStyle(color: Colors.black, fontSize: 19, fontWeight: FontWeight.w700,),
+                          ),
+                        ),*/
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Text(
+                          'Create an account.',
+                          style: GoogleFonts.lato(
+                            textStyle: TextStyle(color: Colors.grey.shade700, fontSize: 16, fontWeight: FontWeight.w500,),
+                          ),
+                        ),
+                      ]
+                    ),
+                    SizedBox(
+                      height: 24,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          alignment: Alignment.bottomCenter,
+                          padding: EdgeInsets.only(right: 7),
+                          child: Icon(
+                            Icons.person,
+                            color: Colors.grey.shade600,
+                            size: 20,
+                          ),
+                        ),
+                        new Expanded(
+                          child: TextFormField(
+                            textAlignVertical: TextAlignVertical.center,
+                            decoration: const InputDecoration(
+                              labelText: 'Name',
+                              hintText: 'Enter your name',
+                              hintStyle: TextStyle(color: Colors.grey),
+                              contentPadding: EdgeInsets.symmetric(vertical: 7, horizontal: 7),
+                              isDense: true,
+                            ),
+                            keyboardType: TextInputType.name,
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter name';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _formData['name'] = value;
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          alignment: Alignment.bottomCenter,
+                          padding: EdgeInsets.only(right: 7),
+                          child: Icon(
+                            Icons.email,
+                            color: Colors.grey.shade600,
+                            size: 20,
+                          ),
+                        ),
+                        new Expanded(
+                          child: TextFormField(
+                            textAlignVertical: TextAlignVertical.center,
+                            decoration: const InputDecoration(
+                              labelText: 'Email',
+                              hintText: 'Enter your email address',
+                              hintStyle: TextStyle(color: Colors.grey),
+                              contentPadding: EdgeInsets.symmetric(vertical: 7, horizontal: 7),
+                              isDense: true,
+                            ),
+                            keyboardType: TextInputType.emailAddress,
+                            validator: (value) {
+                              if (!emailRegex.hasMatch(value)) {
+                                return 'Please enter valid email';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _formData['email'] = value;
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          alignment: Alignment.bottomCenter,
+                          padding: EdgeInsets.only(right: 7),
+                          child: Icon(
+                            Icons.vpn_key,
+                            color: Colors.grey.shade600,
+                            size: 20,
+                          ),
+                        ),
+                        new Expanded(
+                          child: TextFormField(
+                            obscureText: true,
+                            textAlignVertical: TextAlignVertical.center,
+                            decoration: const InputDecoration(
+                                hintText: 'Please enter password',
+                                hintStyle: TextStyle(color: Colors.grey),
+                                contentPadding: EdgeInsets.symmetric(vertical: 7, horizontal: 7),
+                                isDense: true,
+                                labelText: 'Password'),
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Password is required';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _formData['password'] = value;
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 24.0),
+                      child: RaisedButton(
+                        shape: StadiumBorder(),
+                        color: Color(0xff272264),
+                        onPressed: () {
+                          _submitForm();
+                        },
+                        child: Text('Sign up',
+                          style: GoogleFonts.lato(
+                            textStyle: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    InkWell(
+                      onTap: () {
+                        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => SignInOrRegister()));
+                      },
+                      child: Container(
+                        height: 30,
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+                        margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
+                        child: Center(
+                          child: RichText(
+                            text: TextSpan(
+                              text: "Already have an account? ",
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(color: Colors.grey.shade600, fontSize: 15, fontWeight: FontWeight.w600,),
+                              ),
+                              children: <TextSpan>[
+                                TextSpan(text: 'Sign in',
+                                  style: GoogleFonts.lato(
+                                    textStyle: TextStyle(color: Color(0xffCE0E27), fontSize: 16, fontWeight: FontWeight.w700,),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        ),
+                      ),
+                    ),
+                    Container(
+                      color: Colors.transparent,
+                      height: 56,
+                    ),
+                  ],
+                )
+              )
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /*Widget build(BuildContext context) {
+    return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(55.0),
         child: AppBar(
@@ -1114,254 +1615,8 @@ class _RegisterState extends State<Register> with SingleTickerProviderStateMixin
           )
       ),
 
-      /*body: Stack(
-        children: <Widget>[
-
-          Container(
-            height: double.infinity,
-            width: double.infinity,
-            child: new Form(
-              key: _formKey,
-              autovalidate: false,
-              child:Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    'Create an account.',
-                    style: GoogleFonts.lato(
-                      textStyle: TextStyle(color: Colors.grey.shade700, fontSize: 17, fontWeight: FontWeight.w700,),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 24,
-                  ),
-                  Stack(
-                    children: <Widget>[
-                      Container(
-                        width: double.infinity,
-                        margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
-                        padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                        height: 40,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey.shade600),
-                          borderRadius: BorderRadius.circular(5)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Container(
-                              margin: EdgeInsets.only(left: 20),
-                              height: 22,
-                              width: 22,
-                              child: Icon(Icons.person,color: Colors.grey.shade600,size: 20,),
-                            ),
-                          ],
-                        )
-                      ),
-                      Container(
-                        height: 40,
-                        margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
-                        padding: EdgeInsets.fromLTRB(0, 10, 0, 5),
-                        child: TextFormField(
-                          textAlign: TextAlign.center,
-                          decoration: InputDecoration.collapsed(
-                            fillColor: Colors.grey.shade300,
-                            focusColor: Colors.white,
-                            hintText: 'Full Name',
-                            border: InputBorder.none,
-                            hintStyle: TextStyle(color: Colors.grey.shade500),
-                          ).copyWith(isDense: true),
-                          //style: TextStyle(fontFamily: 'Quicksand', fontSize: 15,color: Colors.black),
-                          style: GoogleFonts.lato(
-                            textStyle: TextStyle(color: Colors.black, fontSize: 15,),
-                          ),
-                          keyboardType: TextInputType.text,
-                          validator: (String value) {
-                            if (value.isEmpty) {return 'Please enter your name';}
-                          },
-                          onSaved: (String value) {
-                            _formData['name'] = value;
-                          },
-                        )
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  Stack(
-                    children: <Widget>[
-                      Container(
-                          width: double.infinity,
-                          margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
-                          padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                          height: 40,
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey.shade600),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Container(
-                                margin: EdgeInsets.only(left: 20),
-                                height: 22,
-                                width: 22,
-                                child: Icon(Icons.email,color: Colors.grey.shade600,size: 20,),
-                              ),
-                            ],
-                          )
-                      ),
-                      Container(
-                          height: 40,
-                          margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
-                          padding: EdgeInsets.fromLTRB(0, 10, 0, 5),
-                          child: TextFormField(
-                            obscureText: false,
-                            textAlign: TextAlign.center,
-                            decoration: InputDecoration.collapsed(
-                              fillColor: Colors.grey.shade300,
-                              focusColor: Colors.white,
-                              hintText: 'Email',
-                              border: InputBorder.none,
-                              hintStyle: TextStyle(color: Colors.grey.shade500),
-                            ).copyWith(isDense: true),
-                            style: GoogleFonts.lato(
-                              textStyle: TextStyle(color: Colors.black, fontSize: 15,),
-                            ),
-                            keyboardType: TextInputType.emailAddress,
-                            validator: (String value) {
-                              if (value.isEmpty ||
-                                  !RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
-                                      .hasMatch(value)) {
-                                return 'Please enter a valid email';
-                              }
-                            },
-                            onSaved: (String value) {
-                              _formData['email'] = value;
-                            },
-                          )
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  Stack(
-                    children: <Widget>[
-                      Container(
-                          width: double.infinity,
-                          margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
-                          padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                          height: 40,
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey.shade600),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Container(
-                                margin: EdgeInsets.only(left: 20),
-                                height: 22,
-                                width: 22,
-                                child: Icon(Icons.vpn_key,color: Colors.grey.shade600,size: 20,),
-                              ),
-                            ],
-                          )
-                      ),
-                      Container(
-                          height: 40,
-                          margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
-                          padding: EdgeInsets.fromLTRB(0, 10, 0, 5),
-                          child: TextFormField(
-                            obscureText: true,
-                            textAlign: TextAlign.center,
-                            decoration: InputDecoration.collapsed(
-                              fillColor: Colors.grey.shade300,
-                              focusColor: Colors.white,
-                              hintText: 'Password',
-                              border: InputBorder.none,
-                              hintStyle: TextStyle(color: Colors.grey.shade500),
-                            ).copyWith(isDense: true),
-                            style: GoogleFonts.lato(
-                              textStyle: TextStyle(color: Colors.black, fontSize: 15,),
-                            ),
-                            keyboardType: TextInputType.text,
-                            controller: _passwordTextController,
-                            validator: (String value) {
-                              if (value.isEmpty || value.length < 6) {
-                                return 'Password invalid';
-                              }
-                            },
-                            onSaved: (String value) {
-                              _formData['password'] = value;
-                            },
-                          )
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      _submitForm();
-                    },
-                    child: Container(
-                      height: 42,
-                      decoration: BoxDecoration(
-                          color: Color(0xffCE0E27),
-                          borderRadius: BorderRadius.circular(5)
-                      ),
-                      margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
-                      child: Center(
-                          child: Text('Sign up',
-                            style: GoogleFonts.lato(
-                              textStyle: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700,),
-                            ),
-                          )
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-
-                  InkWell(
-                    onTap: () {
-                      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => SignInOrRegister()));
-                    },
-                    child: Container(
-                      height: 30,
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-                      margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
-                      child: Center(
-                          child: RichText(
-                            text: TextSpan(
-                              text: "Already have an account? ",
-                              style: GoogleFonts.lato(
-                                textStyle: TextStyle(color: Colors.grey.shade600, fontSize: 15, fontWeight: FontWeight.w600,),
-                              ),
-                              children: <TextSpan>[
-                                TextSpan(text: 'Sign in',
-                                    style: GoogleFonts.lato(
-                                      textStyle: TextStyle(color: Color(0xffCE0E27), fontSize: 16, fontWeight: FontWeight.w700,),
-                                    ),
-                                ),
-                              ],
-                            ),
-                          )
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )),
-          ),
-        ],
-      ),*/
     );
-  }
+  }*/
 
 }
 

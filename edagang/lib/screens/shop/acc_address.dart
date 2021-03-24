@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:edagang/models/address_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/utils/constant.dart';
+import 'package:edagang/widgets/blur_icon.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -42,10 +43,13 @@ class _AddressBookState extends State<AddressBook> {
           centerTitle: false,
           elevation: 0.0,
           backgroundColor: Colors.white,
+          iconTheme: IconThemeData(
+            color: Color(0xff084B8C),
+          ),
           title: Text(
-            "My Address",
+            "Address Book",
             style: GoogleFonts.lato(
-              textStyle: TextStyle(color: Color(0xff202020), fontSize: 17, fontWeight: FontWeight.w500,),
+              textStyle: TextStyle(color: Colors.black, fontSize: 18,),
             ),
           ),
           /*leading: IconButton(
@@ -53,7 +57,7 @@ class _AddressBookState extends State<AddressBook> {
             onPressed: () => Navigator.popAndPushNamed(context, '/Account'), // POPPING globalContext
           ),*/
         ),
-        backgroundColor: Colors.grey.shade100,
+        backgroundColor: Color(0xffEEEEEE),
         body: SingleChildScrollView(
             child: Container(
                 alignment: Alignment.topLeft,

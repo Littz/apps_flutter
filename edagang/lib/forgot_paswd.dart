@@ -1,12 +1,11 @@
-import 'package:edagang/index.dart';
 import 'package:edagang/sign_in.dart';
-import 'package:edagang/utils/constant.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as JSON;
+
 
 class ForgotPasswordPage extends StatefulWidget {
   @override
@@ -64,13 +63,17 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 1,
+        iconTheme: IconThemeData(
+          color: Color(0xff084B8C),
+        ),
         title: Text(
           'Forgot Password',
           style: GoogleFonts.lato(
-            textStyle: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w700,),
+            textStyle: TextStyle(color: Color(0xff084B8C), fontSize: 18,),
           ),
         ),
       ),
+      backgroundColor: Color(0xffEEEEEE),
       body: Center(
         child: Container(
           padding: EdgeInsets.all(16),
@@ -135,16 +138,16 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(top: 20),
+                margin: EdgeInsets.only(top: 0),
                 child: RaisedButton(
-                  color: Colors.deepOrange.shade500,
+                  color: Color(0xffC41E34),
                   shape: StadiumBorder(),
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 80),
                     child: Text(
                       "Submit Request",
                       style: GoogleFonts.lato(
-                        textStyle: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700),
+                        textStyle: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
                       ),
                     ),
                   ),

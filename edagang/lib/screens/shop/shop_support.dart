@@ -127,12 +127,12 @@ class _CartsiniHelpState extends State<CartsiniHelp> {
                 title: Text(
                   'FAQ & Support',
                   style: GoogleFonts.lato(
-                    textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.w500,),
+                    textStyle: TextStyle(fontSize: 18,),
                   ),
                 ),
                 elevation: 0,
               ),
-              backgroundColor: Colors.grey.shade100,
+              backgroundColor: Color(0xffEEEEEE),
               body: model.isAuthenticated ?
               SafeArea(
               bottom: true,

@@ -4,6 +4,7 @@ import 'package:edagang/main.dart';
 import 'package:edagang/models/shop_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/screens/shop/product_merchant.dart';
+import 'package:edagang/screens/shop/shop_cart.dart';
 import 'package:edagang/screens/shop/shop_index.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/constant.dart';
@@ -631,7 +632,7 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
                 child: InkWell(
                   onTap: () {
                     //Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ShopCartPage()));
-                    Navigator.push(context, SlideRightRoute(page: NewHomePage(1,2)));
+                    Navigator.push(context, SlideRightRoute(page: ShopCartPage()));
                   },
                   splashColor: Colors.deepOrange.shade100,
                   highlightColor: Colors.deepOrange.shade100,

@@ -92,31 +92,35 @@ class _SearchState extends State<SearchList3> {
               style: GoogleFonts.lato(
                 textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.grey.shade700),
               ),
-              cursorColor: Color(0xffF45432),
+              cursorColor: Colors.black,
               decoration: InputDecoration(
-                  border: InputBorder.none,
-                  prefixIcon: Padding(
-                    padding: EdgeInsetsDirectional.only(end: 10.0),
-                    child: Icon(
-                      CupertinoIcons.search,
-                      color: Colors.grey.shade700,
-                    )
+                //border: InputBorder.none,
+                border: new UnderlineInputBorder(
+                  borderSide: new BorderSide(color: Colors.black)
                 ),
-
-                  hintText: "Search ...",
-                  hintStyle: TextStyle(color: Colors.grey.shade500)),
+                suffixIcon: Padding(
+                  padding: EdgeInsetsDirectional.only(end: 10.0),
+                  child: Icon(
+                    CupertinoIcons.search,
+                    color:Colors.black,
+                  )
+                ),
+                hintText: "Search ...",
+                hintStyle: TextStyle(color: Colors.grey.shade500)
+              ),
             ),
           ),
           flexibleSpace: Container(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
+                color: Colors.white
+                /*gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.topRight,
                     colors: [
                       Color(0xffF45432),
                       Colors.deepOrangeAccent.shade100,
                     ]
-                ),
+                ),*/
               )
           ),
         ),
@@ -248,7 +252,7 @@ class CartsiniItem extends StatelessWidget {
                         Text(
                           repo.company,
                           style: GoogleFonts.lato(
-                            textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic,),
+                            textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic,),
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,

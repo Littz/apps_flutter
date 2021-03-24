@@ -107,18 +107,18 @@ class _ProductListMerchantState extends State<ProductListMerchant> {
               primary: true,
               title: SABT(
                 child: Container(
-                  child: Text(widget.mercName.replaceAll('%20', ' ') ?? '',
-                    style: GoogleFonts.lato(
-                      textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                  )
+                    child: Text(widget.mercName.replaceAll('%20', ' ').toUpperCase() ?? '',
+                      style: GoogleFonts.lato(
+                        textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    )
                 ),
               ),
               flexibleSpace: DecoratedBox(
                 decoration: BoxDecoration(
-                  color: Colors.white
+                    color: Colors.white
                   /*gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -290,7 +290,7 @@ class ProfileMerchant extends StatelessWidget {
                         //padding: const EdgeInsets.only(left: 0.0, right: 0.0, top: 0.0),
                         child: Text(model.getCompanyName() ?? '',
                           style: GoogleFonts.lato(
-                            textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Colors.black),
+                            textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.black),
                           ),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
@@ -306,23 +306,23 @@ class ProfileMerchant extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 0.0, right: 0.0, top: 3.0),
-                        child: RichText(
-                          text: TextSpan(
-                            text: "Joined : ",
-                            style: GoogleFonts.lato(
-                              textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic, color: Colors.black),
-                            ),
-                            children: <TextSpan>[
-                              TextSpan(text: model.getJoinDate() ?? '',
-                                style: GoogleFonts.lato(
-                                  textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black),
-                                ),
+                          padding: const EdgeInsets.only(left: 0.0, right: 0.0, top: 3.0),
+                          child: RichText(
+                            text: TextSpan(
+                              text: "Joined : ",
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic, color: Colors.black),
                               ),
-                            ],
-                          ),
-                        )
-                          /*Column(
+                              children: <TextSpan>[
+                                TextSpan(text: model.getJoinDate() ?? '',
+                                  style: GoogleFonts.lato(
+                                    textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        /*Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
@@ -347,25 +347,25 @@ class ProfileMerchant extends StatelessWidget {
                         height: 40,
                         padding: const EdgeInsets.only(top: 12,),
                         child: RaisedButton.icon(
-                          onPressed: () async {
-                            await FlutterShare.share(
-                              title: 'Cartsini',
-                              text: '',
-                              linkUrl: 'https://shopapp.e-dagang.asia/merchant/'+model.getMid().toString(),
-                              chooserTitle: model.getCompanyName(),
-                            );
-                          },
-                          icon: Icon(Icons.share, size: 22, color: Colors.white,),
-                          label: Text('SHARE',
-                            style: GoogleFonts.lato(
-                              textStyle: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w700,),
+                            onPressed: () async {
+                              await FlutterShare.share(
+                                title: 'Cartsini',
+                                text: '',
+                                linkUrl: 'https://shopapp.e-dagang.asia/merchant/'+model.getMid().toString(),
+                                chooserTitle: model.getCompanyName(),
+                              );
+                            },
+                            icon: Icon(Icons.share, size: 22, color: Colors.white,),
+                            label: Text('SHARE',
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w700,),
+                              ),
+                              //textAlign: TextAlign.center,
                             ),
-                            //textAlign: TextAlign.center,
-                          ),
-                          color: Colors.deepOrange,
-                          shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(20.0)
-                          )
+                            color: Colors.deepOrange,
+                            shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(20.0)
+                            )
                         ),
                       ),
 

@@ -68,7 +68,7 @@ class FpxStatusState extends State<FpxStatus> {
               title: Text(
                 "Payment Status",
                 style: GoogleFonts.lato(
-                  textStyle: TextStyle(color: Constants.darkAccent),
+                  textStyle: TextStyle(color: Colors.black, fontSize: 18),
                 ),
               ),
             ),

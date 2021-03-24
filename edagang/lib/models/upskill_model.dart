@@ -57,3 +57,12 @@ class CourseSchedule {
     this.time_end,
   });
 }
+
+class Goilmu_banner {
+  String imageUrl;
+  String title;
+  int type;
+  int itemId;
+
+  Goilmu_banner({this.imageUrl, this.title, this.type, this.itemId});
+}

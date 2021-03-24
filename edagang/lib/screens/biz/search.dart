@@ -37,8 +37,8 @@ class _SearchState extends State<SearchList> {
       }
       debounceTimer = Timer(Duration(milliseconds: 500), () {
         if (this.mounted) {
-          debounceTimer.cancel();
-          //performSearch(_searchQuery.text);
+          //debounceTimer.cancel();
+          performSearch(_searchQuery.text);
         }
       });
     });
@@ -78,7 +78,7 @@ class _SearchState extends State<SearchList> {
     return Scaffold(
         key: key,
         appBar: AppBar(
-          backgroundColor: Colors.grey.shade400,
+          backgroundColor: Color(0xffEEEEEE),
           centerTitle: true,
           title: Container(
             height: 37,
@@ -97,12 +97,14 @@ class _SearchState extends State<SearchList> {
                 ),
                 cursorColor: Color(0xff2877EA),
                 decoration: InputDecoration(
-                  border: InputBorder.none,
-                  prefixIcon: Padding(
+                  border: new UnderlineInputBorder(
+                    borderSide: new BorderSide(color: Color(0xff084B8C))
+                  ),
+                  suffixIcon: Padding(
                     padding: EdgeInsetsDirectional.only(end: 10.0),
                     child: Icon(
                       CupertinoIcons.search,
-                      color: Colors.grey.shade700,
+                      color: Color(0xff084B8C),
                     )
                   ),
                   hintText: "Search ...",
@@ -113,14 +115,15 @@ class _SearchState extends State<SearchList> {
           ),
           flexibleSpace: Container(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
+                color: Colors.white
+                /*gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.topRight,
                     colors: [
                       Color(0xff2877EA),
                       Color(0xffA0CCE8),
                     ]
-                ),
+                ),*/
               )
           ),
         ),

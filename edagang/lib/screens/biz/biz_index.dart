@@ -5,12 +5,13 @@ import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/screens/biz/biz_home.dart';
 import 'package:edagang/screens/biz/biz_vr_list.dart';
 import 'package:edagang/screens/biz/search.dart';
-import 'package:edagang/screens/biz/webview_quot.dart';
 import 'package:edagang/settings.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
+import 'package:edagang/widgets/searchbar.dart';
+import 'package:edagang/widgets/webview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -44,6 +45,7 @@ class _BizIdxPageState extends State<BizPage> {
   String _selectedItem = 'Notification';
   List _options = ['Notification', 'Setting', 'About Us', 'Logout'];
   String _logType,_photo = "";
+
 
   loadPhoto() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -119,6 +121,120 @@ class _BizIdxPageState extends State<BizPage> {
             headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
               return <Widget>[
                 SliverAppBar(
+                  elevation: 0,
+                  automaticallyImplyLeading: false,
+                  centerTitle: true,
+                  title: Image.asset('assets/icons/ic_smartbiz.png', height: 24, width: 107,),
+                  pinned: true,
+                  floating: true,
+                  actions: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 2, right: 10,),
+                      child: model.isAuthenticated ?
+                      _logType == '0' ?
+                      CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        child: Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.fill, height: 27, width: 27),
+                      )
+                          : CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: Image.network(_photo ?? '', fit: BoxFit.fill, height: 27, width: 27,),
+                          )
+                      )
+                          : CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        child: IconButton(
+                          icon: Icon(
+                            CupertinoIcons.power,
+                            color: Color(0xff084B8C),
+                          ),
+                          onPressed: () {Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));},
+                        ),
+                      ),
+                    ),
+
+                  ],
+                  bottom: AppBar(
+                    elevation: 0,
+                    automaticallyImplyLeading: false,
+                    title: Container(
+                      height: 44,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Expanded(
+                            child: searchBar(context),
+                          ),
+                          SizedBox(width: 8,),
+                          CircleAvatar(
+                            backgroundColor: Colors.grey[200],
+                            child: IconButton(
+                              icon: Icon(
+                                CupertinoIcons.bell_fill,
+                                color: Color(0xff084B8C),
+                              ),
+                              onPressed: () {Navigator.push(context, SlideRightRoute(page: NotificationPage()));},
+                            ),
+                          ),
+                          SizedBox(width: 2,),
+                          CircleAvatar(
+                            backgroundColor: Colors.grey[200],
+                            child: PopupMenuButton(
+                              icon: Icon(Icons.more_vert, color: Color(0xff084B8C),),
+                              itemBuilder: (BuildContext bc) => [
+                                PopupMenuItem(child: ListTile(
+                                  title: Text('Quotation'),
+                                ), value: "1"),
+                                PopupMenuItem(child: ListTile(
+                                  title: Text('Join Us'),
+                                ), value: "2"),
+                                PopupMenuItem(child: ListTile(
+                                  title: Text('Settings'),
+                                ), value: "3"),
+                                PopupMenuItem(child: model.isAuthenticated ? ListTile(
+                                  title: Text('Logout'),
+                                ) : ListTile(
+                                  title: Text('Login'),
+                                ), value: model.isAuthenticated ? "4" : "5"),
+                              ],
+
+                              onSelected: (value) {
+                                setState(() {
+                                  _selectedItem = value;
+                                  print("Selected context menu: $_selectedItem");
+                                  if(_selectedItem == '1'){
+                                    if(model.isAuthenticated) {
+                                      Navigator.push(context, SlideRightRoute(page: WebviewWidget('https://smartbiz.e-dagang.asia/biz/quot/' + model.getId().toString() + '/0', 'Quotation')));
+                                    }else{
+                                      Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
+                                    }
+                                  }
+                                  if(_selectedItem == '2'){
+                                    Navigator.push(context, SlideRightRoute(page: WebviewWidget('https://smartbiz.e-dagang.asia/biz/joinwebv','Join Us')));
+                                  }
+                                  if(_selectedItem == '3'){
+                                    Navigator.push(context, SlideRightRoute(page: SettingPage()));
+                                  }
+                                  if(_selectedItem == '4'){
+                                    logoutUser(context, model);
+                                  }
+                                  if(_selectedItem == '5'){
+                                    Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
+                                  }
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                /*SliverAppBar(
                   elevation: 0.0,
                   expandedHeight: 210.0,
                   floating: false,
@@ -128,19 +244,13 @@ class _BizIdxPageState extends State<BizPage> {
                   iconTheme: IconThemeData(
                     color: Color(0xff084B8C),
                   ),
-                  /*leading: IconButton(
-                    icon: Icon(Icons.dehaze),
-                    onPressed: () {},
-                  ),*/
                   leading: model.isAuthenticated ? Padding(
                     padding: EdgeInsets.all(13),
                     child:  _logType == '0' ? Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.scaleDown) : ClipRRect(
                       borderRadius: BorderRadius.circular(50),
                       child: Image.network(_photo ?? '', fit: BoxFit.fill,),
                     )
-                  ) : //Container(),
-
-                  CircleAvatar(
+                  ) : CircleAvatar(
                     backgroundColor: Colors.transparent,
                     child: IconButton(
                       icon: Icon(
@@ -151,24 +261,14 @@ class _BizIdxPageState extends State<BizPage> {
                     ),
                   ),
                   centerTitle: true,
-                  title: SizedBox(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        //Image.asset('assets/icons/ic_edagang.png', height: 28, width: 30,),
-                        Image.asset('assets/icons/ic_smartbiz.png', height: 24, width: 107,),
-                      ],
-                    ),
-                  ),
-
+                  title: Image.asset('assets/icons/ic_smartbiz.png', height: 24, width: 107,),
                   actions: [
                     CircleAvatar(
                       backgroundColor: Colors.grey[200],
                       child: IconButton(
                         icon: Icon(
                           CupertinoIcons.search,
-                          //color: Color(0xff084B8C),
+                          color: Color(0xff084B8C),
                         ),
                         onPressed: () { Navigator.push(context, SlideRightRoute(page: SearchList()));},
                       ),
@@ -180,7 +280,7 @@ class _BizIdxPageState extends State<BizPage> {
                         child: IconButton(
                           icon: Icon(
                             CupertinoIcons.bell_fill,
-                            //color: Color(0xff084B8C),
+                            color: Color(0xff084B8C),
                           ),
                           onPressed: () {Navigator.push(context, SlideRightRoute(page: NotificationPage()));},
                         ),
@@ -191,20 +291,17 @@ class _BizIdxPageState extends State<BizPage> {
                       child: CircleAvatar(
                         backgroundColor: Colors.grey[200],
                         child: PopupMenuButton(
+                          icon: Icon(Icons.more_vert, color: Color(0xff084B8C),),
                           itemBuilder: (BuildContext bc) => [
                             PopupMenuItem(child: ListTile(
-                              //leading: Icon(Icons.notifications),
                               title: Text('Join Us'),
                             ), value: "1"),
                             PopupMenuItem(child: ListTile(
-                              //leading: Icon(Icons.settings),
                               title: Text('Settings'),
                             ), value: "2"),
                             PopupMenuItem(child: model.isAuthenticated ? ListTile(
-                              //leading: Icon(Icons.logout),
                               title: Text('Logout'),
                             ) : ListTile(
-                              //leading: Icon(Icons.login),
                               title: Text('Login'),
                             ), value: model.isAuthenticated ? "3" : "4"),
                           ],
@@ -214,7 +311,7 @@ class _BizIdxPageState extends State<BizPage> {
                               _selectedItem = value;
                               print("Selected context menu: $_selectedItem");
                               if(_selectedItem == '1'){
-                                Navigator.push(context, SlideRightRoute(page: WebviewQuot('https://smartbiz.e-dagang.asia/biz/joinwebv','Join Us')));
+                                Navigator.push(context, SlideRightRoute(page: WebviewWidget('https://smartbiz.e-dagang.asia/biz/joinwebv','Join Us')));
                               }
                               if(_selectedItem == '2'){
                                 Navigator.push(context, SlideRightRoute(page: SettingPage()));
@@ -256,22 +353,23 @@ class _BizIdxPageState extends State<BizPage> {
                                           itemBuilder: (BuildContext context, int index) {
                                             return InkWell(
                                               onTap: () {
-                                                //goToDetailsPage(context, model.banners[index]);
                                               },
                                               child: ClipRRect(
                                                   borderRadius: new BorderRadius.circular(8.0),
-                                                  child: CachedNetworkImage(
-                                                    placeholder: (context, url) => Container(
-                                                      width: 40,
-                                                      height: 40,
-                                                      color: Colors.transparent,
-                                                      child: CupertinoActivityIndicator(radius: 15,),
-                                                    ),
-                                                    imageUrl: 'http://bizapp.e-dagang.asia' + model.bbanners[index].imageUrl ?? '',
-                                                    fit: BoxFit.fill,
-                                                    height: 150,
-                                                    width: MediaQuery.of(context).size.width,
-                                                  )
+                                                  child: Center(
+                                                    child: CachedNetworkImage(
+                                                      placeholder: (context, url) => Container(
+                                                        width: 40,
+                                                        height: 40,
+                                                        color: Colors.transparent,
+                                                        child: CupertinoActivityIndicator(radius: 15,),
+                                                      ),
+                                                      imageUrl: 'http://bizapp.e-dagang.asia' + model.bbanners[index].imageUrl,
+                                                      fit: BoxFit.fill,
+                                                      height: 150,
+                                                      width: MediaQuery.of(context).size.width,
+                                                    )
+                                                  ),
                                               ),
                                             );
                                           },
@@ -290,10 +388,69 @@ class _BizIdxPageState extends State<BizPage> {
                         )
                     ),
                   ),
-                ),
+                ),*/
               ];
             },
             body: CustomScrollView(slivers: <Widget>[
+              SliverList(delegate: SliverChildListDelegate([
+                Container(
+                  color: Colors.white,
+                  padding: EdgeInsets.only(bottom: 5),
+                  child: Container(
+                    margin: EdgeInsets.only(left: 8, right: 8),
+                    child: Card(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0),),
+                      elevation: 1,
+                      child: ClipPath(
+                        clipper: ShapeBorderClipper(
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))
+                        ),
+                        child: Container(
+                          height: 150.0,
+                          decoration: new BoxDecoration(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                          ),
+                          child: Swiper(
+                            autoplay: true,
+                            itemBuilder: (BuildContext context, int index) {
+                              return InkWell(
+                                onTap: () {
+                                },
+                                child: ClipRRect(
+                                  borderRadius: new BorderRadius.circular(8.0),
+                                  child: Center(
+                                    child: CachedNetworkImage(
+                                      placeholder: (context, url) => Container(
+                                        width: 40,
+                                        height: 40,
+                                        color: Colors.transparent,
+                                        child: CupertinoActivityIndicator(radius: 15,),
+                                      ),
+                                      imageUrl: 'http://bizapp.e-dagang.asia' + model.bbanners[index].imageUrl,
+                                      fit: BoxFit.fill,
+                                      height: 150,
+                                      width: MediaQuery.of(context).size.width,
+                                    )
+                                  ),
+                                ),
+                              );
+                            },
+                            itemCount: model.bbanners.length,
+                            pagination: new SwiperPagination(
+                              builder: new DotSwiperPaginationBuilder(
+                                activeColor: Colors.deepOrange.shade500,
+                                activeSize: 7.0,
+                                size: 7.0,
+                              )
+                            ),
+                          )
+                        )
+                      )
+                    )
+                  )
+                ),
+              ])),
               SliverToBoxAdapter(
                 child: Container(
                   padding: EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 10),
@@ -620,7 +777,7 @@ class _BizIdxPageState extends State<BizPage> {
           return Container(
             padding: EdgeInsets.only(left: 8, top: 0, right: 8, bottom: 0),
             color: Colors.transparent,
-            height: 125,
+            height: 145,
             alignment: Alignment.center,
             child: ListView.builder(
               shrinkWrap: true,
@@ -635,59 +792,85 @@ class _BizIdxPageState extends State<BizPage> {
                     vertical: 5.0,
                   ),
                   child: InkWell(
-                      onTap: () {
-                        print("category name : " + data.cat_name);
-                        //sharedPref.save("cat_id", data.cat_id.toString());
-                        //sharedPref.save("cat_title", data.cat_name);
-                        Navigator.push(context, SlideRightRoute(page: BizCategoryPage(data.cat_id.toString(),data.cat_name)));
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
+                    onTap: () {
+                      print("category name : " + data.cat_name);
+                      //sharedPref.save("cat_id", data.cat_id.toString());
+                      //sharedPref.save("cat_title", data.cat_name);
+                      Navigator.push(context, SlideRightRoute(page: BizCategoryPage(data.cat_id.toString(),data.cat_name)));
+                    },
+                    child: Container(
+                      height: 145,
+                      width: 100,
+                      alignment: Alignment.bottomCenter,
+                      decoration: new BoxDecoration(
+                        color: Colors.grey,
+                        image: new DecorationImage(
+                          image: new NetworkImage('http://bizapp.e-dagang.asia' + data.cat_image ?? '',),
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: Container(
+                        width: 100.0,
+                        alignment: Alignment.bottomCenter,
+                        margin: EdgeInsets.all(2.5),
+                        child: Stack(
+                          children: <Widget>[
+                            Text(data.cat_name ?? '',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(fontSize: 12,
+                                    foreground: Paint()
+                                      ..style = PaintingStyle.stroke
+                                      ..strokeWidth = 4
+                                      ..color = Colors.white70, fontWeight: FontWeight.w600),
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+
+                            Text(data.cat_name ?? '',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(color: Colors.black87, fontSize: 12, fontWeight: FontWeight.w600),
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            )
+                          ],
+                        )
+
+
+                        /*Text(
+                          data.cat_name ?? '',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.lato(
+                            textStyle: TextStyle(backgroundColor: Colors.black38, color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),*/
+                      )
+                    ),
+                      /*child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Container(
-                            height: 65.0,
-                            width: 65.0,
-                            decoration: new BoxDecoration(
-                              color: Colors.grey.shade100,
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.shade500,
-                                  blurRadius: 1.5,
-                                  spreadRadius: 0.0,
-                                  offset: Offset(1.5, 1.5),
-                                )
-                              ],
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(50),
-                              child: CachedNetworkImage(
-                                fit: BoxFit.cover,
-                                height: 65.0,
-                                width: 65.0,
-                                imageUrl: 'http://bizapp.e-dagang.asia' + data.cat_image ?? '',
-                                imageBuilder: (context, imageProvider) => Container(
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.all(Radius.circular(35.0)),
-                                  ),
+                              height: 135,
+                              width: 100,
+                              alignment: Alignment.bottomCenter,
+                              padding: new EdgeInsets.only(bottom: 8.0),
+                              decoration: new BoxDecoration(
+                                image: new DecorationImage(
+                                  image: new NetworkImage('http://bizapp.e-dagang.asia' + data.cat_image ?? ''),
+                                  fit: BoxFit.cover,
                                 ),
-                                placeholder: (context, url) => Container(
-                                  width: 30,
-                                  height: 30,
-                                  color: Colors.transparent,
-                                  child: CupertinoActivityIndicator(radius: 15,),
-                                ),
-                                errorWidget: (context, url, error) => Icon(Icons.image_rounded, size: 36,),
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
                               ),
-                            ),
                           ),
                           Container(
-                            width: 70.0,
+                            width: 100.0,
                             padding: EdgeInsets.only(top: 5, right: 5),
                             child: Align(
                               alignment: Alignment.topCenter,
@@ -703,7 +886,7 @@ class _BizIdxPageState extends State<BizPage> {
                             ),
                           ),
                         ],
-                      )
+                      )*/
                   ),
                 );
               },
@@ -716,10 +899,27 @@ class _BizIdxPageState extends State<BizPage> {
   Widget _fetchVirtualList() {
     return ScopedModelDescendant<MainScopedModel>(
         builder: (context, child, model){
+          /*return Container(
+            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+            height: MediaQuery.of(context).size.height * 0.35,
+            child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: numbers.length, itemBuilder: (context, index) {
+              return Container(
+                width: MediaQuery.of(context).size.width * 0.6,
+                child: Card(
+                  color: Colors.blue,
+                  child: Container(
+                    child: Center(child: Text(numbers[index].toString(), style: TextStyle(color: Colors.white, fontSize: 36.0),)),
+                  ),
+                ),
+              );
+            }),
+          );*/
           return Container(
-            margin: EdgeInsets.only(left: 8, right: 8),
-            height: 235,
-            width: 165,
+            padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
+            height: MediaQuery.of(context).size.height * 0.25,
+            alignment: Alignment.center,
             child: ListView.builder(
               shrinkWrap: true,
               physics: ClampingScrollPhysics(),
@@ -728,10 +928,10 @@ class _BizIdxPageState extends State<BizPage> {
               itemBuilder: (context, index) {
                 var data = model.bvirtual[0];
                 return Container(
-                  width: 165,
+                  width: MediaQuery.of(context).size.width * 0.6,
                   child: Card(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(7.0),),
+                      borderRadius: BorderRadius.all(Radius.circular(8.0),),
                     ),
                     elevation: 1.0,
                     child: InkWell(
@@ -748,11 +948,11 @@ class _BizIdxPageState extends State<BizPage> {
                       },
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Container(
-                              height: 165,
-                              width: 165,
+                              height: 155,
+                              width: MediaQuery.of(context).size.width * 0.6,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.only(topLeft: Radius.circular(7), topRight: Radius.circular(7)),
                                 child: CachedNetworkImage(
@@ -768,13 +968,13 @@ class _BizIdxPageState extends State<BizPage> {
                                     fit: BoxFit.cover,
                                   ),
                                   fit: BoxFit.cover,
-                                  height: 165,
+                                  height: 155,
                                 ),
                               ),
                             ),
                             Container(
-                              width: 165,
-                              padding: EdgeInsets.only(left: 5.0,right: 5.0,top: 7.0),
+                              width: MediaQuery.of(context).size.width * 0.6,
+                              padding: EdgeInsets.only(left: 7.0,right: 7.0,top: 7.0),
                               alignment: Alignment.bottomLeft,
                               decoration: new BoxDecoration(
                                 color: Colors.transparent,
@@ -782,25 +982,26 @@ class _BizIdxPageState extends State<BizPage> {
                               ),
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     data.vr_list[index].vr_name ?? '',
                                     style: GoogleFonts.lato(
-                                      textStyle: TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.w600,),
+                                      textStyle: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w600,),
                                     ),
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  SizedBox(
-                                    height: 3.0,
+                                  /*SizedBox(
+                                    height: 1.5,
                                   ),
                                   Text(
                                     data.vr_desc ?? '',
                                     style: GoogleFonts.lato(
                                       textStyle: TextStyle(color: Colors.blue.shade600, fontSize: 12, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
                                     ),
-                                  ),
+                                  ),*/
                                 ],
                               ),
                             ),

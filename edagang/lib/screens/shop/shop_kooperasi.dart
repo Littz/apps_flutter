@@ -39,16 +39,14 @@ class _KooperasiPageState extends State<KooperasiPage> {
               centerTitle: false,
               elevation: 0.0,
               automaticallyImplyLeading: true,
-              iconTheme: IconThemeData(
-                color: Colors.white,
-              ),
               title: new Text('Koperasi',
                 style: GoogleFonts.lato(
-                  textStyle: TextStyle(color: Colors.white),
+                  textStyle: TextStyle(color: Colors.black),
                 ),
               ),
               flexibleSpace: Container(
-                decoration: BoxDecoration(
+                color: Colors.white,
+                /*decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.topRight,
@@ -57,7 +55,7 @@ class _KooperasiPageState extends State<KooperasiPage> {
                       Colors.deepOrangeAccent.shade100,
                     ]
                   ),
-                )
+                )*/
               ),
             )
           ),

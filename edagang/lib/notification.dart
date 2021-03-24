@@ -32,11 +32,13 @@ class _NotificationPageState extends State<NotificationPage> {
                 key: _scaffoldKey,
                 resizeToAvoidBottomPadding: false,
                 resizeToAvoidBottomInset: false,
-                backgroundColor: Colors.grey.shade100,
                 appBar: AppBar(
                   backgroundColor: Colors.white,
                   //automaticallyImplyLeading: false,
                   elevation: 0.0,
+                  iconTheme: IconThemeData(
+                    color: Color(0xff084B8C),
+                  ),
                   centerTitle: true,
                   title: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -46,15 +48,15 @@ class _NotificationPageState extends State<NotificationPage> {
                           'Notification',
                           style: GoogleFonts.lato(
                             textStyle: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,),
+                              fontSize: 18,
+                              color: Color(0xff084B8C),),
                           ),
                         ),
                         new Text(
                           '(0)',
                           style: GoogleFonts.lato(
                             textStyle: TextStyle(
-                              fontSize: 15,
+                              fontSize: 16,
                               fontWeight: FontWeight.w500,
                               fontStyle: FontStyle.italic,
                             ),
@@ -63,6 +65,7 @@ class _NotificationPageState extends State<NotificationPage> {
                       ]
                   ),
                 ),
+                backgroundColor: Color(0xffEEEEEE),
                 body: Center(
                     child: new Column(
                       mainAxisAlignment: MainAxisAlignment.center,

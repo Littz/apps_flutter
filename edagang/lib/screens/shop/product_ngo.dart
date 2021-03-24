@@ -1,8 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/models/shop_model.dart';
 import 'package:edagang/scoped/scoped_product.dart';
-import 'package:edagang/screens/shop/product_detail.dart';
-import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/product_grid_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,8 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+
 
 class ProductNgoPage extends StatefulWidget {
   String ngoId, ngoName;
@@ -84,19 +80,20 @@ class _ProductNgoPageState extends State<ProductNgoPage> {
           elevation: 0.0,
           title: Text(widget.ngoName,
             style: GoogleFonts.lato(
-              textStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.w600,),
+              textStyle: TextStyle(fontSize: 18,),
             ),
           ),
           flexibleSpace: Container(
             decoration: BoxDecoration(
-              gradient: LinearGradient(
+              color: Colors.white
+              /*gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.topRight,
                 colors: <Color>[
                   Color(0xffF45432),
                   Colors.deepOrangeAccent.shade100,
                 ],
-              ),
+              ),*/
             ),
           ),
           actions: <Widget>[
@@ -106,7 +103,7 @@ class _ProductNgoPageState extends State<ProductNgoPage> {
             ),
           ],
         ),
-        backgroundColor: Colors.grey.shade200,
+        backgroundColor: Color(0xffEEEEEE),
         body: CustomScrollView(
           slivers: <Widget>[
             SliverPadding(

@@ -1,17 +1,17 @@
 
 class Home_banner {
-  final String imageUrl;
-  final String title;
-  final int type;
-  final int itemId;
+  String imageUrl;
+  String title;
+  int type;
+  int itemId;
 
   Home_banner({this.imageUrl, this.title, this.type, this.itemId});
 }
 
 class Home_category {
-  final int cat_id;
-  final String cat_name;
-  final String cat_image;
+  int cat_id;
+  String cat_name;
+  String cat_image;
 
   Home_category({this.cat_id, this.cat_name, this.cat_image});
 }
@@ -62,6 +62,8 @@ class VRList {
 
   VRList({this.vr_type, this.vr_name, this.vr_url, this.vr_image});
 }
+
+
 
 class BizCat {
   int id;

@@ -56,10 +56,13 @@ class _AccProfilePageState extends State<AccProfilePage> {
               centerTitle: false,
               elevation: 0.0,
               backgroundColor: Colors.white,
+              iconTheme: IconThemeData(
+                color: Color(0xff084B8C),
+              ),
               title: Text(
-                "Account Information",
+                "Profile",
                 style: GoogleFonts.lato(
-                  textStyle: TextStyle(color: Color(0xff202020), fontSize: 17, fontWeight: FontWeight.w500,),
+                  textStyle: TextStyle(color: Colors.black, fontSize: 18),
                 ),
               ),
               actions: <Widget>[
@@ -69,7 +72,7 @@ class _AccProfilePageState extends State<AccProfilePage> {
                 ),
               ],
             ),
-            backgroundColor: Colors.grey.shade100,
+            backgroundColor: Color(0xffEEEEEE),
             body: new ListView(
               shrinkWrap: true,
               reverse: false,

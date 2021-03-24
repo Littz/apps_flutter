@@ -62,13 +62,17 @@ class KeyValuePairDropdownState4 extends State<ProductListTop> {
           elevation: 0,
           centerTitle: false,
           backgroundColor: Colors.white,
+          iconTheme: IconThemeData(
+            color: Color(0xff084B8C),
+          ),
           title: Text(widget.catName,
             style: GoogleFonts.lato(
-              textStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.w600,),
+              textStyle: TextStyle(fontSize: 18, color: Colors.black,),
             ),
           ),
           flexibleSpace: Container(
-            decoration: BoxDecoration(
+            color: Colors.white,
+            /*decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.topRight,
@@ -77,7 +81,7 @@ class KeyValuePairDropdownState4 extends State<ProductListTop> {
                   Colors.deepOrangeAccent.shade100,
                 ],
               ),
-            ),
+            ),*/
           ),
           actions: <Widget>[
             Padding(
@@ -86,7 +90,7 @@ class KeyValuePairDropdownState4 extends State<ProductListTop> {
             ),
           ],
         ),
-        backgroundColor: Colors.grey.shade100,
+        backgroundColor: Color(0xffEEEEEE),
         body: CustomScrollView(
           slivers: <Widget>[
             SliverPadding(

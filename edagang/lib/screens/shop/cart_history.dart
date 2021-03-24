@@ -35,15 +35,18 @@ class _CartHistoryOrderPageState extends State<CartHistory> {
           automaticallyImplyLeading: true,
           centerTitle: false,
           elevation: 0.0,
+          iconTheme: IconThemeData(
+            color: Color(0xff084B8C),
+          ),
           backgroundColor: Colors.white,
           title: Text(
             "My Orders",
             style: GoogleFonts.lato(
-              textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Color(0xff202020),),
+              textStyle: TextStyle(fontSize: 18, color: Colors.black,),
             ),
           ),
         ),
-        backgroundColor: Colors.grey.shade100,
+        backgroundColor: Color(0xffEEEEEE),
         body: model.isLoadingOrder ? _buildCircularProgressIndicator() : CustomScrollView(slivers: [
           SliverList(
               delegate: SliverChildListDelegate([
@@ -398,7 +401,7 @@ class HistoryOrdersBody extends StatelessWidget {
               new FlatButton(
                 color: Colors.transparent,
                 onPressed: () {
-                  Navigator.push(context,MaterialPageRoute(builder: (context){return NewHomePage(1,0);}));
+                  Navigator.push(context,MaterialPageRoute(builder: (context){return NewHomePage(1);}));
                 },
                 child: new Padding(
                     padding: EdgeInsets.only(top: 10.0, bottom: 10.0),

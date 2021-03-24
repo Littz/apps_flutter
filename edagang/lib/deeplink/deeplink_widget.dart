@@ -4,11 +4,6 @@ import 'package:edagang/deeplink/shop_category_deeplink.dart';
 import 'package:edagang/deeplink/shop_merchant_deeplink.dart';
 import 'package:edagang/deeplink/shop_product_deeplink.dart';
 import 'package:edagang/main.dart';
-import 'package:edagang/screens/ads/ads_career_detail.dart';
-import 'package:edagang/screens/biz/biz_company_detail.dart';
-import 'package:edagang/screens/shop/product_category.dart';
-import 'package:edagang/screens/shop/product_detail.dart';
-import 'package:edagang/screens/shop/product_merchant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -103,7 +98,7 @@ class DeeplinkWidgetState extends State<DeeplinkWidget> {
             }
         }else {
           //return SimpleTab(2,0);
-          return NewHomePage(2,0);
+          return NewHomePage(2);
         }
       },
     );

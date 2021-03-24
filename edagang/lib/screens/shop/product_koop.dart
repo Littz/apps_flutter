@@ -76,11 +76,12 @@ class _ProductKoopPageState extends State<ProductKoopPage> {
           elevation: 0.0,
           title: Text(widget.koopName,
             style: GoogleFonts.lato(
-              textStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.w600,),
+              textStyle: TextStyle(fontSize: 18, color: Colors.black,),
             ),
           ),
           flexibleSpace: Container(
-            decoration: BoxDecoration(
+            color: Colors.white,
+            /*decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.topRight,
@@ -89,7 +90,7 @@ class _ProductKoopPageState extends State<ProductKoopPage> {
                   Colors.deepOrangeAccent.shade100,
                 ],
               ),
-            ),
+            ),*/
           ),
           actions: <Widget>[
             Padding(

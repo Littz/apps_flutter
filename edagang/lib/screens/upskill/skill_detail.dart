@@ -1,12 +1,12 @@
 import 'package:edagang/models/upskill_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
-import 'package:edagang/screens/upskill/webview.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
+import 'package:edagang/widgets/webview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
@@ -507,7 +507,7 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
                 ),
                 onPressed: () {
                   model.isAuthenticated ? Navigator.push(context, SlideRightRoute(
-                      page: WebviewGoilmu(
+                      page: WebviewWidget(
                           'https://goilmu.e-dagang.asia/ups/quot/'+model.getId().toString()+'/'+_id.toString(), title))) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
                 },
               ),

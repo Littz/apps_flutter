@@ -1,20 +1,18 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/data/datas.dart';
-import 'package:edagang/main.dart';
-import 'package:edagang/notification.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/screens/upskill/search.dart';
-import 'package:edagang/screens/upskill/skill_category.dart';
 import 'package:edagang/screens/upskill/skill_detail.dart';
+import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
-import 'package:edagang/widgets/searchbar.dart';
-import 'package:edagang/widgets/square_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 
 class UpskillPage extends StatefulWidget {
   final TabController tabcontroler;
@@ -97,26 +95,37 @@ class _UpskillPageState extends State<UpskillPage> {
                     floating: false,
                     pinned: true,
                     backgroundColor: Colors.white,
-                    leading: model.isAuthenticated ? Padding(
+                    automaticallyImplyLeading: false,
+                    /*leading: model.isAuthenticated ? Padding(
                         padding: EdgeInsets.all(13),
                         child:  _logType == '0' ? Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.scaleDown) : ClipRRect(
                           borderRadius: BorderRadius.circular(50),
                           child: Image.network(_photo ?? '', fit: BoxFit.fill,),
                         )
-                    ) : Container(),
+                    ) : CircleAvatar(
+                      backgroundColor: Colors.transparent,
+                      child: IconButton(
+                        icon: Icon(
+                          CupertinoIcons.power,
+                          color: Color(0xff084B8C),
+                        ),
+                        onPressed: () {Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));},
+                      ),
+                    ),*/
                     centerTitle: true,
-                    title: SizedBox(
+                    title: Image.asset('assets/icons/ic_goilmu.png', height: 24, width: 108,),
+                    /*SizedBox(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          //Image.asset('assets/icons/ic_edagang.png', height: 28, width: 30,),
+                          Image.asset('assets/icons/ic_edagang.png', height: 28, width: 30,),
                           Image.asset('assets/icons/ic_goilmu.png', height: 24, width: 108,),
                         ],
                       ),
-                    ),
+                    ),*/
                     actions: [
-                      /*CircleAvatar(
+                      CircleAvatar(
                         backgroundColor: Colors.grey[200],
                         child: IconButton(
                           icon: Icon(
@@ -125,21 +134,34 @@ class _UpskillPageState extends State<UpskillPage> {
                           ),
                           onPressed: () {Navigator.push(context, SlideRightRoute(page: SearchList2()));},
                         ),
-                      ),*/
+                      ),
                       Padding(
                         padding: EdgeInsets.only(left: 2, right: 10,),
-                        child: CircleAvatar(
-                          backgroundColor: Colors.grey[200],
+                        child: model.isAuthenticated ?
+                        _logType == '0' ?
+                        CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          child: Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.fill, height: 27, width: 27),
+                        )
+                        //Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.fill, height: 20, width: 20)
+                            : CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: Image.network(_photo ?? '', fit: BoxFit.fill, height: 27, width: 27,),
+                            )
+                        )
+                            : CircleAvatar(
+                          backgroundColor: Colors.transparent,
                           child: IconButton(
                             icon: Icon(
-                              CupertinoIcons.search,
+                              CupertinoIcons.power,
                               color: Color(0xff084B8C),
                             ),
-                            onPressed: () {Navigator.push(context, SlideRightRoute(page: SearchList2()));},
+                            onPressed: () {Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));},
                           ),
                         ),
                       ),
-
                     ],
                     flexibleSpace: FlexibleSpaceBar(
                       background: Container(
@@ -148,39 +170,52 @@ class _UpskillPageState extends State<UpskillPage> {
                           child: Container(
                               margin: EdgeInsets.only(left: 8, right: 8),
                               child: Card(
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0),),
                                   elevation: 1,
                                   child: ClipPath(
                                       clipper: ShapeBorderClipper(
-                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))
+                                      ),
                                       child: Container(
-                                        height: 150.0,
-                                        decoration: new BoxDecoration(
-                                          color: Colors.transparent,
-                                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                                        ),
-                                        child: Swiper.children(
-                                          autoplay: true,
-                                          pagination: new SwiperPagination(
-                                              margin: new EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 15.0),
-                                              builder: new DotSwiperPaginationBuilder(
-                                                  color: Colors.white30,
-                                                  activeColor: Colors.redAccent.shade400,
-                                                  size: 7.0,
-                                                  activeSize: 7.0)
+                                          height: 150.0,
+                                          decoration: new BoxDecoration(
+                                            color: Colors.transparent,
+                                            borderRadius: BorderRadius.all(Radius.circular(8)),
                                           ),
-                                          children: <Widget>[
-                                            Image.asset(
-                                              'assets/cartsiniupskill1.png', height: 150.0,
-                                              fit: BoxFit.fill,),
-                                            Image.asset(
-                                              'assets/cartsiniupskill2.png', height: 150.0,
-                                              fit: BoxFit.fill,),
-                                            Image.asset(
-                                              'assets/cartsiniupskill3.png', height: 150.0,
-                                              fit: BoxFit.fill,),
-                                          ],
-                                        ),
+                                          child: Swiper(
+                                            autoplay: true,
+                                            itemBuilder: (BuildContext context, int index) {
+                                              return InkWell(
+                                                onTap: () {
+                                                },
+                                                child: ClipRRect(
+                                                  borderRadius: new BorderRadius.circular(8.0),
+                                                  child: Center(
+                                                      child: CachedNetworkImage(
+                                                        placeholder: (context, url) => Container(
+                                                          width: 40,
+                                                          height: 40,
+                                                          color: Colors.transparent,
+                                                          child: CupertinoActivityIndicator(radius: 15,),
+                                                        ),
+                                                        imageUrl: 'http://upskillapp.e-dagang.asia' + model.gbanners[index].imageUrl,
+                                                        fit: BoxFit.fill,
+                                                        height: 150,
+                                                        width: MediaQuery.of(context).size.width,
+                                                      )
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            itemCount: model.gbanners.length,
+                                            pagination: new SwiperPagination(
+                                                builder: new DotSwiperPaginationBuilder(
+                                                  activeColor: Colors.deepOrange.shade500,
+                                                  activeSize: 7.0,
+                                                  size: 7.0,
+                                                )
+                                            ),
+                                          )
                                       )
                                   )
                               )
@@ -200,7 +235,7 @@ class _UpskillPageState extends State<UpskillPage> {
                         labelColor: Color(0xff930894),
                         unselectedLabelColor: Colors.grey,
                         labelStyle: GoogleFonts.lato(
-                          textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w700,),
+                          textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w700,),
                         ),
                         unselectedLabelStyle: GoogleFonts.lato(
                           textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),

@@ -53,14 +53,17 @@ class ChangePaswdState extends State<ChangePaswd> with SingleTickerProviderState
         centerTitle: false,
         elevation: 0.0,
         backgroundColor: Colors.white,
+        iconTheme: IconThemeData(
+          color: Color(0xff084B8C),
+        ),
         title: Text(
           "Change Password",
           style: GoogleFonts.lato(
-            textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Color(0xff202020)),
+            textStyle: TextStyle(fontSize: 18, color: Colors.black),
           ),
         ),
       ),
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: Color(0xffEEEEEE),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: ListView(

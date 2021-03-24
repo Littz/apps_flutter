@@ -232,7 +232,7 @@ class ProductScopedModel extends Model {
   }
 
   Future parseMerchantProductsFromResponse(int merchantId, int pageIndex, String filte) async {
-    if (pageIndex == 1) {_isLoadingMer = true;}
+    _isLoadingMer = true;
     notifyListeners();
     currentProductCount = 0;
     var dataFromResponse = await _getProductsByMerchant(merchantId, pageIndex, filte);
@@ -305,7 +305,7 @@ class ProductScopedModel extends Model {
       },
     );
 
-    if (pageIndex == 1) _isLoadingMer = false;
+    _isLoadingMer = false;
     if (currentProductCount < 10) {
       _hasModeProducts = false;
     }

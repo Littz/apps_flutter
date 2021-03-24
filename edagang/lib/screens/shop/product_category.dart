@@ -71,11 +71,12 @@ class ProductListCategoryState extends State<ProductListCategory> {
           elevation: 0.0,
           title: Text(widget.catName,
             style: GoogleFonts.lato(
-              textStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.w600,),
+              textStyle: TextStyle(fontSize: 18, color: Colors.black,),
             ),
           ),
           flexibleSpace: Container(
-            decoration: BoxDecoration(
+            color: Colors.white,
+            /*decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.topRight,
@@ -84,7 +85,7 @@ class ProductListCategoryState extends State<ProductListCategory> {
                   Colors.deepOrangeAccent.shade100,
                 ],
               ),
-            ),
+            ),*/
           ),
           actions: <Widget>[
             Padding(

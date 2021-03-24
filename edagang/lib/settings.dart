@@ -2,10 +2,10 @@ import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/screens/shop/acc_address.dart';
 import 'package:edagang/screens/shop/acc_profile.dart';
 import 'package:edagang/screens/shop/change_paswd.dart';
-import 'package:edagang/screens/shop/shop_policy.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
+import 'package:edagang/widgets/webview.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/cupertino.dart';
@@ -96,21 +96,24 @@ class _SettingPageState extends State<SettingPage> {
               child: Scaffold(
                 appBar: AppBar(
                   //automaticallyImplyLeading: false,
-                  brightness: Brightness.light,
+                  //brightness: Brightness.light,
+                  iconTheme: IconThemeData(
+                    color: Color(0xff084B8C),
+                  ),
                   backgroundColor: Colors.white,
                   centerTitle: true,
                   title: Text(
                     'Settings',
                     style: GoogleFonts.lato(
                       textStyle: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,),
+                        fontSize: 18,
+                        color: Color(0xff084B8C)),
                     ),
                   ),
                   elevation: 0,
                   //bottom: _title(model),
                 ),
-                backgroundColor: Colors.grey.shade100,
+                backgroundColor: Color(0xffEEEEEE),
                 body: SafeArea(
                   top: true,
                   child: SingleChildScrollView(
@@ -119,10 +122,14 @@ class _SettingPageState extends State<SettingPage> {
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            //_title(model),
+                            Divider(color: Colors.transparent,),
                             ListTile(
+                              //dense: true,
+                              //minVerticalPadding: 1.0,
+                              contentPadding: EdgeInsets.symmetric(vertical: -3, horizontal: -3),
+                              //tileColor: Colors.blue,
                               title: Text('Profile'),
-                              //leading: Image.asset('assets/icons/language.png'),
+                              leading: Icon(Icons.person, color: Color(0xff084B8C),),
                               trailing: Icon(Icons.chevron_right,color: Colors.grey),
                               onTap: () {
                                 if(model.isAuthenticated) {
@@ -134,8 +141,9 @@ class _SettingPageState extends State<SettingPage> {
                             ),
                             Divider(color: Colors.grey,),
                             ListTile(
+                              contentPadding: EdgeInsets.symmetric(vertical: -3, horizontal: -3),
                               title: Text('Address Book'),
-                              //leading: Image.asset('assets/icons/country.png'),
+                              leading: Icon(Icons.pin_drop, color: Color(0xff084B8C)),
                               trailing: Icon(Icons.chevron_right,color: Colors.grey),
                               onTap: () {
                                 if(model.isAuthenticated) {
@@ -147,8 +155,9 @@ class _SettingPageState extends State<SettingPage> {
                             ),
                             Divider(color: Colors.grey,),
                             ListTile(
+                              contentPadding: EdgeInsets.symmetric(vertical: -3, horizontal: -3),
                               title: Text('Change Password'),
-                              //leading: Image.asset('assets/icons/change_pass.png'),
+                              leading: Icon(Icons.lock_open, color: Color(0xff084B8C),),
                               trailing: Icon(Icons.chevron_right,color: Colors.grey),
                               onTap: () {
                                 if(model.isAuthenticated) {
@@ -160,15 +169,26 @@ class _SettingPageState extends State<SettingPage> {
                             ),
                             Divider(color: Colors.grey,),
                             ListTile(
-                              title: Text('Legal & Policies'),
-                              //leading: Image.asset('assets/icons/legal.png'),
+                              contentPadding: EdgeInsets.symmetric(vertical: -3, horizontal: -3),
+                              title: Text('Privacy & Policy'),
+                              leading: Icon(Icons.security, color: Color(0xff084B8C)),
                               trailing: Icon(Icons.chevron_right,color: Colors.grey),
                               onTap: () {
-                                if(model.isAuthenticated) {
-                                  Navigator.push(context, SlideRightRoute(page: PolicyPage()));
-                                }else{
-                                  Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
-                                }
+                                Navigator.push(context, SlideRightRoute(
+                                    page: WebviewWidget('https://e-dagang.asia/policy', 'Privacy Policy')));
+                              },
+                            ),
+
+                            Divider(color: Colors.grey,),
+                            ListTile(
+                              contentPadding: EdgeInsets.symmetric(vertical: -3, horizontal: -3),
+                              title: Text('Terms & Services'),
+                              leading: Icon(Icons.shield, color: Color(0xff084B8C)),
+                              trailing: Icon(Icons.chevron_right,color: Colors.grey),
+                              onTap: () {
+                                Navigator.push(context, SlideRightRoute(
+                                    page: WebviewWidget(
+                                        'https://e-dagang.asia/tnc', 'Terms & Services')));
                               },
                             ),
 
@@ -180,7 +200,6 @@ class _SettingPageState extends State<SettingPage> {
                             //Divider(color: Color(0xffF45432),),
                             logOutButton(),
                             SizedBox(height: 15,),
-
 
                           ]
                       ),
@@ -198,24 +217,28 @@ class _SettingPageState extends State<SettingPage> {
       builder: (BuildContext context, Widget child,MainScopedModel model) {
         if (model.isAuthenticated) {
           return ListTile(
+            contentPadding: EdgeInsets.symmetric(vertical: -3, horizontal: -3),
             title: new Text(
               "Logout",
               style: GoogleFonts.lato(
                 textStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: Colors.red.shade600),
               ),
             ),
+            leading: Icon(CupertinoIcons.power, color: Colors.red.shade600),
             onTap: () {
               logoutUser(context, model);
             },
           );
         } else {
           return ListTile(
+            contentPadding: EdgeInsets.symmetric(vertical: -3, horizontal: -3),
             title: new Text(
               "Login",
               style: GoogleFonts.lato(
                 textStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: Colors.red.shade600),
               ),
             ),
+            leading: Icon(CupertinoIcons.power, color: Colors.red.shade600),
             onTap: () {
               Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
             },

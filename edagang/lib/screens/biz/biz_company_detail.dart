@@ -1,12 +1,12 @@
 import 'package:edagang/models/biz_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
-import 'package:edagang/screens/biz/webview_quot.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/custom_dialog.dart';
 import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
+import 'package:edagang/widgets/webview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
@@ -183,6 +183,9 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
             SliverAppBar(
               pinned: true,
               expandedHeight: xpandedHeight,
+              iconTheme: IconThemeData(
+                color: Color(0xff084B8C),
+              ),
               leading: Hero(
                   tag: "back",
                   child: InkWell(
@@ -192,7 +195,7 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                     child: BlurIconLight(
                       icon: Icon(
                         Icons.arrow_back,
-                        color: Colors.black,
+                        color: Color(0xff084B8C),
                       ),
                     ),
                   )
@@ -201,7 +204,7 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                 child: Container(
                     child: Text(company_name ?? '',
                       style: GoogleFonts.lato(
-                        textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w700,),
+                        textStyle: TextStyle(fontSize: 15, color: Color(0xff084B8C)),
                       ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
@@ -652,7 +655,7 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                 ),
               ),
               onPressed: () {
-                model.isAuthenticated ? Navigator.push(context, SlideRightRoute(page: WebviewQuot('https://smartbiz.e-dagang.asia/biz/quot/' + model.getId().toString() + '/' + widget.bizId, 'Quotation'))) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
+                model.isAuthenticated ? Navigator.push(context, SlideRightRoute(page: WebviewWidget('https://smartbiz.e-dagang.asia/biz/quot/' + model.getId().toString() + '/' + widget.bizId, 'Quotation'))) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
               },
             ),
           ],

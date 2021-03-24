@@ -91,14 +91,16 @@ class _SearchState extends State<SearchList2> {
               style: GoogleFonts.lato(
                 textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.grey.shade700),
               ),
-              cursorColor: Color(0xff2877EA),
+              cursorColor: Color(0xff70286D),
               decoration: InputDecoration(
-                  border: InputBorder.none,
-                  prefixIcon: Padding(
+                  border: new UnderlineInputBorder(
+                      borderSide: new BorderSide(color: Color(0xff70286D))
+                  ),
+                  suffixIcon: Padding(
                     padding: EdgeInsetsDirectional.only(end: 10.0),
                     child: Icon(
                       CupertinoIcons.search,
-                      color: Colors.grey.shade700,
+                      color: Color(0xff70286D),
                     )
                 ),
 
@@ -108,14 +110,15 @@ class _SearchState extends State<SearchList2> {
           ),
           flexibleSpace: Container(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
+                color: Colors.white
+                /*gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.topRight,
                     colors: [
                       Color(0xff2877EA),
                       Color(0xffA0CCE8),
                     ]
-                ),
+                ),*/
               )
           ),
         ),
@@ -210,15 +213,15 @@ class TuneUpItem extends StatelessWidget {
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text((repo.company != null) ? repo.company : '-',
-                      style: GoogleFonts.lato(
-                        textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w700,),
-                      ),
-                  ),
                   Text((repo.prodName != null) ? repo.prodName : '-',
                       style: GoogleFonts.lato(
                         textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w600,),
                       ),
+                  ),
+                  Text((repo.company != null) ? repo.company : '-',
+                    style: GoogleFonts.lato(
+                      textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500,),
+                    ),
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 4.0),

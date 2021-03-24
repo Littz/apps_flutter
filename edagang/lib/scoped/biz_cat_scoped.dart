@@ -12,6 +12,11 @@ class SmartbizScopedModel extends Model {
     _bizcat.add(cat);
   }
 
+  bool _isLoadingCat = false;
+  bool get isLoadingCat => _isLoadingCat;
+
+  int ctr;
+  int getCount() {return ctr;}
   String category_name;
   String getCategoryName() {return category_name;}
 
@@ -35,13 +40,19 @@ class SmartbizScopedModel extends Model {
 
   Future fetchBizCategory (int catId) async {
     bizcat.clear();
+
+    _isLoadingCat = true;
     notifyListeners();
 
     var dataFromResponse = await _getBizcat(catId);
     print('BIZ Category==============================================');
     print(dataFromResponse);
 
+    ctr = dataFromResponse["data"]["businesses"].length;
     category_name = dataFromResponse['data']['category']['category_name'];
+
+    print(ctr.toString());
+    print(category_name);
 
     dataFromResponse["data"]["businesses"].forEach((dataCat) {
       BizCat _cat = new BizCat(
@@ -53,7 +64,9 @@ class SmartbizScopedModel extends Model {
       addToBizCategory(_cat);
     });
 
+    _isLoadingCat = false;
     notifyListeners();
+
   }
 
 }

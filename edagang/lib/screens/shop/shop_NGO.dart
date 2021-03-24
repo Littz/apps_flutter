@@ -37,16 +37,14 @@ class _NgoPageState extends State<NgoPage> {
               centerTitle: false,
               elevation: 0.0,
               automaticallyImplyLeading: true,
-              iconTheme: IconThemeData(
-                color: Colors.white,
-              ),
               title: new Text('NGO',
                 style: GoogleFonts.lato(
-                  textStyle: TextStyle(color: Colors.white),
+                  textStyle: TextStyle(color: Colors.black, fontSize: 18),
                 ),
               ),
               flexibleSpace: Container(
-                decoration: BoxDecoration(
+                color: Colors.white,
+                /*decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.topRight,
@@ -55,7 +53,7 @@ class _NgoPageState extends State<NgoPage> {
                       Colors.deepOrangeAccent.shade100,
                     ]
                   ),
-                )
+                )*/
               ),
             )
           ),

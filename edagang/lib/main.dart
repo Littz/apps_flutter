@@ -3,11 +3,13 @@ import 'package:edagang/screens/biz/biz_index.dart';
 import 'package:edagang/screens/fin/fin_index.dart';
 import 'package:edagang/screens/shop/acc_address.dart';
 import 'package:edagang/screens/shop/cart_checkout.dart';
+import 'package:edagang/screens/shop/shop_cart.dart';
 import 'package:edagang/screens/shop/shop_index.dart';
 import 'package:edagang/screens/upskill/skill_index.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/splash.dart';
 import 'package:edagang/utils/constant.dart';
+import 'package:faker/faker.dart';
 import 'package:ff_navigation_bar/ff_navigation_bar.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:edagang/deeplink/deeplink_bloc.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:pagination_view/pagination_view.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math';
@@ -24,15 +27,16 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
+  //WidgetsBinding.instance.renderView.automaticSystemUiAdjustment=false;
 
   runApp(MyApp());
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    systemNavigationBarColor: null, //<------ changed
+    systemNavigationBarDividerColor: null,
     statusBarColor: Colors.transparent,
+    systemNavigationBarIconBrightness: Brightness.light,
+    statusBarIconBrightness: Brightness.dark,
     statusBarBrightness: Brightness.light,
-    statusBarIconBrightness: Brightness.light,
-    systemNavigationBarColor: Colors.transparent,
-    systemNavigationBarIconBrightness: Brightness.dark,
   ));
 
 }
@@ -112,10 +116,9 @@ class _MyAppPageState extends State<MyApp> {
   @override
   void initState() {
     _model.loggedInUser();
-    //_model.fetchBizCat();
-    //_model.fetchBizProd();
-    //_model.fetchBizSvc();
+    _model.fetchGoilmuResponse();
     _model.fetchHomeBizResponse();
+    _model.fetchVrBizResponse();
     _model.fetchVisitedList();
     _model.fetchCompanyList();
     _model.fetchSkillCat();
@@ -154,7 +157,7 @@ class _MyAppPageState extends State<MyApp> {
             headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
             bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
           ),*/
-          visualDensity: VisualDensity.adaptivePlatformDensity,
+          //visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
 
         home: SplashScreen(),
@@ -167,9 +170,9 @@ class _MyAppPageState extends State<MyApp> {
         ),*/
 
         routes: <String, WidgetBuilder>{
-          "/Main": (BuildContext context) => new NewHomePage(2,0),
-          "/ShopIndex": (BuildContext context) => new NewHomePage(1,0),
-          "/ShopCart": (BuildContext context) => new NewHomePage(1,2),
+          "/Main": (BuildContext context) => new NewHomePage(2),
+          "/ShopIndex": (BuildContext context) => new NewHomePage(1),
+          "/ShopCart": (BuildContext context) => new ShopCartPage(),
           "/Address": (BuildContext context) => new AddressBook(),
           "/Checkout": (BuildContext context) => new CheckoutActivity(),
           "/Login": (BuildContext context) => new SignInOrRegister(),
@@ -181,8 +184,8 @@ class _MyAppPageState extends State<MyApp> {
 
 class NewHomePage extends StatefulWidget {
   int selectedPage;
-  int pgIdx;
-  NewHomePage(this.selectedPage, this.pgIdx);
+  //int pgIdx;
+  NewHomePage(this.selectedPage);
 
   @override
   _NewHomePageState createState() => _NewHomePageState();
@@ -282,7 +285,7 @@ class _NewHomePageState extends State<NewHomePage> {
 
   void addHomePage() {
     listBottomWidget.add(FinancePage());
-    listBottomWidget.add(ShopIndexPage(selectedPage: widget.selectedPage, tabcontroler: widget.pgIdx));
+    listBottomWidget.add(ShopIndexPage());
     listBottomWidget.add(BizPage());
     listBottomWidget.add(UpskillPage());
     listBottomWidget.add(AdvertPage());
@@ -290,3 +293,118 @@ class _NewHomePageState extends State<NewHomePage> {
 
 }
 
+
+class HomePage extends StatefulWidget {
+  const HomePage({Key key}) : super(key: key);
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int page;
+  PaginationViewType paginationViewType;
+  GlobalKey<PaginationViewState> key;
+
+  @override
+  void initState() {
+    page = -1;
+    paginationViewType = PaginationViewType.listView;
+    key = GlobalKey<PaginationViewState>();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('PaginationView Example'),
+        actions: <Widget>[
+          (paginationViewType == PaginationViewType.listView)
+              ? IconButton(
+            icon: Icon(Icons.grid_on),
+            onPressed: () => setState(
+                    () => paginationViewType = PaginationViewType.gridView),
+          )
+              : IconButton(
+            icon: Icon(Icons.list),
+            onPressed: () => setState(
+                    () => paginationViewType = PaginationViewType.listView),
+          ),
+          IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: () => key.currentState.refresh(),
+          ),
+        ],
+      ),
+      body: PaginationView<User>(
+        key: key,
+        header: Text('Top'),
+        footer: Text('Loading..'),
+        preloadedItems: <User>[
+          User(faker.person.name(), faker.internet.email()),
+          User(faker.person.name(), faker.internet.email()),
+        ],
+        paginationViewType: paginationViewType,
+        itemBuilder: (BuildContext context, User user, int index) =>
+        (paginationViewType == PaginationViewType.listView)
+            ? ListTile(
+          title: Text(user.name),
+          subtitle: Text(user.email),
+          leading: CircleAvatar(
+            child: Icon(Icons.person),
+          ),
+        )
+            : GridTile(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              CircleAvatar(child: Icon(Icons.person)),
+              const SizedBox(height: 8),
+              Text(user.name),
+              const SizedBox(height: 8),
+              Text(user.email),
+            ],
+          ),
+        ),
+        pageFetch: pageFetch,
+        pullToRefresh: true,
+        onError: (dynamic error) => Center(
+          child: Text('Some error occured'),
+        ),
+        onEmpty: Center(
+          child: Text('Sorry! This is empty'),
+        ),
+        bottomLoader: Center(
+          child: CircularProgressIndicator(),
+        ),
+        initialLoader: Center(
+          child: CircularProgressIndicator(),
+        ),
+      ),
+    );
+  }
+
+  Future<List<User>> pageFetch(int offset) async {
+    print(offset);
+    page = (offset / 20).round();
+    final Faker faker = Faker();
+    final List<User> nextUsersList = List.generate(
+      20,
+          (int index) => User(
+        faker.person.name() + ' - $page$index',
+        faker.internet.email(),
+      ),
+    );
+    await Future<List<User>>.delayed(Duration(seconds: 1));
+    return page == 5 ? [] : nextUsersList;
+  }
+}
+
+class User {
+  User(this.name, this.email);
+
+  final String name;
+  final String email;
+}

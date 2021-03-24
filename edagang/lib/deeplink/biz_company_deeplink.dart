@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/main.dart';
 import 'package:edagang/models/biz_model.dart';
-import 'package:edagang/screens/biz/webview.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/custom_dialog.dart';
 import 'package:edagang/utils/shared_prefs.dart';
@@ -14,7 +13,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:loading_gifs/loading_gifs.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CompanyDeeplinkPage extends StatefulWidget {
@@ -182,7 +180,7 @@ class _CompanyDeeplinkPageState extends State<CompanyDeeplinkPage> with TickerPr
             color: Colors.white,
           ),
           leading: InkWell(
-            onTap: () {Navigator.pushReplacement(context, SlideRightRoute(page: NewHomePage(2,0)));},
+            onTap: () {Navigator.pushReplacement(context, SlideRightRoute(page: NewHomePage(2)));},
             splashColor: Colors.deepOrange.shade100,
             child: Icon(Icons.arrow_back,),
           ),

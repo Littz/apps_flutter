@@ -2,6 +2,10 @@ buildscript {
     repositories {
         google()
         jcenter()
+        mavenCentral()
+        //maven {
+        //    url 'https://dl.bintray.com/android/android-tools'
+        //}
     }
 
     dependencies {
@@ -9,13 +13,16 @@ buildscript {
         //classpath 'com.android.tools.build:gradle:3.3.1'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         classpath 'com.google.gms:google-services:4.3.5'
+        //classpath 'com.google.gms:google-services:4.3.0'
     }
 }
 
 allprojects {
     repositories {
         google()
+        mavenCentral()
         jcenter()
+        //maven { url 'https://google.bintray.com/exoplayer/' }
     }
 }
 

@@ -144,7 +144,6 @@ Future fetchCourseList() async {
 }
 
 
-
 Future<dynamic> _getSkillProfessional() async {
   var response = await http.post(
     Constants.tuneupAPI+'/course/category?category_id=1',
@@ -392,6 +391,43 @@ Future fetchCourseTraining() async {
   notifyListeners();
 }
 
+
+List<Goilmu_banner> gbanners = [];
+List<Goilmu_banner> get _gbanners => gbanners;
+void addGoilmuBannerList(Goilmu_banner gbaner) {_gbanners.add(gbaner);}
+
+Future<dynamic> _getGoilmuJson() async {
+  var response = await http.get(
+    'https://upskillapp.e-dagang.asia/api/course/home',
+    headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
+  ).catchError((error) {
+    print(error.toString());
+    return false;
+  });
+  return json.decode(response.body);
+}
+
+Future fetchGoilmuResponse() async {
+  _gbanners.clear();
+
+  notifyListeners();
+  var dataFromResponse = await _getGoilmuJson();
+
+  print('HOME GOILMU BANNERRRRRR #####################################');
+  print(dataFromResponse["data"]["banner"]);
+
+  dataFromResponse["data"]["banner"].forEach((dataBaner) {
+    Goilmu_banner _banner = new Goilmu_banner(
+      title: dataBaner['title'],
+      imageUrl: dataBaner['image_url'],
+      type: dataBaner['type'],
+      itemId: dataBaner['item_id'],
+    );
+    addGoilmuBannerList(_banner);
+  });
+
+  notifyListeners();
+}
 
 }
 

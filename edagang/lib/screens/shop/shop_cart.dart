@@ -28,74 +28,6 @@ class _ShopCartPageState extends State<ShopCartPage> {
     listCartId = List();
   }
 
-  Widget _showLoginFirst() {
-    return Center(
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.only(left: 16.0, right: 16.0),
-        child: new Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-
-            new Image.asset(
-              "assets/cartsini_logo.png",
-              height: 120.0,
-              fit: BoxFit.fitHeight,
-            ),
-            Container(
-              height: 30,
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-              margin: EdgeInsets.fromLTRB(40, 20, 40, 0),
-              child: Center(
-                  child: RichText(
-                    text: TextSpan(
-                      text: "Sign in to view your ",
-                      style: GoogleFonts.lato(
-                        textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.grey.shade600,),
-                      ),
-                      children: <TextSpan>[
-                        TextSpan(text: 'Cart',
-                            style: GoogleFonts.lato(
-                              textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w700,),
-                            ),
-                        ),
-                      ],
-                    ),
-                  )
-              ),
-            ),
-            new Padding(
-              padding: EdgeInsets.only(top: 16.0, bottom: 20.0),
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(context,MaterialPageRoute(builder: (context) => SignInOrRegister()));
-                },
-                child: Container(
-                  height: 42,
-                  decoration: BoxDecoration(
-                      color: Colors.deepOrange.shade500,
-                      borderRadius: BorderRadius.circular(25)
-                  ),
-                  margin: EdgeInsets.fromLTRB(60, 0, 60, 0),
-                  child: Center(
-                      child: Text('Sign in',
-                        style: GoogleFonts.lato(
-                          textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white),
-                        ),
-                      )
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 10,),
-          ],
-        ),
-      ),
-
-    );
-  }
-
   Widget merchantRow(String title, String displayAmount) {
     return Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -126,59 +58,49 @@ class _ShopCartPageState extends State<ShopCartPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return ScopedModelDescendant(builder: (BuildContext context, Widget child, MainScopedModel model){
       return WillPopScope(key: _scaffoldKey, onWillPop: () {
         Navigator.of(context).pushReplacementNamed("/ShopIndex");
         return null;
       },
-      child: model.isAuthenticated ? Scaffold(
-        key: _scaffoldKey,
-        resizeToAvoidBottomPadding: false,
-        resizeToAvoidBottomInset: false,
-        /*backgroundColor: Colors.grey.shade100,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          automaticallyImplyLeading: false,
-          elevation: 0.0,
-          centerTitle: true,
-          title: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                new Text(
-                  'My Cart ',
-                  style: GoogleFonts.lato(
-                    textStyle: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,),
-                  ),
-                ),
-                new Text(
-                  '('+model.getCartotal().toString()+')',
-                  style: GoogleFonts.lato(
-                    textStyle: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                      fontStyle: FontStyle.italic,
+        child: Scaffold(
+          key: _scaffoldKey,
+          resizeToAvoidBottomPadding: false,
+          resizeToAvoidBottomInset: false,
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 0.0,
+            centerTitle: true,
+            title: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  new Text(
+                    'My Cart ',
+                    style: GoogleFonts.lato(
+                      textStyle: TextStyle(
+                        fontSize: 18,),
                     ),
                   ),
-                ),
-              ]
+                  new Text(
+                    '('+model.getCartotal().toString()+')',
+                    style: GoogleFonts.lato(
+                      textStyle: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ),
+                ]
+            ),
           ),
-        ),*/
-        backgroundColor: Color(0xffEEEEEE),
-        body: model.isLoading3 ? _buildCircularProgressIndicator() : model.getCartotal() > 0 ? _cartItems(model) : _emptyContent(),
-        //body: _cartItems(model),
-
-        bottomNavigationBar: model.cartList.length > 0 ? _buildBottomNavigationBar() : null,
-      ) : Scaffold(
-        key: _scaffoldKey,
-        resizeToAvoidBottomPadding: false,
-        resizeToAvoidBottomInset: false,
-        backgroundColor: Color(0xffEEEEEE),
-        body: _showLoginFirst(),
-      ));
+          backgroundColor: Color(0xffEEEEEE),
+          body: model.isLoading3 ? _buildCircularProgressIndicator() : model.getCartotal() > 0 ? _cartItems(model) : _emptyContent(),
+          //body: _cartItems(model),
+          bottomNavigationBar: model.cartList.length > 0 ? _buildBottomNavigationBar() : null,
+        )
+      );
     });
 
   }

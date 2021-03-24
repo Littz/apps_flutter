@@ -1,13 +1,11 @@
 import 'package:edagang/data/datas.dart';
-import 'package:edagang/main.dart';
-import 'package:edagang/notification.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/screens/ads/ads_career_detail.dart';
-import 'package:edagang/screens/ads/ads_quick_access.dart';
-import 'package:edagang/screens/ads/webview.dart';
+import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
-import 'package:edagang/widgets/square_button.dart';
+import 'package:edagang/widgets/product_grid_card.dart';
+import 'package:edagang/widgets/webview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -97,26 +95,27 @@ class _AdvertPageState extends State<AdvertPage> {
                           floating: false,
                           pinned: true,
                           backgroundColor: Colors.white,
-                          leading: model.isAuthenticated ? Padding(
+                          automaticallyImplyLeading: false,
+                          /*leading: model.isAuthenticated ? Padding(
                               padding: EdgeInsets.all(13),
                               child:  _logType == '0' ? Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.scaleDown) : ClipRRect(
                                 borderRadius: BorderRadius.circular(50),
                                 child: Image.network(_photo ?? '', fit: BoxFit.fill,),
                               )
-                          ) : Container(),
-                          centerTitle: true,
-                          title: SizedBox(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                //Image.asset('assets/icons/ic_edagang.png', height: 28, width: 30,),
-                                Image.asset('assets/icons/ic_blurb.png', height: 24, width: 70,),
-                              ],
+                          ) : CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            child: IconButton(
+                              icon: Icon(
+                                CupertinoIcons.power,
+                                color: Color(0xff084B8C),
+                              ),
+                              onPressed: () {Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));},
                             ),
-                          ),
+                          ),*/
+                          centerTitle: true,
+                          title: Image.asset('assets/icons/ic_blurb.png', height: 24, width: 70,),
                           actions: [
-                            /*CircleAvatar(
+                            CircleAvatar(
                               backgroundColor: Colors.grey[200],
                               child: IconButton(
                                 icon: Icon(
@@ -124,26 +123,35 @@ class _AdvertPageState extends State<AdvertPage> {
                                   color: Color(0xff084B8C),
                                 ),
                                 onPressed: () {Navigator.push(context, SlideRightRoute(
-                                    page: WebviewBlurb(
+                                    page: WebviewWidget(
                                         'https://blurb.e-dagang.asia/wv/career/profile/' +
                                             model.getId().toString(), 'Career Profile')));
                                 },
                               ),
-                            ),*/
+                            ),
                             Padding(
                               padding: EdgeInsets.only(left: 2, right: 10,),
-                              child: CircleAvatar(
-                                backgroundColor: Colors.grey[200],
+                              child: model.isAuthenticated ?
+                                _logType == '0' ?
+                                  CircleAvatar(
+                                    backgroundColor: Colors.transparent,
+                                    child: Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.fill, height: 27, width: 27),
+                                  )
+                                : CircleAvatar(
+                                  backgroundColor: Colors.transparent,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(50),
+                                    child: Image.network(_photo ?? '', fit: BoxFit.fill, height: 27, width: 27,),
+                                  )
+                                )
+                              : CircleAvatar(
+                                backgroundColor: Colors.transparent,
                                 child: IconButton(
                                   icon: Icon(
-                                    CupertinoIcons.doc_person,
+                                    CupertinoIcons.power,
                                     color: Color(0xff084B8C),
                                   ),
-                                  onPressed: () {Navigator.push(context, SlideRightRoute(
-                                      page: WebviewBlurb(
-                                          'https://blurb.e-dagang.asia/wv/career/profile/' +
-                                              model.getId().toString(), 'Career Profile')));
-                                  },
+                                  onPressed: () {Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));},
                                 ),
                               ),
                             ),
@@ -202,7 +210,7 @@ class _AdvertPageState extends State<AdvertPage> {
                               labelColor: Color(0xff57585A),
                               unselectedLabelColor: Colors.grey,
                               labelStyle: GoogleFonts.lato(
-                                textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w700,),
+                                textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w700,),
                               ),
                               unselectedLabelStyle: GoogleFonts.lato(
                                 textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
@@ -336,8 +344,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => _tabBar.preferredSize.height;
 
   @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Align(
         alignment: Alignment.center,
         child: Container(
@@ -354,4 +361,211 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
     return false;
   }
+}
+
+
+class AdsPropertyPage extends StatefulWidget {
+  final String id,name;
+  AdsPropertyPage(this.id, this.name);
+
+  @override
+  _AdsPropertyPageState createState() => _AdsPropertyPageState();
+}
+
+class _AdsPropertyPageState extends State<AdsPropertyPage> {
+  SharedPref sharedPref = SharedPref();
+  BuildContext context;
+
+  @override
+  void initState() {
+    print('cat id ========= '+widget.id);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ScopedModelDescendant<MainScopedModel>(
+        builder: (context, child, model){
+          return Scaffold(
+            backgroundColor: Color(0xffEEEEEE),
+            body: CustomScrollView(slivers: <Widget>[
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Card(
+                    margin: EdgeInsets.all(5.0),
+                    elevation: 1.5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 205,
+                      decoration: new BoxDecoration(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      ),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(context, SlideRightRoute(
+                              page: WebviewWidget(
+                                  'https://blurb.e-dagang.asia/property/pip',
+                                  'Pengerang Industrial Park')));
+                        },
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Expanded(
+                                //width: MediaQuery.of(context).size.width,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(7), topRight: Radius.circular(7)),
+                                  child: Image.asset('assets/pip.png', fit: BoxFit.fill,),
+                                ),
+                              ),
+
+                              Container(
+                                //height: 56,
+                                width: MediaQuery.of(context).size.width,
+                                padding: EdgeInsets.all(10.0),
+                                alignment: Alignment.bottomLeft,
+                                decoration: new BoxDecoration(
+                                  color: Colors.transparent,
+                                  borderRadius: BorderRadius.all(Radius.circular(7)),
+                                ),
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        'Pengerang Industrial Park',
+                                        style: GoogleFonts.lato(
+                                          textStyle: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w600,),
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      Text(
+                                        'Land for sale.',
+                                        style: GoogleFonts.lato(
+                                          textStyle: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500, fontStyle: FontStyle.normal),
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      /*SizedBox(height: 2,),
+                                        Text(
+                                          data.vr_desc,
+                                          textAlign: TextAlign.end,
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(color: Colors.blue.shade700, fontSize: 13, fontWeight: FontWeight.w600,),
+                                          ),
+                                        ),*/
+                                    ]
+                                ),
+                              ),
+                            ]
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+
+
+                /*Container(
+                  padding: EdgeInsets.all(8.0),
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 255,
+                          decoration: new BoxDecoration(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                          ),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(context, SlideRightRoute(
+                                  page: WebviewWidget(
+                                      'https://blurb.e-dagang.asia/property/pip',
+                                      'Pengerang Industrial Park')));
+                            },
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Expanded(
+                                    //width: MediaQuery.of(context).size.width,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.only(topLeft: Radius.circular(7), topRight: Radius.circular(7)),
+                                      child: Image.asset('assets/pip.png'),
+                                    ),
+                                  ),
+                                  Container(
+                                    //height: 56,
+                                    width: MediaQuery.of(context).size.width,
+                                    padding: EdgeInsets.all(10.0),
+                                    alignment: Alignment.bottomLeft,
+                                    decoration: new BoxDecoration(
+                                      color: Colors.transparent,
+                                      borderRadius: BorderRadius.all(Radius.circular(7)),
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                          'Pengerang Industrial Park',
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w600,),
+                                          ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        Text(
+                                        'Land for sale.',
+                                        style: GoogleFonts.lato(
+                                          textStyle: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500, fontStyle: FontStyle.normal),
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                        *//*SizedBox(height: 2,),
+                                        Text(
+                                          data.vr_desc,
+                                          textAlign: TextAlign.end,
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(color: Colors.blue.shade700, fontSize: 13, fontWeight: FontWeight.w600,),
+                                          ),
+                                        ),*//*
+                                      ]
+                                    ),
+                                  ),
+                                ]
+                            ),
+                            *//*child: VrCardItem(
+                              vrimg: Image.asset('assets/pip.png'),
+                              label: 'Pengerang Industrial Park',
+                              sublabel: 'Land for sale.',
+                              footer: '',
+                            ),*//*
+                          ),
+                        ),
+                      ]
+                  ),
+                ),*/
+              ),
+              /*SliverFillRemaining(
+                child: new Container(color: Colors.transparent),
+              ),*/
+            ]),
+          );
+        }
+    );
+  }
+
 }

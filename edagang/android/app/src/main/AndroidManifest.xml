@@ -23,6 +23,7 @@
         android:usesCleartextTraffic="true"
         android:hardwareAccelerated="true"
         android:label="edagang"
+        android:supportsRtl="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -48,6 +49,14 @@
             <!--<meta-data
               android:name="io.flutter.embedding.android.SplashScreenDrawable"
               android:resource="@drawable/launch_background"/>-->
+
+            <meta-data
+                android:name="com.onesignal.messaging.default_notification_icon"
+                android:resource="@drawable/ic_stat_onesignal_default" />
+
+            <meta-data
+                android:name="com.onesignal.NotificationAccentColor.DEFAULT"
+                android:value="FFBF1E2E" />
 
             <meta-data
                 android:name="io.flutter.app.android.SplashScreenUntilFirstFrame"

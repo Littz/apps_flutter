@@ -158,7 +158,7 @@ void addHomeVirtualList(Home_virtual vr) {_bvirtual.add(vr);}
 
 Future<dynamic> _getHomeBizJson() async {
   var response = await http.get(
-    'http://bizapp.e-dagang.asia/api/biz/home',
+    'https://bizapp.e-dagang.asia/api/biz/home',
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
@@ -195,8 +195,8 @@ Future fetchHomeBizResponse() async {
   dataFromResponse["data"]["category"].forEach((dataCat) {
     Home_category _cat = new Home_category(
       cat_id: dataCat['id'],
-      cat_image: dataCat['image'],
-      cat_name: dataCat['category_name'],
+      cat_image: dataCat['image'] ?? '',
+      cat_name: dataCat['category_name'] ?? '',
     );
     addHomeCategoryList(_cat);
   });
@@ -242,6 +242,58 @@ Future fetchHomeBizResponse() async {
       vr_list: vrList,
     );
     addHomeVirtualList(_vr);
+  });
+
+
+  notifyListeners();
+}
+
+
+
+List<Home_virtual> bvirtuals = [];
+List<Home_virtual> get _bvirtuals => bvirtuals;
+void addVirtualPageList(Home_virtual vrp) {_bvirtuals.add(vrp);}
+
+Future<dynamic> _getVrBizJson() async {
+  var response = await http.get(
+    'https://bizapp.e-dagang.asia/api/biz/vr',
+    headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
+  ).catchError((error) {
+    print(error.toString());
+    return false;
+  });
+  return json.decode(response.body);
+}
+
+Future fetchVrBizResponse() async {
+  _bvirtuals.clear();
+
+  notifyListeners();
+  var dataFromResponse = await _getVrBizJson();
+
+  print('VR BIZ VIRTUALLL #####################################');
+  print(dataFromResponse["data"]["virtual"]);
+
+  dataFromResponse["data"]["virtual"].forEach((dataVr) {
+
+    List<VRList> vrList = [];
+    dataVr["vr_list"].forEach((newVr) {
+      vrList.add(
+        new VRList(
+          vr_type: newVr["vr_type"], // after migration -> int to string
+          vr_name: newVr["vr_name"], // after migration -> int to string
+          vr_url: newVr["vr_url"],
+          vr_image: newVr["vr_image"], // after migration -> int to string
+        ),
+      );
+    });
+
+    Home_virtual _vr = new Home_virtual(
+      vr_id: dataVr['id'],
+      vr_desc: dataVr['desc'],
+      vr_list: vrList,
+    );
+    addVirtualPageList(_vr);
   });
 
 

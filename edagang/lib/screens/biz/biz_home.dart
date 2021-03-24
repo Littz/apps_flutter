@@ -1,18 +1,11 @@
-import 'dart:async';
-import 'dart:io';
-import 'dart:convert' show json, utf8;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/models/biz_model.dart';
-import 'package:edagang/models/search_model.dart';
 import 'package:edagang/scoped/biz_cat_scoped.dart';
-import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/screens/biz/biz_company_detail.dart';
-import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -37,30 +30,6 @@ class _BizCategoryPageState extends State<BizCategoryPage> {
     super.initState();
   }
 
-  _buildCircularProgressIndicator() {
-    return Center(
-      child: Container(
-          width: 75,
-          height: 75,
-          color: Colors.transparent,
-          child: Column(
-            children: <Widget>[
-              CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Color(0xff2877EA)),
-                strokeWidth: 1.7,
-              ),
-              SizedBox(height: 5.0,),
-              Text('Loading...',
-                style: GoogleFonts.lato(
-                  textStyle: TextStyle(color: Colors.grey.shade600, fontStyle: FontStyle.italic, fontSize: 13),
-                ),
-              ),
-            ],
-          )
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     SmartbizScopedModel bizModel = SmartbizScopedModel();
@@ -70,43 +39,7 @@ class _BizCategoryPageState extends State<BizCategoryPage> {
       model: bizModel,
       child: Scaffold(
         backgroundColor: Color(0xffEEEEEE),
-        body: CustomScrollView(
-          slivers: <Widget>[
-            SliverAppBar(
-              elevation: 0.0,
-              //expandedHeight: 100,
-              iconTheme: IconThemeData(
-                color: Color(0xff084B8C),
-              ),
-              /*leading: InkWell(
-                onTap: () {Navigator.pop(context);},
-                splashColor: Colors.deepOrange.shade100,
-                highlightColor: Colors.deepOrange.shade100,
-                child: Icon(
-                  Icons.arrow_back,
-                ),
-              ),*/
-              pinned: true,
-              primary: true,
-              title: Container(
-                  child: Text(widget.catName.replaceAll('%20', ' ') ?? '',
-                    style: GoogleFonts.lato(
-                      textStyle: TextStyle(fontWeight: FontWeight.w600, color: Color(0xff084B8C)),
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                  )
-              ),
-            ),
-            SliverPadding(
-              padding: EdgeInsets.fromLTRB(8, 5, 8, 10),
-              sliver: BizCategoryListCompanyBody(catId: int.parse(widget.catId)),
-            ),
-            SliverFillRemaining(
-              child: new Container(color: Colors.transparent),
-            ),
-          ],
-        ),
+        body: BizCategoryListCompanyBody(catId: int.parse(widget.catId)),
       ),
     );
   }
@@ -132,7 +65,75 @@ class BizCategoryListCompanyBody extends StatelessWidget {
     return ScopedModelDescendant<SmartbizScopedModel>(
       builder: (context, child, model) {
         this.model = model;
-        return _buildGridList();
+        return model.isLoadingCat ? _buildCircularProgressIndicator() : model.bizcat.length > 0 ? CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              elevation: 0.0,
+              //expandedHeight: 100,
+              iconTheme: IconThemeData(
+                color: Color(0xff084B8C),
+              ),
+              pinned: true,
+              primary: true,
+              title: Text(model.getCategoryName() ?? '',
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(fontSize: 18, color: Color(0xff084B8C)),
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+              ),
+            ),
+            SliverPadding(padding: EdgeInsets.all(10),
+              sliver: _buildGridList(),
+            ),
+            SliverFillRemaining(
+              child: new Container(color: Colors.transparent),
+            ),
+          ],
+        ) : CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              elevation: 0.0,
+              //expandedHeight: 100,
+              iconTheme: IconThemeData(
+                color: Color(0xff084B8C),
+              ),
+              pinned: true,
+              primary: true,
+              title: Text(model.getCategoryName() ?? '',
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(fontSize: 18, color: Color(0xff084B8C)),
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+              ),
+            ),
+            SliverToBoxAdapter(
+                child: Container(
+                  alignment: Alignment.center,
+                  height: MediaQuery.of(context).size.height / 2,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Image.asset('assets/icons/empty.png', height: 120,),
+                        Text('No listing at the moment.',
+                          style: GoogleFonts.lato(
+                            textStyle: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w600,),
+                          ),
+                        ),
+                      ],
+                    ),
+                  
+                  ),
+                )
+            ),
+            SliverFillRemaining(
+              child: new Container(color: Colors.transparent),
+            ),
+          ],
+        );
       },
     );
   }
@@ -236,6 +237,31 @@ class BizCategoryListCompanyBody extends StatelessWidget {
       ),
     );
   }
+
+  _buildCircularProgressIndicator() {
+    return Center(
+      child: Container(
+          width: 75,
+          height: 75,
+          color: Colors.transparent,
+          child: Column(
+            children: <Widget>[
+              CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation(Color(0xff2877EA)),
+                strokeWidth: 1.7,
+              ),
+              SizedBox(height: 5.0,),
+              Text('Loading...',
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(color: Colors.grey.shade600, fontStyle: FontStyle.italic, fontSize: 13),
+                ),
+              ),
+            ],
+          )
+      ),
+    );
+  }
+
 }
 
 class CompanyCardItem extends StatelessWidget {
