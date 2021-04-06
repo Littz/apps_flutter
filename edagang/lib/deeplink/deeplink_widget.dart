@@ -1,9 +1,17 @@
+import 'package:edagang/deeplink/ads_auto_deeplink.dart';
 import 'package:edagang/deeplink/ads_career_deeplink.dart';
+import 'package:edagang/deeplink/ads_prop_deeplink.dart';
 import 'package:edagang/deeplink/biz_company_deeplink.dart';
+import 'package:edagang/deeplink/fintools_deeplink.dart';
+import 'package:edagang/deeplink/goilmu_deeplink.dart';
 import 'package:edagang/deeplink/shop_category_deeplink.dart';
 import 'package:edagang/deeplink/shop_merchant_deeplink.dart';
 import 'package:edagang/deeplink/shop_product_deeplink.dart';
 import 'package:edagang/main.dart';
+import 'package:edagang/screens/ads/ads_auto_detail.dart';
+import 'package:edagang/screens/ads/ads_prop_detail.dart';
+import 'package:edagang/screens/fin/fin_prod_list.dart';
+import 'package:edagang/screens/upskill/skill_detail.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -80,11 +88,41 @@ class DeeplinkWidgetState extends State<DeeplinkWidget> {
                   }
                 }
                 break;
+              case "fintools":
+                {
+                  switch (type) {
+                    case "product":
+                      return FintoolDlPage(xid, xname);
+                      break;
+                    default:
+                      return Container();
+                      break;
+                  }
+                }
+                break;
               case "blurb":
                 {
                   switch (type) {
                     case "career":
-                      return CareerDeeplinkPage(xid, xname);
+                      return CareerDlPage(xid, xname);
+                      break;
+                    case "property":
+                      return PropDlShowcase(xid, xname);
+                      break;
+                    case "auto":
+                      return AutoDlShowcase(xid, xname);
+                      break;
+                    default:
+                      return Container();
+                      break;
+                  }
+                }
+                break;
+              case "goilmu":
+                {
+                  switch (type) {
+                    case "course":
+                      return GoilmuDlPage(xid, xname);
                       break;
                     default:
                       return Container();
@@ -95,6 +133,8 @@ class DeeplinkWidgetState extends State<DeeplinkWidget> {
               default:
                 return Container();
                 break;
+
+
             }
         }else {
           //return SimpleTab(2,0);

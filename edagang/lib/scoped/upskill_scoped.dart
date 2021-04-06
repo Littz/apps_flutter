@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:edagang/models/biz_model.dart';
 import 'package:edagang/models/upskill_model.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:http/http.dart' as http;
@@ -392,9 +393,9 @@ Future fetchCourseTraining() async {
 }
 
 
-List<Goilmu_banner> gbanners = [];
-List<Goilmu_banner> get _gbanners => gbanners;
-void addGoilmuBannerList(Goilmu_banner gbaner) {_gbanners.add(gbaner);}
+List<Home_banner> gbanners = [];
+List<Home_banner> get _gbanners => gbanners;
+void addGoilmuBannerList(Home_banner gbaner) {_gbanners.add(gbaner);}
 
 Future<dynamic> _getGoilmuJson() async {
   var response = await http.get(
@@ -417,11 +418,12 @@ Future fetchGoilmuResponse() async {
   print(dataFromResponse["data"]["banner"]);
 
   dataFromResponse["data"]["banner"].forEach((dataBaner) {
-    Goilmu_banner _banner = new Goilmu_banner(
+    Home_banner _banner = new Home_banner(
       title: dataBaner['title'],
       imageUrl: dataBaner['image_url'],
       type: dataBaner['type'],
       itemId: dataBaner['item_id'],
+      link_url: dataBaner['link_url'],
     );
     addGoilmuBannerList(_banner);
   });

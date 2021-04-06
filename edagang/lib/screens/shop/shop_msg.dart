@@ -102,7 +102,6 @@ class _MessagesState extends State<ShopMessagePage> {
           },
               child: model.isAuthenticated ? Scaffold(
                 key: _scaffoldKey,
-                resizeToAvoidBottomPadding: false,
                 resizeToAvoidBottomInset: false,
                 appBar: AppBar(
                   backgroundColor: Colors.white,
@@ -167,7 +166,6 @@ class _MessagesState extends State<ShopMessagePage> {
 
               ) : Scaffold(
                 key: _scaffoldKey,
-                resizeToAvoidBottomPadding: false,
                 resizeToAvoidBottomInset: false,
                 backgroundColor: Color(0xffEEEEEE),
                 body: _showLoginFirst(),

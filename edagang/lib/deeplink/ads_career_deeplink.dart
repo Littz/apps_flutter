@@ -13,15 +13,15 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 
-class CareerDeeplinkPage extends StatefulWidget {
+class CareerDlPage extends StatefulWidget {
   String jobId, jobName;
-  CareerDeeplinkPage(this.jobId, this.jobName);
+  CareerDlPage(this.jobId, this.jobName);
 
   @override
-  _CareerDeeplinkPageState createState() => _CareerDeeplinkPageState();
+  _CareerDlPageState createState() => _CareerDlPageState();
 }
 
-class _CareerDeeplinkPageState extends State<CareerDeeplinkPage> with TickerProviderStateMixin {
+class _CareerDlPageState extends State<CareerDlPage> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   SharedPref sharedPref = SharedPref();
   Map<dynamic, dynamic> responseBody;
@@ -129,7 +129,7 @@ class _CareerDeeplinkPageState extends State<CareerDeeplinkPage> with TickerProv
             color: Colors.white,
           ),
           leading: InkWell(
-            onTap: () {Navigator.pushReplacement(context, SlideRightRoute(page: NewHomePage(2)));},
+            onTap: () {Navigator.pushReplacement(context, SlideRightRoute(page: NewHomePage(4)));},
             splashColor: Colors.grey.shade100,
             highlightColor: Colors.deepOrange.shade100,
             child: Icon(

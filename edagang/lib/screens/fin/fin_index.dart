@@ -1,8 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/data/datas.dart';
+import 'package:edagang/models/biz_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
+import 'package:edagang/screens/biz/biz_index.dart';
+import 'package:edagang/screens/fin/fin_prod_list.dart';
 import 'package:edagang/sign_in.dart';
+import 'package:edagang/widgets/emptyData.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/webview.dart';
+import 'package:edagang/widgets/webview_bb.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -54,6 +60,28 @@ class _FinancePageState extends State<FinancePage> {
         _scrollController.offset > (200 - kToolbarHeight);
   }
 
+  goToNextPage(BuildContext context, Home_banner item) {
+    String catname = item.title ?? '';
+    String catid = item.itemId.toString();
+    String ctype = item.type.toString();
+    String vrurl = item.link_url;
+    if(ctype == "1") {
+      print('PRODUCT #############################################');
+    } else if (ctype == "2") {
+      print('CATEGORY #############################################');
+      print(catid);
+      print(catname);
+
+      //Navigator.push(context, SlideRightRoute(page: ProductListCategory(catid, catname)));
+    } else if (ctype == "3") {
+
+      //Navigator.push(context,SlideRightRoute(page: BizCompanyDetailPage(catid,'')));
+    } else if (ctype == "4") {
+
+      Navigator.push(context, SlideRightRoute(page: WebviewBixon(vrurl ?? '', 'https://finapp.e-dagang.asia/file/banner/4/bb_banner3.jpg')));
+    }
+  }
+
   @override
   void initState() {
     _scrollController = ScrollController();
@@ -80,7 +108,7 @@ class _FinancePageState extends State<FinancePage> {
               child: Scaffold(
                 backgroundColor: Color(0xffEEEEEE),
                 body: DefaultTabController(
-                  length: 2,
+                  length: 3,
                   child: NestedScrollView(
                       headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
                         return <Widget>[
@@ -171,28 +199,41 @@ class _FinancePageState extends State<FinancePage> {
                                                   color: Colors.transparent,
                                                   borderRadius: BorderRadius.all(Radius.circular(8)),
                                                 ),
-                                                child: Swiper.children(
-                                                  autoplay: true,
-                                                  pagination: new SwiperPagination(
-                                                      margin: new EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 15.0),
+                                                  child: Swiper(
+                                                    autoplay: true,
+                                                    itemBuilder: (BuildContext context, int index) {
+                                                      return InkWell(
+                                                        onTap: () {
+                                                          goToNextPage(context, model.fbanners[index]);
+                                                        },
+                                                        child: ClipRRect(
+                                                          borderRadius: new BorderRadius.circular(8.0),
+                                                          child: Center(
+                                                            child: CachedNetworkImage(
+                                                              placeholder: (context, url) => Container(
+                                                                width: 40,
+                                                                height: 40,
+                                                                color: Colors.transparent,
+                                                                child: CupertinoActivityIndicator(radius: 15,),
+                                                              ),
+                                                              imageUrl: 'https://finapp.e-dagang.asia' + model.fbanners[index].imageUrl,
+                                                              fit: BoxFit.fill,
+                                                              height: 150,
+                                                              width: MediaQuery.of(context).size.width,
+                                                            )
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    itemCount: model.fbanners.length,
+                                                    pagination: new SwiperPagination(
                                                       builder: new DotSwiperPaginationBuilder(
-                                                          color: Colors.white30,
-                                                          activeColor: Colors.redAccent.shade400,
-                                                          size: 7.0,
-                                                          activeSize: 7.0)
-                                                  ),
-                                                  children: <Widget>[
-                                                    Image.asset(
-                                                      'assets/cartsinifinance1.png', height: 150.0,
-                                                      fit: BoxFit.fill,),
-                                                    Image.asset(
-                                                      'assets/cartsinifinance2.png', height: 150.0,
-                                                      fit: BoxFit.fill,),
-                                                    Image.asset(
-                                                      'assets/cartsinifinance3.png', height: 150.0,
-                                                      fit: BoxFit.fill,),
-                                                  ],
-                                                ),
+                                                        activeColor: Colors.deepOrange.shade500,
+                                                        activeSize: 7.0,
+                                                        size: 7.0,
+                                                      )
+                                                    ),
+                                                  )
                                               )
                                           )
                                       )
@@ -212,14 +253,15 @@ class _FinancePageState extends State<FinancePage> {
                                 labelColor: Color(0xffD91B3E),
                                 unselectedLabelColor: Colors.grey,
                                 labelStyle: GoogleFonts.lato(
-                                  textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w700,),
+                                  textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w700,),
                                 ),
                                 unselectedLabelStyle: GoogleFonts.lato(
-                                  textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
+                                  textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600,),
                                 ),
                                 tabs: [
                                   Tab(text: "INSURANCE"),
                                   Tab(text: "INVESTMENT"),
+                                  Tab(text: "FINANCIAL"),
                                 ],
                               ),
                             ),
@@ -231,71 +273,9 @@ class _FinancePageState extends State<FinancePage> {
                         padding: EdgeInsets.only(left: 8, top: 8, right: 8, bottom: 16),
                         child: TabBarView(
                             children: [
-                              _buildInsurance(key: "key1"),
-                              Container(
-                                padding: EdgeInsets.all(8.0),
-                                width: MediaQuery.of(context).size.width,
-                                child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Container(
-                                        //padding: EdgeInsets.only(left: 8, right: 8, top: 8),
-                                          width: MediaQuery.of(context).size.width,
-                                          height: 145,
-                                          child: InkWell(
-                                              onTap: () {
-                                                Navigator.push(context, SlideRightRoute(
-                                                    page: WebviewWidget(
-                                                        'http://ktpb.org/application-form/',
-                                                        'KTP Membership')));
-                                              },
-                                              child: Card(
-                                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                                                  elevation: 0.0,
-                                                  child: Container(
-                                                      decoration: new BoxDecoration(
-                                                        color: Colors.grey.shade200,
-                                                        borderRadius: BorderRadius.all(Radius.circular(8)),
-                                                      ),
-                                                      child: ClipPath(
-                                                        clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-                                                        child: Image.asset(
-                                                          'assets/fintool_ktp.png', fit: BoxFit.fitWidth,
-                                                          height: 145,
-                                                        ),
-                                                      )
-                                                  )
-                                              )
-                                          )
-                                      ),
-                                      Container(
-                                          width: MediaQuery.of(context).size.width,
-                                          height: 145,
-                                          child: InkWell(
-                                              onTap: () {},
-                                              child: Card(
-                                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                                                  elevation: 0.0,
-                                                  child: Container(
-                                                      decoration: new BoxDecoration(
-                                                        color: Colors.grey.shade200,
-                                                        borderRadius: BorderRadius.all(Radius.circular(8)),
-                                                      ),
-                                                      child: ClipPath(
-                                                        clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-                                                        child: Image.asset(
-                                                          'assets/fintool_dd.png', fit: BoxFit.fitWidth,
-                                                          height: 145,
-                                                        ),
-                                                      )
-                                                  )
-                                              )
-                                          )
-                                      ),
-                                    ]
-                                ),
-                              ),
+                              model.finsurans.length > 0 ? _buildInsurance(key: "key1") : EmptyList(),
+                              model.finvests.length > 0 ? _buildInvestment(key: "key2") : EmptyList(),
+                              model.finances.length > 0 ? _buildFinancial(key: "key3") : EmptyList(),
                             ]
                         ),
                       )
@@ -306,8 +286,6 @@ class _FinancePageState extends State<FinancePage> {
         }
     );
   }
-
-
 
   /*Widget build(BuildContext context) {
     return ScopedModelDescendant<MainScopedModel>(
@@ -526,69 +504,301 @@ class _FinancePageState extends State<FinancePage> {
     );
   }*/
 
+  /*Widget _buildInsuranceo({String key}) {
+    return ScopedModelDescendant<MainScopedModel>(
+        builder: (context, child, model){
+          return MediaQuery.removePadding(
+              context: context,
+              removeTop: true,
+              child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.815,
+                      crossAxisSpacing: 1.5,
+                      mainAxisSpacing: 1.5),
+                  key: PageStorageKey(key),
+                  itemCount: tabs_menu.length,
+                  itemBuilder: (ctx, index) {
+                    var data = tabs_menu[index];
+                    return Container(
+                        alignment: Alignment.center,
+                        child: Card(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(context, SlideRightRoute(page: WebviewWidget(data.webviewUrl, data.title)));
+                              //Navigator.push(context, SlideRightRoute(page: WebviewGeneral(data.webviewUrl, data.title)));
+                            },
+                            child: Container(
+                                alignment: Alignment.bottomCenter,
+                                padding: new EdgeInsets.only(bottom: 8.0),
+                                decoration: new BoxDecoration(
+                                  image: new DecorationImage(
+                                    image: new AssetImage(data.imgPath),
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                                ),
+                                child: Padding(
+                                    padding: EdgeInsets.only(left: 7.0, right: 7.0),
+                                    child: Stack(
+                                      children: <Widget>[
+                                        Text(data.title ?? '',
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(fontSize: 14,
+                                                foreground: Paint()
+                                                  ..style = PaintingStyle.stroke
+                                                  ..strokeWidth = 4
+                                                  ..color = Colors.black38, fontWeight: FontWeight.w600),
+                                          ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+
+                                        Text(data.title ?? '',
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
+                                          ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        )
+                                      ],
+                                    )
+                                  *//*child: Text(
+                            data.title,
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.lato(
+                              textStyle: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700,),
+                            ),
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                          ),*//*
+                                )
+                            ),
+                          ),
+                        )
+                    );
+                  }
+              )
+          );
+        }
+    );
+  }*/
+
   Widget _buildInsurance({String key}) {
     return ScopedModelDescendant<MainScopedModel>(
         builder: (context, child, model){
           return MediaQuery.removePadding(
-            context: context,
-            removeTop: true,
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.815,
-                  crossAxisSpacing: 1.5,
-                  mainAxisSpacing: 1.5),
-              key: PageStorageKey(key),
-              itemCount: tabs_menu.length,
-              itemBuilder: (ctx, index) {
-                var data = tabs_menu[index];
-                return Container(
-                  alignment: Alignment.center,
-                  child: Card(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(context, SlideRightRoute(page: WebviewWidget(data.webviewUrl, data.title)));
-                        //Navigator.push(context, SlideRightRoute(page: WebviewGeneral(data.webviewUrl, data.title)));
-                      },
-                      child: Container(
-                        alignment: Alignment.bottomCenter,
-                        padding: new EdgeInsets.only(bottom: 8.0),
-                        decoration: new BoxDecoration(
-                          image: new DecorationImage(
-                            image: new AssetImage(data.imgPath),
-                            fit: BoxFit.cover,
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 7.0, right: 7.0),
-                            child: Stack(
-                              children: <Widget>[
-                                Text(data.title ?? '',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.lato(
-                                    textStyle: TextStyle(fontSize: 14,
-                                        foreground: Paint()
-                                          ..style = PaintingStyle.stroke
-                                          ..strokeWidth = 4
-                                          ..color = Colors.black38, fontWeight: FontWeight.w600),
+              context: context,
+              removeTop: true,
+              child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.715,
+                      crossAxisSpacing: 1.5,
+                      mainAxisSpacing: 1.5),
+                  key: PageStorageKey(key),
+                  itemCount: model.finsurans.length,
+                  itemBuilder: (ctx, index) {
+                    var data = model.finsurans[index];
+                    return Container(
+                        alignment: Alignment.center,
+                        child: Card(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(context, SlideRightRoute(page: FinDetailPage(data.id.toString(),data.company_name)));
+                              //Navigator.push(context, SlideRightRoute(page: WebviewGeneral(data.webviewUrl, data.title)));
+                            },
+                            child: Container(
+                                alignment: Alignment.bottomCenter,
+                                padding: new EdgeInsets.only(bottom: 8.0),
+                                decoration: new BoxDecoration(
+                                  image: new DecorationImage(
+                                    image: CachedNetworkImageProvider('http://finapp.e-dagang.asia' + data.logo ?? ''),
+                                    fit: BoxFit.cover,
                                   ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
+                                  borderRadius: BorderRadius.all(Radius.circular(5)),
                                 ),
+                                child: Padding(
+                                    padding: EdgeInsets.only(left: 7.0, right: 7.0),
+                                    child: Stack(
+                                      children: <Widget>[
+                                        Text(data.company_licno.toLowerCase() == 'na' ? data.company_name ?? '' : data.company_name + '\n' + data.company_licno  ?? '',
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(fontSize: 13,
+                                                foreground: Paint()
+                                                  ..style = PaintingStyle.stroke
+                                                  ..strokeWidth = 4
+                                                  ..color = Colors.black38, fontWeight: FontWeight.w600),
+                                          ),
+                                          maxLines: 5,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
 
-                                Text(data.title ?? '',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.lato(
-                                    textStyle: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
-                                  ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
+                                        Text(data.company_licno.toLowerCase() == 'na' ? data.company_name ?? '' : data.company_name + '\n' + data.company_licno ?? '',
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
+                                          ),
+                                          maxLines: 5,
+                                          overflow: TextOverflow.ellipsis,
+                                        )
+                                      ],
+                                    ),
                                 )
-                              ],
-                            )
-                          /*child: Text(
+                            ),
+                          ),
+                        )
+                    );
+                  }
+              )
+          );
+        }
+    );
+  }
+
+  Widget _buildInvestment({String key}) {
+    return ScopedModelDescendant<MainScopedModel>(
+        builder: (context, child, model){
+          return MediaQuery.removePadding(
+              context: context,
+              removeTop: true,
+              child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.715,
+                      crossAxisSpacing: 1.5,
+                      mainAxisSpacing: 1.5),
+                  key: PageStorageKey(key),
+                  itemCount: model.finvests.length,
+                  itemBuilder: (ctx, index) {
+                    var data = model.finvests[index];
+                    return Container(
+                        alignment: Alignment.center,
+                        child: Card(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(context, SlideRightRoute(page: FinDetailPage(data.id.toString(),data.company_name)));
+                              //Navigator.push(context, SlideRightRoute(page: WebviewWidget(data., data.title)));
+                              //Navigator.push(context, SlideRightRoute(page: WebviewGeneral(data.webviewUrl, data.title)));
+                            },
+                            child: Container(
+                                alignment: Alignment.bottomCenter,
+                                padding: new EdgeInsets.only(bottom: 8.0),
+                                decoration: new BoxDecoration(
+                                  image: new DecorationImage(
+                                    image: CachedNetworkImageProvider('http://finapp.e-dagang.asia' + data.logo ?? ''),
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 7.0, right: 7.0),
+                                  child: Stack(
+                                    children: <Widget>[
+                                      Text(data.company_licno.toLowerCase() == 'na' ? data.company_name ?? '' : data.company_name + '\n' + data.company_licno  ?? '',
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.lato(
+                                          textStyle: TextStyle(fontSize: 13,
+                                              foreground: Paint()
+                                                ..style = PaintingStyle.stroke
+                                                ..strokeWidth = 4
+                                                ..color = Colors.black38, fontWeight: FontWeight.w600),
+                                        ),
+                                        maxLines: 5,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+
+                                      Text(data.company_licno.toLowerCase() == 'na' ? data.company_name ?? '' : data.company_name + '\n' + data.company_licno ?? '',
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.lato(
+                                          textStyle: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
+                                        ),
+                                        maxLines: 5,
+                                        overflow: TextOverflow.ellipsis,
+                                      )
+                                    ],
+                                  ),
+                                )
+                            ),
+                          ),
+                        )
+                    );
+                  }
+              )
+          );
+        }
+    );
+  }
+
+  Widget _buildFinancial({String key}) {
+    return ScopedModelDescendant<MainScopedModel>(
+        builder: (context, child, model){
+          return MediaQuery.removePadding(
+              context: context,
+              removeTop: true,
+              child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.815,
+                      crossAxisSpacing: 1.5,
+                      mainAxisSpacing: 1.5),
+                  key: PageStorageKey(key),
+                  itemCount: model.finances.length,
+                  itemBuilder: (ctx, index) {
+                    var data = model.finances[index];
+                    return Container(
+                        alignment: Alignment.center,
+                        child: Card(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                          child: InkWell(
+                            onTap: () {
+                              //Navigator.push(context, SlideRightRoute(page: WebviewWidget(data., data.title)));
+                              //Navigator.push(context, SlideRightRoute(page: WebviewGeneral(data.webviewUrl, data.title)));
+                            },
+                            child: Container(
+                                alignment: Alignment.bottomCenter,
+                                padding: new EdgeInsets.only(bottom: 8.0),
+                                decoration: new BoxDecoration(
+                                  image: new DecorationImage(
+                                    image: CachedNetworkImageProvider('http://finapp.e-dagang.asia' + data.logo ?? ''),
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                                ),
+                                child: Padding(
+                                    padding: EdgeInsets.only(left: 7.0, right: 7.0),
+                                    child: Stack(
+                                      children: <Widget>[
+                                        Text(data.company_name ?? '',
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(fontSize: 14,
+                                                foreground: Paint()
+                                                  ..style = PaintingStyle.stroke
+                                                  ..strokeWidth = 4
+                                                  ..color = Colors.black38, fontWeight: FontWeight.w600),
+                                          ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+
+                                        Text(data.company_name ?? '',
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
+                                          ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        )
+                                      ],
+                                    )
+                                  /*child: Text(
                             data.title,
                             textAlign: TextAlign.center,
                             style: GoogleFonts.lato(
@@ -597,13 +807,13 @@ class _FinancePageState extends State<FinancePage> {
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,
                           ),*/
+                                )
+                            ),
+                          ),
                         )
-                      ),
-                    ),
-                  )
-                );
-              }
-            )
+                    );
+                  }
+              )
           );
         }
     );

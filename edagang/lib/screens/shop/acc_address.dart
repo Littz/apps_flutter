@@ -222,7 +222,7 @@ class _AddressBookState extends State<AddressBook> {
                                           ),
                                         ),
                                         SizedBox(height: 5.0),
-                                        new ButtonTheme.bar(
+                                        new ButtonTheme(
                                           child: new ButtonBar(
                                             children: <Widget>[
                                               SizedBox(
@@ -1191,7 +1191,7 @@ class _AddNewAddressState extends State<AddNewAddress> with SingleTickerProvider
           return null;
         },
         child: new Scaffold(
-            resizeToAvoidBottomPadding: true,
+            resizeToAvoidBottomInset: true,
             appBar: AppBar(
               centerTitle: false,
               elevation: 0.0,

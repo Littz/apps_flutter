@@ -5,16 +5,18 @@ class Banner_ {
   final String type;
   final String itemId;
   final String remark;
+  final String link_url;
 
-  Banner_({this.imageUrl, this.title, this.type, this.itemId, this.remark});
+  Banner_({this.imageUrl, this.title, this.type, this.itemId, this.remark, this.link_url});
 
   factory Banner_.fromJson(Map<String, dynamic> parsedJson){
     return Banner_(
-        imageUrl:parsedJson['image_url'],
-        title:parsedJson['title'],
-        type:parsedJson['type'],
-        itemId:parsedJson['item_id'],
-        remark:parsedJson['remark']
+      imageUrl:parsedJson['image_url'],
+      title:parsedJson['title'],
+      type:parsedJson['type'],
+      itemId:parsedJson['item_id'],
+      remark:parsedJson['remark'],
+      link_url: parsedJson['link_url']
     );
   }
 

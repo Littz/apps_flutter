@@ -185,6 +185,7 @@ Future fetchHomeBizResponse() async {
       imageUrl: dataBaner['image_url'],
       type: dataBaner['type'],
       itemId: dataBaner['item_id'],
+      link_url: dataBaner['link_url'],
     );
     addHomeBannerList(_banner);
   });

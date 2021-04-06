@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/models/search_model.dart';
 import 'package:edagang/screens/shop/product_detail.dart';
-import 'package:edagang/screens/shop/product_merchant.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
@@ -10,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert' show json, utf8;
 import 'dart:io';
-
 import 'package:google_fonts/google_fonts.dart';
 
 
@@ -142,7 +140,8 @@ class _SearchState extends State<SearchList3> {
           itemCount: _results.length,
           itemBuilder: (BuildContext context, int index) {
             return CartsiniItem(_results[index]);
-          });
+          }
+      );
     }
   }
 

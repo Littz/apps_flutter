@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/widgets/blur_icon.dart';
-import 'package:edagang/widgets/product_grid_card.dart';
+import 'package:edagang/widgets/emptyData.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -124,11 +124,11 @@ class _BizVrListPageState extends State<BizVrListPage> {
                       unselectedLabelColor: Colors.grey,
                       labelStyle: GoogleFonts.lato(
                         textStyle: TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.w700,),
+                          fontSize: 13, fontWeight: FontWeight.w700,),
                       ),
                       unselectedLabelStyle: GoogleFonts.lato(
                         textStyle: TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.w600,),
+                          fontSize: 13, fontWeight: FontWeight.w600,),
                       ),
                       tabs: [
                         Tab(text: "COMPANY"),
@@ -147,15 +147,15 @@ class _BizVrListPageState extends State<BizVrListPage> {
                 children: [
                   Padding(
                     padding: EdgeInsets.all(8),
-                    child: model.bvirtuals[0].vr_list.length > 0 ? _buildCompanyVr(key: "key1") : _emptyVr(),
+                    child: model.bvirtuals[0].vr_list.length > 0 ? _buildCompanyVr(key: "key1") : EmptyList(),
                   ),
                   Padding(
                     padding: EdgeInsets.all(8),
-                    child: model.bvirtuals[1].vr_list.length > 0 ? _buildGalleryVr(key: "key2") : _emptyVr(),
+                    child: model.bvirtuals[1].vr_list.length > 0 ? _buildGalleryVr(key: "key2") : EmptyList(),
                   ),
                   Padding(
                     padding: EdgeInsets.all(8),
-                    child: model.bvirtuals[2].vr_list.length > 0 ? _buildExhibitionVr(key: "key3") : _emptyVr(),
+                    child: model.bvirtuals[2].vr_list.length > 0 ? _buildExhibitionVr(key: "key3") : EmptyList(),
                   ),
                 ]
               ),
@@ -485,24 +485,6 @@ class _BizVrListPageState extends State<BizVrListPage> {
     );
   }
 
-  Widget _emptyVr() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Image.asset('assets/icons/empty.png', height: 120,),
-          Text('No listing at the moment.',
-            style: GoogleFonts.lato(
-              textStyle: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w600,),
-            ),
-          ),
-        ],
-      ),
-
-    );
-  }
-
 }
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
@@ -572,7 +554,7 @@ class _SABTState extends State<SABT> {
   }
   void _positionListener() {
     final FlexibleSpaceBarSettings settings =
-    context.inheritFromWidgetOfExactType(FlexibleSpaceBarSettings);
+    context.dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>();
     bool visible = settings == null || settings.currentExtent <= settings.minExtent;
     if (_visible != visible) {
       setState(() {

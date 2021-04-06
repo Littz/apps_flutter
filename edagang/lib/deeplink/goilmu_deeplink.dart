@@ -1,3 +1,4 @@
+import 'package:edagang/main.dart';
 import 'package:edagang/models/upskill_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/sign_in.dart';
@@ -16,17 +17,17 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class UpskillDetailPage extends StatefulWidget {
+class GoilmuDlPage extends StatefulWidget {
   String skillId, skillTitle;
-  UpskillDetailPage(this.skillId, this.skillTitle);
+  GoilmuDlPage(this.skillId, this.skillTitle);
 
   @override
-  _UpskillDetailPageState createState() => _UpskillDetailPageState();
+  _GoilmuDlPageState createState() => _GoilmuDlPageState();
 }
 
 const xpandedHeight = 195.0;
 
-class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTickerProviderStateMixin {
+class _GoilmuDlPageState extends State<GoilmuDlPage> with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   ScrollController _scrollController;
   SharedPref sharedPref = SharedPref();
@@ -148,6 +149,36 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      /*appBar: new PreferredSize(
+          preferredSize: Size.fromHeight(56.0),
+          child: new AppBar(
+            centerTitle: false,
+            elevation: 1.0,
+            automaticallyImplyLeading: true,
+            iconTheme: IconThemeData(
+              color: Colors.white,
+            ),
+            title: new Text(cat_name ?? "",
+              style: GoogleFonts.lato(
+                textStyle: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            flexibleSpace: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.topRight,
+                      colors: [
+                        Color(0xff2877EA),
+                        Color(0xffA0CCE8),
+                      ]
+                  ),
+                )
+            ),
+          )
+      ),*/
       backgroundColor: Colors.white,
       body: isLoading ? _buildCircularProgressIndicator() : CustomScrollView(
         controller: _scrollController,
@@ -158,7 +189,10 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
             leading: Hero(
                 tag: "back",
                 child: InkWell(
-                  onTap: () {Navigator.pop(context);},
+                  onTap: () {
+                    //Navigator.pop(context);
+                    Navigator.pushReplacement(context, SlideRightRoute(page: NewHomePage(3)));
+                  },
                   splashColor: Color(0xffA0CCE8),
                   highlightColor: Color(0xffA0CCE8),
                   child: BlurIconLight(
@@ -441,7 +475,7 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
                         await FlutterShare.share(
                           title: 'GOilmu',
                           text: '',
-                          linkUrl: 'https://goilmuapp.e-dagang.asia/course/'+_id.toString(),
+                          linkUrl: 'https://upskillapp.e-dagang.asia/course/'+_id.toString(),
                           chooserTitle: title ?? '',
                         );
                       },

@@ -60,7 +60,7 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
         print("job ID : "+widget.jobId);
 
         http.post(
-          'https://blurbapp.e-dagang.asia/api/career/job/details?job_id='+widget.jobId,
+          'https://blurbapp.e-dagang.asia/api/blurb/job/details?job_id='+widget.jobId,
           headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
         ).then((response) {
           print('JOBBBBB RESPONSE CODE /////////////////');
@@ -163,7 +163,7 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
     {
       return Scaffold(
         key: _scaffoldKey,
-        backgroundColor: Color(0xffEEEEEE),
+        backgroundColor: Colors.white,
         body: isLoading ? _buildCircularProgressIndicator() : CustomScrollView(
           controller: _scrollController,
           slivers: <Widget>[
@@ -171,20 +171,20 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
               pinned: true,
               expandedHeight: xpandedHeight,
               leading: Hero(
-                  tag: "back",
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    splashColor: Color(0xffA0CCE8),
-                    highlightColor: Color(0xffA0CCE8),
-                    child: BlurIconLight(
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: Color(0xff084B8C),
-                      ),
+                tag: "back",
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  splashColor: Color(0xffA0CCE8),
+                  highlightColor: Color(0xffA0CCE8),
+                  child: BlurIconLight(
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: Color(0xff084B8C),
                     ),
-                  )
+                  ),
+                )
               ),
               title: SABT(
                 child: Container(
@@ -242,7 +242,7 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
                               height: 90,
                               width: 90,
                               decoration: new BoxDecoration(
-                                color: Colors.white,
+                                color: Colors.transparent,
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
@@ -428,8 +428,8 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
                         CupertinoSegmentedControl(
-                          selectedColor: Colors.grey.shade600,
-                          borderColor: Colors.grey.shade600,
+                          selectedColor: color,
+                          borderColor: color,
                           groupValue: currentValue,
                           children: const <int, Widget>{
                             0: Text('Description', style: TextStyle(
@@ -512,7 +512,7 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
                     InkWell(
                       onTap: () async {
                         await FlutterShare.share(
-                          title: 'GOilmu',
+                          title: 'Blurb',
                           text: '',
                           linkUrl: 'https://blurbapp.e-dagang.asia/career/'+_id.toString(),
                           chooserTitle: title ?? '',
@@ -553,7 +553,7 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
               onPressed: () {
                 model.isAuthenticated ? Navigator.push(context, SlideRightRoute(
                 page: WebviewWidget(
-                'https://blurb.e-dagang.asia/wv/job/apply/'+model.getId().toString()+'/'+_id.toString(), title))) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
+                'https://blurb.e-dagang.asia/wv/reqform_jobs/'+model.getId().toString()+'/'+_id.toString(), title))) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
               },
             ),
           ],
@@ -632,7 +632,7 @@ class _SABTState extends State<SABT> {
   }
   void _positionListener() {
     final FlexibleSpaceBarSettings settings =
-    context.inheritFromWidgetOfExactType(FlexibleSpaceBarSettings);
+    context.dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>();
     bool visible = settings == null || settings.currentExtent <= settings.minExtent;
     if (_visible != visible) {
       setState(() {

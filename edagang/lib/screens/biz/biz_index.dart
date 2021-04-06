@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/data/datas.dart';
+import 'package:edagang/main.dart';
+import 'package:edagang/models/biz_model.dart';
 import 'package:edagang/notification.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/screens/biz/biz_home.dart';
@@ -9,14 +13,17 @@ import 'package:edagang/settings.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/searchbar.dart';
 import 'package:edagang/widgets/webview.dart';
+import 'package:edagang/widgets/webview_bb.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -35,6 +42,7 @@ class BizPage extends StatefulWidget {
 }
 
 class _BizIdxPageState extends State<BizPage> {
+  final flutterWebviewPlugin = new FlutterWebviewPlugin();
   GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
   final facebookLogin = FacebookLogin();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -83,6 +91,28 @@ class _BizIdxPageState extends State<BizPage> {
     initialPage: 0,
   );
 
+  goToNextPage(BuildContext context, Home_banner item) {
+    String catname = item.title ?? '';
+    String catid = item.itemId.toString();
+    String ctype = item.type.toString();
+    String vrurl = item.link_url;
+    if(ctype == "1") {
+      print('PRODUCT #############################################');
+    } else if (ctype == "2") {
+      print('CATEGORY #############################################');
+      print(catid);
+      print(catname);
+
+      //Navigator.push(context, SlideRightRoute(page: ProductListCategory(catid, catname)));
+    } else if (ctype == "3") {
+
+      Navigator.push(context,SlideRightRoute(page: BizCompanyDetailPage(catid,'')));
+    } else if (ctype == "4") {
+
+      Navigator.push(context, SlideRightRoute(page: WebviewBixon(vrurl ?? '', 'https://bizapp.e-dagang.asia/file/banner/25/bb_banner1.jpeg')));
+    }
+  }
+
   @override
   void initState() {
     _pageController.addListener(() {
@@ -92,6 +122,7 @@ class _BizIdxPageState extends State<BizPage> {
     _scrollController.addListener(_scrollListener);
     quick_menu = getBizQxcess();
     tabs_menu = getBizTabs();
+
     super.initState();
     loadPhoto();
   }
@@ -100,6 +131,15 @@ class _BizIdxPageState extends State<BizPage> {
   void dispose() {
     _scrollController.removeListener(_scrollListener);
     super.dispose();
+  }
+
+  Future launchVr(String url) async {
+    //final String url = data.vr_list[index].vr_url ?? '';
+    if (await canLaunch(url)) await launch(
+      url,
+      forceSafariVC: false,
+      forceWebView: false,
+    );
   }
 
   @override
@@ -416,6 +456,7 @@ class _BizIdxPageState extends State<BizPage> {
                             itemBuilder: (BuildContext context, int index) {
                               return InkWell(
                                 onTap: () {
+                                  goToNextPage(context, model.bbanners[index]);
                                 },
                                 child: ClipRRect(
                                   borderRadius: new BorderRadius.circular(8.0),
@@ -494,7 +535,31 @@ class _BizIdxPageState extends State<BizPage> {
                       ),
                       Padding(
                         padding: EdgeInsets.only(left: 0,),
-                        child: CircleAvatar(
+                        child: InkWell(
+                          highlightColor: Colors.blue.shade100,
+                          splashColor: Colors.blue.shade100,
+                          onTap: () {
+                            Navigator.push(context,SlideRightRoute(page: BizVrListPage()));
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Text(
+                                'More ',
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Color(0xff357FEB)),
+                                ),
+                              ),
+                              Icon(
+                                CupertinoIcons.right_chevron,
+                                size: 17,
+                                color: Color(0xff357FEB),
+                              ),
+                            ],
+                          ),
+                        ),
+                        /*CircleAvatar(
                           backgroundColor: Colors.white,
                           child: IconButton(
                             icon: Icon(
@@ -503,7 +568,7 @@ class _BizIdxPageState extends State<BizPage> {
                             ),
                             onPressed: () {Navigator.push(context,SlideRightRoute(page: BizVrListPage()));},
                           ),
-                        ),
+                        ),*/
                       ),
                     ],
                   ),
@@ -549,6 +614,7 @@ class _BizIdxPageState extends State<BizPage> {
               topList(),
 
             ]),
+
           )
 
           /*Scaffold(
@@ -805,7 +871,8 @@ class _BizIdxPageState extends State<BizPage> {
                       decoration: new BoxDecoration(
                         color: Colors.grey,
                         image: new DecorationImage(
-                          image: new NetworkImage('http://bizapp.e-dagang.asia' + data.cat_image ?? '',),
+                          //image: new NetworkImage('http://bizapp.e-dagang.asia' + data.cat_image ?? '',),
+                          image: CachedNetworkImageProvider('http://bizapp.e-dagang.asia' + data.cat_image ?? ''),
                           fit: BoxFit.cover,
                         ),
                         borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -938,14 +1005,23 @@ class _BizIdxPageState extends State<BizPage> {
                       borderRadius: BorderRadius.all(
                         Radius.circular(7.0),
                       ),
-                      onTap: () async {
+                      onTap: () {
+                        launchVr(data.vr_list[index].vr_url);
+                        /*flutterWebviewPlugin.launch(
+                          data.vr_list[index].vr_url ?? '',
+                          rect: new Rect.fromLTWH(0.0, 20.0, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height),
+                          userAgent: Constants.kAndroidUserAgent,
+                        );*/
+                        //Navigator.push(context, SlideRightRoute(page: WebviewWidget(data.vr_list[index].vr_url ?? '', data.vr_list[index].vr_name)));
+                      }
+                      /*async {
                         final String url = data.vr_list[index].vr_url ?? '';
                         if (await canLaunch(url)) await launch(
                           url,
                           forceSafariVC: false,
                           forceWebView: false,
                         );
-                      },
+                      }*/,
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1120,7 +1196,6 @@ class _BizIdxPageState extends State<BizPage> {
     );
   }
 
-
   logoutUser(BuildContext context, MainScopedModel model) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String logtype = prefs.getString('login_type');
@@ -1152,5 +1227,154 @@ class _BizIdxPageState extends State<BizPage> {
     };
     return headers;
   }
+
+}
+
+
+class WebviewVr extends StatefulWidget {
+  final url, title;
+  WebviewVr(this.url, this.title);
+  @override
+  _WebviewVrState createState() => _WebviewVrState(this.url, this. title);
+}
+
+class _WebviewVrState extends State<WebviewVr> {
+  var _url, _title;
+  _WebviewVrState(this._url, this._title);
+  String selectedUrl = '';
+
+  final flutterWebViewPlugin = FlutterWebviewPlugin();
+  StreamSubscription _onDestroy;
+  StreamSubscription<String> _onUrlChanged;
+  StreamSubscription<WebViewStateChanged> _onStateChanged;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _history = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _title = widget.title;
+    _url = widget.url;
+
+    print("URL Init: $_url");
+
+    flutterWebViewPlugin.close();
+
+    _onDestroy = flutterWebViewPlugin.onDestroy.listen((_) {
+      if (mounted) {
+        //_scaffoldKey.currentState.showSnackBar(const SnackBar(content: const Text('Webview Destroyed')));
+      }
+    });
+
+    _onUrlChanged = flutterWebViewPlugin.onUrlChanged.listen((String url) {
+      if (mounted) {
+        setState(() {
+          _history.add('onUrlChanged: $url');
+          print("URL changed: $url");
+        });
+      }
+    });
+
+    _onStateChanged = flutterWebViewPlugin.onStateChanged.listen((WebViewStateChanged state) {
+      if (mounted) {
+        setState(() {
+          _history.add('onStateChanged: ${state.type} ${state.url}');
+          print("URL state changed: ${state.url}");
+          print("URL state type: ${state.type}");
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _onDestroy.cancel();
+    _onUrlChanged.cancel();
+    _onStateChanged.cancel();
+    _history.clear();
+
+    super.dispose();
+    flutterWebViewPlugin.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WebviewScaffold(
+      //primary: true,
+      /*appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          iconTheme: IconThemeData(color: Colors.blue),
+          elevation: 0.0,
+          brightness: Brightness.light,
+        ),*/
+      url: _url,
+      withZoom: true,
+      //withJavascript: true,
+      hidden: true,
+      userAgent: Constants.kAndroidUserAgent,
+      initialChild: Container(
+        child: const Center(
+          child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation(Color(0xff357FEB)),
+              strokeWidth: 1.9
+          ),
+        ),
+      ),
+      persistentFooterButtons: <Widget>[
+        new OutlinedButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('Close')
+        ),
+      ],
+    );
+
+    /*return WebviewScaffold(
+      url: _url,
+      appBar: new AppBar(
+        centerTitle: false,
+        elevation: 0.0,
+        automaticallyImplyLeading: false,
+        iconTheme: IconThemeData(
+          color: Color(0xff084B8C),
+        ),
+        actions: [
+          CircleAvatar(
+            backgroundColor: Colors.transparent,
+            child: IconButton(
+              icon: Icon(
+                CupertinoIcons.xmark,
+                color: Color(0xff084B8C),
+              ),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ),
+        ],
+        flexibleSpace: DecoratedBox(
+            decoration: BoxDecoration(
+                color: Colors.transparent
+            )
+        ),
+      ),
+      withZoom: true,
+      withLocalStorage: true,
+      hidden: true,
+      userAgent: Constants.kAndroidUserAgent,
+      persistentFooterButtons: <Widget>[
+        new OutlinedButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Close')
+        ),
+      ],
+      initialChild: Container(
+        child: const Center(
+          child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation(Color(0xff357FEB)),
+              strokeWidth: 1.9
+          ),
+        ),
+      ),
+    );*/
+  }
+
 
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:edagang/index.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intro_slider/intro_slider.dart';
 import 'package:intro_slider/slide_object.dart';
@@ -15,6 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    //SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top]);
     Timer(Duration(seconds: 3), () {
       Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => Index(),));
     });

@@ -204,7 +204,7 @@ class TuneUpItem extends StatelessWidget {
       child: InkWell(
           onTap: () {
             sharedPref.save("skil_id", repo.prodId.toString());
-            Navigator.push(context, SlideRightRoute(page: UpskillDetailPage()));
+            Navigator.push(context, SlideRightRoute(page: UpskillDetailPage(repo.prodId.toString(),repo.prodName)));
           },
           highlightColor: Colors.lightBlueAccent,
           splashColor: Colors.red,

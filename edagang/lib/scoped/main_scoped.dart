@@ -1,5 +1,6 @@
 import 'package:edagang/scoped/ads_scoped.dart';
 import 'package:edagang/scoped/biz_scoped.dart';
+import 'package:edagang/scoped/fin_scoped.dart';
 import 'package:edagang/scoped/scoped_cart.dart';
 import 'package:edagang/scoped/scoped_order.dart';
 import 'package:edagang/scoped/scoped_user.dart';
@@ -8,5 +9,5 @@ import 'package:edagang/scoped/upskill_scoped.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 
-class MainScopedModel extends Model with ShopHomeScopedModel, BizAppScopedModel, UpskillScopedModel, AdvertAppScopedModel, CartScopedModel, UserScopedModel, OrderScopedModel {
+class MainScopedModel extends Model with FinAppScopedModel, ShopHomeScopedModel, BizAppScopedModel, UpskillScopedModel, AdvertAppScopedModel, CartScopedModel, UserScopedModel, OrderScopedModel {
 }

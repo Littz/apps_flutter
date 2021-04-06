@@ -1,11 +1,18 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/data/datas.dart';
+import 'package:edagang/models/ads_model.dart';
+import 'package:edagang/models/biz_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
+import 'package:edagang/screens/ads/ads_auto_detail.dart';
 import 'package:edagang/screens/ads/ads_career_detail.dart';
+import 'package:edagang/screens/ads/ads_prop_detail.dart';
+import 'package:edagang/screens/biz/biz_index.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/product_grid_card.dart';
 import 'package:edagang/widgets/webview.dart';
+import 'package:edagang/widgets/webview_bb.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -27,6 +34,7 @@ class _AdvertPageState extends State<AdvertPage> {
   BuildContext context;
   List<Menus> quick_menu = new List();
   String _logType,_photo = "";
+  var listImgUrl = new List<String>();
 
   loadPhoto() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -59,6 +67,28 @@ class _AdvertPageState extends State<AdvertPage> {
         _scrollController.offset > (200 - kToolbarHeight);
   }
 
+  goToNextPage(BuildContext context, Home_banner item) {
+    String catname = item.title ?? '';
+    String catid = item.itemId.toString();
+    String ctype = item.type.toString();
+    String vrurl = item.link_url;
+    if(ctype == "1") {
+      print('PRODUCT #############################################');
+    } else if (ctype == "2") {
+      print('CATEGORY #############################################');
+      print(catid);
+      print(catname);
+
+      //Navigator.push(context, SlideRightRoute(page: ProductListCategory(catid, catname))); https://upskillapp.e-dagang.asia/file/banner/6/bb_banner4.jpg
+    } else if (ctype == "3") {
+
+      //Navigator.push(context,SlideRightRoute(page: BizCompanyDetailPage(catid,'')));
+    } else if (ctype == "4") {
+
+      Navigator.push(context, SlideRightRoute(page: WebviewBixon(vrurl ?? '', 'https://blurbapp.e-dagang.asia/file/banner/6/bb_banner5.jpg')));
+    }
+  }
+
   @override
   void initState() {
     _scrollController = ScrollController();
@@ -66,6 +96,7 @@ class _AdvertPageState extends State<AdvertPage> {
     quick_menu = getAdsCategory();
     super.initState();
     loadPhoto();
+    listImgUrl = List();
   }
 
   @override
@@ -85,7 +116,7 @@ class _AdvertPageState extends State<AdvertPage> {
               child: Scaffold(
                 backgroundColor: Color(0xffEEEEEE),
                 body: DefaultTabController(
-                  length: 2,
+                  length: 3,
                   child: NestedScrollView(
                     headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
                       return <Widget>[
@@ -170,27 +201,46 @@ class _AdvertPageState extends State<AdvertPage> {
                                             clipper: ShapeBorderClipper(
                                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
                                             child: Container(
-                                              height: 150.0,
-                                              decoration: new BoxDecoration(
-                                                color: Colors.transparent,
-                                                borderRadius: BorderRadius.all(Radius.circular(8)),
-                                              ),
-                                              child: Swiper.children(
-                                                autoplay: false,
-                                                pagination: new SwiperPagination(
-                                                    margin: new EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 15.0),
-                                                    builder: new DotSwiperPaginationBuilder(
-                                                        color: Colors.white30,
-                                                        activeColor: Colors.redAccent.shade400,
-                                                        size: 7.0,
-                                                        activeSize: 7.0)
+                                                height: 150.0,
+                                                decoration: new BoxDecoration(
+                                                  color: Colors.transparent,
+                                                  borderRadius: BorderRadius.all(Radius.circular(8)),
                                                 ),
-                                                children: <Widget>[
-                                                  Image.asset(
-                                                    'assets/edagangblurb.png', height: 150.0,
-                                                    fit: BoxFit.fill,),
-                                                ],
-                                              ),
+                                                child: Swiper(
+                                                  autoplay: true,
+                                                  itemBuilder: (BuildContext context, int index) {
+                                                    return InkWell(
+                                                      onTap: () {
+                                                        goToNextPage(context, model.blb_banners[index]);
+                                                      },
+                                                      child: ClipRRect(
+                                                        borderRadius: new BorderRadius.circular(8.0),
+                                                        child: Center(
+                                                            child: CachedNetworkImage(
+                                                              placeholder: (context, url) => Container(
+                                                                width: 40,
+                                                                height: 40,
+                                                                color: Colors.transparent,
+                                                                child: CupertinoActivityIndicator(radius: 15,),
+                                                              ),
+                                                              imageUrl: 'https://blurbapp.e-dagang.asia' + model.blb_banners[index].imageUrl,
+                                                              fit: BoxFit.fill,
+                                                              height: 150,
+                                                              width: MediaQuery.of(context).size.width,
+                                                            )
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  itemCount: model.blb_banners.length,
+                                                  pagination: new SwiperPagination(
+                                                      builder: new DotSwiperPaginationBuilder(
+                                                        activeColor: Colors.deepOrange.shade500,
+                                                        activeSize: 7.0,
+                                                        size: 7.0,
+                                                      )
+                                                  ),
+                                                )
                                             )
                                         )
                                     )
@@ -210,14 +260,15 @@ class _AdvertPageState extends State<AdvertPage> {
                               labelColor: Color(0xff57585A),
                               unselectedLabelColor: Colors.grey,
                               labelStyle: GoogleFonts.lato(
-                                textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w700,),
+                                textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w700,),
                               ),
                               unselectedLabelStyle: GoogleFonts.lato(
-                                textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
+                                textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600,),
                               ),
                               tabs: [
                                 Tab(text: "CAREER"),
                                 Tab(text: "PROPERTY"),
+                                Tab(text: "AUTOMOBILE"),
                               ],
                             ),
                           ),
@@ -230,7 +281,8 @@ class _AdvertPageState extends State<AdvertPage> {
                       child: TabBarView(
                           children: [
                             _buildCareer(key: "key1"),
-                            AdsPropertyPage('2', 'Property'),
+                            _buildProperty(key: "key2"),
+                            _buildAuto(key: "key3"),
                           ]
                       ),
                     )
@@ -247,14 +299,14 @@ class _AdvertPageState extends State<AdvertPage> {
         builder: (context, child, model){
           return ListView.builder(
               key: PageStorageKey(key),
-              itemCount: model.jobcat.length,
+              itemCount: model.blbcareer.length,
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               padding: EdgeInsets.only(left: 2.5, top: 2.5, right: 2.5),
               itemBuilder: (BuildContext context, int index) {
-                var data = model.jobcat[index];
+                var data = model.blbcareer[index];
                 return Card(
-                    margin: EdgeInsets.all(5.0),
+                    margin: EdgeInsets.all(7.0),
                     elevation: 1.5,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
@@ -266,59 +318,325 @@ class _AdvertPageState extends State<AdvertPage> {
                             sharedPref.save("job_id", data.id.toString());
                             Navigator.push(context,SlideRightRoute(page: CareerDetailPage(data.id.toString(),data.title)));
                           },
-                          child: Column(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Expanded(
-                                    flex: 4,
-                                    child: Container(
-                                      margin: EdgeInsets.only(left: 7.0, right: 7.0, top: 8.0),
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                        data.title,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: GoogleFonts.lato(
-                                          textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w700,),
-                                        ),
-                                        maxLines: 2,
-                                      ),
+                            children: <Widget>[
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(5),
+                                child: CachedNetworkImage(
+                                  placeholder: (context, url) => Container(
+                                    width: 40,
+                                    height: 40,
+                                    color: Colors.transparent,
+                                    child: CupertinoActivityIndicator(
+                                      radius: 15,
                                     ),
                                   ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      margin: EdgeInsets.only(left: 5, right: 7.0, top: 8.0),
-                                      alignment: Alignment.topRight,
-                                      child: Icon(
-                                        CupertinoIcons.chevron_forward,
-                                        size: 18,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
-                                child: Text(
-                                  data.company,
-                                  style: GoogleFonts.lato(
-                                    textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
-                                  ),
+                                  imageUrl: 'https://blurbapp.e-dagang.asia'+data.company_logo,
+                                  fit: BoxFit.cover,
+                                  width: 70,
+                                  height: 70,
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
-                                child: Text(
-                                  data.state,
-                                  style: GoogleFonts.lato(
-                                    textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500,),
+                              Expanded(
+                                child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 0),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Expanded(
+                                              flex: 4,
+                                              child: Container(
+                                                margin: EdgeInsets.only(left: 7.0, right: 7.0, top: 0.0),
+                                                alignment: Alignment.topLeft,
+                                                child: Text(
+                                                  data.title,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: GoogleFonts.lato(
+                                                    textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w700,),
+                                                  ),
+                                                  maxLines: 2,
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 1,
+                                              child: Container(
+                                                margin: EdgeInsets.only(left: 0, right: 3.0, top: 0.0),
+                                                alignment: Alignment.topRight,
+                                                child: Icon(
+                                                  CupertinoIcons.chevron_forward,
+                                                  size: 18,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
+                                          child: Text(
+                                            data.company_name,
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
+                                          child: Text(
+                                            data.city_name + ', ' + data.state_name,
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500,),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                ),
+                              ),
+                            ],
+                          )
+
+                          /**/
+                      ),
+                    )
+                );
+              }
+          );
+        });
+  }
+
+  Widget _buildProperty({String key}) {
+    return ScopedModelDescendant<MainScopedModel>(
+        builder: (context, child, model){
+          return ListView.builder(
+              key: PageStorageKey(key),
+              itemCount: model.blbproperty.length,
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              padding: EdgeInsets.only(left: 2.5, top: 2.5, right: 2.5),
+              itemBuilder: (BuildContext context, int index) {
+                var data = model.blbproperty[index];
+                return Card(
+                    margin: EdgeInsets.all(7.0),
+                    elevation: 1.5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Container(
+                      margin: EdgeInsets.all(5.0),
+                      child: InkWell(
+                          onTap: () {
+                            Navigator.push(context,SlideRightRoute(page: PropShowcase(data.id.toString(),data.title)));
+                            //saveData();
+                            //Navigator.push(context,SlideRightRoute(page: CareerDetailPage(data.id.toString(),data.title)));
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(5),
+                                child: CachedNetworkImage(
+                                  placeholder: (context, url) => Container(
+                                    width: 40,
+                                    height: 40,
+                                    color: Colors.transparent,
+                                    child: CupertinoActivityIndicator(
+                                      radius: 15,
+                                    ),
                                   ),
+                                  imageUrl: 'https://blurbapp.e-dagang.asia'+data.images[0].file_path,
+                                  fit: BoxFit.cover,
+                                  width: 70,
+                                  height: 70,
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 0),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Expanded(
+                                              flex: 4,
+                                              child: Container(
+                                                margin: EdgeInsets.only(left: 7.0, right: 7.0, top: 0.0),
+                                                alignment: Alignment.topLeft,
+                                                child: Text(
+                                                  data.title,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: GoogleFonts.lato(
+                                                    textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w700,),
+                                                  ),
+                                                  maxLines: 2,
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 1,
+                                              child: Container(
+                                                margin: EdgeInsets.only(left: 0, right: 3.0, top: 0.0),
+                                                alignment: Alignment.topRight,
+                                                child: Icon(
+                                                  CupertinoIcons.chevron_forward,
+                                                  size: 18,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
+                                          child: Text(
+                                            data.company_name,
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
+                                          child: Text(
+                                            data.price,
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600,),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                ),
+                              ),
+                            ],
+                          )
+                      ),
+                    )
+                );
+              }
+          );
+        });
+  }
+
+  Widget _buildAuto({String key}) {
+    return ScopedModelDescendant<MainScopedModel>(
+        builder: (context, child, model){
+          return ListView.builder(
+              key: PageStorageKey(key),
+              itemCount: model.blbautomobile.length,
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              padding: EdgeInsets.only(left: 2.5, top: 2.5, right: 2.5),
+              itemBuilder: (BuildContext context, int index) {
+                var data = model.blbautomobile[index];
+                listImgUrl.add(data.images.toString());
+                return Card(
+                    margin: EdgeInsets.all(5.0),
+                    elevation: 1.5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Container(
+                      margin: EdgeInsets.all(7.0),
+                      child: InkWell(
+                          onTap: () {
+                            //saveData();
+                            Navigator.push(context,SlideRightRoute(page: AutoShowcase(data.id.toString(),data.title)));
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(5),
+                                child: CachedNetworkImage(
+                                  placeholder: (context, url) => Container(
+                                    width: 40,
+                                    height: 40,
+                                    color: Colors.transparent,
+                                    child: CupertinoActivityIndicator(
+                                      radius: 15,
+                                    ),
+                                  ),
+                                  imageUrl: 'https://blurbapp.e-dagang.asia'+data.images[0].file_path,
+                                  fit: BoxFit.cover,
+                                  width: 70,
+                                  height: 70,
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 0),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Expanded(
+                                            flex: 4,
+                                            child: Container(
+                                              margin: EdgeInsets.only(left: 7.0, right: 7.0, top: 0.0),
+                                              alignment: Alignment.topLeft,
+                                              child: Text(
+                                                data.title,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: GoogleFonts.lato(
+                                                  textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w700,),
+                                                ),
+                                                maxLines: 2,
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 1,
+                                            child: Container(
+                                              margin: EdgeInsets.only(left: 0, right: 3.0, top: 0.0),
+                                              alignment: Alignment.topRight,
+                                              child: Icon(
+                                                CupertinoIcons.chevron_forward,
+                                                size: 18,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 0.0),
+                                        child: Text(
+                                          data.location,
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
+                                        child: Text(
+                                          data.price+'\n('+data.year+')',
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500,),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )
                                 ),
                               ),
                             ],

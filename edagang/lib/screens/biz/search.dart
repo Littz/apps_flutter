@@ -138,7 +138,9 @@ class _SearchState extends State<SearchList> {
       return CenterTitle(_error);
     } else if (_searchQuery.text.isEmpty) {
       return CenterTitle('');
-    } else if (_results.length > 0) {
+    } else if (_results.length == 0) {
+      return CenterTitle('No result found.');
+    } else {
       return ListView.builder(
           padding: EdgeInsets.symmetric(vertical: 5.0),
           itemCount: _results.length,
@@ -146,8 +148,6 @@ class _SearchState extends State<SearchList> {
             return SmartbizItem(_results[index]);
           }
       );
-    } else {
-      return CenterTitle('No result found.');
     }
   }
 
@@ -210,35 +210,123 @@ class SmartbizItem extends StatelessWidget {
     return Card(
       child: InkWell(
           onTap: () {
-            sharedPref.save("biz_id", repo.bizId.toString());
-            Navigator.push(context, SlideRightRoute(page: BizCompanyDetailPage(repo.bizId.toString(),repo.company)));
+            sharedPref.save("biz_id", repo.prodId.toString());
+            Navigator.push(context, SlideRightRoute(page: BizCompanyDetailPage(repo.prodId.toString(),repo.companyName)));
           },
           highlightColor: Colors.lightBlueAccent,
           splashColor: Colors.red,
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text((repo.company != null) ? repo.company : '-',
-                      style: GoogleFonts.lato(
-                        textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w700,),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: CachedNetworkImage(
+                    placeholder: (context, url) => Container(
+                      width: 40,
+                      height: 40,
+                      color: Colors.transparent,
+                      child: CupertinoActivityIndicator(
+                        radius: 15,
                       ),
+                    ),
+                    imageUrl: 'http://bizapp.e-dagang.asia'+repo.imgLogo,
+                    fit: BoxFit.scaleDown,
+                    width: 60,
+                    //height: 76,
                   ),
-                  Text((repo.prodName != null) ? repo.prodName : '-',
-                      style: GoogleFonts.lato(
-                        textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w600,),
-                      ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text((repo.companyName != null) ? repo.companyName ?? '' : '-',
+                          style: GoogleFonts.lato(
+                            textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w700,),
+                          ),
+                        ),
+                        Text((repo.website != null) ? repo.website ?? '' : '-',
+                          style: GoogleFonts.lato(
+                            textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w500,),
+                          ),
+                        ),
+                        const Padding(padding: EdgeInsets.only(top: 8)),
+                      ],
+                    ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 4.0),
-                    child: repo.prodDesc != null
-                        ? htmlText(repo.prodDesc)
-                        : Text('No desription'),
-                  ),
-                ]),
-          )),
+                ),
+              ],
+            ),
+          )
+      ),
     );
+    /*return Card(
+      child: InkWell(
+          onTap: () {
+            sharedPref.save("biz_id", repo.prodId.toString());
+            Navigator.push(context, SlideRightRoute(page: BizCompanyDetailPage(repo.prodId.toString(),repo.companyName)));
+          },
+          highlightColor: Colors.lightBlueAccent,
+          splashColor: Colors.red,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  alignment: Alignment.topCenter,
+                  width: 65,
+                  //height: 65,
+                  padding: const EdgeInsets.all(2.5),
+                  child: CachedNetworkImage(
+                    placeholder: (context, url) => Container(
+                      width: 40,
+                      height: 40,
+                      color: Colors.transparent,
+                      child: CupertinoActivityIndicator(radius: 15,),
+                    ),
+                    imageUrl: 'http://bizapp.e-dagang.asia'+repo.imgLogo ?? '',
+                    fit: BoxFit.cover,
+                    width: 60,
+                    //height: 56,
+                  ),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(5))),
+                ),
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(2.5),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text((repo.companyName != null) ? repo.companyName ?? '' : '-',
+                          style: GoogleFonts.lato(
+                            textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w700,),
+                          ),
+                        ),
+                        Text((repo.website != null) ? repo.website ?? '' : '-',
+                          style: GoogleFonts.lato(
+                            textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w500,),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  //flex: 100,
+                )
+              ],
+            ),
+
+
+          )),
+    );*/
   }
 
 }
@@ -248,7 +336,7 @@ class Api {
   static final String _url = "bizapp.e-dagang.asia";
 
   static Future<List<Repo>> getRepositoriesWithSearchQuery(String query) async {
-    final uri = Uri.https(_url, '/api/product/search', {
+    final uri = Uri.https(_url, '/api/biz/search', {
       'search_text': query,
     });
 
@@ -259,11 +347,11 @@ class Api {
     if (jsonResponse['errors'] != null) {
       return null;
     }
-    if (jsonResponse['data']['product'] == null) {
+    if (jsonResponse['data']['businesses'] == null) {
       return List();
     }
 
-    return Repo.mapJSONStringToList(jsonResponse['data']['product']);
+    return Repo.mapJSONStringToList(jsonResponse['data']['businesses']);
   }
 
   static Future<Map<String, dynamic>> _getJson(Uri uri) async {

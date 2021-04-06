@@ -96,6 +96,7 @@ Future fetchHomePageResponse() async {
       type: dataBaner['type'],
       itemId: dataBaner['item_id'],
       remark: dataBaner['remark'],
+      link_url: dataBaner['link_url'],
     );
     addToBannerList(_baner);
   });

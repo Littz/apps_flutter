@@ -30,7 +30,6 @@ class _NotificationPageState extends State<NotificationPage> {
           },
               child: Scaffold(
                 key: _scaffoldKey,
-                resizeToAvoidBottomPadding: false,
                 resizeToAvoidBottomInset: false,
                 appBar: AppBar(
                   backgroundColor: Colors.white,

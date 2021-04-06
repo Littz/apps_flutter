@@ -1,11 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/data/datas.dart';
+import 'package:edagang/models/biz_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
+import 'package:edagang/screens/biz/biz_index.dart';
 import 'package:edagang/screens/upskill/search.dart';
 import 'package:edagang/screens/upskill/skill_detail.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
+import 'package:edagang/widgets/webview_bb.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -57,6 +60,28 @@ class _UpskillPageState extends State<UpskillPage> {
   bool get isShrink {
     return _scrollController.hasClients &&
         _scrollController.offset > (200 - kToolbarHeight);
+  }
+
+  goToNextPage(BuildContext context, Home_banner item) {
+    String catname = item.title ?? '';
+    String catid = item.itemId.toString();
+    String ctype = item.type.toString();
+    String vrurl = item.link_url;
+    if(ctype == "1") {
+      print('PRODUCT #############################################');
+    } else if (ctype == "2") {
+      print('CATEGORY #############################################');
+      print(catid);
+      print(catname);
+
+      //Navigator.push(context, SlideRightRoute(page: ProductListCategory(catid, catname)));
+    } else if (ctype == "3") {
+
+      //Navigator.push(context,SlideRightRoute(page: BizCompanyDetailPage(catid,'')));
+    } else if (ctype == "4") {
+
+      Navigator.push(context, SlideRightRoute(page: WebviewBixon(vrurl ?? '', 'https://upskillapp.e-dagang.asia/file/banner/6/bb_banner4.jpg')));
+    }
   }
 
   @override
@@ -187,6 +212,7 @@ class _UpskillPageState extends State<UpskillPage> {
                                             itemBuilder: (BuildContext context, int index) {
                                               return InkWell(
                                                 onTap: () {
+                                                  goToNextPage(context, model.gbanners[index]);
                                                 },
                                                 child: ClipRRect(
                                                   borderRadius: new BorderRadius.circular(8.0),
@@ -235,10 +261,10 @@ class _UpskillPageState extends State<UpskillPage> {
                         labelColor: Color(0xff930894),
                         unselectedLabelColor: Colors.grey,
                         labelStyle: GoogleFonts.lato(
-                          textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w700,),
+                          textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w700,),
                         ),
                         unselectedLabelStyle: GoogleFonts.lato(
-                          textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
+                          textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600,),
                         ),
                         tabs: [
                           Tab(text: "PROFESSIONAL"),
@@ -294,7 +320,7 @@ class _UpskillPageState extends State<UpskillPage> {
                     onTap: () {
                       sharedPref.save("skil_id", data.id.toString());
                       Navigator.push(
-                          context, SlideRightRoute(page: UpskillDetailPage()));
+                          context, SlideRightRoute(page: UpskillDetailPage(data.id.toString(),data.title)));
                     },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -395,7 +421,7 @@ class _UpskillPageState extends State<UpskillPage> {
                     child: InkWell(
                         onTap: () {
                           sharedPref.save("skil_id", data.id.toString());
-                          Navigator.push(context, SlideRightRoute(page: UpskillDetailPage()));
+                          Navigator.push(context, SlideRightRoute(page: UpskillDetailPage(data.id.toString(),data.title)));
                         },
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -489,7 +515,7 @@ class _UpskillPageState extends State<UpskillPage> {
                     child: InkWell(
                         onTap: () {
                           sharedPref.save("skil_id", data.id.toString());
-                          Navigator.push(context, SlideRightRoute(page: UpskillDetailPage()));
+                          Navigator.push(context, SlideRightRoute(page: UpskillDetailPage(data.id.toString(),data.title)));
                         },
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -583,7 +609,7 @@ class _UpskillPageState extends State<UpskillPage> {
                     child: InkWell(
                         onTap: () {
                           sharedPref.save("skil_id", data.id.toString());
-                          Navigator.push(context, SlideRightRoute(page: UpskillDetailPage()));
+                          Navigator.push(context, SlideRightRoute(page: UpskillDetailPage(data.id.toString(),data.title)));
                         },
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,

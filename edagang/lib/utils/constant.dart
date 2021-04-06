@@ -37,8 +37,7 @@ class Constants{
   static String getState = shopAPI+"/lookup/state";
   static String getCity = shopAPI+"/lookup/city/";
 
-
-  static const androidUserAgent = 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Mobile Safari/537.36';
+  static const kAndroidUserAgent = 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Mobile Safari/537.36';
 
   static const double padding =10;
   static const double avatarRadius =15;

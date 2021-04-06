@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/data/datas.dart';
 import 'package:edagang/models/shop_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
+import 'package:edagang/screens/biz/biz_index.dart';
 import 'package:edagang/screens/shop/cart_history.dart';
 import 'package:edagang/screens/shop/cart_review.dart';
 import 'package:edagang/screens/shop/more_popular.dart';
@@ -21,6 +22,7 @@ import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/product_grid_card.dart';
 import 'package:edagang/widgets/searchbar.dart';
 import 'package:edagang/widgets/webview.dart';
+import 'package:edagang/widgets/webview_bb.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -71,6 +73,7 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
     String catname = item.title ?? '';
     String catid = item.itemId.toString();
     String ctype = item.type.toString();
+    String vrurl = item.link_url;
     if(ctype == "1") {
       sharedPref.save("prd_id", catid);
       sharedPref.save("prd_title", catname);
@@ -83,7 +86,11 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
 
       Navigator.push(context, SlideRightRoute(page: ProductListCategory(catid, catname)));
     } else if (ctype == "3") {
+
       Navigator.push(context, SlideRightRoute(page: ProductListMerchant(catid,catname)));
+    } else if (ctype == "4") {
+
+      Navigator.push(context, SlideRightRoute(page: WebviewBixon(vrurl ?? '', 'https://shopapp.e-dagang.asia/general/file/banner/23/bb_banner2.jpg')));
     }
   }
 

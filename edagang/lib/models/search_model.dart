@@ -22,22 +22,20 @@ class Search {
 
 class Repo {
   final int prodId;
-  final int bizId;
-  final String prodName;
-  final String prodDesc;
-  final String company;
+  final String companyName;
+  final String overview;
+  final String website;
   final String imgLogo;
 
-  Repo(this.prodId, this.bizId, this.prodName, this.prodDesc, this.company, this.imgLogo);
+  Repo(this.prodId, this.companyName, this.overview, this.website, this.imgLogo);
 
   static List<Repo> mapJSONStringToList(List<dynamic> jsonList) {
     return jsonList.map((r) =>Repo(
         r['id'],
-        r['business_id'],
-        r['product_name'],
-        r['product_desc'],
-        r['business']['company_name'],
-        r['images']['file_path'])
+        r['company_name'].toString(),
+        r['overview'],
+        r['website'].toString(),
+        r['logo'])
     ).toList();
   }
 }

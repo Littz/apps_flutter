@@ -4,8 +4,9 @@ class Home_banner {
   String title;
   int type;
   int itemId;
+  String link_url;
 
-  Home_banner({this.imageUrl, this.title, this.type, this.itemId});
+  Home_banner({this.imageUrl, this.title, this.type, this.itemId, this.link_url});
 }
 
 class Home_category {
@@ -18,6 +19,7 @@ class Home_category {
 
 class Home_business {
   int id;
+  int ref_type;
   String company_name;
   String overview;
   String address;
@@ -26,12 +28,14 @@ class Home_business {
   String email;
   String website;
   String logo;
+  String company_licno;
   List<Product> product;
   List<Award> award;
   List<Cert> cert;
 
   Home_business({
     this.id,
+    this.ref_type,
     this.company_name,
     this.overview,
     this.address,
@@ -40,6 +44,7 @@ class Home_business {
     this.email,
     this.website,
     this.logo,
+    this.company_licno,
     this.product,
     this.award,
     this.cert,
@@ -117,6 +122,7 @@ class Product {
   final String product_desc;
   final String company_name;
   final String file_path;
+  final String overview;
 
   Product({
     this.id,
@@ -124,7 +130,8 @@ class Product {
     this.product_name,
     this.product_desc,
     this.company_name,
-    this.file_path
+    this.file_path,
+    this.overview,
   });
 }
 
