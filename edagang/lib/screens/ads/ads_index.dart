@@ -68,6 +68,7 @@ class _AdvertPageState extends State<AdvertPage> {
   }
 
   goToNextPage(BuildContext context, Home_banner item) {
+    String imgurl = 'https://blurbapp.e-dagang.asia'+item.imageUrl;
     String catname = item.title ?? '';
     String catid = item.itemId.toString();
     String ctype = item.type.toString();
@@ -85,7 +86,7 @@ class _AdvertPageState extends State<AdvertPage> {
       //Navigator.push(context,SlideRightRoute(page: BizCompanyDetailPage(catid,'')));
     } else if (ctype == "4") {
 
-      Navigator.push(context, SlideRightRoute(page: WebviewBixon(vrurl ?? '', 'https://blurbapp.e-dagang.asia/file/banner/6/bb_banner5.jpg')));
+      Navigator.push(context, SlideRightRoute(page: WebviewBixon(vrurl ?? '', imgurl ?? '')));
     }
   }
 
@@ -306,7 +307,7 @@ class _AdvertPageState extends State<AdvertPage> {
               itemBuilder: (BuildContext context, int index) {
                 var data = model.blbcareer[index];
                 return Card(
-                    margin: EdgeInsets.all(7.0),
+                    margin: EdgeInsets.all(4.0),
                     elevation: 1.5,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
@@ -368,7 +369,7 @@ class _AdvertPageState extends State<AdvertPage> {
                                             Expanded(
                                               flex: 1,
                                               child: Container(
-                                                margin: EdgeInsets.only(left: 0, right: 3.0, top: 0.0),
+                                                margin: EdgeInsets.only(left: 0, right: 0.0, top: 0.0),
                                                 alignment: Alignment.topRight,
                                                 child: Icon(
                                                   CupertinoIcons.chevron_forward,
@@ -425,7 +426,7 @@ class _AdvertPageState extends State<AdvertPage> {
               itemBuilder: (BuildContext context, int index) {
                 var data = model.blbproperty[index];
                 return Card(
-                    margin: EdgeInsets.all(7.0),
+                    margin: EdgeInsets.all(4.0),
                     elevation: 1.5,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
@@ -488,7 +489,7 @@ class _AdvertPageState extends State<AdvertPage> {
                                             Expanded(
                                               flex: 1,
                                               child: Container(
-                                                margin: EdgeInsets.only(left: 0, right: 3.0, top: 0.0),
+                                                margin: EdgeInsets.only(left: 0, right: 0.0, top: 0.0),
                                                 alignment: Alignment.topRight,
                                                 child: Icon(
                                                   CupertinoIcons.chevron_forward,
@@ -544,13 +545,13 @@ class _AdvertPageState extends State<AdvertPage> {
                 var data = model.blbautomobile[index];
                 listImgUrl.add(data.images.toString());
                 return Card(
-                    margin: EdgeInsets.all(5.0),
+                    margin: EdgeInsets.all(4.0),
                     elevation: 1.5,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                     child: Container(
-                      margin: EdgeInsets.all(7.0),
+                      margin: EdgeInsets.all(5.0),
                       child: InkWell(
                           onTap: () {
                             //saveData();
@@ -606,7 +607,7 @@ class _AdvertPageState extends State<AdvertPage> {
                                           Expanded(
                                             flex: 1,
                                             child: Container(
-                                              margin: EdgeInsets.only(left: 0, right: 3.0, top: 0.0),
+                                              margin: EdgeInsets.only(left: 0, right: 0.0, top: 0.0),
                                               alignment: Alignment.topRight,
                                               child: Icon(
                                                 CupertinoIcons.chevron_forward,

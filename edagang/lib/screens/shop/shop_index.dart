@@ -70,6 +70,7 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
   }
 
   goToDetailsPage(BuildContext context, Banner_ item) {
+    String imgurl = 'https://shopapp.e-dagang.asia'+item.imageUrl;
     String catname = item.title ?? '';
     String catid = item.itemId.toString();
     String ctype = item.type.toString();
@@ -90,7 +91,7 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
       Navigator.push(context, SlideRightRoute(page: ProductListMerchant(catid,catname)));
     } else if (ctype == "4") {
 
-      Navigator.push(context, SlideRightRoute(page: WebviewBixon(vrurl ?? '', 'https://shopapp.e-dagang.asia/general/file/banner/23/bb_banner2.jpg')));
+      Navigator.push(context, SlideRightRoute(page: WebviewBixon(vrurl ?? '', imgurl ?? '')));
     }
   }
 

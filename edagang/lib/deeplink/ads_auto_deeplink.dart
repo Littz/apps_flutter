@@ -5,9 +5,11 @@ import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/widgets/SABTitle.dart';
 import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
+import 'package:edagang/widgets/photo_viewer.dart';
 import 'package:edagang/widgets/webview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -164,27 +166,27 @@ class _AutoDlShowcasePageState extends State<AutoDlShowcase> with TickerProvider
               pinned: true,
               expandedHeight: xpandedHeight,
               leading: Hero(
-                tag: "back",
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pushReplacement(context, SlideRightRoute(page: NewHomePage(4)));
-                  },
-                  splashColor: Color(0xffA0CCE8),
-                  highlightColor: Color(0xffA0CCE8),
-                  child: BlurIconLight(
-                    icon: Icon(
-                      Icons.arrow_back,
-                      color: Color(0xff084B8C),
+                  tag: "back",
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pushReplacement(context, SlideRightRoute(page: NewHomePage(4)));
+                    },
+                    splashColor: Color(0xffA0CCE8),
+                    highlightColor: Color(0xffA0CCE8),
+                    child: BlurIconLight(
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: Color(0xff084B8C),
+                      ),
                     ),
-                  ),
-                )
+                  )
               ),
-              title: SABT(
+              title: SABTs(
                 child: Container(
                     child: Text(atitle ?? '',
                       style: GoogleFonts.lato(
                         textStyle: TextStyle(
-                          fontSize: 15, color: Color(0xff084B8C)),
+                            fontSize: 15, color: Color(0xff084B8C)),
                       ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
@@ -233,13 +235,12 @@ class _AutoDlShowcasePageState extends State<AutoDlShowcase> with TickerProvider
                             ),
                           ),
                         ),
-
-                        _propertyDescription(),
-
                         Container(
-                          padding: EdgeInsets.only(top: 1),
+                          padding: EdgeInsets.only(top: 1, bottom: 5),
                           child: _reqBtn(),
                         ),
+                        _propertyDescription(),
+
                       ],
                     ),
                   ),
@@ -327,7 +328,7 @@ class _AutoDlShowcasePageState extends State<AutoDlShowcase> with TickerProvider
                       (image) {
                     return GestureDetector(
                       onTap:  () {
-                        Navigator.push(context, SlideRightRoute(page: PhotoViewPage(imej: image.file_path,)));
+                        Navigator.push(context, SlideRightRoute(page: PhotoViewer(imej: image.file_path,)));
                       },
                       child: Hero(
                         tag: "Cartsini",
@@ -478,14 +479,41 @@ class _AutoDlShowcasePageState extends State<AutoDlShowcase> with TickerProvider
           mainAxisSize: MainAxisSize.max,
           children: [
             Expanded(
-              child: Text('',
-                style: GoogleFonts.lato(
-                  textStyle: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 17,
-                    color: color,
-                  ),
-                ),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    InkWell(
+                      onTap: () async {
+                        await FlutterShare.share(
+                          title: 'Blurb',
+                          text: '',
+                          linkUrl: 'https://blurbapp.e-dagang.asia/auto/'+_aid.toString(),
+                          chooserTitle: atitle ?? '',
+                        );
+                      },
+                      splashColor: Color(0xffA0CCE8),
+                      highlightColor: Color(0xffA0CCE8),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.share, color: color),
+                          Container(
+                            margin: const EdgeInsets.only(top: 2),
+                            child: Text('SHARE',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: color,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ]
               ),
             ),
             RaisedButton(
@@ -498,8 +526,8 @@ class _AutoDlShowcasePageState extends State<AutoDlShowcase> with TickerProvider
                 ),
               ),
               onPressed: () {
-                //model.isAuthenticated ? Navigator.push(context, SlideRightRoute(
-                //page: WebviewWidget('https://blurb.e-dagang.asia/wv/job/apply/'+model.getId().toString()+'/'+_id.toString(), title))) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
+                model.isAuthenticated ? Navigator.push(context, SlideRightRoute(
+                    page: WebviewWidget('https://blurb.e-dagang.asia/wv/reqform_auto/'+model.getId().toString()+'/'+_aid.toString(), atitle))) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
               },
             ),
           ],
@@ -542,88 +570,3 @@ class _AutoDlShowcasePageState extends State<AutoDlShowcase> with TickerProvider
 
 }
 
-class SABT extends StatefulWidget {
-  final Widget child;
-  const SABT({
-    Key key,
-    @required this.child,
-  }) : super(key: key);
-  @override
-  _SABTState createState() {
-    return new _SABTState();
-  }
-}
-
-class _SABTState extends State<SABT> {
-  ScrollPosition _position;
-  bool _visible;
-  @override
-  void dispose() {
-    _removeListener();
-    super.dispose();
-  }
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _removeListener();
-    _addListener();
-  }
-  void _addListener() {
-    _position = Scrollable.of(context)?.position;
-    _position?.addListener(_positionListener);
-    _positionListener();
-  }
-  void _removeListener() {
-    _position?.removeListener(_positionListener);
-  }
-  void _positionListener() {
-    final FlexibleSpaceBarSettings settings =
-    context.dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>();
-    bool visible = settings == null || settings.currentExtent <= settings.minExtent;
-    if (_visible != visible) {
-      setState(() {
-        _visible = visible;
-      });
-    }
-  }
-  @override
-  Widget build(BuildContext context) {
-    return Visibility(
-      visible: _visible,
-      child: widget.child,
-    );
-  }
-}
-
-class PhotoViewPage extends StatelessWidget {
-  final String imej;
-  PhotoViewPage({this.imej});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        iconTheme: IconThemeData(
-          color: Colors.white,
-        ),
-        backgroundColor: Colors.black.withAlpha(240),
-      ),
-      backgroundColor: Colors.black.withAlpha(240),
-      body: PhotoView(
-        imageProvider: NetworkImage(imej),
-        minScale: PhotoViewComputedScale.contained * 0.8,
-        maxScale: PhotoViewComputedScale.covered * 2,
-        enableRotation: false,
-        backgroundDecoration: BoxDecoration(
-          color: Colors.black.withAlpha(240),
-        ),
-        loadingChild: Center(
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.deepOrange),
-          ),
-        ),
-      ),
-    );
-  }
-}

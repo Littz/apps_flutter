@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/models/upskill_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/widgets/SABTitle.dart';
 import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
@@ -79,10 +81,10 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
                   new CourseSchedule(
                     id: schedule['id'],
                     course_id: schedule['course_id'],
-                    date_start: schedule['date_start'] != null ? schedule['date_start'] : '',
-                    date_end: schedule['date_end'] != null ? schedule['date_end'] : '',
-                    time_start: schedule['time_start'] != null ? schedule['time_start'] : '',
-                    time_end: schedule['time_end'] != null ? schedule['time_end'] : '',
+                    date_start: schedule['date_start'] != null ? schedule['date_start'] : '0000-00-00',
+                    date_end: schedule['date_end'] != null ? schedule['date_end'] : '0000-00-00',
+                    time_start: schedule['time_start'] != null ? schedule['time_start'] : '00:00:00',
+                    time_end: schedule['time_end'] != null ? schedule['time_end'] : '00:00:00',
                   )
               );
             });
@@ -169,7 +171,7 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
                   ),
                 )
             ),
-            title: SABT(
+            title: SABTs(
               child: Container(
                   child: Text(title ?? '',
                     style: GoogleFonts.lato(
@@ -211,10 +213,11 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(50),
-                              child: FadeInImage.assetNetwork(
-                                placeholder: logo ?? "",
-                                image: logo ?? "",
+                              child: CachedNetworkImage(
+                                imageUrl: logo ?? "",
                                 fit: BoxFit.cover,
+                                placeholder: (context, url) => CircularProgressIndicator(),
+                                errorWidget: (context, url, error) => Icon(Icons.error_outline),
                               ),
                             ),
                           ),
@@ -267,7 +270,7 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
                                 ),
                             ),
 
-                            _scheduleList(),
+                            //_scheduleList(),
 
                             _reqBtn(),
 
@@ -291,22 +294,28 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
                           0: Text('Overview', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),),
                           1: Text('Modules', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),),
                           2: Text('Attendees', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),),
+                          3: Text('Schedules', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),),
                         },
                         onValueChanged: (value) {
                           if (value == 0) {
                             currentTab = Padding(
-                              padding: EdgeInsets.only(left: 13, top: 10, right: 13),
+                              padding: EdgeInsets.only(left: 10, top: 0, right: 10),
                               child: htmlText(overview),
                             );
                           } else if(value == 1) {
                             currentTab = Padding(
-                              padding: EdgeInsets.only(left: 13, top: 10, right: 13),
+                              padding: EdgeInsets.only(left: 10, top: 0, right: 10),
                               child: htmlText(key_modules),
+                            );
+                          } else if(value == 2) {
+                            currentTab = Padding(
+                              padding: EdgeInsets.only(left: 10, top: 0, right: 10),
+                              child: htmlText(attendees),
                             );
                           } else {
                             currentTab = Padding(
-                              padding: EdgeInsets.only(left: 13, top: 10, right: 13),
-                              child: htmlText(attendees),
+                              padding: EdgeInsets.only(left: 10, top: 0, right: 10),
+                              child: _scheduleList(),
                             );
                           }
                           setState(() {
@@ -316,7 +325,7 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
                       ),
                       currentTab ??
                           Padding(
-                            padding: EdgeInsets.only(left: 13, top: 10, right: 13),
+                            padding: EdgeInsets.only(left: 10, top: 0, right: 10),
                             child: htmlText(overview),
                           )
                     ],
@@ -352,16 +361,17 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
         padding: const EdgeInsets.only(top: 5.0),
         child: new SingleChildScrollView(
             child: Column(
-                children: <Widget>[
-                  ListView.builder(
-                    /*separatorBuilder: (context, index) => Divider(
-                      color: Colors.grey,
-                    ),*/
+              children: <Widget>[
+                MediaQuery.removePadding(
+                context: context,
+                removeTop: true,
+                child: ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: schedule.length,
                     itemBuilder: (context, index) {
                       var data = schedule[index];
+
                       var d1 = data.date_start.split("-");
                       String dd = d1[2];
                       String mm = d1[1];
@@ -374,10 +384,10 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
                       String yy2 = d2[0];
                       var dte2 = dd2+'/'+mm2+'/'+yy2;
 
-                      if(data.time_start == ''){
+                      if(data.time_start == '00:00:00'){
                         return Container(
                           padding: EdgeInsets.only(bottom: 2),
-                          child: Text(dte1 + ' to ' + dte2,
+                          child: Text(dte2 == '00/00/0000' ? dte1 : dte1 + ' to ' + dte2,
                             style: GoogleFonts.lato(
                               textStyle: TextStyle(
                                 fontSize: 13, fontWeight: FontWeight.w500,),
@@ -391,7 +401,7 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
                           children: <Widget>[
                             Container(
                               padding: EdgeInsets.only(bottom: 2),
-                              child: Text(dte1 + ' to ' + dte2,
+                              child: Text(dte2 == '00/00/0000' ? dte1 : dte1 + ' to ' + dte2,
                                 style: GoogleFonts.lato(
                                   textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500,),
                                 ),
@@ -400,7 +410,7 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
 
                             Container(
                               child: Text(
-                                data.time_start + ' to ' + data.time_end,
+                                data.time_start.substring(0,5) + ' to ' + data.time_end.substring(0,5),
                                 style: GoogleFonts.lato(
                                   textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500,),
                                 ),
@@ -411,7 +421,8 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
                         );
                       }
                     },
-                  )
+                    )
+                )
                 ]
             )
         ),
@@ -525,55 +536,3 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
   }
 }
 
-class SABT extends StatefulWidget {
-  final Widget child;
-  const SABT({
-    Key key,
-    @required this.child,
-  }) : super(key: key);
-  @override
-  _SABTState createState() {
-    return new _SABTState();
-  }
-}
-
-class _SABTState extends State<SABT> {
-  ScrollPosition _position;
-  bool _visible;
-  @override
-  void dispose() {
-    _removeListener();
-    super.dispose();
-  }
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _removeListener();
-    _addListener();
-  }
-  void _addListener() {
-    _position = Scrollable.of(context)?.position;
-    _position?.addListener(_positionListener);
-    _positionListener();
-  }
-  void _removeListener() {
-    _position?.removeListener(_positionListener);
-  }
-  void _positionListener() {
-    final FlexibleSpaceBarSettings settings =
-    context.dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>();
-    bool visible = settings == null || settings.currentExtent <= settings.minExtent;
-    if (_visible != visible) {
-      setState(() {
-        _visible = visible;
-      });
-    }
-  }
-  @override
-  Widget build(BuildContext context) {
-    return Visibility(
-      visible: _visible,
-      child: widget.child,
-    );
-  }
-}

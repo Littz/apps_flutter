@@ -1,18 +1,22 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/main.dart';
 import 'package:edagang/models/biz_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/custom_dialog.dart';
+import 'package:edagang/widgets/SABTitle.dart';
 import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
+import 'package:edagang/widgets/photo_viewer.dart';
 import 'package:edagang/widgets/webview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_gifs/loading_gifs.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
@@ -83,16 +87,16 @@ class _FintoolDlPageState extends State<FintoolDlPage> with TickerProviderStateM
             });
 
             List<Award> _award = [];
-            /*resBody['data']['business']['award'].forEach((awad) {
+            resBody['data']['business']['award'].forEach((awad) {
               _award.add(
                   new Award(
                     id: awad['id'],
                     business_id: awad['business_id'],
                     award_desc: awad['award_desc'],
-                    filename: 'https://bizapp.e-dagang.asia'+awad['filename'],
+                    filename: awad['filename'] == null ? 'null' : 'https://finapp.e-dagang.asia'+awad['filename'],
                   )
               );
-            });*/
+            });
 
             var data = Home_business(
               id: resBody['data']['business']['id'],
@@ -188,7 +192,7 @@ class _FintoolDlPageState extends State<FintoolDlPage> with TickerProviderStateM
                     ),
                   )
               ),
-              title: SABT(
+              title: SABTs(
                 child: Container(
                     child: Text(company_name ?? '',
                       style: GoogleFonts.lato(
@@ -230,10 +234,11 @@ class _FintoolDlPageState extends State<FintoolDlPage> with TickerProviderStateM
                               ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(50),
-                                child: FadeInImage.assetNetwork(
-                                  placeholder: _logo ?? "",
-                                  image: _logo ?? "",
+                                child: CachedNetworkImage(
+                                  imageUrl: _logo ?? "",
                                   fit: BoxFit.cover,
+                                  placeholder: (context, url) => CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) => Icon(Icons.error_outline),
                                 ),
                               ),
                             ),
@@ -731,10 +736,19 @@ class _FintoolDlPageState extends State<FintoolDlPage> with TickerProviderStateM
                             flex: 1,
                             child: Container(
                               height: 60,
-                              child: FadeInImage.assetNetwork(
-                                placeholder: cupertinoActivityIndicatorSmall,
-                                image: data.filename ?? '',
-                                fit: BoxFit.cover,
+                              child: data.filename == 'null' ? Image.asset('assets/icons/ic_launcher_new.png', height: 28, width: 28, fit: BoxFit.cover,) : GestureDetector(
+                                onTap: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) => PhotoViewer(imej: data.filename,),)
+                                  );
+                                },
+                                child: CachedNetworkImage(
+                                  imageUrl: data.filename ?? "",
+                                  fit: BoxFit.cover,
+                                  //placeholder: (context, url) => CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) => Icon(Icons.error_outline),
+                                ),
+
                               ),
                             ),
                           ),
@@ -753,57 +767,4 @@ class _FintoolDlPageState extends State<FintoolDlPage> with TickerProviderStateM
     }
   }
 
-}
-
-class SABT extends StatefulWidget {
-  final Widget child;
-  const SABT({
-    Key key,
-    @required this.child,
-  }) : super(key: key);
-  @override
-  _SABTState createState() {
-    return new _SABTState();
-  }
-}
-
-class _SABTState extends State<SABT> {
-  ScrollPosition _position;
-  bool _visible;
-  @override
-  void dispose() {
-    _removeListener();
-    super.dispose();
-  }
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _removeListener();
-    _addListener();
-  }
-  void _addListener() {
-    _position = Scrollable.of(context)?.position;
-    _position?.addListener(_positionListener);
-    _positionListener();
-  }
-  void _removeListener() {
-    _position?.removeListener(_positionListener);
-  }
-  void _positionListener() {
-    final FlexibleSpaceBarSettings settings =
-    context.dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>();
-    bool visible = settings == null || settings.currentExtent <= settings.minExtent;
-    if (_visible != visible) {
-      setState(() {
-        _visible = visible;
-      });
-    }
-  }
-  @override
-  Widget build(BuildContext context) {
-    return Visibility(
-      visible: _visible,
-      child: widget.child,
-    );
-  }
 }

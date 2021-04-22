@@ -218,6 +218,8 @@ class BizCategoryListCompanyBody extends StatelessWidget {
                                       style: GoogleFonts.lato(
                                         textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                                       ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
                                       //style: TextStyle(fontSize: 14.0)
                                     ),
                                   ),
@@ -258,105 +260,6 @@ class BizCategoryListCompanyBody extends StatelessWidget {
               ),
             ],
           )
-      ),
-    );
-  }
-
-}
-
-class CompanyCardItem extends StatelessWidget {
-  SharedPref sharedPref = SharedPref();
-  final BizCat bcat;
-
-  CompanyCardItem({
-    @required this.bcat,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return _buildProductItemCard(context, bcat);
-  }
-
-  _buildProductItemCard(BuildContext context, BizCat bcat) {
-
-    return InkWell(
-      onTap: () {
-        //sharedPref.save("biz_id", bcat.id.toString());
-        //sharedPref.save("biz_name", bcat.name);
-        //Navigator.push(context,SlideRightRoute(page: BizCompanyDetailPage(data.id.toString(),data.company_name)));
-      },
-      child: Card(
-        elevation: 1.0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        child: ClipPath(
-          clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-          child: Center(
-              child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: Container(
-                    padding: const EdgeInsets.all(0.0),
-                    color: Colors.white,
-                    child: Card(
-                      color: Colors.white,
-                      elevation: 0.0,
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: Container(
-                                  decoration: BoxDecoration(
-                                      color: Colors.transparent,
-                                      borderRadius: BorderRadius.circular(8)
-                                  ),
-                                  child: Image.asset(
-                                    'assets/icons/ic_launcher_new.png', height: 80.0, width: 80.0,
-                                    fit: BoxFit.cover,)
-
-                                /*CachedNetworkImage(
-                                  fit: BoxFit.fitWidth,
-                                  imageUrl: 'http://bizapp.e-dagang.asia'+bcat.logo ?? '',
-                                  imageBuilder: (context, imageProvider) => Container(
-                                    decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          alignment: Alignment.center,
-                                          image: imageProvider,
-                                          fit: BoxFit.fitWidth,
-                                        ),
-                                        borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(8.0),
-                                            topRight: Radius.circular(8.0)
-                                        )
-                                    ),
-                                  ),
-                                  placeholder: (context, url) => Container(color: Colors.grey.shade200,),
-                                  errorWidget: (context, url, error) => Icon(Icons.image_rounded, size: 36,),
-                                ),*/
-                              ),
-                            ),
-                            SizedBox(height: 8.0),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Text(bcat.name,
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.lato(
-                                  textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                                ),
-                                //style: TextStyle(fontSize: 14.0)
-                              ),
-                            ),
-                            SizedBox(height: 8.0)
-                          ]
-                      ),
-                    ),
-                  )
-              )
-          ),
-        ),
       ),
     );
   }

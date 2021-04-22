@@ -12,6 +12,7 @@ import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
+import 'package:edagang/widgets/photo_viewer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -669,7 +670,7 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
       return GestureDetector(
         onTap: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => PhotoViewPage(imej: image,),)
+              MaterialPageRoute(builder: (context) => PhotoViewer(imej: image,),)
           );
         },
         child: Hero(
@@ -706,7 +707,7 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
                       (image) {
                     return GestureDetector(
                       onTap:  () {
-                        Navigator.push(context, SlideRightRoute(page: PhotoViewPage(imej: image.imageURL,)));
+                        Navigator.push(context, SlideRightRoute(page: PhotoViewer(imej: image.imageURL,)));
                       },
                       child: Hero(
                           tag: "Cartsini",
@@ -1009,35 +1010,3 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
   }
 }
 
-class PhotoViewPage extends StatelessWidget {
-  final String imej;
-  PhotoViewPage({this.imej});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        iconTheme: IconThemeData(
-          color: Colors.white,
-        ),
-        backgroundColor: Colors.black.withAlpha(240),
-      ),
-      backgroundColor: Colors.black.withAlpha(240),
-      body: PhotoView(
-        imageProvider: NetworkImage(imej),
-        minScale: PhotoViewComputedScale.contained * 0.8,
-        maxScale: PhotoViewComputedScale.covered * 2,
-        enableRotation: false,
-        backgroundDecoration: BoxDecoration(
-          color: Colors.black.withAlpha(240),
-        ),
-        loadingChild: Center(
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.deepOrange),
-          ),
-        ),
-      ),
-    );
-  }
-}

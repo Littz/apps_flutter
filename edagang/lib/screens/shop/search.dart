@@ -149,7 +149,6 @@ class _SearchState extends State<SearchList3> {
 
 class CenterTitle extends StatelessWidget {
   final String title;
-
   CenterTitle(this.title);
 
   @override
@@ -218,7 +217,7 @@ class CartsiniItem extends StatelessWidget {
               children: <Widget>[
                 ClipRRect(
                   borderRadius: BorderRadius.circular(4),
-                  child: CachedNetworkImage(
+                  child: repo.imgLogo == null ? Image.asset('assets/icons/ic_launcher_new.png', width: 76, fit: BoxFit.cover,) : CachedNetworkImage(
                     placeholder: (context, url) => Container(
                       width: 40,
                       height: 40,

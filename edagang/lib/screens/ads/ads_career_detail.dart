@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/models/ads_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/widgets/SABTitle.dart';
 import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
@@ -32,11 +34,10 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
   ScrollController _scrollController;
   SharedPref sharedPref = SharedPref();
   Map<dynamic, dynamic> responseBody;
-  String _dl;
+
   bool isEnabled = true ;
   bool isLoading = false;
   Color color = Color(0xff2877EA);
-  String _selectedItem = '';
 
   int _id,_compid,_yrxperience;
   String title,city,state,salary,descr,requirement,overview,email,company,logo;
@@ -148,14 +149,6 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
     }
   }*/
 
-  Future share() async {
-    await FlutterShare.share(
-    title: 'Blurb',
-    text: '',
-    linkUrl: 'https://blurbapp.e-dagang.asia/career/'+_id.toString(),
-    chooserTitle: widget.jobName,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -186,7 +179,7 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
                   ),
                 )
               ),
-              title: SABT(
+              title: SABTs(
                 child: Container(
                     child: Text(title ?? '',
                       style: GoogleFonts.lato(
@@ -242,7 +235,7 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
                               height: 90,
                               width: 90,
                               decoration: new BoxDecoration(
-                                color: Colors.transparent,
+                                color: Colors.white,
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
@@ -256,10 +249,11 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
                               ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(50),
-                                child: FadeInImage.assetNetwork(
-                                  placeholder: logo ?? "",
-                                  image: logo ?? "",
+                                child: CachedNetworkImage(
+                                  imageUrl: logo ?? "",
                                   fit: BoxFit.cover,
+                                  placeholder: (context, url) => CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) => Icon(Icons.error_outline),
                                 ),
                               ),
                             ),
@@ -553,7 +547,7 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
               onPressed: () {
                 model.isAuthenticated ? Navigator.push(context, SlideRightRoute(
                 page: WebviewWidget(
-                'https://blurb.e-dagang.asia/wv/reqform_jobs/'+model.getId().toString()+'/'+_id.toString(), title))) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
+                'https://blurb.e-dagang.asia/wv/job/apply/'+model.getId().toString()+'/'+_id.toString(), title))) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
               },
             ),
           ],
@@ -594,57 +588,4 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
     _animationController.dispose();
   }
 
-}
-
-class SABT extends StatefulWidget {
-  final Widget child;
-  const SABT({
-    Key key,
-    @required this.child,
-  }) : super(key: key);
-  @override
-  _SABTState createState() {
-    return new _SABTState();
-  }
-}
-
-class _SABTState extends State<SABT> {
-  ScrollPosition _position;
-  bool _visible;
-  @override
-  void dispose() {
-    _removeListener();
-    super.dispose();
-  }
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _removeListener();
-    _addListener();
-  }
-  void _addListener() {
-    _position = Scrollable.of(context)?.position;
-    _position?.addListener(_positionListener);
-    _positionListener();
-  }
-  void _removeListener() {
-    _position?.removeListener(_positionListener);
-  }
-  void _positionListener() {
-    final FlexibleSpaceBarSettings settings =
-    context.dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>();
-    bool visible = settings == null || settings.currentExtent <= settings.minExtent;
-    if (_visible != visible) {
-      setState(() {
-        _visible = visible;
-      });
-    }
-  }
-  @override
-  Widget build(BuildContext context) {
-    return Visibility(
-      visible: _visible,
-      child: widget.child,
-    );
-  }
 }

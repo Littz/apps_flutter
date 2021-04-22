@@ -3,14 +3,12 @@ import 'package:edagang/models/search_model.dart';
 import 'package:edagang/screens/biz/biz_company_detail.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
-import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert' show json, utf8;
 import 'dart:io';
-
 import 'package:google_fonts/google_fonts.dart';
 
 
@@ -155,7 +153,6 @@ class _SearchState extends State<SearchList> {
 
 class CenterTitle extends StatelessWidget {
   final String title;
-
   CenterTitle(this.title);
 
   @override
@@ -223,7 +220,7 @@ class SmartbizItem extends StatelessWidget {
               children: <Widget>[
                 ClipRRect(
                   borderRadius: BorderRadius.circular(4),
-                  child: CachedNetworkImage(
+                  child: repo.imgLogo == null ? Image.asset('assets/icons/ic_launcher_new.png', width: 60, fit: BoxFit.cover,) : CachedNetworkImage(
                     placeholder: (context, url) => Container(
                       width: 40,
                       height: 40,

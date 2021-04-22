@@ -61,6 +61,7 @@ class _FinancePageState extends State<FinancePage> {
   }
 
   goToNextPage(BuildContext context, Home_banner item) {
+    String imgurl = 'https://finapp.e-dagang.asia'+item.imageUrl;
     String catname = item.title ?? '';
     String catid = item.itemId.toString();
     String ctype = item.type.toString();
@@ -78,7 +79,7 @@ class _FinancePageState extends State<FinancePage> {
       //Navigator.push(context,SlideRightRoute(page: BizCompanyDetailPage(catid,'')));
     } else if (ctype == "4") {
 
-      Navigator.push(context, SlideRightRoute(page: WebviewBixon(vrurl ?? '', 'https://finapp.e-dagang.asia/file/banner/4/bb_banner3.jpg')));
+      Navigator.push(context, SlideRightRoute(page: WebviewBixon(vrurl ?? '', imgurl ?? '')));
     }
   }
 
@@ -596,7 +597,7 @@ class _FinancePageState extends State<FinancePage> {
               child: GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      childAspectRatio: 0.715,
+                      childAspectRatio: 0.805,
                       crossAxisSpacing: 1.5,
                       mainAxisSpacing: 1.5),
                   key: PageStorageKey(key),
@@ -618,7 +619,7 @@ class _FinancePageState extends State<FinancePage> {
                                 decoration: new BoxDecoration(
                                   image: new DecorationImage(
                                     image: CachedNetworkImageProvider('http://finapp.e-dagang.asia' + data.logo ?? ''),
-                                    fit: BoxFit.cover,
+                                    fit: data.id == 6 ? BoxFit.fill : BoxFit.cover,
                                   ),
                                   borderRadius: BorderRadius.all(Radius.circular(5)),
                                 ),
@@ -670,7 +671,7 @@ class _FinancePageState extends State<FinancePage> {
               child: GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      childAspectRatio: 0.715,
+                      childAspectRatio: 0.805,
                       crossAxisSpacing: 1.5,
                       mainAxisSpacing: 1.5),
                   key: PageStorageKey(key),
@@ -693,7 +694,7 @@ class _FinancePageState extends State<FinancePage> {
                                 decoration: new BoxDecoration(
                                   image: new DecorationImage(
                                     image: CachedNetworkImageProvider('http://finapp.e-dagang.asia' + data.logo ?? ''),
-                                    fit: BoxFit.cover,
+                                    fit: data.id == 5 ? BoxFit.fill : BoxFit.fill,
                                   ),
                                   borderRadius: BorderRadius.all(Radius.circular(5)),
                                 ),
@@ -745,7 +746,7 @@ class _FinancePageState extends State<FinancePage> {
               child: GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      childAspectRatio: 0.815,
+                      childAspectRatio: 0.805,
                       crossAxisSpacing: 1.5,
                       mainAxisSpacing: 1.5),
                   key: PageStorageKey(key),

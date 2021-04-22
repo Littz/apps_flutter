@@ -1,19 +1,14 @@
 import 'dart:async';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:edagang/data/datas.dart';
-import 'package:edagang/main.dart';
 import 'package:edagang/models/biz_model.dart';
 import 'package:edagang/notification.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/screens/biz/biz_home.dart';
 import 'package:edagang/screens/biz/biz_vr_list.dart';
-import 'package:edagang/screens/biz/search.dart';
 import 'package:edagang/settings.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
-import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/searchbar.dart';
 import 'package:edagang/widgets/webview.dart';
@@ -48,12 +43,9 @@ class _BizIdxPageState extends State<BizPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   SharedPref sharedPref = SharedPref();
   BuildContext context;
-  List<Menus> quick_menu = new List();
-  List<Menus> tabs_menu = new List();
-  String _selectedItem = 'Notification';
-  List _options = ['Notification', 'Setting', 'About Us', 'Logout'];
-  String _logType,_photo = "";
 
+  String _selectedItem = 'Notification';
+  String _logType,_photo = "";
 
   loadPhoto() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -92,6 +84,7 @@ class _BizIdxPageState extends State<BizPage> {
   );
 
   goToNextPage(BuildContext context, Home_banner item) {
+    String imgurl = 'https://bizapp.e-dagang.asia'+item.imageUrl;
     String catname = item.title ?? '';
     String catid = item.itemId.toString();
     String ctype = item.type.toString();
@@ -99,17 +92,14 @@ class _BizIdxPageState extends State<BizPage> {
     if(ctype == "1") {
       print('PRODUCT #############################################');
     } else if (ctype == "2") {
-      print('CATEGORY #############################################');
+      print('CATEGORY ############################################');
       print(catid);
       print(catname);
-
       //Navigator.push(context, SlideRightRoute(page: ProductListCategory(catid, catname)));
     } else if (ctype == "3") {
-
       Navigator.push(context,SlideRightRoute(page: BizCompanyDetailPage(catid,'')));
     } else if (ctype == "4") {
-
-      Navigator.push(context, SlideRightRoute(page: WebviewBixon(vrurl ?? '', 'https://bizapp.e-dagang.asia/file/banner/25/bb_banner1.jpeg')));
+      Navigator.push(context, SlideRightRoute(page: WebviewBixon(vrurl ?? '', imgurl ?? '')));
     }
   }
 
@@ -120,8 +110,6 @@ class _BizIdxPageState extends State<BizPage> {
     });
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
-    quick_menu = getBizQxcess();
-    tabs_menu = getBizTabs();
 
     super.initState();
     loadPhoto();
@@ -134,7 +122,6 @@ class _BizIdxPageState extends State<BizPage> {
   }
 
   Future launchVr(String url) async {
-    //final String url = data.vr_list[index].vr_url ?? '';
     if (await canLaunch(url)) await launch(
       url,
       forceSafariVC: false,
@@ -144,10 +131,6 @@ class _BizIdxPageState extends State<BizPage> {
 
   @override
   Widget build(BuildContext context) {
-    /*SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.white,
-    ));*/
-
     return ScopedModelDescendant<MainScopedModel>(
       builder: (context, child, model) {
         return WillPopScope(
@@ -171,19 +154,17 @@ class _BizIdxPageState extends State<BizPage> {
                     Padding(
                       padding: EdgeInsets.only(left: 2, right: 10,),
                       child: model.isAuthenticated ?
-                      _logType == '0' ?
-                      CircleAvatar(
-                        backgroundColor: Colors.transparent,
-                        child: Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.fill, height: 27, width: 27),
-                      )
-                          : CircleAvatar(
+                        _logType == '0' ? CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          child: Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.fill, height: 27, width: 27),
+                        ) : CircleAvatar(
                           backgroundColor: Colors.transparent,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(50),
                             child: Image.network(_photo ?? '', fit: BoxFit.fill, height: 27, width: 27,),
                           )
-                      )
-                          : CircleAvatar(
+                        )
+                      : CircleAvatar(
                         backgroundColor: Colors.transparent,
                         child: IconButton(
                           icon: Icon(
@@ -194,7 +175,6 @@ class _BizIdxPageState extends State<BizPage> {
                         ),
                       ),
                     ),
-
                   ],
                   bottom: AppBar(
                     elevation: 0,
@@ -274,161 +254,6 @@ class _BizIdxPageState extends State<BizPage> {
                     ),
                   ),
                 ),
-                /*SliverAppBar(
-                  elevation: 0.0,
-                  expandedHeight: 210.0,
-                  floating: false,
-                  pinned: true,
-                  backgroundColor: Colors.white,
-                  automaticallyImplyLeading: false,
-                  iconTheme: IconThemeData(
-                    color: Color(0xff084B8C),
-                  ),
-                  leading: model.isAuthenticated ? Padding(
-                    padding: EdgeInsets.all(13),
-                    child:  _logType == '0' ? Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.scaleDown) : ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child: Image.network(_photo ?? '', fit: BoxFit.fill,),
-                    )
-                  ) : CircleAvatar(
-                    backgroundColor: Colors.transparent,
-                    child: IconButton(
-                      icon: Icon(
-                        CupertinoIcons.power,
-                        color: Color(0xff084B8C),
-                      ),
-                      onPressed: () {Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));},
-                    ),
-                  ),
-                  centerTitle: true,
-                  title: Image.asset('assets/icons/ic_smartbiz.png', height: 24, width: 107,),
-                  actions: [
-                    CircleAvatar(
-                      backgroundColor: Colors.grey[200],
-                      child: IconButton(
-                        icon: Icon(
-                          CupertinoIcons.search,
-                          color: Color(0xff084B8C),
-                        ),
-                        onPressed: () { Navigator.push(context, SlideRightRoute(page: SearchList()));},
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 2,),
-                      child: CircleAvatar(
-                        backgroundColor: Colors.grey[200],
-                        child: IconButton(
-                          icon: Icon(
-                            CupertinoIcons.bell_fill,
-                            color: Color(0xff084B8C),
-                          ),
-                          onPressed: () {Navigator.push(context, SlideRightRoute(page: NotificationPage()));},
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 2, right: 10,),
-                      child: CircleAvatar(
-                        backgroundColor: Colors.grey[200],
-                        child: PopupMenuButton(
-                          icon: Icon(Icons.more_vert, color: Color(0xff084B8C),),
-                          itemBuilder: (BuildContext bc) => [
-                            PopupMenuItem(child: ListTile(
-                              title: Text('Join Us'),
-                            ), value: "1"),
-                            PopupMenuItem(child: ListTile(
-                              title: Text('Settings'),
-                            ), value: "2"),
-                            PopupMenuItem(child: model.isAuthenticated ? ListTile(
-                              title: Text('Logout'),
-                            ) : ListTile(
-                              title: Text('Login'),
-                            ), value: model.isAuthenticated ? "3" : "4"),
-                          ],
-
-                          onSelected: (value) {
-                            setState(() {
-                              _selectedItem = value;
-                              print("Selected context menu: $_selectedItem");
-                              if(_selectedItem == '1'){
-                                Navigator.push(context, SlideRightRoute(page: WebviewWidget('https://smartbiz.e-dagang.asia/biz/joinwebv','Join Us')));
-                              }
-                              if(_selectedItem == '2'){
-                                Navigator.push(context, SlideRightRoute(page: SettingPage()));
-                              }
-                              if(_selectedItem == '3'){
-                                logoutUser(context, model);
-                              }
-                              if(_selectedItem == '4'){
-                                Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
-                              }
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-
-                  ],
-                  flexibleSpace: FlexibleSpaceBar(
-                    background: Container(
-                        color: Colors.white,
-                        padding: EdgeInsets.only(bottom: 5, top: 90),
-                        child: Container(
-                            margin: EdgeInsets.only(left: 8, right: 8),
-                            child: Card(
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0),),
-                                elevation: 1,
-                                child: ClipPath(
-                                    clipper: ShapeBorderClipper(
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))
-                                    ),
-                                    child: Container(
-                                        height: 150.0,
-                                        decoration: new BoxDecoration(
-                                          color: Colors.transparent,
-                                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                                        ),
-                                        child: Swiper(
-                                          autoplay: true,
-                                          itemBuilder: (BuildContext context, int index) {
-                                            return InkWell(
-                                              onTap: () {
-                                              },
-                                              child: ClipRRect(
-                                                  borderRadius: new BorderRadius.circular(8.0),
-                                                  child: Center(
-                                                    child: CachedNetworkImage(
-                                                      placeholder: (context, url) => Container(
-                                                        width: 40,
-                                                        height: 40,
-                                                        color: Colors.transparent,
-                                                        child: CupertinoActivityIndicator(radius: 15,),
-                                                      ),
-                                                      imageUrl: 'http://bizapp.e-dagang.asia' + model.bbanners[index].imageUrl,
-                                                      fit: BoxFit.fill,
-                                                      height: 150,
-                                                      width: MediaQuery.of(context).size.width,
-                                                    )
-                                                  ),
-                                              ),
-                                            );
-                                          },
-                                          itemCount: model.bbanners.length,
-                                          pagination: new SwiperPagination(
-                                              builder: new DotSwiperPaginationBuilder(
-                                                activeColor: Colors.deepOrange.shade500,
-                                                activeSize: 7.0,
-                                                size: 7.0,
-                                              )
-                                          ),
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    ),
-                  ),
-                ),*/
               ];
             },
             body: CustomScrollView(slivers: <Widget>[
@@ -506,10 +331,6 @@ class _BizIdxPageState extends State<BizPage> {
                           color: Color(0xff084B8C),
                         ),
                       ),
-                      /*Icon(
-                        Icons.more_horiz,
-                        color: Colors.grey[800],
-                      ),*/
                     ],
                   ),
                 ),
@@ -559,16 +380,6 @@ class _BizIdxPageState extends State<BizPage> {
                             ],
                           ),
                         ),
-                        /*CircleAvatar(
-                          backgroundColor: Colors.white,
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.more_horiz,
-                              color: Color(0xff357FEB),
-                            ),
-                            onPressed: () {Navigator.push(context,SlideRightRoute(page: BizVrListPage()));},
-                          ),
-                        ),*/
                       ),
                     ],
                   ),
@@ -593,245 +404,14 @@ class _BizIdxPageState extends State<BizPage> {
                           color: Color(0xff084B8C),
                         ),
                       ),
-                      /*Padding(
-                        padding: EdgeInsets.only(left: 0,),
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.more_horiz,
-                              color: Color(0xff357FEB),
-                            ),
-                            onPressed: () {},
-                          ),
-                        ),
-                      ),*/
                     ],
                   ),
                 ),
               ),
-
               topList(),
 
             ]),
-
           )
-
-          /*Scaffold(
-              appBar: PreferredSize(
-                preferredSize: Size.fromHeight(45.0),
-                child: AppBar(
-                  automaticallyImplyLeading: false,
-                  backgroundColor: Colors.white,
-                  elevation: 0.0,
-                  title: searchBar(context),
-                  actions: model.isAuthenticated ? [
-                    Container(
-                      height: 36,
-                      width: 36,
-                      alignment: Alignment.centerRight,
-                      decoration: new BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                      child: _logType == '0' ? Icon(CupertinoIcons.person_crop_circle, size: 36, color: Colors.grey.shade700,) :
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(50),
-                        child: Image(image: NetworkImage(_photo ?? '',))
-                      ),
-                    ),
-                    PopupMenuButton(
-                      itemBuilder: (BuildContext bc) => [
-                        PopupMenuItem(child: ListTile(
-                          leading: Icon(Icons.notifications),
-                          title: Text('Notification'),
-                        ), value: "1"),
-                        PopupMenuItem(child: ListTile(
-                          leading: Icon(Icons.settings),
-                          title: Text('Settings'),
-                        ), value: "2"),
-                        PopupMenuItem(child: model.isAuthenticated ? ListTile(
-                          leading: Icon(Icons.logout),
-                          title: Text('Logout'),
-                        ) : ListTile(
-                          leading: Icon(Icons.login),
-                          title: Text('Login'),
-                        ), value: model.isAuthenticated ? "3" : "4"),
-                      ],
-
-                      onSelected: (value) {
-                        setState(() {
-                          _selectedItem = value;
-                          print("Selected context menu: $_selectedItem");
-                          if(_selectedItem == '1'){
-                            Navigator.push(context, SlideRightRoute(page: NotificationPage()));
-                          }
-                          if(_selectedItem == '2'){
-                            Navigator.push(context, SlideRightRoute(page: SettingPage()));
-                          }
-                          if(_selectedItem == '3'){
-                            logoutUser(context, model);
-                          }
-                          if(_selectedItem == '4'){
-                            Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
-                          }
-                        });
-                      },
-                    ),
-                  ] : [
-                    PopupMenuButton(
-                      itemBuilder: (BuildContext bc) => [
-                        PopupMenuItem(child: ListTile(
-                          leading: Icon(Icons.notifications),
-                          title: Text('Notification'),
-                        ), value: "1"),
-                        PopupMenuItem(child: ListTile(
-                          leading: Icon(Icons.settings),
-                          title: Text('Settings'),
-                        ), value: "2"),
-                        PopupMenuItem(child: model.isAuthenticated ? ListTile(
-                          leading: Icon(Icons.logout),
-                          title: Text('Logout'),
-                        ) : ListTile(
-                          leading: Icon(Icons.login),
-                          title: Text('Login'),
-                        ), value: model.isAuthenticated ? "3" : "4"),
-                      ],
-
-                      onSelected: (value) {
-                        setState(() {
-                          _selectedItem = value;
-                          print("Selected context menu: $_selectedItem");
-                          if(_selectedItem == '1'){
-                            Navigator.push(context, SlideRightRoute(page: NotificationPage()));
-                          }
-                          if(_selectedItem == '2'){
-                            Navigator.push(context, SlideRightRoute(page: SettingPage()));
-                          }
-                          if(_selectedItem == '3'){
-                            logoutUser(context, model);
-                          }
-                          if(_selectedItem == '4'){
-                            Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
-                          }
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              backgroundColor: Colors.grey.shade100,
-              body: CustomScrollView(slivers: <Widget>[
-                SliverList(delegate: SliverChildListDelegate([
-                  Container(
-                    color: Colors.white,
-                    padding: EdgeInsets.only(bottom: 5),
-                    child: Container(
-                      margin: EdgeInsets.only(left: 8, right: 8),
-                      child: Card(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                        elevation: 1,
-                        child: ClipPath(
-                          clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-                          child: Container(
-                            height: 150.0,
-                            decoration: new BoxDecoration(
-                              color: Colors.grey.shade200,
-                              borderRadius: BorderRadius.all(Radius.circular(8)),
-                            ),
-                            child: Swiper.children(
-                              autoplay: true,
-                              pagination: new SwiperPagination(
-                                margin: new EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 15.0),
-                                builder: new DotSwiperPaginationBuilder(
-                                    color: Colors.white30,
-                                    activeColor: Colors.redAccent.shade400,
-                                    size: 7.0,
-                                    activeSize: 7.0
-                                )
-                              ),
-                              children: <Widget>[
-                                Image.asset(
-                                  'assets/edagangcekap.png', height: 150.0,
-                                  fit: BoxFit.fill,),
-                                Image.asset(
-                                  'assets/cartsinibiz1.png', height: 150.0,
-                                  fit: BoxFit.fill,),
-
-                              ],
-                            ),
-                          )
-                        )
-                      )
-                    )
-                  ),
-                ])),
-
-                SliverToBoxAdapter(
-                  child: Container(
-                    padding: EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 10),
-                    child: Text('Quick Access',
-                      style: GoogleFonts.lato(
-                        textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600,),
-                      ),
-                    ),
-                  ),
-                ),
-
-                SliverPadding(
-                  padding: EdgeInsets.fromLTRB(8, 6, 8, 0),
-                  sliver: quickLink(context),
-                ),
-
-                SliverToBoxAdapter(
-                  child: Container(
-                    padding: EdgeInsets.only(left: 8, right: 8, top: 20),
-                    height: 115,
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(context,SlideRightRoute(page: BizVrListPage()));
-                      },
-                      child: Card(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                        elevation: 0.0,
-                        child: Container(
-                          decoration: new BoxDecoration(
-                            color: Colors.grey.shade200,
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                          ),
-                          child: ClipPath(
-                            clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-                            child: Image.asset(
-                              'assets/images/virtual_trade.png', fit: BoxFit.cover,
-                              height: 115,
-                            ),
-                          )
-                        )
-                      )
-                    )
-                  ),
-                ),
-
-                SliverPadding(
-                  padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
-                  sliver: gridMenu(context, widget.tabcontroler),
-                ),
-
-                SliverToBoxAdapter(
-                  child: Container(
-                    padding: EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 0),
-                    child: Text('Most Visited',
-                      style: GoogleFonts.lato(
-                        textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                  ),
-                ),
-
-                topList(),
-
-              ]),
-            )*/
         );
       }
     );
@@ -852,7 +432,6 @@ class _BizIdxPageState extends State<BizPage> {
               itemBuilder: (context, index) {
                 var data = model.bcategory[index];
                 return Padding(
-                  //padding: EdgeInsets.only(left: 3.6, top: 8, right: 3.6,),
                   padding: EdgeInsets.symmetric(
                     horizontal: 5.0,
                     vertical: 5.0,
@@ -860,8 +439,6 @@ class _BizIdxPageState extends State<BizPage> {
                   child: InkWell(
                     onTap: () {
                       print("category name : " + data.cat_name);
-                      //sharedPref.save("cat_id", data.cat_id.toString());
-                      //sharedPref.save("cat_title", data.cat_name);
                       Navigator.push(context, SlideRightRoute(page: BizCategoryPage(data.cat_id.toString(),data.cat_name)));
                     },
                     child: Container(
@@ -871,7 +448,6 @@ class _BizIdxPageState extends State<BizPage> {
                       decoration: new BoxDecoration(
                         color: Colors.grey,
                         image: new DecorationImage(
-                          //image: new NetworkImage('http://bizapp.e-dagang.asia' + data.cat_image ?? '',),
                           image: CachedNetworkImageProvider('http://bizapp.e-dagang.asia' + data.cat_image ?? ''),
                           fit: BoxFit.cover,
                         ),
@@ -906,54 +482,8 @@ class _BizIdxPageState extends State<BizPage> {
                             )
                           ],
                         )
-
-
-                        /*Text(
-                          data.cat_name ?? '',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.lato(
-                            textStyle: TextStyle(backgroundColor: Colors.black38, color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),*/
                       )
                     ),
-                      /*child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Container(
-                              height: 135,
-                              width: 100,
-                              alignment: Alignment.bottomCenter,
-                              padding: new EdgeInsets.only(bottom: 8.0),
-                              decoration: new BoxDecoration(
-                                image: new DecorationImage(
-                                  image: new NetworkImage('http://bizapp.e-dagang.asia' + data.cat_image ?? ''),
-                                  fit: BoxFit.cover,
-                                ),
-                                borderRadius: BorderRadius.all(Radius.circular(10)),
-                              ),
-                          ),
-                          Container(
-                            width: 100.0,
-                            padding: EdgeInsets.only(top: 5, right: 5),
-                            child: Align(
-                              alignment: Alignment.topCenter,
-                              child: Text(
-                                data.cat_name ?? '',
-                                style: GoogleFonts.lato(
-                                  textStyle: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w600,),
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )*/
                   ),
                 );
               },
@@ -966,23 +496,6 @@ class _BizIdxPageState extends State<BizPage> {
   Widget _fetchVirtualList() {
     return ScopedModelDescendant<MainScopedModel>(
         builder: (context, child, model){
-          /*return Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
-            height: MediaQuery.of(context).size.height * 0.35,
-            child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: numbers.length, itemBuilder: (context, index) {
-              return Container(
-                width: MediaQuery.of(context).size.width * 0.6,
-                child: Card(
-                  color: Colors.blue,
-                  child: Container(
-                    child: Center(child: Text(numbers[index].toString(), style: TextStyle(color: Colors.white, fontSize: 36.0),)),
-                  ),
-                ),
-              );
-            }),
-          );*/
           return Container(
             padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
             height: MediaQuery.of(context).size.height * 0.25,
@@ -1007,21 +520,7 @@ class _BizIdxPageState extends State<BizPage> {
                       ),
                       onTap: () {
                         launchVr(data.vr_list[index].vr_url);
-                        /*flutterWebviewPlugin.launch(
-                          data.vr_list[index].vr_url ?? '',
-                          rect: new Rect.fromLTWH(0.0, 20.0, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height),
-                          userAgent: Constants.kAndroidUserAgent,
-                        );*/
-                        //Navigator.push(context, SlideRightRoute(page: WebviewWidget(data.vr_list[index].vr_url ?? '', data.vr_list[index].vr_name)));
-                      }
-                      /*async {
-                        final String url = data.vr_list[index].vr_url ?? '';
-                        if (await canLaunch(url)) await launch(
-                          url,
-                          forceSafariVC: false,
-                          forceWebView: false,
-                        );
-                      }*/,
+                      },
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1069,15 +568,6 @@ class _BizIdxPageState extends State<BizPage> {
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  /*SizedBox(
-                                    height: 1.5,
-                                  ),
-                                  Text(
-                                    data.vr_desc ?? '',
-                                    style: GoogleFonts.lato(
-                                      textStyle: TextStyle(color: Colors.blue.shade600, fontSize: 12, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
-                                    ),
-                                  ),*/
                                 ],
                               ),
                             ),
@@ -1170,11 +660,12 @@ class _BizIdxPageState extends State<BizPage> {
                                           Padding(
                                             padding: EdgeInsets.symmetric(horizontal: 8.0),
                                             child: Text(data.company_name,
-                                                textAlign: TextAlign.center,
-                                                style: GoogleFonts.lato(
-                                                  textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                                                ),
-                                                //style: TextStyle(fontSize: 14.0)
+                                              textAlign: TextAlign.center,
+                                              style: GoogleFonts.lato(
+                                                textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                                              ),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
                                           SizedBox(height: 8.0)
@@ -1227,9 +718,7 @@ class _BizIdxPageState extends State<BizPage> {
     };
     return headers;
   }
-
 }
-
 
 class WebviewVr extends StatefulWidget {
   final url, title;
@@ -1327,53 +816,6 @@ class _WebviewVrState extends State<WebviewVr> {
         ),
       ],
     );
-
-    /*return WebviewScaffold(
-      url: _url,
-      appBar: new AppBar(
-        centerTitle: false,
-        elevation: 0.0,
-        automaticallyImplyLeading: false,
-        iconTheme: IconThemeData(
-          color: Color(0xff084B8C),
-        ),
-        actions: [
-          CircleAvatar(
-            backgroundColor: Colors.transparent,
-            child: IconButton(
-              icon: Icon(
-                CupertinoIcons.xmark,
-                color: Color(0xff084B8C),
-              ),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ),
-        ],
-        flexibleSpace: DecoratedBox(
-            decoration: BoxDecoration(
-                color: Colors.transparent
-            )
-        ),
-      ),
-      withZoom: true,
-      withLocalStorage: true,
-      hidden: true,
-      userAgent: Constants.kAndroidUserAgent,
-      persistentFooterButtons: <Widget>[
-        new OutlinedButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Close')
-        ),
-      ],
-      initialChild: Container(
-        child: const Center(
-          child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation(Color(0xff357FEB)),
-              strokeWidth: 1.9
-          ),
-        ),
-      ),
-    );*/
   }
 
 

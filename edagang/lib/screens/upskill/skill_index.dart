@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/data/datas.dart';
 import 'package:edagang/models/biz_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
-import 'package:edagang/screens/biz/biz_index.dart';
 import 'package:edagang/screens/upskill/search.dart';
 import 'package:edagang/screens/upskill/skill_detail.dart';
 import 'package:edagang/sign_in.dart';
@@ -63,6 +62,7 @@ class _UpskillPageState extends State<UpskillPage> {
   }
 
   goToNextPage(BuildContext context, Home_banner item) {
+    String imgurl = 'https://upskillapp.e-dagang.asia'+item.imageUrl;
     String catname = item.title ?? '';
     String catid = item.itemId.toString();
     String ctype = item.type.toString();
@@ -80,7 +80,7 @@ class _UpskillPageState extends State<UpskillPage> {
       //Navigator.push(context,SlideRightRoute(page: BizCompanyDetailPage(catid,'')));
     } else if (ctype == "4") {
 
-      Navigator.push(context, SlideRightRoute(page: WebviewBixon(vrurl ?? '', 'https://upskillapp.e-dagang.asia/file/banner/6/bb_banner4.jpg')));
+      Navigator.push(context, SlideRightRoute(page: WebviewBixon(vrurl ?? '', imgurl ?? '')));
     }
   }
 
@@ -309,7 +309,7 @@ class _UpskillPageState extends State<UpskillPage> {
         itemBuilder: (_, index) {
           var data = model.skillProfessional[index];
           return Card(
-              margin: EdgeInsets.all(5.0),
+              margin: EdgeInsets.all(4.0),
               elevation: 1.5,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
@@ -334,7 +334,7 @@ class _UpskillPageState extends State<UpskillPage> {
                               flex: 3,
                               child: Container(
                                 padding: EdgeInsets.only(
-                                    left: 7.0, right: 7.0, top: 8.0),
+                                    left: 0.0, right: 7.0, top: 0.0),
                                 child: Text(
                                   data.title,
                                   overflow: TextOverflow.ellipsis,
@@ -349,7 +349,7 @@ class _UpskillPageState extends State<UpskillPage> {
                             Expanded(
                               flex: 1,
                               child: Container(
-                                margin: EdgeInsets.only(right: 7.0, top: 8.0),
+                                margin: EdgeInsets.only(right: 0.0, top: 0.0),
                                 alignment: Alignment.topRight,
                                 child: Icon(
                                   CupertinoIcons.chevron_forward,
@@ -362,7 +362,7 @@ class _UpskillPageState extends State<UpskillPage> {
                         ),
                         Padding(
                           padding: EdgeInsets.only(
-                              left: 7.0, right: 7.0, bottom: 7.0),
+                              left: 0.0, right: 7.0, bottom: 7.0),
                           child: Text(
                             data.company_name,
                             style: GoogleFonts.lato(
@@ -373,7 +373,7 @@ class _UpskillPageState extends State<UpskillPage> {
                         ),
                         Container(
                           margin: EdgeInsets.only(
-                              left: 7.0, right: 7.0, bottom: 7.0),
+                              left: 0.0, right: 7.0, bottom: 7.0),
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.end,
@@ -411,7 +411,7 @@ class _UpskillPageState extends State<UpskillPage> {
             itemBuilder: (context, index) {
               var data = model.skillTechnical[index];
               return Card(
-                  margin: EdgeInsets.all(5.0),
+                  margin: EdgeInsets.all(4.0),
                   elevation: 1.5,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
@@ -434,7 +434,7 @@ class _UpskillPageState extends State<UpskillPage> {
                                 Expanded(
                                   flex: 3,
                                   child: Container(
-                                    padding: EdgeInsets.only(left: 7.0, right: 7.0, top: 8.0),
+                                    padding: EdgeInsets.only(left: 0.0, right: 7.0, top: 0.0),
                                     child: Text(
                                       data.title,
                                       overflow: TextOverflow.ellipsis,
@@ -448,7 +448,7 @@ class _UpskillPageState extends State<UpskillPage> {
                                 Expanded(
                                   flex: 1,
                                   child: Container(
-                                    margin: EdgeInsets.only(right: 7.0, top: 8.0),
+                                    margin: EdgeInsets.only(right: 0.0, top: 0.0),
                                     alignment: Alignment.topRight,
                                     child: Icon(
                                       CupertinoIcons.chevron_forward,
@@ -460,7 +460,7 @@ class _UpskillPageState extends State<UpskillPage> {
                               ],
                             ),
                             Padding(
-                              padding: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
+                              padding: EdgeInsets.only(left:0.0, right: 7.0, bottom: 7.0),
                               child: Text(
                                 data.company_name,
                                 style: GoogleFonts.lato(
@@ -469,7 +469,7 @@ class _UpskillPageState extends State<UpskillPage> {
                               ),
                             ),
                             Container(
-                              margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
+                              margin: EdgeInsets.only(left: 0.0, right: 7.0, bottom: 7.0),
                               child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -505,7 +505,7 @@ class _UpskillPageState extends State<UpskillPage> {
             itemBuilder: (context, index) {
               var data = model.skillSafety[index];
               return Card(
-                  margin: EdgeInsets.all(5.0),
+                  margin: EdgeInsets.all(4.0),
                   elevation: 1.5,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
@@ -528,7 +528,7 @@ class _UpskillPageState extends State<UpskillPage> {
                                 Expanded(
                                   flex: 3,
                                   child: Container(
-                                    padding: EdgeInsets.only(left: 7.0, right: 7.0, top: 8.0),
+                                    padding: EdgeInsets.only(left: 0.0, right: 7.0, top: 0.0),
                                     child: Text(
                                       data.title,
                                       overflow: TextOverflow.ellipsis,
@@ -542,7 +542,7 @@ class _UpskillPageState extends State<UpskillPage> {
                                 Expanded(
                                   flex: 1,
                                   child: Container(
-                                    margin: EdgeInsets.only(right: 7.0, top: 8.0),
+                                    margin: EdgeInsets.only(right: 0.0, top: 0.0),
                                     alignment: Alignment.topRight,
                                     child: Icon(
                                       CupertinoIcons.chevron_forward,
@@ -554,7 +554,7 @@ class _UpskillPageState extends State<UpskillPage> {
                               ],
                             ),
                             Padding(
-                              padding: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
+                              padding: EdgeInsets.only(left: 0.0, right: 7.0, bottom: 7.0),
                               child: Text(
                                 data.company_name,
                                 style: GoogleFonts.lato(
@@ -563,7 +563,7 @@ class _UpskillPageState extends State<UpskillPage> {
                               ),
                             ),
                             Container(
-                              margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
+                              margin: EdgeInsets.only(left: 0.0, right: 7.0, bottom: 7.0),
                               child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -599,7 +599,7 @@ class _UpskillPageState extends State<UpskillPage> {
             itemBuilder: (context, index) {
               var data = model.skillTraining[index];
               return Card(
-                  margin: EdgeInsets.all(5.0),
+                  margin: EdgeInsets.all(4.0),
                   elevation: 1.5,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
@@ -622,7 +622,7 @@ class _UpskillPageState extends State<UpskillPage> {
                                 Expanded(
                                   flex: 3,
                                   child: Container(
-                                    padding: EdgeInsets.only(left: 7.0, right: 7.0, top: 8.0),
+                                    padding: EdgeInsets.only(left: 0.0, right: 7.0, top: 0.0),
                                     child: Text(
                                       data.title,
                                       overflow: TextOverflow.ellipsis,
@@ -636,7 +636,7 @@ class _UpskillPageState extends State<UpskillPage> {
                                 Expanded(
                                   flex: 1,
                                   child: Container(
-                                    margin: EdgeInsets.only(right: 7.0, top: 8.0),
+                                    margin: EdgeInsets.only(right: 0.0, top: 0.0),
                                     alignment: Alignment.topRight,
                                     child: Icon(
                                       CupertinoIcons.chevron_forward,
@@ -648,7 +648,7 @@ class _UpskillPageState extends State<UpskillPage> {
                               ],
                             ),
                             Padding(
-                              padding: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
+                              padding: EdgeInsets.only(left: 05.0, right: 7.0, bottom: 7.0),
                               child: Text(
                                 data.company_name,
                                 style: GoogleFonts.lato(
@@ -657,7 +657,7 @@ class _UpskillPageState extends State<UpskillPage> {
                               ),
                             ),
                             Container(
-                              margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
+                              margin: EdgeInsets.only(left: 0.0, right: 7.0, bottom: 7.0),
                               child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   crossAxisAlignment: CrossAxisAlignment.end,

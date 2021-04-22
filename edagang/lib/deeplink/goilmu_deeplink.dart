@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/main.dart';
 import 'package:edagang/models/upskill_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/widgets/SABTitle.dart';
 import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
@@ -203,7 +205,7 @@ class _GoilmuDlPageState extends State<GoilmuDlPage> with SingleTickerProviderSt
                   ),
                 )
             ),
-            title: SABT(
+            title: SABTs(
               child: Container(
                   child: Text(title ?? '',
                     style: GoogleFonts.lato(
@@ -245,10 +247,11 @@ class _GoilmuDlPageState extends State<GoilmuDlPage> with SingleTickerProviderSt
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(50),
-                              child: FadeInImage.assetNetwork(
-                                placeholder: logo ?? "",
-                                image: logo ?? "",
+                              child: CachedNetworkImage(
+                                imageUrl: logo ?? "",
                                 fit: BoxFit.cover,
+                                placeholder: (context, url) => CircularProgressIndicator(),
+                                errorWidget: (context, url, error) => Icon(Icons.error_outline),
                               ),
                             ),
                           ),
@@ -475,7 +478,7 @@ class _GoilmuDlPageState extends State<GoilmuDlPage> with SingleTickerProviderSt
                         await FlutterShare.share(
                           title: 'GOilmu',
                           text: '',
-                          linkUrl: 'https://upskillapp.e-dagang.asia/course/'+_id.toString(),
+                          linkUrl: 'https://goilmuapp.e-dagang.asia/course/'+_id.toString(),
                           chooserTitle: title ?? '',
                         );
                       },
@@ -559,55 +562,3 @@ class _GoilmuDlPageState extends State<GoilmuDlPage> with SingleTickerProviderSt
   }
 }
 
-class SABT extends StatefulWidget {
-  final Widget child;
-  const SABT({
-    Key key,
-    @required this.child,
-  }) : super(key: key);
-  @override
-  _SABTState createState() {
-    return new _SABTState();
-  }
-}
-
-class _SABTState extends State<SABT> {
-  ScrollPosition _position;
-  bool _visible;
-  @override
-  void dispose() {
-    _removeListener();
-    super.dispose();
-  }
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _removeListener();
-    _addListener();
-  }
-  void _addListener() {
-    _position = Scrollable.of(context)?.position;
-    _position?.addListener(_positionListener);
-    _positionListener();
-  }
-  void _removeListener() {
-    _position?.removeListener(_positionListener);
-  }
-  void _positionListener() {
-    final FlexibleSpaceBarSettings settings =
-    context.dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>();
-    bool visible = settings == null || settings.currentExtent <= settings.minExtent;
-    if (_visible != visible) {
-      setState(() {
-        _visible = visible;
-      });
-    }
-  }
-  @override
-  Widget build(BuildContext context) {
-    return Visibility(
-      visible: _visible,
-      child: widget.child,
-    );
-  }
-}

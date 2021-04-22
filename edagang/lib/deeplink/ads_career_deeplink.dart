@@ -1,16 +1,23 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/main.dart';
 import 'package:edagang/models/ads_model.dart';
+import 'package:edagang/scoped/main_scoped.dart';
+import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/widgets/SABTitle.dart';
+import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
+import 'package:edagang/widgets/webview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import 'package:scoped_model/scoped_model.dart';
 
 
 class CareerDlPage extends StatefulWidget {
@@ -21,13 +28,17 @@ class CareerDlPage extends StatefulWidget {
   _CareerDlPageState createState() => _CareerDlPageState();
 }
 
+const xpandedHeight = 195.0;
+
 class _CareerDlPageState extends State<CareerDlPage> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  ScrollController _scrollController;
   SharedPref sharedPref = SharedPref();
   Map<dynamic, dynamic> responseBody;
-  String _dl;
-  bool isEnabled = true;
-  Color color = Colors.grey.shade700;
+
+  bool isEnabled = true ;
+  bool isLoading = false;
+  Color color = Color(0xff2877EA);
 
   int _id,_compid,_yrxperience;
   String title,city,state,salary,descr,requirement,overview,email,company,logo;
@@ -39,18 +50,26 @@ class _CareerDlPageState extends State<CareerDlPage> with TickerProviderStateMix
   Animation<Offset> _movieInformationSlidingAnimation;
 
   getDetails() async {
+    setState(() {
+      isLoading = true;
+    });
+
     try {
+      //String id = await sharedPref.read("biz_id");
+
       setState(() {
+        //_bizId = id;
         print("job ID : "+widget.jobId);
 
         http.post(
-          'https://blurbapp.e-dagang.asia/api/career/job/details?job_id='+widget.jobId,
+          'https://blurbapp.e-dagang.asia/api/blurb/job/details?job_id='+widget.jobId,
           headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
         ).then((response) {
           print('JOBBBBB RESPONSE CODE /////////////////');
           print(response.statusCode.toString());
 
           var resBody = json.decode(response.body);
+          print('JOBBBBB COMPANY NAME >>>>>>>>>>>>>>'+resBody['data']['job'][0]['title']);
           print('JOBBBBB DETAIL RESPONSE ===============');
           print(resBody);
 
@@ -87,6 +106,7 @@ class _CareerDlPageState extends State<CareerDlPage> with TickerProviderStateMix
             email = data.contact_email;
 
           });
+          isLoading = false;
         });
       });
     } catch (Excepetion ) {
@@ -98,6 +118,7 @@ class _CareerDlPageState extends State<CareerDlPage> with TickerProviderStateMix
   void initState() {
     getDetails();
     super.initState();
+    _scrollController = ScrollController()..addListener(() => setState(() {}));
     _animationController = AnimationController(vsync: this, duration: Duration(seconds: 2)) ..forward();
     _movieInformationSlidingAnimation =
         Tween<Offset>(begin: Offset(0, 1), end: Offset.zero).animate(
@@ -106,285 +127,441 @@ class _CareerDlPageState extends State<CareerDlPage> with TickerProviderStateMix
                 parent: _animationController));
   }
 
-  Future<void> share() async {
-    await FlutterShare.share(
-      title: 'Blurb',
-      text: '',
-      linkUrl: 'https://blurbapp.e-dagang.asia/career/'+_id.toString(),
-      chooserTitle: widget.jobName,
-    );
+  bool get _showTitle {
+    return _scrollController.hasClients && _scrollController.offset > xpandedHeight - kToolbarHeight;
   }
+
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: new PreferredSize(
-        preferredSize: Size.fromHeight(56.0),
-        child: new AppBar(
-          centerTitle: false,
-          elevation: 1.0,
-          //automaticallyImplyLeading: true,
-          iconTheme: IconThemeData(
-            color: Colors.white,
-          ),
-          leading: InkWell(
-            onTap: () {Navigator.pushReplacement(context, SlideRightRoute(page: NewHomePage(4)));},
-            splashColor: Colors.grey.shade100,
-            highlightColor: Colors.deepOrange.shade100,
-            child: Icon(
-            Icons.arrow_back,
-            ),
-          ),
-          title: new Text(title ?? '',
-            style: GoogleFonts.lato(
-              textStyle: TextStyle(color: Colors.white,),
-            ),
-          ),
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.topRight,
-                colors: [
-                  Colors.grey.shade600,
-                  Colors.grey.shade200,
-                ]
+    return ScopedModelDescendant<MainScopedModel>(builder: (context, child, model)
+    {
+      return Scaffold(
+        key: _scaffoldKey,
+        backgroundColor: Colors.white,
+        body: isLoading ? _buildCircularProgressIndicator() : CustomScrollView(
+          controller: _scrollController,
+          slivers: <Widget>[
+            SliverAppBar(
+              pinned: true,
+              expandedHeight: xpandedHeight,
+              leading: Hero(
+                  tag: "back",
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pushReplacement(context, SlideRightRoute(page: NewHomePage(4)));
+                    },
+                    splashColor: Color(0xffA0CCE8),
+                    highlightColor: Color(0xffA0CCE8),
+                    child: BlurIconLight(
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: Color(0xff084B8C),
+                      ),
+                    ),
+                  )
               ),
-            )
-          ),
-        )
-      ),
-      backgroundColor: Colors.white,
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                Container(
-                  padding: EdgeInsets.all(8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              title: SABTs(
+                child: Container(
+                    child: Text(title ?? '',
+                      style: GoogleFonts.lato(
+                        textStyle: TextStyle(
+                            fontSize: 18, color: Color(0xff084B8C)),
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    )
+                ),
+              ),
+              /*actions: [
+                PopupMenuButton(
+                  itemBuilder: (BuildContext bc) =>
+                  [
+                    PopupMenuItem(child: ListTile(
+                      leading: Icon(Icons.account_circle),
+                      title: Text('Career Profile'),
+                    ), value: "1"),
+                  ],
+                  onSelected: (value) {
+                    setState(() {
+                      _selectedItem = value;
+                      print("Selected context menu: $_selectedItem");
+                      Navigator.push(context, SlideRightRoute(
+                          page: WebviewWidget(
+                              'https://blurb.e-dagang.asia/wv/career/profile/' +
+                                  model.getId().toString(), 'Career Profile')));
+                    });
+                  },
+                  child: BlurIconLight(
+                    icon: Icon(
+                      Icons.more_vert,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ],*/
+              flexibleSpace: _showTitle ? null : FlexibleSpaceBar(
+                background: Column(
                     children: <Widget>[
-
-                      Container(
-                        margin: EdgeInsets.only(left: 0.0, top: 0.0),
-                        height: 100,
-                        width: 200,
-                        child: CachedNetworkImage(
-                          fit: BoxFit.cover,
-                          imageUrl: logo ?? '',
-                          imageBuilder: (context, imageProvider) => Container(
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: imageProvider,
-                                fit: BoxFit.cover,
-                              ),
-                              borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                            ),
+                      Stack(
+                        overflow: Overflow.visible,
+                        alignment: Alignment.bottomLeft,
+                        children: <Widget>[
+                          Image.asset(
+                            'assets/bgblurb.png', fit: BoxFit.fill,
+                            height: 165,
                           ),
-                          placeholder: (context, url) => Container(
-                            width: 30,
-                            height: 30,
-                            color: Colors.transparent,
-                            child: CupertinoActivityIndicator(radius: 15,),
-                          ),
-                          errorWidget: (context, url, error) => Container(color: Colors.grey.shade200, child: Icon(Icons.image, color: Colors.white, size: 44,),),
-                        ),
-                      ),
-
-                      Container(
-                        padding: EdgeInsets.only(top: 4),
-                        child: Text(company ?? '',
-                          style: GoogleFonts.lato(
-                            textStyle: TextStyle(fontStyle: FontStyle.normal, fontSize: 15, fontWeight: FontWeight.w700 ),
-                          ),
-                        ),
-                      ),
-
-                      Container(
-                        padding: EdgeInsets.only(top: 5),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Container(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Text(city ?? '',
-                                    style: GoogleFonts.lato(
-                                      textStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
-                                    ),
-                                  ),
-                                  Text(', ',
-                                    style: GoogleFonts.lato(
-                                      textStyle: TextStyle(fontSize: 13),
-                                    ),
-                                  ),
-                                  Text(state ?? '',
-                                    style: GoogleFonts.lato(
-                                      textStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
-                                    ),
-                                  ),
+                          FractionalTranslation(
+                            translation: Offset(0.1, 0.5),
+                            child: Container(
+                              height: 90,
+                              width: 90,
+                              decoration: new BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.shade500,
+                                    blurRadius: 2.5,
+                                    spreadRadius: 0.0,
+                                    offset: Offset(2.5, 2.5),
+                                  )
                                 ],
+                                //border: new Border.all(color: Colors.blue, width: 1.5,),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: CachedNetworkImage(
+                                  imageUrl: logo ?? "",
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) => CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) => Icon(Icons.error_outline),
+                                ),
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 0.0, top: 0.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      Text('Experience: ',
-                                      style: GoogleFonts.lato(
-                                      textStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
-                                      ),
-                                      ),
-                                      Text(_yrxperience.toString() ?? '',
-                                      style: GoogleFonts.lato(
-                                      textStyle: TextStyle(fontSize: 13),
-                                      ),
-                                      ),
-                                      Text('years',
-                                      style: GoogleFonts.lato(
-                                      textStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
-                                      ),
-                                      ),
-                                    ],
-                                  ),
+                          ),
+                          /*Positioned(
+                          bottom: -16.0,
+                          right: 16.0,
+                          child: vr_ofis == 'null' && vr_room == 'null' ? Container() : Container(
+                              alignment: Alignment.topRight,
+                              child: virtualBtn(context, vr_ofis, vr_room)
+                          ),
+                        ),*/
+                        ],
+                      ),
+                    ]
+                ),
+              ),
+              /*flexibleSpace: _showTitle ? null : FlexibleSpaceBar(
+              background: Image.asset(
+                'assets/bgblurb.png', fit: BoxFit.fill,
+                height: 150,
+              ),
+            ),*/
 
-                                  SizedBox(height: 1.0,),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      Text('Salary: ',
-                                        style: GoogleFonts.lato(
-                                        textStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
-                                        ),
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  Container(
+                    padding: EdgeInsets.only(
+                        left: 8.0, top: 1.0, right: 8.0, bottom: 8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          padding: EdgeInsets.only(top: 4),
+                          child: Text(title ?? '',
+                            style: GoogleFonts.lato(
+                              textStyle: TextStyle(fontStyle: FontStyle.normal,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(top: 2),
+                          child: Text(company ?? '',
+                            style: GoogleFonts.lato(
+                              textStyle: TextStyle(fontStyle: FontStyle.normal,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ),
+
+                        Container(
+                          padding: EdgeInsets.only(top: 5),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Container(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Text(city ?? '',
+                                      style: GoogleFonts.lato(
+                                        textStyle: TextStyle(
+                                            fontStyle: FontStyle.italic,
+                                            fontSize: 13),
                                       ),
-                                      Text(salary ?? '',
-                                        style: GoogleFonts.lato(
-                                        textStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
-                                        ),
+                                    ),
+                                    Text(', ',
+                                      style: GoogleFonts.lato(
+                                        textStyle: TextStyle(fontSize: 13),
                                       ),
-                                    ],
-                                  ),
-                                  /*SizedBox(height: 1.0,),
+                                    ),
+                                    Text(state ?? '',
+                                      style: GoogleFonts.lato(
+                                        textStyle: TextStyle(
+                                            fontStyle: FontStyle.italic,
+                                            fontSize: 13),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 0.0, top: 0.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment
+                                          .start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        Text('Experience: ',
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(
+                                                fontStyle: FontStyle.italic,
+                                                fontSize: 13),
+                                          ),
+                                        ),
+                                        Text(_yrxperience.toString() ?? '',
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(fontSize: 13),
+                                          ),
+                                        ),
+                                        Text('years',
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(
+                                                fontStyle: FontStyle.italic,
+                                                fontSize: 13),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+
+                                    SizedBox(height: 1.0,),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment
+                                          .start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        Text('Salary: ',
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(
+                                                fontStyle: FontStyle.italic,
+                                                fontSize: 13),
+                                          ),
+                                        ),
+                                        Text(salary ?? '',
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(
+                                                fontStyle: FontStyle.italic,
+                                                fontSize: 13),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    /*SizedBox(height: 1.0,),
                                   Text("Contact email: "+email ?? "",
                                       style: GoogleFonts.lato(
                                         textStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
                                       ),
                                   ),*/
-                                ],
+                                    _reqBtn(),
+
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  AnimatedBuilder(
+                    animation: _animationController,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        CupertinoSegmentedControl(
+                          selectedColor: color,
+                          borderColor: color,
+                          groupValue: currentValue,
+                          children: const <int, Widget>{
+                            0: Text('Description', style: TextStyle(
+                                fontSize: 13, fontWeight: FontWeight.w600),),
+                            1: Text('Requirement', style: TextStyle(
+                                fontSize: 13, fontWeight: FontWeight.w600),),
+                            2: Text('Overview', style: TextStyle(
+                                fontSize: 13, fontWeight: FontWeight.w600),),
+                          },
+                          onValueChanged: (value) {
+                            if (value == 0) {
+                              currentTab = Padding(
+                                padding: EdgeInsets.only(
+                                    left: 10, top: 10, right: 10),
+                                child: htmlText(descr ?? ''),
+                              );
+                            } else if (value == 1) {
+                              currentTab = Padding(
+                                padding: EdgeInsets.only(
+                                    left: 10, top: 10, right: 10),
+                                child: htmlText(requirement ?? ''),
+                              );
+                            } else {
+                              currentTab = Padding(
+                                padding: EdgeInsets.only(
+                                    left: 10, top: 10, right: 10),
+                                child: htmlText(overview ?? ''),
+                              );
+                            }
+                            setState(() {
+                              currentValue = value;
+                            });
+                          },
+                        ),
+                        currentTab ??
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  left: 10, top: 10, right: 10),
+                              child: htmlText(descr ?? ''),
+                            ),
+                      ],
+                    ),
+                    builder: (BuildContext context, Widget child) {
+                      return Opacity(
+                        opacity: _animationController.value,
+                        child: FractionalTranslation(
+                          translation: _movieInformationSlidingAnimation.value,
+                          child: child,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+            SliverFillRemaining(
+              child: new Container(color: Colors.transparent),
+            ),
+          ],
+        ),
+      ); // Here you direct access using widget
+    });
+  }
+
+  Widget _reqBtn() {
+    return ScopedModelDescendant<MainScopedModel>(builder: (context, child, model){
+      return Container(
+        padding: EdgeInsets.only(left: 2, top: 5, right: 2),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    InkWell(
+                      onTap: () async {
+                        await FlutterShare.share(
+                          title: 'Blurb',
+                          text: '',
+                          linkUrl: 'https://blurbapp.e-dagang.asia/career/'+_id.toString(),
+                          chooserTitle: title ?? '',
+                        );
+                      },
+                      splashColor: Color(0xffA0CCE8),
+                      highlightColor: Color(0xffA0CCE8),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.share, color: color),
+                          Container(
+                            margin: const EdgeInsets.only(top: 2),
+                            child: Text('SHARE',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: color,
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-
-                      Container(
-                          alignment: Alignment.topLeft,
-                          margin: EdgeInsets.only(left: 5.0, top: 8.0,  bottom: 5),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                InkWell(
-                                  onTap: () {share();},
-                                  splashColor: Color(0xffA0CCE8),
-                                  highlightColor: Color(0xffA0CCE8),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Icon(Icons.share, color: color),
-                                      Container(
-                                        margin: const EdgeInsets.only(top: 2),
-                                        child: Text('SHARE',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w600,
-                                            color: color,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ]
-                          )
-                      ),
-                    ],
-                  ),
-                ),
-
-                AnimatedBuilder(
-                  animation: _animationController,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      CupertinoSegmentedControl(
-                        selectedColor: Colors.grey.shade600,
-                        borderColor: Colors.grey.shade600,
-                        groupValue: currentValue,
-                        children: const <int, Widget>{
-                          0: Text('Description', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),),
-                          1: Text('Requirement', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),),
-                          2: Text('Overview', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),),
-                        },
-                        onValueChanged: (value) {
-                          if (value == 0) {
-                            currentTab = Padding(
-                              padding: EdgeInsets.only(left: 10, top: 10, right: 10),
-                              child: htmlText(descr ?? ''),
-                            );
-                          } else if(value == 1) {
-                            currentTab = Padding(
-                              padding: EdgeInsets.only(left: 10, top: 10, right: 10),
-                              child: htmlText(requirement ?? ''),
-                            );
-                          } else {
-                            currentTab = Padding(
-                              padding: EdgeInsets.only(left: 10, top: 10, right: 10),
-                              child: htmlText(overview ?? ''),
-                            );
-                          }
-                          setState(() {
-                            currentValue = value;
-                          });
-                        },
-                      ),
-                      currentTab ??
-                          Padding(
-                            padding: EdgeInsets.only(left: 10, top: 10, right: 10),
-                            child: htmlText(descr ?? ''),
-                          )
-                    ],
-                  ),
-                  builder: (BuildContext context, Widget child) {
-                    return Opacity(
-                      opacity: _animationController.value,
-                      child: FractionalTranslation(
-                        translation: _movieInformationSlidingAnimation.value,
-                        child: child,
-                      ),
-                    );
-                  },
-                ),
-              ],
+                    ),
+                  ]
+              ),
             ),
-          ),
-        ],
+            RaisedButton(
+              shape: StadiumBorder(),
+              color: color,
+              child: Text('APPLY',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600,),
+                ),
+              ),
+              onPressed: () {
+                model.isAuthenticated ? Navigator.push(context, SlideRightRoute(
+                    page: WebviewWidget(
+                        'https://blurb.e-dagang.asia/wv/reqform_jobs/'+model.getId().toString()+'/'+_id.toString(), title))) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
+              },
+            ),
+          ],
+        ),
+      );
+
+    });
+
+  }
+
+  _buildCircularProgressIndicator() {
+    return Center(
+      child: Container(
+          width: 75,
+          height: 75,
+          color: Colors.transparent,
+          child: Column(
+            children: <Widget>[
+              CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation(Color(0xff2877EA)),
+                strokeWidth: 1.7,
+              ),
+              SizedBox(height: 5.0,),
+              Text('Loading...',
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(color: Colors.grey.shade600, fontStyle: FontStyle.italic, fontSize: 13),
+                ),
+              ),
+            ],
+          )
       ),
-    ); // Here you direct access using widget
+    );
   }
 
   @override
@@ -394,4 +571,3 @@ class _CareerDlPageState extends State<CareerDlPage> with TickerProviderStateMix
   }
 
 }
-
