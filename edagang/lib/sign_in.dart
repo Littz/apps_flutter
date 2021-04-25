@@ -16,13 +16,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as JSON;
 
-
 class SignInOrRegister extends StatefulWidget {
   @override
   _SignInOrRegisterState createState() => _SignInOrRegisterState();
 }
 
-class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerProviderStateMixin {
+class _SignInOrRegisterState extends State<SignInOrRegister>
+    with SingleTickerProviderStateMixin {
   final Map<String, dynamic> _formData = {'email': null, 'password': null};
   final GlobalKey<FormState> _formKeyForLogin = GlobalKey<FormState>();
   final TextEditingController _emailTextController = TextEditingController();
@@ -36,7 +36,8 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
   GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
 
   final RegExp phoneRegex = new RegExp(r'^[6-9]\d{9}$');
-  final RegExp emailRegex = new RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
+  final RegExp emailRegex = new RegExp(
+      r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
 
   @override
   void initState() {
@@ -65,19 +66,17 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
   }
 
   Widget horizontalLine() => Padding(
-    padding: EdgeInsets.symmetric(horizontal: 10.0),
-    child: Container(
-      height: 1.0,
-      color: Colors.grey.shade500,
-    ),
-  );
-
+        padding: EdgeInsets.symmetric(horizontal: 10.0),
+        child: Container(
+          height: 1.0,
+          color: Colors.grey.shade500,
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainScopedModel>(
-        builder: (BuildContext context, Widget child, MainScopedModel model)
-    {
+        builder: (BuildContext context, Widget child, MainScopedModel model) {
       return Scaffold(
         //key: _scaffoldKey,
         appBar: PreferredSize(
@@ -89,7 +88,11 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
             title: Text(
               'Sign In',
               style: GoogleFonts.lato(
-                textStyle: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w600,),
+                textStyle: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
@@ -106,261 +109,279 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
             ),
             Center(
               child: Form(
-                key: _formKeyForLogin,
-                autovalidate: false,
-                child: new SingleChildScrollView(
-                  padding: EdgeInsets.all(40.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      CircleAvatar(
-                        radius: 58.0,
-                        child: Image.asset(
-                          'assets/red_edagang.png',
-                          fit: BoxFit.fill,
-                          height: 69,
-                          width: 165,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 24,
-                      ),
-                      Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            /*Text(
+                  key: _formKeyForLogin,
+                  autovalidate: false,
+                  child: new SingleChildScrollView(
+                      padding: EdgeInsets.all(40.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          CircleAvatar(
+                            radius: 58.0,
+                            child: Image.asset(
+                              'assets/red_edagang.png',
+                              fit: BoxFit.fill,
+                              height: 69,
+                              width: 165,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 24,
+                          ),
+                          Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                /*Text(
                       'Sign In',
                       style: GoogleFonts.lato(
                         textStyle: TextStyle(color: Colors.black, fontSize: 19, fontWeight: FontWeight.w700,),
                       ),
                     ),*/
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Text(
-                              'Login with email and password.',
-                              style: GoogleFonts.lato(
-                                textStyle: TextStyle(color: Colors.grey.shade700, fontSize: 16, fontWeight: FontWeight.w500,),
+                                SizedBox(
+                                  height: 8,
+                                ),
+                                Text(
+                                  'Login with email and password.',
+                                  style: GoogleFonts.lato(
+                                    textStyle: TextStyle(
+                                      color: Colors.grey.shade700,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ]),
+                          SizedBox(
+                            height: 24,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                alignment: Alignment.bottomCenter,
+                                padding: EdgeInsets.only(right: 7),
+                                child: Icon(
+                                  Icons.email,
+                                  color: Colors.grey.shade600,
+                                  size: 20,
+                                ),
+                              ),
+                              new Expanded(
+                                child: TextFormField(
+                                  textAlignVertical: TextAlignVertical.center,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Email',
+                                    hintText: 'Enter your email address',
+                                    hintStyle: TextStyle(color: Colors.grey),
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 7, horizontal: 7),
+                                    isDense: true,
+                                  ),
+                                  keyboardType: TextInputType.emailAddress,
+                                  validator: (value) {
+                                    if (!emailRegex.hasMatch(value)) {
+                                      return 'Please enter valid email';
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (value) {
+                                    _formData['email'] = value;
+                                  },
+                                ),
+                              )
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                alignment: Alignment.bottomCenter,
+                                padding: EdgeInsets.only(right: 7),
+                                child: Icon(
+                                  Icons.vpn_key,
+                                  color: Colors.grey.shade600,
+                                  size: 20,
+                                ),
+                              ),
+                              new Expanded(
+                                child: TextFormField(
+                                  obscureText: true,
+                                  textAlignVertical: TextAlignVertical.center,
+                                  decoration: const InputDecoration(
+                                      hintText: 'Please enter password',
+                                      hintStyle: TextStyle(color: Colors.grey),
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 7, horizontal: 7),
+                                      isDense: true,
+                                      labelText: 'Password'),
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return 'Password is required';
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (value) {
+                                    _formData['password'] = value;
+                                  },
+                                ),
+                              )
+                            ],
+                          ),
+                          _buildForgotPasswordBtn(),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                            child: RaisedButton(
+                              shape: StadiumBorder(),
+                              color: Color(0xff272264),
+                              onPressed: () {
+                                _submitLoginEmail(model);
+                              },
+                              child: Text(
+                                'Login',
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700),
+                                ),
                               ),
                             ),
-                          ]
-                      ),
-                      SizedBox(
-                        height: 24,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Container(
-                            alignment: Alignment.bottomCenter,
-                            padding: EdgeInsets.only(right: 7),
-                            child: Icon(
-                              Icons.email,
-                              color: Colors.grey.shade600,
-                              size: 20,
-                            ),
                           ),
-                          new Expanded(
-                            child: TextFormField(
-                              textAlignVertical: TextAlignVertical.center,
-                              decoration: const InputDecoration(
-                                labelText: 'Email',
-                                hintText: 'Enter your email address',
-                                hintStyle: TextStyle(color: Colors.grey),
-                                contentPadding: EdgeInsets.symmetric(vertical: 7, horizontal: 7),
-                                isDense: true,
-                              ),
-                              keyboardType: TextInputType.emailAddress,
-                              validator: (value) {
-                                if (!emailRegex.hasMatch(value)) {
-                                  return 'Please enter valid email';
-                                }
-                                return null;
-                              },
-                              onSaved: (value) {
-                                _formData['email'] = value;
-                              },
-                            ),
-                          )
-                        ],
-                      ),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Container(
-                            alignment: Alignment.bottomCenter,
-                            padding: EdgeInsets.only(right: 7),
-                            child: Icon(
-                              Icons.vpn_key,
-                              color: Colors.grey.shade600,
-                              size: 20,
-                            ),
-                          ),
-                          new Expanded(
-                            child: TextFormField(
-                              obscureText: true,
-                              textAlignVertical: TextAlignVertical.center,
-                              decoration: const InputDecoration(
-                                  hintText: 'Please enter password',
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  contentPadding: EdgeInsets.symmetric(vertical: 7, horizontal: 7),
-                                  isDense: true,
-                                  labelText: 'Password'),
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'Password is required';
-                                }
-                                return null;
-                              },
-                              onSaved: (value) {
-                                _formData['password'] = value;
-                              },
-                            ),
-                          )
-                        ],
-                      ),
-
-                      _buildForgotPasswordBtn(),
-
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
-                        child: RaisedButton(
-                          shape: StadiumBorder(),
-                          color: Color(0xff272264),
-                          onPressed: () {
-                            _submitLoginEmail(model);
-                          },
-                          child: Text('Login',
-                            style: GoogleFonts.lato(
-                              textStyle: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      InkWell(
-                        onTap: () {
-                          Navigator.pushReplacement(context,
-                              MaterialPageRoute(builder: (context) => Register()));
-                        },
-                        child: Container(
-                          height: 24,
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-                          alignment: Alignment.center,
-                          child: Center(
-                              child: RichText(
+                          InkWell(
+                            onTap: () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Register()));
+                            },
+                            child: Container(
+                              height: 24,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5)),
+                              alignment: Alignment.center,
+                              child: Center(
+                                  child: RichText(
                                 text: TextSpan(
                                   text: "Don't have an account? ",
                                   style: GoogleFonts.lato(
-                                    textStyle: TextStyle(color: Colors.grey.shade600, fontSize: 15,),
+                                    textStyle: TextStyle(
+                                      color: Colors.grey.shade600,
+                                      fontSize: 15,
+                                    ),
                                   ),
                                   children: <TextSpan>[
-                                    TextSpan(text: 'Sign up',
+                                    TextSpan(
+                                      text: 'Sign up',
                                       style: GoogleFonts.lato(
-                                        textStyle: TextStyle(color: Color(0xffCE0E27), fontSize: 16, fontWeight: FontWeight.w700,),
+                                        textStyle: TextStyle(
+                                          color: Color(0xffCE0E27),
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700,
+                                        ),
                                       ),
                                     ),
                                   ],
                                 ),
-                              )
+                              )),
+                            ),
                           ),
-                        ),
-                      ),
-
-                      SizedBox(
-                        height: 24,
-                      ),
-
-                      Container(
-                        width: double.infinity,
-                        //margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Expanded(
-                              flex: 2,
-                              child: horizontalLine(),
-                            ),
-                            Text(' Or access with ',
-                              style: GoogleFonts.lato(
-                                textStyle: TextStyle(color: Colors.grey.shade700, fontSize: 12, fontWeight: FontWeight.normal,),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: horizontalLine(),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 30.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            GestureDetector(
-                              onTap: () {
-                                _facebookLogin(model);
-                              },
-                              child: Container(
-                                height: 60.0,
-                                width: 60.0,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black26,
-                                      offset: Offset(0, 2),
-                                      blurRadius: 6.0,
+                          SizedBox(
+                            height: 24,
+                          ),
+                          Container(
+                            width: double.infinity,
+                            //margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Expanded(
+                                  flex: 2,
+                                  child: horizontalLine(),
+                                ),
+                                Text(
+                                  ' Or access with ',
+                                  style: GoogleFonts.lato(
+                                    textStyle: TextStyle(
+                                      color: Colors.grey.shade700,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.normal,
                                     ),
-                                  ],
-                                  image: DecorationImage(
-                                    image: AssetImage('assets/icons/facebook.jpg',),
                                   ),
                                 ),
-                              ),
+                                Expanded(
+                                  flex: 2,
+                                  child: horizontalLine(),
+                                ),
+                              ],
                             ),
-
-                            GestureDetector(
-                              onTap: () {
-                                _googleLogin(model);
-                              },
-                              child: Container(
-                                height: 60.0,
-                                width: 60.0,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black26,
-                                      offset: Offset(0, 2),
-                                      blurRadius: 6.0,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 30.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                GestureDetector(
+                                  onTap: () {
+                                    _facebookLogin(model);
+                                  },
+                                  child: Container(
+                                    height: 60.0,
+                                    width: 60.0,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black26,
+                                          offset: Offset(0, 2),
+                                          blurRadius: 6.0,
+                                        ),
+                                      ],
+                                      image: DecorationImage(
+                                        image: AssetImage(
+                                          'assets/icons/facebook.jpg',
+                                        ),
+                                      ),
                                     ),
-                                  ],
-                                  image: DecorationImage(
-                                    image: AssetImage('assets/icons/google.jpg',),
                                   ),
                                 ),
-                              ),
+                                GestureDetector(
+                                  onTap: () {
+                                    _googleLogin(model);
+                                  },
+                                  child: Container(
+                                    height: 60.0,
+                                    width: 60.0,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black26,
+                                          offset: Offset(0, 2),
+                                          blurRadius: 6.0,
+                                        ),
+                                      ],
+                                      image: DecorationImage(
+                                        image: AssetImage(
+                                          'assets/icons/google.jpg',
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        color: Colors.transparent,
-                        height: 56,
-                      ),
-                    ],
-                  )
-                )
-              ),
+                          ),
+                          Container(
+                            color: Colors.transparent,
+                            height: 56,
+                          ),
+                        ],
+                      ))),
             ),
           ],
         ),
@@ -616,12 +637,18 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
     return Container(
       alignment: Alignment.centerRight,
       child: FlatButton(
-        onPressed: () {Navigator.push(context,SlideRightRoute(page: ForgotPasswordPage()));},
+        onPressed: () {
+          Navigator.push(context, SlideRightRoute(page: ForgotPasswordPage()));
+        },
         padding: EdgeInsets.only(right: 0.0),
         child: Text(
           'Forgot Password?',
           style: GoogleFonts.lato(
-            textStyle: TextStyle(color: Color(0xffCE0E27), fontSize: 14, fontWeight: FontWeight.w700,),
+            textStyle: TextStyle(
+              color: Color(0xffCE0E27),
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+            ),
           ),
         ),
       ),
@@ -660,11 +687,15 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
         children: <Widget>[
           _buildSocialBtn(
             () {},
-            AssetImage('assets/icons/facebook.jpg',),
+            AssetImage(
+              'assets/icons/facebook.jpg',
+            ),
           ),
           _buildSocialBtn(
             () {},
-            AssetImage('assets/icons/google.jpg',),
+            AssetImage(
+              'assets/icons/google.jpg',
+            ),
           ),
         ],
       ),
@@ -683,7 +714,6 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
       return;
     }
 
-
     _formKeyForLogin.currentState.save();
 
     final Map<String, dynamic> authData = {
@@ -701,10 +731,12 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
     final http.Response response = await http.post(
       Constants.apiLogin,
       body: JSON.jsonEncode(authData),
-      headers: {'Content-Type': 'application/json',},
+      headers: {
+        'Content-Type': 'application/json',
+      },
     );
 
-    print("RES BODY >>>> "+response.body);
+    print("RES BODY >>>> " + response.body);
 
     final Map<String, dynamic> responseData = JSON.jsonDecode(response.body);
     String message = 'Something wrong somewhere.';
@@ -716,7 +748,7 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
     } else {
       message = responseData["data"];
     }
-    print("MESG >>>> "+message);
+    print("MESG >>>> " + message);
     //print("MESG >>>> "+responseData["data"]);
 
     final Map<String, dynamic> successInformation = {
@@ -740,31 +772,46 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
       model.fetchOrderHistoryResponse();
 
       Navigator.of(context).pushReplacementNamed("/Main");
-      print('Sukses login! => '+successInformation['message']);
+      print('Sukses login! => ' + successInformation['message']);
       //showStatusToast(message);
 
     } else {
-      print('An Error Occurred! => '+successInformation['message']);
+      print('An Error Occurred! => ' + successInformation['message']);
 
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Unsuccessful login.',
+            title: Text(
+              'Unsuccessful login.',
               style: GoogleFonts.lato(
-                textStyle: TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.w700,),
+                textStyle: TextStyle(
+                  color: Colors.red,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
-            content: Text(message,
+            content: Text(
+              message,
               style: GoogleFonts.lato(
-                textStyle: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500,),
+                textStyle: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
             actions: [
               FlatButton(
-                child: Text('Close',
+                child: Text(
+                  'Close',
                   style: GoogleFonts.lato(
-                    textStyle: TextStyle(color: Colors.red, fontSize: 14, fontWeight: FontWeight.w600,),
+                    textStyle: TextStyle(
+                      color: Colors.red,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
                 onPressed: () {
@@ -782,31 +829,30 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
     });
   }
 
-  _googleLogin(MainScopedModel model) async{
-    try{
+  _googleLogin(MainScopedModel model) async {
+    try {
       await _googleSignIn.signIn();
       setState(() {
         _isLoggedInG = true;
       });
 
-      if(_isLoggedInG) _submitGoogleLogin(model);
-
-    } catch (err){
+      if (_isLoggedInG) _submitGoogleLogin(model);
+    } catch (err) {
       print('Google login error!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
       print(err);
     }
   }
 
-  _facebookLogin(MainScopedModel model) async{
-
-    final result = await facebookLogin.logInWithReadPermissions(['email']);
+  _facebookLogin(MainScopedModel model) async {
+    final result = await facebookLogin.logIn(['email']);
     print('Facebook Login !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
     print(result.status.toString());
 
     switch (result.status) {
       case FacebookLoginStatus.loggedIn:
         final token = result.accessToken.token;
-        final graphResponse = await http.get('https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=${token}');
+        final graphResponse = await http.get(
+            'https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=${token}');
         final profile = JSON.jsonDecode(graphResponse.body);
         print(profile);
         setState(() {
@@ -814,23 +860,22 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
           _isLoggedInFb = true;
         });
         print('Facebook login success!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-        if(_isLoggedInFb) _submitFbLogin(model);
+        if (_isLoggedInFb) _submitFbLogin(model);
 
         break;
       case FacebookLoginStatus.cancelledByUser:
-        setState(() => _isLoggedInFb = false );
+        setState(() => _isLoggedInFb = false);
         print('Facebook login cancelled!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
         break;
       case FacebookLoginStatus.error:
-        setState(() => _isLoggedInFb = false );
+        setState(() => _isLoggedInFb = false);
         print('Facebook login error!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
         print(result.errorMessage);
         break;
     }
-
   }
 
-  _submitFbLogin(MainScopedModel model) async{
+  _submitFbLogin(MainScopedModel model) async {
     setState(() {
       _isLoader = true;
     });
@@ -856,10 +901,12 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
     final http.Response response = await http.post(
       Constants.apiLogin,
       body: JSON.jsonEncode(authData),
-      headers: {'Content-Type': 'application/json',},
+      headers: {
+        'Content-Type': 'application/json',
+      },
     );
 
-    print("RES BODY >>>> "+response.body);
+    print("RES BODY >>>> " + response.body);
 
     final Map<String, dynamic> responseData = JSON.jsonDecode(response.body);
     String message = 'Something wrong somewhere.';
@@ -871,7 +918,7 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
     } else {
       message = responseData["data"];
     }
-    print("MESG >>>> "+message);
+    print("MESG >>>> " + message);
 
     final Map<String, dynamic> successInformation = {
       'success': !hasError,
@@ -883,7 +930,8 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
       prefs.setString('token', responseData['data']['token']);
       prefs.setString('email', responseData['data']['email']);
       prefs.setString('login_type', '2');
-      prefs.setString('photo', userProfile["picture"]["data"]["url"].toString());
+      prefs.setString(
+          'photo', userProfile["picture"]["data"]["url"].toString());
 
       model.loggedInUser();
       model.fetchProfile();
@@ -895,30 +943,44 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
       model.fetchOrderHistoryResponse();
 
       Navigator.of(context).pushReplacementNamed("/Main");
-      print('Sukses login! => '+successInformation['message']);
-
+      print('Sukses login! => ' + successInformation['message']);
     } else {
-      print('An Error Occurred! => '+successInformation['message']);
+      print('An Error Occurred! => ' + successInformation['message']);
 
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Unsuccessful login.',
+            title: Text(
+              'Unsuccessful login.',
               style: GoogleFonts.lato(
-                textStyle: TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.w700,),
+                textStyle: TextStyle(
+                  color: Colors.red,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
-            content: Text(message,
+            content: Text(
+              message,
               style: GoogleFonts.lato(
-                textStyle: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500,),
+                textStyle: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
             actions: [
               FlatButton(
-                child: Text('Close',
+                child: Text(
+                  'Close',
                   style: GoogleFonts.lato(
-                    textStyle: TextStyle(color: Colors.red, fontSize: 14, fontWeight: FontWeight.w600,),
+                    textStyle: TextStyle(
+                      color: Colors.red,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
                 onPressed: () {
@@ -934,10 +996,9 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
     setState(() {
       _isLoader = false;
     });
-
   }
 
-  _submitGoogleLogin(MainScopedModel model) async{
+  _submitGoogleLogin(MainScopedModel model) async {
     setState(() {
       _isLoader = true;
     });
@@ -963,10 +1024,12 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
     final http.Response response = await http.post(
       Constants.apiLogin,
       body: JSON.jsonEncode(authData),
-      headers: {'Content-Type': 'application/json',},
+      headers: {
+        'Content-Type': 'application/json',
+      },
     );
 
-    print("RES BODY >>>> "+response.body);
+    print("RES BODY >>>> " + response.body);
 
     final Map<String, dynamic> responseData = JSON.jsonDecode(response.body);
     String message = 'Something wrong somewhere.';
@@ -978,7 +1041,7 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
     } else {
       message = responseData["data"];
     }
-    print("MESG >>>> "+message);
+    print("MESG >>>> " + message);
 
     final Map<String, dynamic> successInformation = {
       'success': !hasError,
@@ -1002,30 +1065,44 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
       model.fetchOrderHistoryResponse();
 
       Navigator.of(context).pushReplacementNamed("/Main");
-      print('Sukses login! => '+successInformation['message']);
-
+      print('Sukses login! => ' + successInformation['message']);
     } else {
-      print('An Error Occurred! => '+successInformation['message']);
+      print('An Error Occurred! => ' + successInformation['message']);
 
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Unsuccessful login.',
+            title: Text(
+              'Unsuccessful login.',
               style: GoogleFonts.lato(
-                textStyle: TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.w700,),
+                textStyle: TextStyle(
+                  color: Colors.red,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
-            content: Text(message,
+            content: Text(
+              message,
               style: GoogleFonts.lato(
-                textStyle: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500,),
+                textStyle: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
             actions: [
               FlatButton(
-                child: Text('Close',
+                child: Text(
+                  'Close',
                   style: GoogleFonts.lato(
-                    textStyle: TextStyle(color: Colors.red, fontSize: 14, fontWeight: FontWeight.w600,),
+                    textStyle: TextStyle(
+                      color: Colors.red,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
                 onPressed: () {
@@ -1041,29 +1118,30 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
     setState(() {
       _isLoader = false;
     });
-
   }
 
-  _logoutFb(){
+  _logoutFb() {
     facebookLogin.logOut();
     setState(() {
       _isLoggedInFb = false;
     });
   }
-
 }
 
-
 //==========================================================================================================================
-
 
 class Register extends StatefulWidget {
   @override
   _RegisterState createState() => _RegisterState();
 }
 
-class _RegisterState extends State<Register> with SingleTickerProviderStateMixin {
-  final Map<String, dynamic> _formData = {'name': null, 'email': null, 'password': null};
+class _RegisterState extends State<Register>
+    with SingleTickerProviderStateMixin {
+  final Map<String, dynamic> _formData = {
+    'name': null,
+    'email': null,
+    'password': null
+  };
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _passwordTextController = TextEditingController();
   bool _isLoader = false;
@@ -1071,7 +1149,6 @@ class _RegisterState extends State<Register> with SingleTickerProviderStateMixin
   final RegExp phoneRegex = new RegExp(r'^[6-9]\d{9}$');
   final RegExp emailRegex = new RegExp(
       r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
-
 
   void _submitForm() async {
     setState(() {
@@ -1094,7 +1171,8 @@ class _RegisterState extends State<Register> with SingleTickerProviderStateMixin
 
     final http.Response response = await http.post(
       Constants.apiRegister,
-      body: JSON.jsonEncode(authData), //{'fullname': 'Cartsini Sana', 'email': _formData['email'], 'password': _formData['password'], 'channel': 0},
+      body: JSON.jsonEncode(
+          authData), //{'fullname': 'Cartsini Sana', 'email': _formData['email'], 'password': _formData['password'], 'channel': 0},
       headers: {'Content-Type': 'application/json'},
     );
 
@@ -1117,33 +1195,47 @@ class _RegisterState extends State<Register> with SingleTickerProviderStateMixin
     };
 
     if (successInformation['success']) {
-
       //showStatusToast(message);
-      Navigator.pushReplacement(context, SlideRightRoute(page: SignInOrRegister()));
-      print('Success register! => '+successInformation['message']);
-
+      Navigator.pushReplacement(
+          context, SlideRightRoute(page: SignInOrRegister()));
+      print('Success register! => ' + successInformation['message']);
     } else {
-      print('An Error Occurred! => '+successInformation['message']);
+      print('An Error Occurred! => ' + successInformation['message']);
 
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Unsuccessful register.',
+            title: Text(
+              'Unsuccessful register.',
               style: GoogleFonts.lato(
-                textStyle: TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.w700,),
+                textStyle: TextStyle(
+                  color: Colors.red,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
-            content: Text(message,
+            content: Text(
+              message,
               style: GoogleFonts.lato(
-                textStyle: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500,),
+                textStyle: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
             actions: [
               FlatButton(
-                child: Text('Close',
+                child: Text(
+                  'Close',
                   style: GoogleFonts.lato(
-                    textStyle: TextStyle(color: Colors.red, fontSize: 14, fontWeight: FontWeight.w600,),
+                    textStyle: TextStyle(
+                      color: Colors.red,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
                 onPressed: () {
@@ -1173,7 +1265,11 @@ class _RegisterState extends State<Register> with SingleTickerProviderStateMixin
           title: Text(
             'Sign Up',
             style: GoogleFonts.lato(
-              textStyle: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w600,),
+              textStyle: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ),
@@ -1190,213 +1286,229 @@ class _RegisterState extends State<Register> with SingleTickerProviderStateMixin
           ),
           Center(
             child: Form(
-              key: _formKey,
-              autovalidate: false,
-              child: new SingleChildScrollView(
-                padding: EdgeInsets.all(40.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    CircleAvatar(
-                      radius: 58.0,
-                      child: Image.asset(
-                        'assets/red_edagang.png',
-                        fit: BoxFit.fill,
-                        height: 69,
-                        width: 165,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 24,
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                key: _formKey,
+                autovalidate: false,
+                child: new SingleChildScrollView(
+                    padding: EdgeInsets.all(40.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
-                        /*Text(
+                        CircleAvatar(
+                          radius: 58.0,
+                          child: Image.asset(
+                            'assets/red_edagang.png',
+                            fit: BoxFit.fill,
+                            height: 69,
+                            width: 165,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 24,
+                        ),
+                        Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              /*Text(
                           'Sign Up',
                           style: GoogleFonts.lato(
                             textStyle: TextStyle(color: Colors.black, fontSize: 19, fontWeight: FontWeight.w700,),
                           ),
                         ),*/
-                        SizedBox(
-                          height: 8,
-                        ),
-                        Text(
-                          'Create an account.',
-                          style: GoogleFonts.lato(
-                            textStyle: TextStyle(color: Colors.grey.shade700, fontSize: 16, fontWeight: FontWeight.w500,),
-                          ),
-                        ),
-                      ]
-                    ),
-                    SizedBox(
-                      height: 24,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          alignment: Alignment.bottomCenter,
-                          padding: EdgeInsets.only(right: 7),
-                          child: Icon(
-                            Icons.person,
-                            color: Colors.grey.shade600,
-                            size: 20,
-                          ),
-                        ),
-                        new Expanded(
-                          child: TextFormField(
-                            textAlignVertical: TextAlignVertical.center,
-                            decoration: const InputDecoration(
-                              labelText: 'Name',
-                              hintText: 'Enter your name',
-                              hintStyle: TextStyle(color: Colors.grey),
-                              contentPadding: EdgeInsets.symmetric(vertical: 7, horizontal: 7),
-                              isDense: true,
-                            ),
-                            keyboardType: TextInputType.name,
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Please enter name';
-                              }
-                              return null;
-                            },
-                            onSaved: (value) {
-                              _formData['name'] = value;
-                            },
-                          ),
-                        )
-                      ],
-                    ),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          alignment: Alignment.bottomCenter,
-                          padding: EdgeInsets.only(right: 7),
-                          child: Icon(
-                            Icons.email,
-                            color: Colors.grey.shade600,
-                            size: 20,
-                          ),
-                        ),
-                        new Expanded(
-                          child: TextFormField(
-                            textAlignVertical: TextAlignVertical.center,
-                            decoration: const InputDecoration(
-                              labelText: 'Email',
-                              hintText: 'Enter your email address',
-                              hintStyle: TextStyle(color: Colors.grey),
-                              contentPadding: EdgeInsets.symmetric(vertical: 7, horizontal: 7),
-                              isDense: true,
-                            ),
-                            keyboardType: TextInputType.emailAddress,
-                            validator: (value) {
-                              if (!emailRegex.hasMatch(value)) {
-                                return 'Please enter valid email';
-                              }
-                              return null;
-                            },
-                            onSaved: (value) {
-                              _formData['email'] = value;
-                            },
-                          ),
-                        )
-                      ],
-                    ),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          alignment: Alignment.bottomCenter,
-                          padding: EdgeInsets.only(right: 7),
-                          child: Icon(
-                            Icons.vpn_key,
-                            color: Colors.grey.shade600,
-                            size: 20,
-                          ),
-                        ),
-                        new Expanded(
-                          child: TextFormField(
-                            obscureText: true,
-                            textAlignVertical: TextAlignVertical.center,
-                            decoration: const InputDecoration(
-                                hintText: 'Please enter password',
-                                hintStyle: TextStyle(color: Colors.grey),
-                                contentPadding: EdgeInsets.symmetric(vertical: 7, horizontal: 7),
-                                isDense: true,
-                                labelText: 'Password'),
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Password is required';
-                              }
-                              return null;
-                            },
-                            onSaved: (value) {
-                              _formData['password'] = value;
-                            },
-                          ),
-                        )
-                      ],
-                    ),
-
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 24.0),
-                      child: RaisedButton(
-                        shape: StadiumBorder(),
-                        color: Color(0xff272264),
-                        onPressed: () {
-                          _submitForm();
-                        },
-                        child: Text('Sign up',
-                          style: GoogleFonts.lato(
-                            textStyle: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700),
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    InkWell(
-                      onTap: () {
-                        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => SignInOrRegister()));
-                      },
-                      child: Container(
-                        height: 30,
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-                        margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
-                        child: Center(
-                          child: RichText(
-                            text: TextSpan(
-                              text: "Already have an account? ",
-                              style: GoogleFonts.lato(
-                                textStyle: TextStyle(color: Colors.grey.shade600, fontSize: 15, fontWeight: FontWeight.w600,),
+                              SizedBox(
+                                height: 8,
                               ),
-                              children: <TextSpan>[
-                                TextSpan(text: 'Sign in',
-                                  style: GoogleFonts.lato(
-                                    textStyle: TextStyle(color: Color(0xffCE0E27), fontSize: 16, fontWeight: FontWeight.w700,),
+                              Text(
+                                'Create an account.',
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(
+                                    color: Colors.grey.shade700,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                              ],
-                            ),
-                          )
+                              ),
+                            ]),
+                        SizedBox(
+                          height: 24,
                         ),
-                      ),
-                    ),
-                    Container(
-                      color: Colors.transparent,
-                      height: 56,
-                    ),
-                  ],
-                )
-              )
-            ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              alignment: Alignment.bottomCenter,
+                              padding: EdgeInsets.only(right: 7),
+                              child: Icon(
+                                Icons.person,
+                                color: Colors.grey.shade600,
+                                size: 20,
+                              ),
+                            ),
+                            new Expanded(
+                              child: TextFormField(
+                                textAlignVertical: TextAlignVertical.center,
+                                decoration: const InputDecoration(
+                                  labelText: 'Name',
+                                  hintText: 'Enter your name',
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 7, horizontal: 7),
+                                  isDense: true,
+                                ),
+                                keyboardType: TextInputType.name,
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Please enter name';
+                                  }
+                                  return null;
+                                },
+                                onSaved: (value) {
+                                  _formData['name'] = value;
+                                },
+                              ),
+                            )
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              alignment: Alignment.bottomCenter,
+                              padding: EdgeInsets.only(right: 7),
+                              child: Icon(
+                                Icons.email,
+                                color: Colors.grey.shade600,
+                                size: 20,
+                              ),
+                            ),
+                            new Expanded(
+                              child: TextFormField(
+                                textAlignVertical: TextAlignVertical.center,
+                                decoration: const InputDecoration(
+                                  labelText: 'Email',
+                                  hintText: 'Enter your email address',
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 7, horizontal: 7),
+                                  isDense: true,
+                                ),
+                                keyboardType: TextInputType.emailAddress,
+                                validator: (value) {
+                                  if (!emailRegex.hasMatch(value)) {
+                                    return 'Please enter valid email';
+                                  }
+                                  return null;
+                                },
+                                onSaved: (value) {
+                                  _formData['email'] = value;
+                                },
+                              ),
+                            )
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              alignment: Alignment.bottomCenter,
+                              padding: EdgeInsets.only(right: 7),
+                              child: Icon(
+                                Icons.vpn_key,
+                                color: Colors.grey.shade600,
+                                size: 20,
+                              ),
+                            ),
+                            new Expanded(
+                              child: TextFormField(
+                                obscureText: true,
+                                textAlignVertical: TextAlignVertical.center,
+                                decoration: const InputDecoration(
+                                    hintText: 'Please enter password',
+                                    hintStyle: TextStyle(color: Colors.grey),
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 7, horizontal: 7),
+                                    isDense: true,
+                                    labelText: 'Password'),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Password is required';
+                                  }
+                                  return null;
+                                },
+                                onSaved: (value) {
+                                  _formData['password'] = value;
+                                },
+                              ),
+                            )
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 24.0),
+                          child: RaisedButton(
+                            shape: StadiumBorder(),
+                            color: Color(0xff272264),
+                            onPressed: () {
+                              _submitForm();
+                            },
+                            child: Text(
+                              'Sign up',
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SignInOrRegister()));
+                          },
+                          child: Container(
+                            height: 30,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5)),
+                            margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
+                            child: Center(
+                                child: RichText(
+                              text: TextSpan(
+                                text: "Already have an account? ",
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(
+                                    color: Colors.grey.shade600,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: 'Sign in',
+                                    style: GoogleFonts.lato(
+                                      textStyle: TextStyle(
+                                        color: Color(0xffCE0E27),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )),
+                          ),
+                        ),
+                        Container(
+                          color: Colors.transparent,
+                          height: 56,
+                        ),
+                      ],
+                    ))),
           ),
         ],
       ),
@@ -1619,4 +1731,3 @@ class _RegisterState extends State<Register> with SingleTickerProviderStateMixin
   }*/
 
 }
-
