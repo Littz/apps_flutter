@@ -7,19 +7,17 @@ import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/SABTitle.dart';
 import 'package:edagang/widgets/blur_icon.dart';
-import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/photo_viewer.dart';
 import 'package:edagang/widgets/webview.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:page_indicator/page_indicator.dart';
-import 'package:photo_view/photo_view.dart';
 import 'dart:convert';
-
 import 'package:scoped_model/scoped_model.dart';
 
 
@@ -127,6 +125,7 @@ class _AutoDlShowcasePageState extends State<AutoDlShowcase> with TickerProvider
 
   @override
   void initState() {
+    FirebaseAnalytics().logEvent(name: 'Deeplink_Blurb_auto_'+widget.autoTitle,parameters:null);
     getDetails();
     super.initState();
     _scrollController = ScrollController()..addListener(() => setState(() {}));

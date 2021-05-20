@@ -4,6 +4,7 @@ import 'package:edagang/screens/shop/product_detail.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -68,6 +69,12 @@ class _SearchState extends State<SearchList3> {
         }
       });
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    FirebaseAnalytics().logEvent(name: 'Cartsini_Search_page',parameters:null);
   }
 
   @override

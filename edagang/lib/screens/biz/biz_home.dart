@@ -4,6 +4,7 @@ import 'package:edagang/scoped/biz_cat_scoped.dart';
 import 'package:edagang/screens/biz/biz_company_detail.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -28,6 +29,7 @@ class _BizCategoryPageState extends State<BizCategoryPage> {
   @override
   void initState() {
     super.initState();
+    FirebaseAnalytics().logEvent(name: 'Biz_category_'+widget.catName,parameters:null);
   }
 
   @override
@@ -162,74 +164,86 @@ class BizCategoryListCompanyBody extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
               ),
-              child: ClipPath(
-                clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-                child: Center(
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
-                        child: Container(
-                          padding: const EdgeInsets.all(0.0),
-                          color: Colors.white,
-                          child: Card(
+              child: Stack(
+                  children: [
+                    Center(
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Container(
+                            padding: const EdgeInsets.all(0.0),
                             color: Colors.white,
-                            elevation: 0.0,
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                            child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          color: Colors.transparent,
-                                          borderRadius: BorderRadius.circular(7)
-                                      ),
-                                      child: data.logo == null ? Image.asset(
-                                        'assets/icons/ic_launcher_new.png', height: 80.0, width: 80.0,
-                                        fit: BoxFit.cover,)
-
-                                          : CachedNetworkImage(
-                                        fit: BoxFit.fitWidth,
-                                        imageUrl: 'http://bizapp.e-dagang.asia'+data.logo ?? '',
-                                        imageBuilder: (context, imageProvider) => Container(
-                                          decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                alignment: Alignment.center,
-                                                image: imageProvider,
-                                                fit: BoxFit.fitWidth,
-                                              ),
-                                              borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(8.0),
-                                                  topRight: Radius.circular(8.0)
-                                              )
-                                          ),
+                            child: Card(
+                              color: Colors.white,
+                              elevation: 0.0,
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.transparent,
+                                            borderRadius: BorderRadius.circular(7)
                                         ),
-                                        placeholder: (context, url) => Container(color: Colors.grey.shade200,),
-                                        errorWidget: (context, url, error) => Icon(Icons.image_rounded, size: 36,),
+                                        child: data.logo == null ? Image.asset(
+                                          'assets/icons/ic_launcher_new.png', height: 80.0, width: 80.0,
+                                          fit: BoxFit.cover,)
+
+                                            : CachedNetworkImage(
+                                          fit: BoxFit.fitWidth,
+                                          imageUrl: 'http://bizapp.e-dagang.asia'+data.logo ?? '',
+                                          imageBuilder: (context, imageProvider) => Container(
+                                            decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                  alignment: Alignment.center,
+                                                  image: imageProvider,
+                                                  fit: BoxFit.fitWidth,
+                                                ),
+                                                borderRadius: BorderRadius.only(
+                                                    topLeft: Radius.circular(8.0),
+                                                    topRight: Radius.circular(8.0)
+                                                )
+                                            ),
+                                          ),
+                                          placeholder: (context, url) => Container(color: Colors.grey.shade200,),
+                                          errorWidget: (context, url, error) => Icon(Icons.image_rounded, size: 36,),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(height: 8.0),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 8.0),
-                                    child: Text(data.name,
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.lato(
-                                        textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                                    SizedBox(height: 8.0),
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                      child: Text(data.name,
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.lato(
+                                          textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      //style: TextStyle(fontSize: 14.0)
                                     ),
-                                  ),
-                                  SizedBox(height: 8.0)
-                                ]
+                                    SizedBox(height: 8.0)
+                                  ]
+                              ),
                             ),
+                          )
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: data.verify == 1 ? Padding(
+                        padding: EdgeInsets.only(top: 5, right: 5),
+                        child: Image.asset('assets/icons/verify.png', fit: BoxFit.cover, height: 21,),
+                        /*Text('Verified',
+                          style: GoogleFonts.lato(
+                            textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.green.shade700),
                           ),
-                        )
-                    )
-                ),
+                        ),*/
+                      ) : Container(),
+                    ),
+                  ]
               ),
             ),
           );

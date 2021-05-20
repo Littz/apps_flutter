@@ -1,11 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/screens/shop/product_koop.dart';
-import 'package:edagang/screens/shop/product_merchant.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
-import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -26,6 +25,7 @@ class _KooperasiPageState extends State<KooperasiPage> {
   @override
   void initState() {
     super.initState();
+    FirebaseAnalytics().logEvent(name: 'Cartsini_Koperasi_home',parameters:null);
   }
 
   @override

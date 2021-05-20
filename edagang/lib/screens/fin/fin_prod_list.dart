@@ -10,6 +10,7 @@ import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/photo_viewer.dart';
 import 'package:edagang/widgets/webview.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
@@ -73,25 +74,26 @@ class _FinDetailPageState extends State<FinDetailPage> with TickerProviderStateM
             List<Product> _product = [];
             resBody['data']['business']['product'].forEach((produk) {
               _product.add(
-                  new Product(
-                    id: produk['id'],
-                    business_id: produk['company_id'],
-                    product_name: produk['product_name'],
-                    product_desc: produk['description'],
-                    overview: produk['overview']
-                  )
+                new Product(
+                  id: produk['id'],
+                  business_id: produk['company_id'],
+                  product_name: produk['product_name'],
+                  product_desc: produk['description'],
+                  overview: produk['overview'],
+                  file_path: produk['images'] == null ? 'null' : 'https://finapp.e-dagang.asia'+produk['images']['file_path'],
+                )
               );
             });
 
             List<Award> _award = [];
             resBody['data']['business']['award'].forEach((awad) {
               _award.add(
-                  new Award(
-                    id: awad['id'],
-                    business_id: awad['business_id'],
-                    award_desc: awad['award_desc'],
-                    filename: awad['filename'] == null ? 'null' : 'https://finapp.e-dagang.asia'+awad['filename'],
-                  )
+                new Award(
+                  id: awad['id'],
+                  business_id: awad['business_id'],
+                  award_desc: awad['award_desc'],
+                  filename: awad['filename'] == null ? 'null' : 'https://finapp.e-dagang.asia'+awad['filename'],
+                )
               );
             });
 
@@ -136,6 +138,7 @@ class _FinDetailPageState extends State<FinDetailPage> with TickerProviderStateM
 
   @override
   void initState() {
+    FirebaseAnalytics().logEvent(name: 'Fintools_Product_'+widget.bizName,parameters:null);
     getDetails();
     super.initState();
     _scrollController = ScrollController()..addListener(() => setState(() {}));
@@ -350,7 +353,7 @@ class _FinDetailPageState extends State<FinDetailPage> with TickerProviderStateM
                             } else if(value == 1) {
                               currentTab = Padding(
                                 padding: EdgeInsets.only(left: 10, top: 10, right: 10),
-                                child: _productList(widget.bizId),
+                                child: _productList(widget.bizName),
                               );
                             } else {
                               currentTab = Padding(
@@ -593,7 +596,7 @@ class _FinDetailPageState extends State<FinDetailPage> with TickerProviderStateM
 
   }
 
-  Widget _productList(String bid) {
+  Widget _productList(String co) {
     if(products.length == 0) {
       return Padding(
         padding: const EdgeInsets.all(10.0),
@@ -627,36 +630,21 @@ class _FinDetailPageState extends State<FinDetailPage> with TickerProviderStateM
                       return MediaQuery.removePadding(
                         context: context,
                         removeTop: true,
-                        child: bid == '4' ? ListTile(
+                        child: ListTile(
                           contentPadding: EdgeInsets.symmetric(vertical: -3, horizontal: -3),
                           title: Text(data.product_name),
                           subtitle: htmlText(data.product_desc),
                           trailing: Icon(Icons.chevron_right,color: Colors.grey),
                           onTap: () {
                             showDialog(context: context,
-                                builder: (BuildContext context){
-                                  return CustomDialogBox(
-                                    title: '',
-                                    descriptions: data.overview,
-                                    text: "Close",
-                                  );
-                                }
-                            );
-                          },
-                        ) : ListTile(
-                          contentPadding: EdgeInsets.symmetric(vertical: -3, horizontal: -3),
-                          title: Text(data.product_name),
-                          subtitle: htmlText(data.product_desc),
-                          trailing: Icon(Icons.chevron_right,color: Colors.grey),
-                          onTap: () {
-                            showDialog(context: context,
-                                builder: (BuildContext context){
-                                  return CustomDialogBox(
-                                    title: data.product_name,
-                                    descriptions: data.overview,
-                                    text: "Close",
-                                  );
-                                }
+                              builder: (BuildContext context){
+                                return CustomDialogBox(
+                                  file_img: data.file_path,
+                                  title: data.product_name,
+                                  descriptions: data.overview,
+                                  text: co,
+                                );
+                              }
                             );
                           },
                         )

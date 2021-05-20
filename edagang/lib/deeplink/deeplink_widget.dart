@@ -1,18 +1,18 @@
 import 'package:edagang/deeplink/ads_auto_deeplink.dart';
 import 'package:edagang/deeplink/ads_career_deeplink.dart';
+import 'package:edagang/deeplink/ads_company_deeplink.dart';
 import 'package:edagang/deeplink/ads_prop_deeplink.dart';
 import 'package:edagang/deeplink/biz_company_deeplink.dart';
 import 'package:edagang/deeplink/fintools_deeplink.dart';
+import 'package:edagang/deeplink/goilmu_company_deeplink.dart';
 import 'package:edagang/deeplink/goilmu_deeplink.dart';
 import 'package:edagang/deeplink/shop_category_deeplink.dart';
 import 'package:edagang/deeplink/shop_merchant_deeplink.dart';
 import 'package:edagang/deeplink/shop_product_deeplink.dart';
+import 'package:edagang/deeplink/video_deeplink.dart';
 import 'package:edagang/main.dart';
-import 'package:edagang/screens/ads/ads_auto_detail.dart';
-import 'package:edagang/screens/ads/ads_prop_detail.dart';
-import 'package:edagang/screens/fin/fin_prod_list.dart';
-import 'package:edagang/screens/upskill/skill_detail.dart';
 import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/utube/video_play.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:edagang/deeplink/deeplink_bloc.dart';
@@ -50,6 +50,7 @@ class DeeplinkWidgetState extends State<DeeplinkWidget> {
           String cat = links[0];
           String type = links[1];
           String xid = links[2];
+          String vid = links[3];
           String xname = links[3];
           print("VALUE ID ${type} ==> ${xid}");
           print("VALUE TITLE ${type} ==> ${cat}");
@@ -69,6 +70,9 @@ class DeeplinkWidgetState extends State<DeeplinkWidget> {
                       sharedPref.save("prd_id", xid);
                       sharedPref.save("prd_title", xname);
                       return ProductDeeplink();
+                      break;
+                    case "video":
+                      return VideoPlayDl(vid, xname);
                       break;
                     default:
                       return Container();
@@ -112,6 +116,9 @@ class DeeplinkWidgetState extends State<DeeplinkWidget> {
                     case "auto":
                       return AutoDlShowcase(xid, xname);
                       break;
+                    case "company":
+                      return BlurbCompanyPropertyDlPage(xid, xname);
+                      break;
                     default:
                       return Container();
                       break;
@@ -123,6 +130,9 @@ class DeeplinkWidgetState extends State<DeeplinkWidget> {
                   switch (type) {
                     case "course":
                       return GoilmuDlPage(xid, xname);
+                      break;
+                    case "business":
+                      return GoilmuCompanyDlPage(xid, xname);
                       break;
                     default:
                       return Container();

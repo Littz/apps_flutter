@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/models/upskill_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
+import 'package:edagang/screens/upskill/skill_company.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
@@ -9,6 +10,7 @@ import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/webview.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
@@ -36,7 +38,7 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
   Map<dynamic, dynamic> responseBody;
   String _skillId;
 
-  int _id,course_id,business_id,cat_id,course_category_id;
+  int _id,course_id,biz_id,cat_id,course_category_id;
   String title,descr,overview,attendees,key_modules,price,company_name,logo,cat_name;
   String date_start,date_end,time_start,time_end;
   List<CourseSchedule> schedule = [];
@@ -107,6 +109,7 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
             );
 
             _id = data.id;
+            biz_id = data.business_id;
             title = data.title;
             descr = data.descr;
             overview = data.overview;
@@ -115,7 +118,7 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
             price = data.price;
             course_category_id = data.course_category_id;
             company_name = data.company_name;
-            logo = 'https://upskillapp.e-dagang.asia'+data.logo;
+            logo = 'https://goilmuapp.e-dagang.asia'+data.logo;
             cat_name = data.cat_name;
             schedule = data.schedule;
 
@@ -140,6 +143,7 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
                 curve: Interval(0.25, 1.0, curve: Curves.fastOutSlowIn),
                 parent: _animationController));
 
+    FirebaseAnalytics().logEvent(name: 'Goilmu_Detail_'+widget.skillTitle,parameters:null);
 
   }
 
@@ -258,16 +262,32 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Container(
+
                               child: Text(title ?? "",
                                   style: GoogleFonts.lato(
                                     textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w700,),
                                   ),
                               ),
                             ),
-                            Text(company_name ?? "",
+                            /*Text(company_name ?? "",
                                 style: GoogleFonts.lato(
                                   textStyle: TextStyle(fontSize: 13, fontStyle: FontStyle.italic,),
                                 ),
+                            ),*/
+                            InkWell(
+                              onTap: () {
+                                print('hello world!!!!!!!!!!!!!!!');
+                                print(biz_id.toString());
+                                print(company_name);
+                                Navigator.push(context, SlideRightRoute(page: GoilmuCompanyPage(biz_id.toString(),company_name)));
+                              },
+                              child: new Text(
+                                company_name ?? "",
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: color, decoration: TextDecoration.underline),
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
 
                             //_scheduleList(),
@@ -300,7 +320,12 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
                           if (value == 0) {
                             currentTab = Padding(
                               padding: EdgeInsets.only(left: 10, top: 0, right: 10),
-                              child: htmlText(overview),
+                              child: overview.contains('<') ?  htmlText(overview) : Text(
+                                overview,
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                                ),
+                              )
                             );
                           } else if(value == 1) {
                             currentTab = Padding(
@@ -435,7 +460,7 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
     return ScopedModelDescendant<MainScopedModel>(builder: (context, child, model){
       //if(model.isAuthenticated){
         return Container(
-          padding: EdgeInsets.only(left: 2, top: 5, right: 2),
+          padding: EdgeInsets.only(left: 2, top: 8, right: 2),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,

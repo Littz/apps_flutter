@@ -6,6 +6,7 @@ import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/webview.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/cupertino.dart';
@@ -50,6 +51,7 @@ class _SettingPageState extends State<SettingPage> {
   void initState() {
     super.initState();
     loadPhoto();
+    FirebaseAnalytics().logEvent(name: 'Setting_page',parameters:null);
     //networkCheck.checkInternet(fetchPrefrence);
   }
 

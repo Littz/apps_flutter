@@ -14,7 +14,7 @@ class Constants{
   static String tokenGuest = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjJhN2NiM2U2NTllY2MwMTFlN2JiNjM4MDA3MWJkYWE5OTQxY2I5NzMwNjNmY2RhOGNlYmM1Mzc3ZWNmODM1MDljMGYyMGUwOWFkYzBkZWViIn0.eyJhdWQiOiIzIiwianRpIjoiMmE3Y2IzZTY1OWVjYzAxMWU3YmI2MzgwMDcxYmRhYTk5NDFjYjk3MzA2M2ZjZGE4Y2ViYzUzNzdlY2Y4MzUwOWMwZjIwZTA5YWRjMGRlZWIiLCJpYXQiOjE1NzA5Njg0NzUsIm5iZiI6MTU3MDk2ODQ3NSwiZXhwIjoxNjAyNTkwODc1LCJzdWIiOiI4Iiwic2NvcGVzIjpbXX0.rYqZDXoFnc-pMZecqieKqmuJG9rWgXKTf-2Ix09dcO52iACHZ-MaxhE1sjfms3VUHv0-klZqa8Q5ZblyqRTX6bWbK02fB28o8Mi0MDJYjjTsa-l6_Us-JxEJZPfaICWGitO6KGQ0kkiD-0l8VSsiBpZPtXOR5mgVCL4Ws15tdJ6bwwGskNcEg02E1EaMf-VdYZrjXpXN7C6Gq8UU73iJsO1NOSvVgfHlwFBbrl4Pby8KoVFYFvmq357wn8uwJiycU0Ggc6zmOe5u51AtoSbKVGoXBNoi80vKGVobUmWfCdYKhEZWth81HQyULQBRY4VvCz9NlfUvKJRs--LLLw0VXSWC3A3GtJKYuMp9adr84hfPSOV9sJE98dzVZwXQH0jkRd_owSq6Cq2daLuKk1SHgzZ_46BpLtTrwCWCeDDYnew-m5M1LJqeS8k96b3JftXtccnjUN1EIiai6MaIiZ9NI9P7oOLKA1H2ycp8eHwwixIsDBCoi_a1NTjOw-z84YeEz5QSUQ2dsgt9EVEtZEYujOCoraLW9y1uoKP1zMB5ApdxIaeeO3Ap0Lr25GxJI1U5enEx4m_mxIJgxhQ7IkjU-JkX0v4YAkuZhj-JqTk6nQFWJzjEOTmZMsLmHz6vOBZwKNqaRfSgKcWwETO9VIoHydIYzP3rmRFkFiSRo5ITzB4";
 
   static String bizAPI = "https://bizapp.e-dagang.asia/api";
-  static String tuneupAPI = "https://upskillapp.e-dagang.asia/api";
+  static String tuneupAPI = "https://goilmuapp.e-dagang.asia/api";
   static String shopAPI = "https://shopapp.e-dagang.asia/api";
 
   static String apiRegister = shopAPI+"/register";
@@ -40,7 +40,7 @@ class Constants{
   static const kAndroidUserAgent = 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Mobile Safari/537.36';
 
   static const double padding =10;
-  static const double avatarRadius =15;
+  static const double avatarRadius =10;
 
   static Color lightPrimary = Colors.deepOrange.shade600;
   static Color darkPrimary = Colors.deepOrange.shade300;

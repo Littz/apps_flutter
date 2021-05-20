@@ -1,5 +1,6 @@
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/sign_in.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,6 +18,7 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   void initState() {
     super.initState();
+    FirebaseAnalytics().logEvent(name: 'Notification_page',parameters:null);
   }
 
   @override

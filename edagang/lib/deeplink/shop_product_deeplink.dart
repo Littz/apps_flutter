@@ -11,12 +11,13 @@ import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/photo_viewer.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_indicator/page_indicator.dart';
-import 'package:photo_view/photo_view.dart';
+import 'package:intl/intl.dart';
 import "package:scoped_model/scoped_model.dart";
 import 'package:flutter/material.dart';
 import 'dart:convert';
@@ -44,12 +45,14 @@ class _ProductDeeplinkPageState extends State<ProductDeeplink> with TickerProvid
   String qnty_txt = "";
   String varName;
   int quantity = 1;
+  final myr = new NumberFormat("#,##0.00", "en_US");
 
   var listVariation = new List<int>();
   var listOption = new List<int>();
 
   int pid,minOrder;
-  String name,price,promoPrice,catid,delivery,ispromo,summary,details,image,merchant_id,merchant_name,stock,have_variation;
+  double price,promoPrice;
+  String name,catid,delivery,ispromo,summary,details,image,merchant_id,merchant_name,stock,have_variation;
   List images = List();
   List reviews = List();
   bool isLoading = false;
@@ -155,7 +158,7 @@ class _ProductDeeplinkPageState extends State<ProductDeeplink> with TickerProvid
                   new Video(
                     id: newImage["id"],
                     productId: newImage["product_id"].toString(),  // after migration -> int to string
-                    videoURL: Constants.urlImage+newImage["video_url"],
+                    link: Constants.urlImage+newImage["video_url"],
                   ),
                 );
               },
@@ -198,8 +201,8 @@ class _ProductDeeplinkPageState extends State<ProductDeeplink> with TickerProvid
             pid = data.id ?? '';
             name = data.name ?? '';
             ispromo = data.ispromo ?? '';
-            price = double.parse(data.price).toStringAsFixed(2);
-            promoPrice = data.promoPrice;
+            price = double.tryParse(data.price.toString()) ?? '';
+            promoPrice = double.tryParse(data.promoPrice.toString()) ?? '';
             delivery = data.delivery ?? '';
             summary = data.summary ?? '';
             details = data.details ?? '';
@@ -233,6 +236,7 @@ class _ProductDeeplinkPageState extends State<ProductDeeplink> with TickerProvid
 
   @override
   void initState() {
+    FirebaseAnalytics().logEvent(name: 'Deeplink_Cartsini_product_'+_title,parameters:null);
     getDetails();
     super.initState();
     loadPrefs();
@@ -355,30 +359,32 @@ class _ProductDeeplinkPageState extends State<ProductDeeplink> with TickerProvid
                         children: <Widget>[
                           Container(
                             child: ispromo == '1' ?
-                              Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   new Text(
-                                    ispromo == '1' ? 'RM'+promoPrice.toString() ?? 'RM0.00' : 'RM'+price.toString() ?? 'RM0.00',
-                                    style: GoogleFonts.lato(
-                                      textStyle: TextStyle(fontSize: 21, fontWeight: FontWeight.w600, color: Constants.darkAccent),
-                                    )
+                                      'RM'+myr.format(promoPrice),
+                                      //ispromo == '1' ? 'RM'+promoPrice.toString() ?? 'RM0.00' : 'RM'+price.toString() ?? 'RM0.00',
+                                      style: GoogleFonts.lato(
+                                        textStyle: TextStyle(fontSize: 21, fontWeight: FontWeight.w600, color: Constants.darkAccent),
+                                      )
                                   ),
                                   SizedBox(height: 2),
                                   Text(
-                                    "RM"+price.toString(),
+                                    "RM"+myr.format(price),
                                     style: GoogleFonts.lato(
                                       textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.grey.shade600, decoration: TextDecoration.lineThrough),
                                     ),
                                   ),
                                 ]
-                              ) :
-                              new Text(
-                                ispromo == '1' ? 'RM'+promoPrice.toString() ?? 'RM0.00' : 'RM'+price.toString() ?? 'RM0.00',
-                                style: GoogleFonts.lato(
-                                  textStyle: TextStyle(fontSize: 21, fontWeight: FontWeight.w600, color: Constants.darkAccent),
-                                ),
+                            ) :
+                            new Text(
+                              'RM'+myr.format(price),
+                              //ispromo == '1' ? 'RM'+promoPrice.toString() ?? 'RM0.00' : 'RM'+price.toString() ?? 'RM0.00',
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(fontSize: 21, fontWeight: FontWeight.w600, color: Constants.darkAccent),
                               ),
+                            ),
                           ),
 
                           new Row(

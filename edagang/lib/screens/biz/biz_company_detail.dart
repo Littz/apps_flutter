@@ -10,16 +10,16 @@ import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/photo_viewer.dart';
 import 'package:edagang/widgets/webview.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:loading_gifs/loading_gifs.dart';
-import 'package:photo_view/photo_view.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
 
 class BizCompanyDetailPage extends StatefulWidget {
   String bizId, bizName;
@@ -164,6 +164,8 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                 curve: Interval(0.25, 1.0, curve: Curves.fastOutSlowIn),
                 parent: _animationController)
         );
+
+    FirebaseAnalytics().logEvent(name: 'Smartbiz_Company_'+widget.bizName,parameters:null);
   }
 
   bool get _showTitle {
@@ -248,7 +250,7 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                                 borderRadius: BorderRadius.circular(50),
                                 child: CachedNetworkImage(
                                   imageUrl: _logo ?? "",
-                                  fit: BoxFit.cover,
+                                  //fit: BoxFit.cover,
                                   placeholder: (context, url) => CircularProgressIndicator(),
                                   errorWidget: (context, url, error) => Icon(Icons.error_outline),
                                 ),

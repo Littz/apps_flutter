@@ -1,4 +1,5 @@
 import 'package:edagang/utils/constant.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,6 +30,7 @@ class ChangePaswdState extends State<ChangePaswd> with SingleTickerProviderState
   @override
   void initState() {
     super.initState();
+    FirebaseAnalytics().logEvent(name: 'Change_Password',parameters:null);
   }
 
   void showCartSnak(BuildContext context,String msg,bool flag){

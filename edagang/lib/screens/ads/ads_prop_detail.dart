@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/models/ads_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
+import 'package:edagang/screens/ads/ads_company.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
@@ -10,6 +11,7 @@ import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/photo_viewer.dart';
 import 'package:edagang/widgets/webview.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
@@ -141,6 +143,8 @@ class _PropShowcasePageState extends State<PropShowcase> with TickerProviderStat
             CurvedAnimation(
                 curve: Interval(0.25, 1.0, curve: Curves.fastOutSlowIn),
                 parent: _animationController));
+
+    FirebaseAnalytics().logEvent(name: 'Blurb_Property_'+widget.propTitle,parameters:null);
   }
 
   bool get _showTitle {
@@ -227,6 +231,31 @@ class _PropShowcasePageState extends State<PropShowcase> with TickerProviderStat
                                   fontWeight: FontWeight.w600),
                             ),
                           ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.only(right: 10.0),
+                          child: InkWell(
+                            onTap: () {
+                              print('property!!!!!!!!!!!!!!!');
+                              print(_companyId.toString());
+                              print(developer);
+                              Navigator.push(context, SlideRightRoute(page: BlurbCompanyPropertyPage(_companyId.toString(),developer)));
+                            },
+                            child: new Text(
+                              developer ?? '',
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: color, decoration: TextDecoration.underline),
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+
+                          /*Text(
+                            'Developer: '+developer,
+                            style: GoogleFonts.lato(
+                              textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500,),
+                            ),
+                          ),*/
                         ),
                         Container(
                           padding: EdgeInsets.only(top: 2),

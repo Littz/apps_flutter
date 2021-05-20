@@ -7,6 +7,7 @@ import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/SABTitle.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/product_grid_card.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
@@ -66,6 +67,7 @@ class _MerchantDeeplinkState extends State<MerchantDeeplink> {
 
   @override
   void initState() {
+    FirebaseAnalytics().logEvent(name: 'Deeplink_Cartsini_merchant_'+widget.mercName,parameters:null);
     super.initState();
     _scrollController = ScrollController()..addListener(() => setState(() {}));
   }

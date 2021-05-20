@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:edagang/models/address_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/utils/constant.dart';
-import 'package:edagang/widgets/blur_icon.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -28,6 +28,7 @@ class _AddressBookState extends State<AddressBook> {
   @override
   void initState() {
     super.initState();
+    FirebaseAnalytics().logEvent(name: 'Address_Book_add',parameters:null);
   }
 
   /*void _moveToAccountScreen(BuildContext context) => Navigator.pushReplacementNamed(context, '/Account');*/
@@ -433,6 +434,7 @@ class _EditAddressState extends State<EditAddress> {
 
   @override
   void initState() {
+    FirebaseAnalytics().logEvent(name: 'Address_Book_edit',parameters:null);
     print(widget.addrid);
     print(widget.nama);
     print(widget.fuladdr);
@@ -1108,6 +1110,7 @@ class _AddNewAddressState extends State<AddNewAddress> with SingleTickerProvider
     _dropDownMenuCity = [];
 
     super.initState();
+    FirebaseAnalytics().logEvent(name: 'Address_New',parameters:null);
   }
 
   List<DropdownMenuItem<StateMsia>> buildDropdownMenuItems(List negeri) {
@@ -1625,9 +1628,6 @@ class _AddNewAddressState extends State<AddNewAddress> with SingleTickerProvider
   }
 
 }
-
-
-
 
 
 class StateMsia {

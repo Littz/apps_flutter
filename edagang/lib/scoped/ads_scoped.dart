@@ -72,6 +72,60 @@ List<AutoCat> blbautomobile = [];
 List<AutoCat> get _blbautomobiles => blbautomobile;
 void addHomeAutomobileList(AutoCat auto) {_blbautomobiles.add(auto);}
 
+List<JobsCat> blbother = [];
+List<JobsCat> get _blbothers => blbother;
+void addHomeOtherList(JobsCat other) {_blbothers.add(other);}
+
+Future<dynamic> _getBlurbOtherJson() async {
+  var response = await http.get(
+    'https://blurbapp.e-dagang.asia/api/blurb/others/listing',
+    headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
+  ).catchError((error) {
+    print(error.toString());
+    return false;
+  });
+  return json.decode(response.body);
+}
+
+Future fetchBlurbOtherResponse() async {
+  _blbothers.clear();
+
+  notifyListeners();
+  var dataFromResponse = await _getBlurbOtherJson();
+
+  print('HOME BLURB OTHER #####################################');
+  print(dataFromResponse["data"]["other"]);
+
+  dataFromResponse["data"]["other"].forEach((dataJobs) {
+
+    List<Images> imageOther = [];
+    dataJobs["images"].forEach((otherData) {
+      imageOther.add(
+        new Images(
+            id: otherData["id"], // after migration -> int to string
+            property_id: otherData["product_id"], // after migration -> int to string
+            file_path: otherData["file_path"]
+        ),
+      );
+    },
+    );
+
+    JobsCat _other = new JobsCat(
+      id: dataJobs['id'],
+      company_id: dataJobs['business_id'],
+      title: dataJobs['product_name'],
+      descr: dataJobs['product_desc'],
+      company_name: dataJobs['company']['company_name'],
+      company_logo: dataJobs['company']['logo'],
+      image: imageOther,
+    );
+    addHomeOtherList(_other);
+  });
+
+  notifyListeners();
+}
+
+
 
 Future<dynamic> _getHomeBlurbJson() async {
   var response = await http.get(

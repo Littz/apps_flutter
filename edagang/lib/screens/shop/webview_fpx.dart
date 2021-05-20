@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:edagang/screens/shop/payment_status.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
@@ -29,6 +30,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
 
   @override
   void initState() {
+    FirebaseAnalytics().logEvent(name: 'Cartsini_Fpx_webview',parameters:null);
     super.initState();
     _title = widget.title;
     _nett = widget.nett;

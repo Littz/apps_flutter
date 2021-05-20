@@ -1,4 +1,8 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 import 'package:edagang/screens/ads/ads_index.dart';
 import 'package:edagang/screens/biz/biz_index.dart';
 import 'package:edagang/screens/fin/fin_index.dart';
@@ -15,36 +19,40 @@ import 'package:edagang/scoped/main_scoped.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:io';
 import 'package:flutter/foundation.dart';
 
+
 void main() {
-  /*FlutterError.onError = (FlutterErrorDetails details) {
-    FlutterError.dumpErrorToConsole(details);
-    if (kReleaseMode)
-      exit(1);
-  };*/
 
-  runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized(); //imp line need to be added first
+  FlutterError.onError = (FlutterErrorDetails details) {
+    //this line prints the default flutter gesture caught exception in console
+    //FlutterError.dumpErrorToConsole(details);
+    print("Error From INSIDE FRAME_WORK");
+    print("----------------------");
+    print("Error :  ${details.exception}");
+    print("StackTrace :  ${details.stack}");
+  };
+  runApp(MyApp()); // starting point of app
 
-  //SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top]);
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    systemNavigationBarColor: null, //<------ changed
+    systemNavigationBarColor: null,
     systemNavigationBarDividerColor: null,
     statusBarColor: Colors.transparent,
     systemNavigationBarIconBrightness: Brightness.light,
     statusBarIconBrightness: Brightness.dark,
     statusBarBrightness: Brightness.light,
   ));
-
 }
 
 class MyApp extends StatefulWidget {
-  MyApp({Key key, this.title}) : super(key: key);
+  MyApp({Key key, this.title, this.uri}) : super(key: key);
   final String title;
+  final Uri uri;
 
   @override
   _MyAppPageState createState() => new _MyAppPageState();
@@ -115,19 +123,21 @@ class _MyAppPageState extends State<MyApp> {
     _model.loggedInUser();
     _model.fetchHomeFinResponse();
     _model.fetchHomeBlurbResponse();
+    _model.fetchBlurbOtherResponse();
     _model.fetchGoilmuResponse();
     _model.fetchHomeBizResponse();
     _model.fetchVrBizResponse();
     _model.fetchVisitedList();
     _model.fetchCompanyList();
     _model.fetchSkillCat();
-    _model.fetchJobsCat();
+    //_model.fetchJobsCat();
     _model.fetchCourseList();
     _model.fetchCourseProfessional();
     _model.fetchCourseTechnical();
     _model.fetchCourseSafety();
     _model.fetchCourseTraining();
     _model.fetchHomePageResponse();
+    _model.fetchVideoListResponse();
     _model.fetchKoopListResponse();
     _model.fetchNgoListResponse();
     loadAuth();
@@ -141,6 +151,13 @@ class _MyAppPageState extends State<MyApp> {
     return ScopedModel<MainScopedModel>(
       model: _model,
       child: MaterialApp(
+        builder: (BuildContext context, Widget widget) {
+          Widget error = Text('...rendering error...');
+          if (widget is Scaffold || widget is Navigator)
+            error = Scaffold(body: Center(child: error));
+          ErrorWidget.builder = (FlutterErrorDetails errorDetails) => error;
+          return widget;
+        },
         debugShowCheckedModeBanner: false,
         title: 'eDagang',
         theme: ThemeData(
@@ -153,7 +170,10 @@ class _MyAppPageState extends State<MyApp> {
         home: SplashScreen(),
         routes: <String, WidgetBuilder>{
           "/Main": (BuildContext context) => new NewHomePage(2),
+          "/Fintool": (BuildContext context) => new NewHomePage(0),
           "/ShopIndex": (BuildContext context) => new NewHomePage(1),
+          "/Goilmu": (BuildContext context) => new NewHomePage(3),
+          "/Blurb": (BuildContext context) => new NewHomePage(4),
           "/ShopCart": (BuildContext context) => new ShopCartPage(),
           "/Address": (BuildContext context) => new AddressBook(),
           "/Checkout": (BuildContext context) => new CheckoutActivity(),
@@ -203,6 +223,26 @@ class _NewHomePageState extends State<NewHomePage> {
         onSelectTab: (index) {
           setState(() {
             selectedIndex = index;
+            /*switch (index) {
+              case 0:
+                FirebaseAnalytics().logEvent(name: 'Fintools_Tab',parameters:null);
+                break;
+              case 1:
+                FirebaseAnalytics().logEvent(name: 'Cartsini_Tab',parameters:null);
+                break;
+              case 2:
+                FirebaseAnalytics().logEvent(name: 'Smartbiz_Tab',parameters:null);
+                break;
+              case 3:
+                FirebaseAnalytics().logEvent(name: 'Goilmu_Tab',parameters:null);
+                break;
+              case 4:
+                FirebaseAnalytics().logEvent(name: 'Blurb_Tab',parameters:null);
+                break;
+              default:
+                FirebaseAnalytics().logEvent(name: 'Smartbiz_Tab',parameters:null);
+                break;
+            }*/
           });
         },
         items: [
@@ -252,3 +292,121 @@ class _NewHomePageState extends State<NewHomePage> {
 
 }
 
+
+
+
+class MyHomePage extends StatefulWidget {
+  MyHomePage({Key key, this.title}) : super(key: key);
+
+  final String title;
+
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  bool isLoggedIn = false;
+  var profileData;
+
+  var facebookLogin = FacebookLogin();
+
+  void onLoginStatusChanged(bool isLoggedIn, {profileData}) {
+    setState(() {
+      this.isLoggedIn = isLoggedIn;
+      this.profileData = profileData;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text("Facebook Login"),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.exit_to_app,
+                color: Colors.white,
+              ),
+              onPressed: () => facebookLogin.isLoggedIn
+                  .then((isLoggedIn) => isLoggedIn ? _logout() : {}),
+            ),
+          ],
+        ),
+        body: Container(
+          child: Center(
+            child: isLoggedIn
+                ? _displayUserData(profileData)
+                : _displayLoginButton(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void initiateFacebookLogin() async {
+    var facebookLoginResult =
+    await facebookLogin.logIn(['email']);
+
+    switch (facebookLoginResult.status) {
+      case FacebookLoginStatus.error:
+        onLoginStatusChanged(false);
+        break;
+      case FacebookLoginStatus.cancelledByUser:
+        onLoginStatusChanged(false);
+        break;
+      case FacebookLoginStatus.loggedIn:
+        var graphResponse = await http.get(
+            'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email,picture.height(200)&access_token=${facebookLoginResult
+                .accessToken.token}');
+
+        var profile = json.decode(graphResponse.body);
+        print(profile.toString());
+
+        onLoginStatusChanged(true, profileData: profile);
+        break;
+    }
+  }
+
+  _displayUserData(profileData) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Container(
+          height: 200.0,
+          width: 200.0,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            image: DecorationImage(
+              fit: BoxFit.fill,
+              image: NetworkImage(
+                profileData['picture']['data']['url'],
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 28.0),
+        Text(
+          "Logged in as: ${profileData['name']}",
+          style: TextStyle(
+            fontSize: 20.0,
+          ),
+        ),
+      ],
+    );
+  }
+
+  _displayLoginButton() {
+    return RaisedButton(
+      child: Text("Login with Facebook"),
+      onPressed: () => initiateFacebookLogin(),
+    );
+  }
+
+  _logout() async {
+    await facebookLogin.logOut();
+    onLoginStatusChanged(false);
+    print("Logged out");
+  }
+}

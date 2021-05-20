@@ -3,6 +3,7 @@ import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/screens/shop/cart_checkout.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,6 +25,7 @@ class _ShopCartPageState extends State<ShopCartPage> {
 
   @override
   initState() {
+    FirebaseAnalytics().logEvent(name: 'Cartsini_Cart_page',parameters:null);
     super.initState();
     listCartId = List();
   }

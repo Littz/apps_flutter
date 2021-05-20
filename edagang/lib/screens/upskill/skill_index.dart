@@ -8,8 +8,10 @@ import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/webview_bb.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -62,7 +64,7 @@ class _UpskillPageState extends State<UpskillPage> {
   }
 
   goToNextPage(BuildContext context, Home_banner item) {
-    String imgurl = 'https://upskillapp.e-dagang.asia'+item.imageUrl;
+    String imgurl = 'https://goilmuapp.e-dagang.asia'+item.imageUrl;
     String catname = item.title ?? '';
     String catid = item.itemId.toString();
     String ctype = item.type.toString();
@@ -73,14 +75,14 @@ class _UpskillPageState extends State<UpskillPage> {
       print('CATEGORY #############################################');
       print(catid);
       print(catname);
-
       //Navigator.push(context, SlideRightRoute(page: ProductListCategory(catid, catname)));
     } else if (ctype == "3") {
-
       //Navigator.push(context,SlideRightRoute(page: BizCompanyDetailPage(catid,'')));
     } else if (ctype == "4") {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        Navigator.push(context, SlideRightRoute(page: WebviewBixon(vrurl ?? '', imgurl ?? '')));
+      });
 
-      Navigator.push(context, SlideRightRoute(page: WebviewBixon(vrurl ?? '', imgurl ?? '')));
     }
   }
 
@@ -91,6 +93,7 @@ class _UpskillPageState extends State<UpskillPage> {
     quick_menu = getUpskillCategory();
     super.initState();
     loadPhoto();
+    FirebaseAnalytics().logEvent(name: 'Goilmu_Home',parameters:null);
   }
 
   @override
@@ -169,12 +172,17 @@ class _UpskillPageState extends State<UpskillPage> {
                           child: Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.fill, height: 27, width: 27),
                         )
                         //Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.fill, height: 20, width: 20)
-                            : CircleAvatar(
-                            backgroundColor: Colors.transparent,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(50),
-                              child: Image.network(_photo ?? '', fit: BoxFit.fill, height: 27, width: 27,),
-                            )
+                            : Container(
+                          height: 30.0,
+                          width: 30.0,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              //fit: BoxFit.fill,
+                              image: CachedNetworkImageProvider(_photo),
+                              //scale: 30,
+                            ),
+                          ),
                         )
                             : CircleAvatar(
                           backgroundColor: Colors.transparent,
@@ -224,7 +232,7 @@ class _UpskillPageState extends State<UpskillPage> {
                                                           color: Colors.transparent,
                                                           child: CupertinoActivityIndicator(radius: 15,),
                                                         ),
-                                                        imageUrl: 'http://upskillapp.e-dagang.asia' + model.gbanners[index].imageUrl,
+                                                        imageUrl: 'http://goilmuapp.e-dagang.asia' + model.gbanners[index].imageUrl,
                                                         fit: BoxFit.fill,
                                                         height: 150,
                                                         width: MediaQuery.of(context).size.width,
@@ -318,6 +326,7 @@ class _UpskillPageState extends State<UpskillPage> {
                 margin: EdgeInsets.all(5.0),
                 child: InkWell(
                     onTap: () {
+                      FirebaseAnalytics().logEvent(name: 'Goilmu_Pro_'+data.title,parameters:null);
                       sharedPref.save("skil_id", data.id.toString());
                       Navigator.push(
                           context, SlideRightRoute(page: UpskillDetailPage(data.id.toString(),data.title)));
@@ -420,6 +429,7 @@ class _UpskillPageState extends State<UpskillPage> {
                     margin: EdgeInsets.all(5.0),
                     child: InkWell(
                         onTap: () {
+                          FirebaseAnalytics().logEvent(name: 'Goilmu_Tech_'+data.title,parameters:null);
                           sharedPref.save("skil_id", data.id.toString());
                           Navigator.push(context, SlideRightRoute(page: UpskillDetailPage(data.id.toString(),data.title)));
                         },
@@ -514,6 +524,7 @@ class _UpskillPageState extends State<UpskillPage> {
                     margin: EdgeInsets.all(5.0),
                     child: InkWell(
                         onTap: () {
+                          FirebaseAnalytics().logEvent(name: 'Goilmu_Safety_'+data.title,parameters:null);
                           sharedPref.save("skil_id", data.id.toString());
                           Navigator.push(context, SlideRightRoute(page: UpskillDetailPage(data.id.toString(),data.title)));
                         },
@@ -608,6 +619,7 @@ class _UpskillPageState extends State<UpskillPage> {
                     margin: EdgeInsets.all(5.0),
                     child: InkWell(
                         onTap: () {
+                          FirebaseAnalytics().logEvent(name: 'Goilmu_Skill_'+data.title,parameters:null);
                           sharedPref.save("skil_id", data.id.toString());
                           Navigator.push(context, SlideRightRoute(page: UpskillDetailPage(data.id.toString(),data.title)));
                         },

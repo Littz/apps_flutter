@@ -4,6 +4,7 @@ import 'package:edagang/screens/shop/acc_address.dart';
 import 'package:edagang/screens/shop/webview_fpx.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -38,6 +39,7 @@ class CheckoutActivityState extends State<CheckoutActivity> {
 
   @override
   void initState() {
+    FirebaseAnalytics().logEvent(name: 'Cartsini_Cart_Checkout',parameters:null);
     super.initState();
     //listCartId = List();
     _loadCartId();

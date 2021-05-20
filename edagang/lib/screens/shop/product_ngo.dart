@@ -2,6 +2,7 @@ import 'package:edagang/models/shop_model.dart';
 import 'package:edagang/scoped/scoped_product.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/product_grid_card.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -60,6 +61,7 @@ class _ProductNgoPageState extends State<ProductNgoPage> {
 
   @override
   void initState() {
+    FirebaseAnalytics().logEvent(name: 'Cartsini_NGO_product',parameters:null);
     super.initState();
     _scrollController = ScrollController()..addListener(() => setState(() {}));
   }

@@ -1,5 +1,12 @@
 package com.digital.dagang.asia.edagang;
 
+import io.flutter.embedding.android.FlutterActivity;
+import io.flutter.plugins.GeneratedPluginRegistrant;
+import androidx.annotation.NonNull;
+import io.flutter.embedding.android.FlutterActivity;
+import io.flutter.embedding.engine.FlutterEngine;
+import io.flutter.plugin.common.MethodChannel;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,28 +16,33 @@ import android.os.Bundle;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 
-import io.flutter.app.FlutterActivity;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugins.GeneratedPluginRegistrant;
-//import org.devio.flutter.splashscreen.SplashScreen;
 
-public class EmbeddingV1Activity extends FlutterActivity {
-
+public class MainActivity extends FlutterActivity {
+    //private static final String CHANNEL = "samples.flutter.dev/battery";
     private static final String CHANNEL = "app.edagang/cnannel";
     private static final String EVENTS = "app.edagang/events";
     private String startString;
     private BroadcastReceiver linksReceiver;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //GeneratedPluginRegistrant.registerWith(this);
+    public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
+        GeneratedPluginRegistrant.registerWith(flutterEngine);
+
         Intent intent = getIntent();
         Uri data = intent.getData();
+        new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CHANNEL).setMethodCallHandler(
+        (call, result) -> {
+            if (call.method.equals("initialLink")) {
+                if (startString != null) {
+                    result.success(startString);
+                }
+            }
+        });
 
-        new MethodChannel(getFlutterView(), CHANNEL).setMethodCallHandler(
+        /*new MethodChannel(getFlutterView(), CHANNEL).setMethodCallHandler(
                 new MethodChannel.MethodCallHandler() {
                     @Override
                     public void onMethodCall(MethodCall call, MethodChannel.Result result) {
@@ -40,9 +52,10 @@ public class EmbeddingV1Activity extends FlutterActivity {
                             }
                         }
                     }
-                });
+                }
+        );*/
 
-        new EventChannel(getFlutterView(), EVENTS).setStreamHandler(
+        /*new EventChannel(getFlutterView(), EVENTS).setStreamHandler(
                 new EventChannel.StreamHandler() {
                     @Override
                     public void onListen(Object args, final EventChannel.EventSink events) {
@@ -54,7 +67,7 @@ public class EmbeddingV1Activity extends FlutterActivity {
                         linksReceiver = null;
                     }
                 }
-        );
+        );*/
 
         if (data != null) {
             startString = data.toString();
@@ -71,7 +84,6 @@ public class EmbeddingV1Activity extends FlutterActivity {
             linksReceiver.onReceive(this.getApplicationContext(), intent);
         }
     }
-
 
     private BroadcastReceiver createChangeReceiver(final EventChannel.EventSink events) {
         return new BroadcastReceiver() {

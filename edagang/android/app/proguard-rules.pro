@@ -5,4 +5,4 @@
 -keep class io.flutter.view.**  { *; }
 -keep class io.flutter.**  { *; }
 -keep class io.flutter.plugins.**  { *; }
-#-keep class androidx.lifecycle.DefaultLifecycleObserver
+-keep class androidx.lifecycle.DefaultLifecycleObserver

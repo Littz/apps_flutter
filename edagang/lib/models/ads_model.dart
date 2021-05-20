@@ -2,14 +2,16 @@ class JobsCat {
   final int id;
   final int company_id;
   final String title;
+  final String descr;
   final int city_id;
   final int state_id;
   final String company_name;
   final String company_logo;
   final String city_name;
   final String state_name;
+  final List<Images> image;
 
-  JobsCat({this.id, this.company_id, this.title, this.city_id, this.state_id, this.company_name, this.company_logo, this.city_name, this.state_name});
+  JobsCat({this.id, this.company_id, this.title, this.descr, this.city_id, this.state_id, this.company_name, this.company_logo, this.city_name, this.state_name, this.image});
 }
 
 class JobList {

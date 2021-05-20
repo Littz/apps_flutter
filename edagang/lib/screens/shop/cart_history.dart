@@ -2,10 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/main.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/screens/shop/cart_review.dart';
-import 'package:edagang/screens/shop/product_detail.dart';
-import 'package:edagang/screens/shop/shop_index.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,6 +23,7 @@ class _CartHistoryOrderPageState extends State<CartHistory> {
   @override
   void initState() {
     super.initState();
+    FirebaseAnalytics().logEvent(name: 'Cartsini_Cart_History',parameters:null);
   }
 
   @override

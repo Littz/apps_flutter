@@ -1,6 +1,7 @@
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -37,6 +38,7 @@ class FpxStatusState extends State<FpxStatus> {
   void initState() {
     super.initState();
     loadPrefs();
+    FirebaseAnalytics().logEvent(name: 'Cartsini_Payment_status',parameters:null);
   }
 
   circularProgress() {

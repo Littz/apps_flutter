@@ -2,15 +2,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/data/datas.dart';
 import 'package:edagang/models/biz_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
-import 'package:edagang/screens/biz/biz_index.dart';
 import 'package:edagang/screens/fin/fin_prod_list.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/widgets/emptyData.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
-import 'package:edagang/widgets/webview.dart';
 import 'package:edagang/widgets/webview_bb.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -78,8 +78,10 @@ class _FinancePageState extends State<FinancePage> {
 
       //Navigator.push(context,SlideRightRoute(page: BizCompanyDetailPage(catid,'')));
     } else if (ctype == "4") {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        Navigator.push(context, SlideRightRoute(page: WebviewBixon(vrurl ?? '', imgurl ?? '')));
+      });
 
-      Navigator.push(context, SlideRightRoute(page: WebviewBixon(vrurl ?? '', imgurl ?? '')));
     }
   }
 
@@ -90,6 +92,7 @@ class _FinancePageState extends State<FinancePage> {
     tabs_menu = getFinInsurans();
     super.initState();
     loadPhoto();
+    FirebaseAnalytics().logEvent(name: 'Fintools_Home',parameters:null);
   }
 
   @override
@@ -147,12 +150,17 @@ class _FinancePageState extends State<FinancePage> {
                                   backgroundColor: Colors.transparent,
                                   child: Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.fill, height: 27, width: 27),
                                 )
-                                    : CircleAvatar(
-                                    backgroundColor: Colors.transparent,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(50),
-                                      child: Image.network(_photo ?? '', fit: BoxFit.fill, height: 27, width: 27,),
-                                    )
+                                    : Container(
+                                  height: 30.0,
+                                  width: 30.0,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      //fit: BoxFit.fill,
+                                      image: CachedNetworkImageProvider(_photo),
+                                      //scale: 30,
+                                    ),
+                                  ),
                                 )
                                     : CircleAvatar(
                                   backgroundColor: Colors.transparent,
@@ -222,6 +230,18 @@ class _FinancePageState extends State<FinancePage> {
                                                               height: 150,
                                                               width: MediaQuery.of(context).size.width,
                                                             )
+
+                                                            /*Container(
+                                                              height: 150.0,
+                                                              width: MediaQuery.of(context).size.width,
+                                                              decoration: BoxDecoration(
+                                                                shape: BoxShape.rectangle,
+                                                                image: DecorationImage(
+                                                                  fit: BoxFit.fill,
+                                                                  image: CachedNetworkImageProvider('https://finapp.e-dagang.asia' + model.fbanners[index].imageUrl),
+                                                                ),
+                                                              ),
+                                                            )*/
                                                           ),
                                                         ),
                                                       );
@@ -617,9 +637,11 @@ class _FinancePageState extends State<FinancePage> {
                                 alignment: Alignment.bottomCenter,
                                 padding: new EdgeInsets.only(bottom: 8.0),
                                 decoration: new BoxDecoration(
-                                  image: new DecorationImage(
+                                  image: data.id == 6 || data.id == 10 ? DecorationImage(
                                     image: CachedNetworkImageProvider('http://finapp.e-dagang.asia' + data.logo ?? ''),
-                                    fit: data.id == 6 ? BoxFit.fill : BoxFit.cover,
+                                  ) : DecorationImage(
+                                    image: CachedNetworkImageProvider('http://finapp.e-dagang.asia' + data.logo ?? ''),
+                                    fit: BoxFit.cover,
                                   ),
                                   borderRadius: BorderRadius.all(Radius.circular(5)),
                                 ),
@@ -684,6 +706,7 @@ class _FinancePageState extends State<FinancePage> {
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
                           child: InkWell(
                             onTap: () {
+                              FirebaseAnalytics().logEvent(name: 'Fintools_Investment_'+data.company_name,parameters:null);
                               Navigator.push(context, SlideRightRoute(page: FinDetailPage(data.id.toString(),data.company_name)));
                               //Navigator.push(context, SlideRightRoute(page: WebviewWidget(data., data.title)));
                               //Navigator.push(context, SlideRightRoute(page: WebviewGeneral(data.webviewUrl, data.title)));
@@ -692,9 +715,11 @@ class _FinancePageState extends State<FinancePage> {
                                 alignment: Alignment.bottomCenter,
                                 padding: new EdgeInsets.only(bottom: 8.0),
                                 decoration: new BoxDecoration(
-                                  image: new DecorationImage(
+                                  image: data.id == 5 ? DecorationImage(
                                     image: CachedNetworkImageProvider('http://finapp.e-dagang.asia' + data.logo ?? ''),
-                                    fit: data.id == 5 ? BoxFit.fill : BoxFit.fill,
+                                  ) : DecorationImage(
+                                    image: CachedNetworkImageProvider('http://finapp.e-dagang.asia' + data.logo ?? ''),
+                                    fit: BoxFit.cover,
                                   ),
                                   borderRadius: BorderRadius.all(Radius.circular(5)),
                                 ),
@@ -759,6 +784,7 @@ class _FinancePageState extends State<FinancePage> {
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
                           child: InkWell(
                             onTap: () {
+                              FirebaseAnalytics().logEvent(name: 'Fintools_Financial_'+data.company_name,parameters:null);
                               //Navigator.push(context, SlideRightRoute(page: WebviewWidget(data., data.title)));
                               //Navigator.push(context, SlideRightRoute(page: WebviewGeneral(data.webviewUrl, data.title)));
                             },

@@ -10,6 +10,7 @@ import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/webview.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
@@ -116,7 +117,7 @@ class _GoilmuDlPageState extends State<GoilmuDlPage> with SingleTickerProviderSt
             price = data.price;
             course_category_id = data.course_category_id;
             company_name = data.company_name;
-            logo = 'https://upskillapp.e-dagang.asia'+data.logo;
+            logo = 'https://goilmuapp.e-dagang.asia'+data.logo;
             cat_name = data.cat_name;
             schedule = data.schedule;
 
@@ -131,6 +132,7 @@ class _GoilmuDlPageState extends State<GoilmuDlPage> with SingleTickerProviderSt
 
   @override
   void initState() {
+    FirebaseAnalytics().logEvent(name: 'Deeplink_Goilmu_Course_'+widget.skillTitle,parameters:null);
     getDetails();
     super.initState();
     _scrollController = ScrollController()..addListener(() => setState(() {}));
@@ -140,8 +142,6 @@ class _GoilmuDlPageState extends State<GoilmuDlPage> with SingleTickerProviderSt
             CurvedAnimation(
                 curve: Interval(0.25, 1.0, curve: Curves.fastOutSlowIn),
                 parent: _animationController));
-
-
   }
 
   bool get _showTitle {
@@ -249,7 +249,7 @@ class _GoilmuDlPageState extends State<GoilmuDlPage> with SingleTickerProviderSt
                               borderRadius: BorderRadius.circular(50),
                               child: CachedNetworkImage(
                                 imageUrl: logo ?? "",
-                                fit: BoxFit.cover,
+                                //fit: BoxFit.cover,
                                 placeholder: (context, url) => CircularProgressIndicator(),
                                 errorWidget: (context, url, error) => Icon(Icons.error_outline),
                               ),

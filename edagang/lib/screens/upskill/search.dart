@@ -4,6 +4,7 @@ import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -72,6 +73,12 @@ class _SearchState extends State<SearchList2> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    FirebaseAnalytics().logEvent(name: 'Goilmu_Search_page',parameters:null);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         key: key,
@@ -105,7 +112,8 @@ class _SearchState extends State<SearchList2> {
                 ),
 
                   hintText: "Search ...",
-                  hintStyle: TextStyle(color: Colors.grey.shade500)),
+                  hintStyle: TextStyle(color: Colors.grey.shade500)
+              ),
             ),
           ),
           flexibleSpace: Container(
@@ -140,7 +148,8 @@ class _SearchState extends State<SearchList2> {
           itemCount: _results.length,
           itemBuilder: (BuildContext context, int index) {
             return TuneUpItem(_results[index]);
-          });
+          }
+      );
     }
   }
 

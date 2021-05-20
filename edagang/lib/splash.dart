@@ -1,10 +1,22 @@
 import 'dart:async';
 import 'package:edagang/index.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:intro_slider/intro_slider.dart';
-import 'package:intro_slider/slide_object.dart';
+import 'package:uni_links/uni_links.dart';
+
+import 'deeplink/ads_auto_deeplink.dart';
+import 'deeplink/ads_career_deeplink.dart';
+import 'deeplink/ads_company_deeplink.dart';
+import 'deeplink/ads_other_deeplink.dart';
+import 'deeplink/ads_prop_deeplink.dart';
+import 'deeplink/biz_company_deeplink.dart';
+import 'deeplink/fintools_deeplink.dart';
+import 'deeplink/goilmu_company_deeplink.dart';
+import 'deeplink/goilmu_deeplink.dart';
+import 'deeplink/shop_category_deeplink.dart';
+import 'deeplink/shop_merchant_deeplink.dart';
+import 'deeplink/shop_product_deeplink.dart';
+import 'deeplink/video_deeplink.dart';
 
 
 class SplashScreen extends StatefulWidget {
@@ -13,18 +25,171 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  StreamSubscription _sub;
+
   @override
   void initState() {
     super.initState();
-    //SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top]);
+    FirebaseAnalytics().logEvent(name: 'Splash_Screen',parameters:null);
     Timer(Duration(seconds: 3), () {
-      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => Index(),));
+      checkDeepLink();
+      //Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => Index(),));
     });
+  }
+
+  checkDeepLink() async {
+    _sub = getLinksStream().listen((String link) {
+      print('initPlatformStateForStringUniLinks: $link');
+    }, onError: (err) {
+      print('error $err');
+    });
+
+    getLinksStream().listen((String link) {
+      print('initState index got link: $link');
+    }, onError: (err) {
+      print('got err: $err');
+    });
+
+    String initialLink;
+    Uri initialUri;
+    try {
+      initialLink = await getInitialLink();
+      print('initial link: $initialLink');
+      WidgetsFlutterBinding.ensureInitialized();
+      if (initialLink != null) initialUri = Uri.parse(initialLink);
+
+      if (initialLink!=null && initialLink.isNotEmpty) {
+        /*List<String> splitt = initialLink.toString().split('/');
+        print(initialLink.toString().split('/')[0]);
+        print(initialLink.toString().split('/')[1]);
+        print(initialLink.toString().split('/')[2]);
+        print(initialLink.toString().split('/')[3]);
+        print(initialLink.toString().split('/')[4]);
+        print(initialLink.toString().split('/')[5]);
+        print(splitt[splitt.length - 1]);*/
+
+        String type = initialLink.toString().split('/')[3];
+        String subtype = initialLink.toString().split('/')[4];
+        String xid = initialLink.toString().split('/')[5];
+        String xname = initialLink.toString().split('/')[6];
+
+        switch (type) {
+          case "cartsini":
+            {
+              switch (subtype) {
+                case "merchant":
+                  //return MerchantDeeplink(xid, xname);
+                  return Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => MerchantDeeplink(xid, xname)));
+                  break;
+                case "category":
+                  //return CategoryDeeplink(xid, xname);
+                  return Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => CategoryDeeplink(xid, xname)));
+                  break;
+                case "product":
+                  //return ProductDeeplink();
+                  return Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => ProductDeeplink()));
+                  break;
+                case "video":
+                  //return VideoPlay(xid, xname);
+                  return Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => VideoPlayDl(xid, xname)));
+                  break;
+                default:
+                  return Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => Cartsini(),));
+                  break;
+              }
+            }
+            break;
+          case "smartbiz":
+            {
+              switch (subtype) {
+                case "company":
+                  //return CompanyDeeplinkPage(xid, xname);
+                  return Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => CompanyDeeplinkPage(xid, xname)));
+                  break;
+                default:
+                  return Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => Index(),));
+                  break;
+              }
+            }
+            break;
+          case "fintools":
+            {
+              switch (subtype) {
+                case "product":
+                  //return FintoolDlPage(xid, xname);
+                  return Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => FintoolDlPage(xid, xname)));
+                  break;
+                default:
+                  return Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => Fintool(),));
+                  break;
+              }
+            }
+            break;
+          case "blurb":
+            {
+              switch (subtype) {
+                case "career":
+                  //return CareerDlPage(xid, xname);
+                  return Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => CareerDlPage(xid, xname)));
+                  break;
+                case "property":
+                  //return PropDlShowcase(xid, xname);
+                  return Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => PropDlShowcase(xid, xname)));
+                  break;
+                case "auto":
+                  //return AutoDlShowcase(xid, xname);
+                  return Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => AutoDlShowcase(xid, xname)));
+                  break;
+                case "others":
+                //return BlurbCompanyPropertyDlPage(xid, xname);
+                  return Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => OtherDlPage(xid, xname)));
+                  break;
+                case "company":
+                  //return BlurbCompanyPropertyDlPage(xid, xname);
+                  return Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => BlurbCompanyPropertyDlPage(xid, xname)));
+                  break;
+                default:
+                  return Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => Blurb(),));
+                  break;
+              }
+            }
+            break;
+          case "goilmu":
+            {
+              switch (subtype) {
+                case "course":
+                  //return GoilmuDlPage(xid, xname);
+                  return Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => GoilmuDlPage(xid, xname)));
+                  break;
+                case "company":
+                  return Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => GoilmuCompanyDlPage(xid, xname)));
+                  break;
+                default:
+                  return Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => Goilmu(),));
+                  break;
+              }
+            }
+            break;
+          default:
+            return Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => Index(),));
+            break;
+        }
+      } else {
+        return Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => Index(),));
+      }
+
+    }catch(e){
+      print('error initialLink >>>>  $e');
+    }
+
+    print('   $initialLink    <<<<  initialLink   $initialUri    <<< initialUri ');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
@@ -38,168 +203,6 @@ class _SplashScreenState extends State<SplashScreen> {
           ),
         ],
       ),
-    );
-  }
-}
-
-class IntroScreen extends StatefulWidget {
-  IntroScreen({Key key}) : super(key: key);
-
-  @override
-  _IntroScreenState createState() => new _IntroScreenState();
-}
-
-class _IntroScreenState extends State<IntroScreen> {
-  List<Slide> slides = new List();
-
-  @override
-  void initState() {
-    super.initState();
-
-    slides.add(
-      new Slide(
-          /*title: "SMARTBIZ",
-          styleTitle: GoogleFonts.lato(
-            textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.red.shade600),
-          ),
-          description: "An excellent online platform promoting products, services, businesses and events, transforming visibility into business opportunities.",
-          styleDescription: GoogleFonts.lato(
-            textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
-          ),*/
-
-          pathImage: "assets/sample.gif",
-          //backgroundColor: Colors.white,
-          //foregroundImageFit: BoxFit.fill,
-          heightImage: 676,
-          widthImage: 380
-      ),
-    );
-    /*slides.add(
-      new Slide(
-        title: "FINTOOLS",
-        styleTitle: GoogleFonts.lato(
-          textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.red.shade600),
-        ),
-        description: "Offers a range of financial services on an online platform to meet any business or personal financial requirements.",
-        styleDescription: GoogleFonts.lato(
-          textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
-        ),
-        pathImage: "assets/images/intro_fintools.png",
-        backgroundColor: Colors.white,
-        foregroundImageFit: BoxFit.fill,
-        heightImage: 257,
-        widthImage: 380
-      ),
-    );*/
-    /*slides.add(
-      new Slide(
-          title: "CARTSINI",
-          styleTitle: GoogleFonts.lato(
-            textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.red.shade600),
-          ),
-          description: "Traditional marketplace but with a totally modern online shopping experience that broadens the horizon for both customers and providers of products and services.",
-          styleDescription: GoogleFonts.lato(
-            textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
-          ),
-
-          pathImage: "assets/images/intro_cartsini.png",
-          backgroundColor: Colors.white,
-          foregroundImageFit: BoxFit.fill,
-          heightImage: 257,
-          widthImage: 380
-      ),
-    );
-    slides.add(
-      new Slide(
-          title: "SMARTBIZ",
-          styleTitle: GoogleFonts.lato(
-            textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.red.shade600),
-          ),
-          description: "An excellent online platform promoting products, services, businesses and events, transforming visibility into business opportunities.",
-          styleDescription: GoogleFonts.lato(
-            textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
-          ),
-
-          pathImage: "assets/images/intro_smartbiz.png",
-          backgroundColor: Colors.white,
-          foregroundImageFit: BoxFit.fill,
-          heightImage: 257,
-          widthImage: 380
-      ),
-    );
-    slides.add(
-      new Slide(
-          title: "GOILMU",
-          styleTitle: GoogleFonts.lato(
-            textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.red.shade600),
-          ),
-          description: "The go-to for career transformation and new opportunities through training and upskilling for professionals and non professionals using immersive tools and techniques.",
-          styleDescription: GoogleFonts.lato(
-            textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
-          ),
-
-          pathImage: "assets/images/intro_goilmu.png",
-          backgroundColor: Colors.white,
-          foregroundImageFit: BoxFit.fill,
-          heightImage: 257,
-          widthImage: 380
-      ),
-    );
-    slides.add(
-      new Slide(
-          title: "BLURB",
-          styleTitle: GoogleFonts.lato(
-            textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.red.shade600),
-          ),
-          description: "A virtual business world to conduct business-as -usual but within an immersive online ecosystem, enhancing the business process in pursuit of success.",
-          styleDescription: GoogleFonts.lato(
-            textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
-          ),
-
-          pathImage: "assets/images/intro_blurb.png",
-          backgroundColor: Colors.white,
-          foregroundImageFit: BoxFit.fill,
-          heightImage: 257,
-          widthImage: 380
-      ),
-    );
-    slides.add(
-      new Slide(
-          title: "VIRTUAL TRADE",
-          styleTitle: GoogleFonts.lato(
-            textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.red.shade600),
-          ),
-          description: "The day-to-day office environment is transformed into a virtual office to seamlessly continue the usiness experience and enhance the effectiveness to pursue success. Also provides a virtual Convention and Exhibition Centre.",
-          styleDescription: GoogleFonts.lato(
-            textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
-          ),
-
-          pathImage: "assets/images/intro_vrtrade.png",
-          backgroundColor: Colors.white,
-          foregroundImageFit: BoxFit.fill,
-          heightImage: 257,
-          widthImage: 380
-      ),
-    );*/
-
-  }
-
-  void onDonePress() {
-// Do what you want
-    Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => Index(),));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return new IntroSlider(
-      slides: this.slides,
-      colorSkipBtn: Color(0xffDD0000),
-      onSkipPress: this.onDonePress,
-      colorDoneBtn: Color(0xffDD0000),
-      onDonePress: this.onDonePress,
-      colorActiveDot: Color(0xffDD0000),
-      colorDot: Colors.grey,
-
     );
   }
 }

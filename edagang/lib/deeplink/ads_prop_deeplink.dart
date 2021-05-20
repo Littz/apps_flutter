@@ -11,6 +11,7 @@ import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/photo_viewer.dart';
 import 'package:edagang/widgets/webview.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
@@ -133,6 +134,7 @@ class _PropDlShowcasePageState extends State<PropDlShowcase> with TickerProvider
 
   @override
   void initState() {
+    FirebaseAnalytics().logEvent(name: 'Deeplink_Blurb_property_'+widget.propTitle,parameters:null);
     getDetails();
     super.initState();
     _scrollController = ScrollController()..addListener(() => setState(() {}));

@@ -1,5 +1,6 @@
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/utils/constant.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,6 +30,7 @@ class _AccProfilePageState extends State<AccProfilePage> {
   void initState() {
     //this.getProfile();
     super.initState();
+    FirebaseAnalytics().logEvent(name: 'Account_Profile',parameters:null);
   }
 
   setSelectedRadio(int val) {

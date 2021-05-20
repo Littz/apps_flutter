@@ -4,6 +4,7 @@ import 'package:edagang/screens/shop/product_ngo.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,6 +25,7 @@ class _NgoPageState extends State<NgoPage> {
   @override
   void initState() {
     super.initState();
+    FirebaseAnalytics().logEvent(name: 'Cartsini_NGO_home',parameters:null);
   }
 
   @override

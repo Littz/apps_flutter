@@ -9,16 +9,21 @@ import 'package:edagang/screens/ads/ads_prop_detail.dart';
 import 'package:edagang/screens/biz/biz_index.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/product_grid_card.dart';
 import 'package:edagang/widgets/webview.dart';
 import 'package:edagang/widgets/webview_bb.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'ads_other_detail.dart';
 
 class AdvertPage extends StatefulWidget {
   final TabController tabcontroler;
@@ -85,8 +90,10 @@ class _AdvertPageState extends State<AdvertPage> {
 
       //Navigator.push(context,SlideRightRoute(page: BizCompanyDetailPage(catid,'')));
     } else if (ctype == "4") {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        Navigator.push(context, SlideRightRoute(page: WebviewBixon(vrurl ?? '', imgurl ?? '')));
+      });
 
-      Navigator.push(context, SlideRightRoute(page: WebviewBixon(vrurl ?? '', imgurl ?? '')));
     }
   }
 
@@ -98,6 +105,7 @@ class _AdvertPageState extends State<AdvertPage> {
     super.initState();
     loadPhoto();
     listImgUrl = List();
+    FirebaseAnalytics().logEvent(name: 'Blurb_Home',parameters:null);
   }
 
   @override
@@ -117,7 +125,7 @@ class _AdvertPageState extends State<AdvertPage> {
               child: Scaffold(
                 backgroundColor: Color(0xffEEEEEE),
                 body: DefaultTabController(
-                  length: 3,
+                  length: 4,
                   child: NestedScrollView(
                     headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
                       return <Widget>[
@@ -169,12 +177,17 @@ class _AdvertPageState extends State<AdvertPage> {
                                     backgroundColor: Colors.transparent,
                                     child: Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.fill, height: 27, width: 27),
                                   )
-                                : CircleAvatar(
-                                  backgroundColor: Colors.transparent,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(50),
-                                    child: Image.network(_photo ?? '', fit: BoxFit.fill, height: 27, width: 27,),
-                                  )
+                                : Container(
+                                  height: 30.0,
+                                  width: 30.0,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      //fit: BoxFit.fill,
+                                      image: CachedNetworkImageProvider(_photo),
+                                      //scale: 30,
+                                    ),
+                                  ),
                                 )
                               : CircleAvatar(
                                 backgroundColor: Colors.transparent,
@@ -270,6 +283,7 @@ class _AdvertPageState extends State<AdvertPage> {
                                 Tab(text: "CAREER"),
                                 Tab(text: "PROPERTY"),
                                 Tab(text: "AUTOMOBILE"),
+                                Tab(text: "OTHERS"),
                               ],
                             ),
                           ),
@@ -284,6 +298,7 @@ class _AdvertPageState extends State<AdvertPage> {
                             _buildCareer(key: "key1"),
                             _buildProperty(key: "key2"),
                             _buildAuto(key: "key3"),
+                            _buildOther(key: "key4"),
                           ]
                       ),
                     )
@@ -317,7 +332,8 @@ class _AdvertPageState extends State<AdvertPage> {
                       child: InkWell(
                           onTap: () {
                             sharedPref.save("job_id", data.id.toString());
-                            Navigator.push(context,SlideRightRoute(page: CareerDetailPage(data.id.toString(),data.title)));
+                              FirebaseAnalytics().logEvent(name: 'Blurb_job_'+data.title,parameters:null);
+                              Navigator.push(context,SlideRightRoute(page: CareerDetailPage(data.id.toString(),data.title)));
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -435,6 +451,7 @@ class _AdvertPageState extends State<AdvertPage> {
                       margin: EdgeInsets.all(5.0),
                       child: InkWell(
                           onTap: () {
+                            FirebaseAnalytics().logEvent(name: 'Blurb_property_'+data.title,parameters:null);
                             Navigator.push(context,SlideRightRoute(page: PropShowcase(data.id.toString(),data.title)));
                             //saveData();
                             //Navigator.push(context,SlideRightRoute(page: CareerDetailPage(data.id.toString(),data.title)));
@@ -555,6 +572,7 @@ class _AdvertPageState extends State<AdvertPage> {
                       child: InkWell(
                           onTap: () {
                             //saveData();
+                            FirebaseAnalytics().logEvent(name: 'Blurb_auto_'+data.title,parameters:null);
                             Navigator.push(context,SlideRightRoute(page: AutoShowcase(data.id.toString(),data.title)));
                           },
                           child: Row(
@@ -638,6 +656,120 @@ class _AdvertPageState extends State<AdvertPage> {
                                       ),
                                     ],
                                   )
+                                ),
+                              ),
+                            ],
+                          )
+                      ),
+                    )
+                );
+              }
+          );
+        });
+  }
+
+  Widget _buildOther({String key}) {
+    return ScopedModelDescendant<MainScopedModel>(
+        builder: (context, child, model){
+          return ListView.builder(
+              key: PageStorageKey(key),
+              itemCount: model.blbother.length,
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              padding: EdgeInsets.only(left: 2.5, top: 2.5, right: 2.5),
+              itemBuilder: (BuildContext context, int index) {
+                var data = model.blbother[index];
+                listImgUrl.add(data.image.toString());
+                return Card(
+                    margin: EdgeInsets.all(4.0),
+                    elevation: 1.5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Container(
+                      margin: EdgeInsets.all(5.0),
+                      child: InkWell(
+                          onTap: () {
+                            //sharedPref.save("job_id", data.id.toString());
+                            //FirebaseAnalytics().logEvent(name: 'Blurb_job_'+data.title,parameters:null);
+                            Navigator.push(context,SlideRightRoute(page: OtherDetailPage(data.id.toString(),data.title)));
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(5),
+                                child: CachedNetworkImage(
+                                  placeholder: (context, url) => Container(
+                                    width: 40,
+                                    height: 40,
+                                    color: Colors.transparent,
+                                    child: CupertinoActivityIndicator(
+                                      radius: 15,
+                                    ),
+                                  ),
+                                  imageUrl: 'https://blurbapp.e-dagang.asia'+data.image[0].file_path,
+                                  fit: BoxFit.cover,
+                                  width: 70,
+                                  height: 70,
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 0),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Expanded(
+                                              flex: 4,
+                                              child: Container(
+                                                margin: EdgeInsets.only(left: 7.0, right: 7.0, top: 0.0),
+                                                alignment: Alignment.topLeft,
+                                                child: Text(
+                                                  data.title,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: GoogleFonts.lato(
+                                                    textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w700,),
+                                                  ),
+                                                  maxLines: 2,
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 1,
+                                              child: Container(
+                                                margin: EdgeInsets.only(left: 0, right: 0.0, top: 0.0),
+                                                alignment: Alignment.topRight,
+                                                child: Icon(
+                                                  CupertinoIcons.chevron_forward,
+                                                  size: 18,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
+                                          child: Text(
+                                            data.company_name,
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
+                                          child: htmlText2(data.descr),
+                                        ),
+                                      ],
+                                    )
                                 ),
                               ),
                             ],

@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:edagang/scoped/scoped_product.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/product_grid_card.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -57,6 +58,7 @@ class ProductListCategoryState extends State<ProductListCategory> {
   @override
   void initState() {
     super.initState();
+    FirebaseAnalytics().logEvent(name: 'Cartsini_product_cat',parameters:null);
   }
 
   @override

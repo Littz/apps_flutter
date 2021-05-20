@@ -3,6 +3,7 @@ import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/widgets/SABTitle.dart';
 import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/emptyData.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,6 +30,7 @@ class _BizVrListPageState extends State<BizVrListPage> {
   void initState() {
     super.initState();
     _scrollController = ScrollController()..addListener(() => setState(() {}));
+    FirebaseAnalytics().logEvent(name: 'Smartbiz_Virtual_List',parameters:null);
   }
 
   bool get _showTitle {

@@ -1,23 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:edagang/main.dart';
 import 'package:edagang/models/shop_model.dart';
 import 'package:edagang/scoped/scoped_product.dart';
-import 'package:edagang/screens/shop/product_detail.dart';
 import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/SABTitle.dart';
-import 'package:edagang/widgets/html2text.dart';
-import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/product_grid_card.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:loading_gifs/loading_gifs.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+
 
 class ProductListMerchant extends StatefulWidget {
   String mercId, mercName;
@@ -71,6 +66,7 @@ class _ProductListMerchantState extends State<ProductListMerchant> {
 
   @override
   void initState() {
+    FirebaseAnalytics().logEvent(name: 'Cartsini_Merchant_products',parameters:null);
     super.initState();
     _scrollController = ScrollController()..addListener(() => setState(() {}));
   }
@@ -207,7 +203,7 @@ class ProfileMerchant extends StatelessWidget {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(50),
                       child: model.getProfilePic().toString() == 'null' ? Image.asset('assets/icons/ic_launcher_new.png', height: 75, width: 75, fit: BoxFit.cover,) : CachedNetworkImage(
-                        fit: BoxFit.cover,
+                        //fit: BoxFit.cover,
                         height: 75,
                         width: 75,
                         imageUrl: Constants.urlImage + model.getProfilePic().toString() ?? '',
@@ -215,7 +211,7 @@ class ProfileMerchant extends StatelessWidget {
                           decoration: BoxDecoration(
                             image: DecorationImage(
                               image: imageProvider,
-                              fit: BoxFit.cover,
+                              //fit: BoxFit.cover,
                             ),
                             borderRadius: BorderRadius.all(Radius.circular(7.0)),
                           ),

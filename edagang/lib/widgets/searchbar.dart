@@ -2,6 +2,7 @@ import 'package:edagang/screens/biz/search.dart';
 import 'package:edagang/screens/shop/search.dart';
 import 'package:edagang/screens/upskill/search.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +15,7 @@ Widget searchBar(BuildContext context) {
           InkWell(
             splashColor: Colors.deepOrange.shade600,
             onTap: () {
+              FirebaseAnalytics().logEvent(name: 'Smartbiz_search',parameters:null);
               Navigator.push(context, SlideRightRoute(page: SearchList()));
             },
             child: Container(

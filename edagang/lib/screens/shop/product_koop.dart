@@ -1,17 +1,14 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/models/shop_model.dart';
 import 'package:edagang/scoped/scoped_product.dart';
-import 'package:edagang/screens/shop/product_detail.dart';
-import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/product_grid_card.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+
 
 class ProductKoopPage extends StatefulWidget {
   String koopId, koopName;
@@ -62,6 +59,7 @@ class _ProductKoopPageState extends State<ProductKoopPage> {
   @override
   void initState() {
     super.initState();
+    FirebaseAnalytics().logEvent(name: 'Cartsini_Koperasi_product',parameters:null);
   }
 
   @override

@@ -1,17 +1,15 @@
-import 'dart:math';
 import 'dart:ui';
 import 'package:edagang/main.dart';
 import 'package:edagang/scoped/scoped_product.dart';
-import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/products_list_item.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+
 
 class CategoryDeeplink extends StatefulWidget {
   String catId, catName;
@@ -61,6 +59,7 @@ class _CategoryDeeplinkState extends State<CategoryDeeplink> {
 
   @override
   void initState() {
+    FirebaseAnalytics().logEvent(name: 'Deeplink_Cartsini_category_'+widget.catName,parameters:null);
     super.initState();
   }
 

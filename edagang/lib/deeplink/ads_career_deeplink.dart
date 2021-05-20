@@ -10,6 +10,7 @@ import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/webview.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
@@ -116,6 +117,7 @@ class _CareerDlPageState extends State<CareerDlPage> with TickerProviderStateMix
 
   @override
   void initState() {
+    FirebaseAnalytics().logEvent(name: 'Deeplink_Blurb_career_'+widget.jobName,parameters:null);
     getDetails();
     super.initState();
     _scrollController = ScrollController()..addListener(() => setState(() {}));
@@ -233,7 +235,7 @@ class _CareerDlPageState extends State<CareerDlPage> with TickerProviderStateMix
                                 borderRadius: BorderRadius.circular(50),
                                 child: CachedNetworkImage(
                                   imageUrl: logo ?? "",
-                                  fit: BoxFit.cover,
+                                  //fit: BoxFit.cover,
                                   placeholder: (context, url) => CircularProgressIndicator(),
                                   errorWidget: (context, url, error) => Icon(Icons.error_outline),
                                 ),

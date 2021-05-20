@@ -13,8 +13,10 @@ import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/searchbar.dart';
 import 'package:edagang/widgets/webview.dart';
 import 'package:edagang/widgets/webview_bb.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -97,9 +99,14 @@ class _BizIdxPageState extends State<BizPage> {
       print(catname);
       //Navigator.push(context, SlideRightRoute(page: ProductListCategory(catid, catname)));
     } else if (ctype == "3") {
-      Navigator.push(context,SlideRightRoute(page: BizCompanyDetailPage(catid,'')));
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        Navigator.push(context,SlideRightRoute(page: BizCompanyDetailPage(catid,'')));
+      });
     } else if (ctype == "4") {
-      Navigator.push(context, SlideRightRoute(page: WebviewBixon(vrurl ?? '', imgurl ?? '')));
+      FirebaseAnalytics().logEvent(name: 'Blackbixon_form',parameters:null);
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        Navigator.push(context, SlideRightRoute(page: WebviewBixon(vrurl ?? '', imgurl ?? '')));
+      });
     }
   }
 
@@ -113,6 +120,7 @@ class _BizIdxPageState extends State<BizPage> {
 
     super.initState();
     loadPhoto();
+    FirebaseAnalytics().logEvent(name: 'Smartbiz_Home',parameters:null);
   }
 
   @override
@@ -136,6 +144,8 @@ class _BizIdxPageState extends State<BizPage> {
         return WillPopScope(
           key: _scaffoldKey,
           onWillPop: () {
+            //Navigator.of(context,rootNavigator: true).pop();
+            //Navigator.of(context).pop();
             SystemNavigator.pop();
             return Future.value(true);
           },
@@ -157,12 +167,17 @@ class _BizIdxPageState extends State<BizPage> {
                         _logType == '0' ? CircleAvatar(
                           backgroundColor: Colors.transparent,
                           child: Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.fill, height: 27, width: 27),
-                        ) : CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
-                            child: Image.network(_photo ?? '', fit: BoxFit.fill, height: 27, width: 27,),
-                          )
+                        ) : Container(
+                          height: 30.0,
+                          width: 30.0,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              //fit: BoxFit.fill,
+                              image: CachedNetworkImageProvider(_photo),
+                              //scale: 30,
+                            ),
+                          ),
                         )
                       : CircleAvatar(
                         backgroundColor: Colors.transparent,
@@ -171,7 +186,9 @@ class _BizIdxPageState extends State<BizPage> {
                             CupertinoIcons.power,
                             color: Color(0xff084B8C),
                           ),
-                          onPressed: () {Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));},
+                          onPressed: () {
+                              Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
+                          },
                         ),
                       ),
                     ),
@@ -197,7 +214,9 @@ class _BizIdxPageState extends State<BizPage> {
                                 CupertinoIcons.bell_fill,
                                 color: Color(0xff084B8C),
                               ),
-                              onPressed: () {Navigator.push(context, SlideRightRoute(page: NotificationPage()));},
+                              onPressed: () {
+                                  Navigator.push(context, SlideRightRoute(page: NotificationPage()));
+                              },
                             ),
                           ),
                           SizedBox(width: 2,),
@@ -206,44 +225,47 @@ class _BizIdxPageState extends State<BizPage> {
                             child: PopupMenuButton(
                               icon: Icon(Icons.more_vert, color: Color(0xff084B8C),),
                               itemBuilder: (BuildContext bc) => [
-                                PopupMenuItem(child: ListTile(
+                                /*PopupMenuItem(child: ListTile(
                                   title: Text('Quotation'),
-                                ), value: "1"),
+                                ), value: "1"),*/
                                 PopupMenuItem(child: ListTile(
                                   title: Text('Join Us'),
-                                ), value: "2"),
+                                ), value: "1"),
                                 PopupMenuItem(child: ListTile(
                                   title: Text('Settings'),
-                                ), value: "3"),
+                                ), value: "2"),
                                 PopupMenuItem(child: model.isAuthenticated ? ListTile(
                                   title: Text('Logout'),
                                 ) : ListTile(
                                   title: Text('Login'),
-                                ), value: model.isAuthenticated ? "4" : "5"),
+                                ), value: model.isAuthenticated ? "3" : "4"),
                               ],
 
                               onSelected: (value) {
                                 setState(() {
                                   _selectedItem = value;
                                   print("Selected context menu: $_selectedItem");
-                                  if(_selectedItem == '1'){
+                                  /*if(_selectedItem == '1'){
                                     if(model.isAuthenticated) {
                                       Navigator.push(context, SlideRightRoute(page: WebviewWidget('https://smartbiz.e-dagang.asia/biz/quot/' + model.getId().toString() + '/0', 'Quotation')));
                                     }else{
                                       Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
                                     }
+                                  }*/
+                                  if(_selectedItem == '1'){
+                                      FirebaseAnalytics().logEvent(name: 'JoinUs_form',parameters:null);
+                                      Navigator.push(context, SlideRightRoute(page: WebviewWidget('https://smartbiz.e-dagang.asia/biz/joinwebv','Join Us')));
                                   }
                                   if(_selectedItem == '2'){
-                                    Navigator.push(context, SlideRightRoute(page: WebviewWidget('https://smartbiz.e-dagang.asia/biz/joinwebv','Join Us')));
+                                      Navigator.push(context, SlideRightRoute(page: SettingPage()));
                                   }
                                   if(_selectedItem == '3'){
-                                    Navigator.push(context, SlideRightRoute(page: SettingPage()));
+                                      FirebaseAnalytics().logEvent(name: 'Logout_app',parameters:null);
+                                      logoutUser(context, model);
                                   }
                                   if(_selectedItem == '4'){
-                                    logoutUser(context, model);
-                                  }
-                                  if(_selectedItem == '5'){
-                                    Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
+                                      FirebaseAnalytics().logEvent(name: 'Login_page',parameters:null);
+                                      Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
                                   }
                                 });
                               },
@@ -519,15 +541,16 @@ class _BizIdxPageState extends State<BizPage> {
                         Radius.circular(7.0),
                       ),
                       onTap: () {
+                        FirebaseAnalytics().logEvent(name: 'Biz_virtual_'+data.vr_list[index].vr_name,parameters:null);
                         launchVr(data.vr_list[index].vr_url);
                       },
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Container(
-                              height: 155,
-                              width: MediaQuery.of(context).size.width * 0.6,
+                            Expanded(
+                              //height: 155,
+                              //width: MediaQuery.of(context).size.width * 0.6,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.only(topLeft: Radius.circular(7), topRight: Radius.circular(7)),
                                 child: CachedNetworkImage(
@@ -543,14 +566,15 @@ class _BizIdxPageState extends State<BizPage> {
                                     fit: BoxFit.cover,
                                   ),
                                   fit: BoxFit.cover,
-                                  height: 155,
+                                  //height: 155,
                                 ),
                               ),
                             ),
                             Container(
+                              height: 35,
                               width: MediaQuery.of(context).size.width * 0.6,
-                              padding: EdgeInsets.only(left: 7.0,right: 7.0,top: 7.0),
-                              alignment: Alignment.bottomLeft,
+                              padding: EdgeInsets.only(left: 7.0,right: 7.0,top: 0.0),
+                              alignment: Alignment.centerLeft,
                               decoration: new BoxDecoration(
                                 color: Colors.transparent,
                                 borderRadius: BorderRadius.all(Radius.circular(7)),
@@ -585,105 +609,121 @@ class _BizIdxPageState extends State<BizPage> {
 
   Widget topList() {
     return ScopedModelDescendant<MainScopedModel>(
-        builder: (context, child, model) {
-          return SliverPadding(
-              padding: EdgeInsets.all(10),
-              sliver: SliverGrid(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 1.5,
-                  crossAxisSpacing: 1.5,
-                  childAspectRatio: 0.815,
-                ),
-                delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-                  var data = model.bbusiness[index];
-                  return InkWell(
-                    onTap: () {
-                      sharedPref.save("biz_id", data.id.toString());
-                      sharedPref.save("biz_name", data.company_name);
-                      Navigator.push(context,SlideRightRoute(page: BizCompanyDetailPage(data.id.toString(),data.company_name)));
-                    },
-                    child: Card(
-                      elevation: 1.0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: ClipPath(
-                        clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-                        child: Center(
-                            child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: Container(
-                                  padding: const EdgeInsets.all(0.0),
-                                  color: Colors.white,
-                                  child: Card(
-                                    color: Colors.white,
-                                    elevation: 0.0,
-                                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                                    child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          Expanded(
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  color: Colors.transparent,
-                                                  borderRadius: BorderRadius.circular(7)
-                                              ),
-                                              child: data.logo == null ? Image.asset(
-                                                'assets/icons/ic_launcher_new.png', height: 80.0, width: 80.0,
-                                                fit: BoxFit.cover,)
+      builder: (context, child, model) {
+        return SliverPadding(
+          padding: EdgeInsets.all(10),
+          sliver: SliverGrid(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 1.5,
+              crossAxisSpacing: 1.5,
+              childAspectRatio: 0.815,
+            ),
+            delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+              var data = model.bbusiness[index];
+              return InkWell(
+                onTap: () {
+                  sharedPref.save("biz_id", data.id.toString());
+                  sharedPref.save("biz_name", data.company_name);
+                  //FirebaseAnalytics().logEvent(name: 'Biz_company_'+data.company_name,parameters:null);
+                  Navigator.push(context,SlideRightRoute(page: BizCompanyDetailPage(data.id.toString(),data.company_name)));
 
-                                                  : CachedNetworkImage(
-                                                fit: BoxFit.fitWidth,
-                                                imageUrl: 'http://bizapp.e-dagang.asia'+data.logo ?? '',
-                                                imageBuilder: (context, imageProvider) => Container(
-                                                  decoration: BoxDecoration(
-                                                      image: DecorationImage(
-                                                        alignment: Alignment.center,
-                                                        image: imageProvider,
-                                                        fit: BoxFit.fitWidth,
-                                                      ),
-                                                      borderRadius: BorderRadius.only(
-                                                          topLeft: Radius.circular(8.0),
-                                                          topRight: Radius.circular(8.0)
-                                                      )
-                                                  ),
-                                                ),
-                                                placeholder: (context, url) => Container(color: Colors.grey.shade200,),
-                                                errorWidget: (context, url, error) => Icon(Icons.image_rounded, size: 36,),
-                                              ),
+                },
+                child: Card(
+                  elevation: 1.0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Stack(
+                    children: [
+                      Center(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Container(
+                            padding: const EdgeInsets.all(0.0),
+                            color: Colors.white,
+                            child: Card(
+                              color: Colors.white,
+                              elevation: 0.0,
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.transparent,
+                                        borderRadius: BorderRadius.circular(7)
+                                      ),
+                                      child: data.logo == null ? Image.asset(
+                                        'assets/icons/ic_launcher_new.png', height: 80.0, width: 80.0,
+                                        fit: BoxFit.cover,)
+
+                                          : CachedNetworkImage(
+                                        fit: BoxFit.fitWidth,
+                                        imageUrl: 'http://bizapp.e-dagang.asia'+data.logo ?? '',
+                                        imageBuilder: (context, imageProvider) => Container(
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              alignment: Alignment.center,
+                                              image: imageProvider,
+                                              fit: BoxFit.fitWidth,
                                             ),
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(8.0),
+                                              topRight: Radius.circular(8.0)
+                                            )
                                           ),
-                                          SizedBox(height: 8.0),
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 8.0),
-                                            child: Text(data.company_name,
-                                              textAlign: TextAlign.center,
-                                              style: GoogleFonts.lato(
-                                                textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                                              ),
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                          SizedBox(height: 8.0)
-                                        ]
+                                        ),
+                                        placeholder: (context, url) => Container(color: Colors.grey.shade200,),
+                                        errorWidget: (context, url, error) => Icon(Icons.image_rounded, size: 36,),
+                                      ),
                                     ),
                                   ),
-                                )
-                            )
+                                  SizedBox(height: 8.0),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Text(data.company_name,
+                                      textAlign: TextAlign.center,
+                                      style: GoogleFonts.lato(
+                                        textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8.0)
+                                ]
+                              ),
+                            ),
+                          )
                         ),
                       ),
-                    ),
-                  );
-                },
-                  childCount: model.bbusiness.length,
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: data.verify == 1 ? Padding(
+                          padding: EdgeInsets.only(top: 5, right: 5),
+                          child: Image.asset('assets/icons/verify.png', fit: BoxFit.cover, height: 21,),
+
+                          /*Text('Verified',
+                            style: GoogleFonts.lato(
+                              textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.green.shade700),
+                            ),
+                          ),*/
+                        ) : Container(),
+                      ),
+                    ]
+                  ),
                 ),
-              )
-          );
-        }
+              );
+            },
+              childCount: model.bbusiness.length,
+            ),
+          )
+        );
+      }
     );
   }
 
@@ -702,7 +742,6 @@ class _BizIdxPageState extends State<BizPage> {
     }else if(logtype == '2') {
       facebookLogin.logOut();
     }
-
     Navigator.of(context).pushReplacementNamed("/Main");
   }
 
@@ -817,6 +856,5 @@ class _WebviewVrState extends State<WebviewVr> {
       ],
     );
   }
-
 
 }

@@ -3,14 +3,17 @@ import 'package:edagang/models/shop_model.dart';
 import 'package:edagang/screens/shop/product_detail.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 
 class ProductCardItem extends StatelessWidget {
   SharedPref sharedPref = SharedPref();
   final Product product;
+  final myr = new NumberFormat("#,##0.00", "en_US");
 
   ProductCardItem({
     @required this.product,
@@ -25,11 +28,12 @@ class ProductCardItem extends StatelessWidget {
 
     double price = double.tryParse(product.price.toString()) ?? 0;
     assert(price is double);
-    var hrgOri = price.toStringAsFixed(2);
+    //var hrgOri = price.toStringAsFixed(2);
+    var hrgOri = myr.format(price);
 
     double price2 = double.tryParse(product.promoPrice.toString()) ?? 0;
     assert(price2 is double);
-    var hrgPromo = price2.toStringAsFixed(2);
+    var hrgPromo = myr.format(price2);
 
     return Container(
       child: Card(
@@ -47,6 +51,7 @@ class ProductCardItem extends StatelessWidget {
             sharedPref.save("prd_id", product.id.toString());
             sharedPref.save("prd_title", product.name);
             Navigator.push(context, SlideRightRoute(page: ProductShowcase()));
+
           },
           child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -214,6 +219,7 @@ class ProductCardItem extends StatelessWidget {
 class PopularCardItem extends StatelessWidget {
   SharedPref sharedPref = SharedPref();
   final Product product;
+  final myr = new NumberFormat("#,##0.00", "en_US");
 
   PopularCardItem({
     @required this.product,
@@ -228,11 +234,12 @@ class PopularCardItem extends StatelessWidget {
 
     double price = double.tryParse(product.price.toString()) ?? 0;
     assert(price is double);
-    var hrgOri = price.toStringAsFixed(2);
+    //var hrgOri = price.toStringAsFixed(2);
+    var hrgOri = myr.format(price);
 
     double price2 = double.tryParse(product.promoPrice.toString()) ?? 0;
     assert(price2 is double);
-    var hrgPromo = price2.toStringAsFixed(2);
+    var hrgPromo = myr.format(price2);
 
     return Container(
       width: 125,
@@ -249,6 +256,7 @@ class PopularCardItem extends StatelessWidget {
             sharedPref.save("prd_id", product.id.toString());
             sharedPref.save("prd_title", product.name);
             Navigator.push(context, SlideRightRoute(page: ProductShowcase()));
+            FirebaseAnalytics().logEvent(name: 'Cartsini_popular_'+product.name,parameters:null);
           },
           child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -366,6 +374,7 @@ class PopularCardItem extends StatelessWidget {
 class PromoCardItem extends StatelessWidget {
   SharedPref sharedPref = SharedPref();
   final Product product;
+  final myr = new NumberFormat("#,##0.00", "en_US");
 
   PromoCardItem({
     @required this.product,
@@ -380,11 +389,12 @@ class PromoCardItem extends StatelessWidget {
 
     double price = double.tryParse(product.price.toString()) ?? 0;
     assert(price is double);
-    var hrgOri = price.toStringAsFixed(2);
+    //var hrgOri = price.toStringAsFixed(2);
+    var hrgOri = myr.format(price);
 
     double price2 = double.tryParse(product.promoPrice.toString()) ?? 0;
     assert(price2 is double);
-    var hrgPromo = price2.toStringAsFixed(2);
+    var hrgPromo = myr.format(price2);
 
     return Container(
       width: 150,

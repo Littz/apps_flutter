@@ -399,7 +399,7 @@ void addGoilmuBannerList(Home_banner gbaner) {_gbanners.add(gbaner);}
 
 Future<dynamic> _getGoilmuJson() async {
   var response = await http.get(
-    'https://upskillapp.e-dagang.asia/api/course/home',
+    'https://goilmuapp.e-dagang.asia/api/course/home',
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());

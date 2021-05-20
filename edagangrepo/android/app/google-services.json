@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "61884815226",
+    "project_id": "edagang-d8876",
+    "storage_bucket": "edagang-d8876.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:61884815226:android:1ab03619be8d1c1bda28c3",
+        "android_client_info": {
+          "package_name": "com.digital.dagang.asia.edagang"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "61884815226-js4ot7n7cmqh82lr9mvk9edcsmq0i7ih.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.digital.dagang.asia.edagang",
+            "certificate_hash": "771f1f9a6bb34980483b8a1fb86375c0d33539a5"
+          }
+        },
+        {
+          "client_id": "61884815226-qabf90rj76ahgm5sjhb6sio8l1ldgs2f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVB2DeqYLc6gtZPt9kYloqI7j4Q6bxuoM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "61884815226-qabf90rj76ahgm5sjhb6sio8l1ldgs2f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
