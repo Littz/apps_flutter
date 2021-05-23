@@ -3,6 +3,7 @@ import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/screens/shop/cart_checkout.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
+import 'package:edagang/widgets/progressIndicator.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -97,26 +98,12 @@ class _ShopCartPageState extends State<ShopCartPage> {
             ),
           ),
           backgroundColor: Color(0xffEEEEEE),
-          body: model.isLoading3 ? _buildCircularProgressIndicator() : model.getCartotal() > 0 ? _cartItems(model) : _emptyContent(),
+          body: model.isLoading3 ? buildCircularProgressIndicator() : model.getCartotal() > 0 ? _cartItems(model) : _emptyContent(),
           //body: _cartItems(model),
           bottomNavigationBar: model.cartList.length > 0 ? _buildBottomNavigationBar() : null,
         )
       );
     });
-
-  }
-
-  _buildCircularProgressIndicator() {
-    return Center(
-      child: Container(
-        width: 50,
-        height: 50,
-        color: Colors.transparent,
-        child: CupertinoActivityIndicator(
-          radius: 22,
-        ),
-      ),
-    );
   }
 
   _cartItems(MainScopedModel model) {
@@ -316,7 +303,7 @@ class _ShopCartPageState extends State<ShopCartPage> {
 
                                                                                 });
                                                                               }
-                                                                              model.isLoading4 ? _buildCircularProgressIndicator() : model.updCartQty(cartId: int.parse(cart.cart_id), productId: int.parse(cart.product_id), quantity: quantity);
+                                                                              model.isLoading4 ? buildCircularProgressIndicator() : model.updCartQty(cartId: int.parse(cart.cart_id), productId: int.parse(cart.product_id), quantity: quantity);
 
                                                                             },
                                                                           ),
@@ -337,7 +324,7 @@ class _ShopCartPageState extends State<ShopCartPage> {
 
                                                                                 });
                                                                               }
-                                                                              model.isLoading4 ? _buildCircularProgressIndicator() : model.updCartQty(cartId: int.parse(cart.cart_id), productId: int.parse(cart.product_id), quantity: quantity);
+                                                                              model.isLoading4 ? buildCircularProgressIndicator() : model.updCartQty(cartId: int.parse(cart.cart_id), productId: int.parse(cart.product_id), quantity: quantity);
                                                                             },
                                                                           ),
                                                                         ]

@@ -131,21 +131,7 @@ class ProductsListCategoryBody extends StatelessWidget {
       builder: (context, child, model) {
         this.model = model;
         return _buildListView();
-        //return model.isLoadingCat ? _buildCircularProgressIndicator() : _buildListView();
       },
-    );
-  }
-
-  _buildCircularProgressIndicator() {
-    return Center(
-      child: Container(
-        width: 50,
-        height: 50,
-        color: Colors.transparent,
-        child: CupertinoActivityIndicator(
-          radius: 22,
-        ),
-      ),
     );
   }
 

@@ -5,7 +5,6 @@ import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/utils/constant.dart';
@@ -22,8 +21,7 @@ class SignInOrRegister extends StatefulWidget {
   _SignInOrRegisterState createState() => _SignInOrRegisterState();
 }
 
-class _SignInOrRegisterState extends State<SignInOrRegister>
-    with SingleTickerProviderStateMixin {
+class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerProviderStateMixin {
   final Map<String, dynamic> _formData = {'email': null, 'password': null};
   final GlobalKey<FormState> _formKeyForLogin = GlobalKey<FormState>();
   final TextEditingController _emailTextController = TextEditingController();
@@ -42,9 +40,9 @@ class _SignInOrRegisterState extends State<SignInOrRegister>
 
   @override
   void initState() {
+    FirebaseAnalytics().logEvent(name: 'Login_page',parameters:null);
     super.initState();
     initDeviceId();
-    FirebaseAnalytics().logEvent(name: 'Login_page',parameters:null);
   }
 
   Future initDeviceId() async {
@@ -68,332 +66,314 @@ class _SignInOrRegisterState extends State<SignInOrRegister>
   }
 
   Widget horizontalLine() => Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10.0),
-        child: Container(
-          height: 1.0,
-          color: Colors.grey.shade500,
-        ),
-      );
+    padding: EdgeInsets.symmetric(horizontal: 10.0),
+    child: Container(
+      height: 1.0,
+      color: Colors.grey.shade500,
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainScopedModel>(
         builder: (BuildContext context, Widget child, MainScopedModel model) {
-      return Scaffold(
-        //key: _scaffoldKey,
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(55.0),
-          child: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0.0,
-            centerTitle: true,
-            title: Text(
-              'Sign In',
-              style: GoogleFonts.lato(
-                textStyle: TextStyle(
-                  color: Colors.black,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
+          return Scaffold(
+            //key: _scaffoldKey,
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(55.0),
+              child: AppBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0.0,
+                centerTitle: true,
+                title: Text(
+                  'Sign In',
+                  style: GoogleFonts.lato(
+                    textStyle: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
-        body: Stack(
-          children: <Widget>[
-            Container(
-              height: double.infinity,
-              /*decoration: new BoxDecoration(
-                image: new DecorationImage(
-                    fit: BoxFit.cover,
-                    image: new NetworkImage(
-                        'https://i.pinimg.com/originals/c2/47/e9/c247e913a0214313045a8a5c39f8522b.jpg'))),*/
-            ),
-            Center(
-              child: Form(
-                  key: _formKeyForLogin,
-                  autovalidate: false,
-                  child: new SingleChildScrollView(
-                      padding: EdgeInsets.all(40.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          CircleAvatar(
-                            radius: 58.0,
-                            child: Image.asset(
-                              'assets/red_edagang.png',
-                              fit: BoxFit.fill,
-                              height: 69,
-                              width: 165,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 24,
-                          ),
-                          Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                /*Text(
-                      'Sign In',
-                      style: GoogleFonts.lato(
-                        textStyle: TextStyle(color: Colors.black, fontSize: 19, fontWeight: FontWeight.w700,),
-                      ),
-                    ),*/
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Text(
-                                  'Login with email and password.',
-                                  style: GoogleFonts.lato(
-                                    textStyle: TextStyle(
-                                      color: Colors.grey.shade700,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ]),
-                          SizedBox(
-                            height: 24,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+            body: Stack(
+              children: <Widget>[
+                Center(
+                  child: Form(
+                      key: _formKeyForLogin,
+                      autovalidate: false,
+                      child: new SingleChildScrollView(
+                          padding: EdgeInsets.all(40.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: <Widget>[
-                              Container(
-                                alignment: Alignment.bottomCenter,
-                                padding: EdgeInsets.only(right: 7),
-                                child: Icon(
-                                  Icons.email,
-                                  color: Colors.grey.shade600,
-                                  size: 20,
+                              CircleAvatar(
+                                radius: 58.0,
+                                child: Image.asset(
+                                  'assets/red_edagang.png',
+                                  fit: BoxFit.fill,
+                                  height: 69,
+                                  width: 165,
                                 ),
                               ),
-                              new Expanded(
-                                child: TextFormField(
-                                  textAlignVertical: TextAlignVertical.center,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Email',
-                                    hintText: 'Enter your email address',
-                                    hintStyle: TextStyle(color: Colors.grey),
-                                    contentPadding: EdgeInsets.symmetric(
-                                        vertical: 7, horizontal: 7),
-                                    isDense: true,
-                                  ),
-                                  keyboardType: TextInputType.emailAddress,
-                                  validator: (value) {
-                                    if (!emailRegex.hasMatch(value)) {
-                                      return 'Please enter valid email';
-                                    }
-                                    return null;
-                                  },
-                                  onSaved: (value) {
-                                    _formData['email'] = value;
-                                  },
-                                ),
-                              )
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Container(
-                                alignment: Alignment.bottomCenter,
-                                padding: EdgeInsets.only(right: 7),
-                                child: Icon(
-                                  Icons.vpn_key,
-                                  color: Colors.grey.shade600,
-                                  size: 20,
-                                ),
+                              SizedBox(
+                                height: 32,
                               ),
-                              new Expanded(
-                                child: TextFormField(
-                                  obscureText: true,
-                                  textAlignVertical: TextAlignVertical.center,
-                                  decoration: const InputDecoration(
-                                      hintText: 'Please enter password',
-                                      hintStyle: TextStyle(color: Colors.grey),
-                                      contentPadding: EdgeInsets.symmetric(
-                                          vertical: 7, horizontal: 7),
-                                      isDense: true,
-                                      labelText: 'Password'),
-                                  validator: (value) {
-                                    if (value.isEmpty) {
-                                      return 'Password is required';
-                                    }
-                                    return null;
-                                  },
-                                  onSaved: (value) {
-                                    _formData['password'] = value;
-                                  },
-                                ),
-                              )
-                            ],
-                          ),
-                          _buildForgotPasswordBtn(),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 16.0),
-                            child: RaisedButton(
-                              shape: StadiumBorder(),
-                              color: Color(0xff272264),
-                              onPressed: () {
-                                FirebaseAnalytics().logEvent(name: 'Login_via_email',parameters:null);
-                                _submitLoginEmail(model);
-                              },
-                              child: Text(
-                                'Login',
-                                style: GoogleFonts.lato(
-                                  textStyle: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                              ),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              FirebaseAnalytics().logEvent(name: 'Register account',parameters:null);
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Register()));
-                            },
-                            child: Container(
-                              height: 24,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5)),
-                              alignment: Alignment.center,
-                              child: Center(
-                                  child: RichText(
-                                text: TextSpan(
-                                  text: "Don't have an account? ",
-                                  style: GoogleFonts.lato(
-                                    textStyle: TextStyle(
-                                      color: Colors.grey.shade600,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                      text: 'Sign up',
+                              Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      'Login with email and password.',
                                       style: GoogleFonts.lato(
                                         textStyle: TextStyle(
-                                          color: Color(0xffCE0E27),
+                                          color: Colors.grey.shade700,
                                           fontSize: 16,
-                                          fontWeight: FontWeight.w700,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ]),
+                              SizedBox(
+                                height: 24,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Container(
+                                    alignment: Alignment.bottomCenter,
+                                    padding: EdgeInsets.only(right: 7),
+                                    child: Icon(
+                                      Icons.email,
+                                      color: Colors.grey.shade600,
+                                      size: 20,
+                                    ),
+                                  ),
+                                  new Expanded(
+                                    child: TextFormField(
+                                      textAlignVertical: TextAlignVertical.center,
+                                      decoration: const InputDecoration(
+                                        labelText: 'Email',
+                                        hintText: 'Enter your email address',
+                                        hintStyle: TextStyle(color: Colors.grey),
+                                        contentPadding: EdgeInsets.symmetric(
+                                            vertical: 7, horizontal: 7),
+                                        isDense: true,
+                                      ),
+                                      keyboardType: TextInputType.emailAddress,
+                                      validator: (value) {
+                                        if (!emailRegex.hasMatch(value)) {
+                                          return 'Please enter valid email';
+                                        }
+                                        return null;
+                                      },
+                                      onSaved: (value) {
+                                        _formData['email'] = value;
+                                      },
+                                    ),
+                                  )
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Container(
+                                    alignment: Alignment.bottomCenter,
+                                    padding: EdgeInsets.only(right: 7),
+                                    child: Icon(
+                                      Icons.vpn_key,
+                                      color: Colors.grey.shade600,
+                                      size: 20,
+                                    ),
+                                  ),
+                                  new Expanded(
+                                    child: TextFormField(
+                                      obscureText: true,
+                                      textAlignVertical: TextAlignVertical.center,
+                                      decoration: const InputDecoration(
+                                          hintText: 'Please enter password',
+                                          hintStyle: TextStyle(color: Colors.grey),
+                                          contentPadding: EdgeInsets.symmetric(
+                                              vertical: 7, horizontal: 7),
+                                          isDense: true,
+                                          labelText: 'Password'),
+                                      validator: (value) {
+                                        if (value.isEmpty) {
+                                          return 'Password is required';
+                                        }
+                                        return null;
+                                      },
+                                      onSaved: (value) {
+                                        _formData['password'] = value;
+                                      },
+                                    ),
+                                  )
+                                ],
+                              ),
+                              _buildForgotPasswordBtn(),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                child: RaisedButton(
+                                  shape: StadiumBorder(),
+                                  color: Color(0xff272264),
+                                  onPressed: () {
+                                    _submitLoginEmail(model);
+                                  },
+                                  child: Text(
+                                    'Login',
+                                    style: GoogleFonts.lato(
+                                      textStyle: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Register()));
+                                },
+                                child: Container(
+                                  height: 24,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5)),
+                                  alignment: Alignment.center,
+                                  child: Center(
+                                      child: RichText(
+                                        text: TextSpan(
+                                          text: "Don't have an account? ",
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(
+                                              color: Colors.grey.shade600,
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                          children: <TextSpan>[
+                                            TextSpan(
+                                              text: 'Sign up',
+                                              style: GoogleFonts.lato(
+                                                textStyle: TextStyle(
+                                                  color: Color(0xffCE0E27),
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 24,
+                              ),
+                              Container(
+                                width: double.infinity,
+                                //margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Expanded(
+                                      flex: 2,
+                                      child: horizontalLine(),
+                                    ),
+                                    Text(
+                                      ' Or access with ',
+                                      style: GoogleFonts.lato(
+                                        textStyle: TextStyle(
+                                          color: Colors.grey.shade700,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child: horizontalLine(),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 30.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    GestureDetector(
+                                      onTap: () {
+                                        _facebookLogin(model);
+                                      },
+                                      child: Container(
+                                        height: 60.0,
+                                        width: 60.0,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black26,
+                                              offset: Offset(0, 2),
+                                              blurRadius: 6.0,
+                                            ),
+                                          ],
+                                          image: DecorationImage(
+                                            image: AssetImage(
+                                              'assets/icons/facebook.jpg',
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        _googleLogin(model);
+                                      },
+                                      child: Container(
+                                        height: 60.0,
+                                        width: 60.0,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black26,
+                                              offset: Offset(0, 2),
+                                              blurRadius: 6.0,
+                                            ),
+                                          ],
+                                          image: DecorationImage(
+                                            image: AssetImage(
+                                              'assets/icons/google.jpg',
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ],
                                 ),
-                              )),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 24,
-                          ),
-                          Container(
-                            width: double.infinity,
-                            //margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Expanded(
-                                  flex: 2,
-                                  child: horizontalLine(),
-                                ),
-                                Text(
-                                  ' Or access with ',
-                                  style: GoogleFonts.lato(
-                                    textStyle: TextStyle(
-                                      color: Colors.grey.shade700,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 2,
-                                  child: horizontalLine(),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 30.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                GestureDetector(
-                                  onTap: () {
-                                    FirebaseAnalytics().logEvent(name: 'Fb_Login',parameters:null);
-                                    _facebookLogin(model);
-                                  },
-                                  child: Container(
-                                    height: 60.0,
-                                    width: 60.0,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.white,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black26,
-                                          offset: Offset(0, 2),
-                                          blurRadius: 6.0,
-                                        ),
-                                      ],
-                                      image: DecorationImage(
-                                        image: AssetImage(
-                                          'assets/icons/facebook.jpg',
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    FirebaseAnalytics().logEvent(name: 'Google_Sign in',parameters:null);
-                                    _googleLogin(model);
-                                  },
-                                  child: Container(
-                                    height: 60.0,
-                                    width: 60.0,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.white,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black26,
-                                          offset: Offset(0, 2),
-                                          blurRadius: 6.0,
-                                        ),
-                                      ],
-                                      image: DecorationImage(
-                                        image: AssetImage(
-                                          'assets/icons/google.jpg',
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            color: Colors.transparent,
-                            height: 56,
-                          ),
-                        ],
-                      ))),
+                              ),
+                              Container(
+                                color: Colors.transparent,
+                                height: 56,
+                              ),
+                            ],
+                          )
+                      )
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-
-      );
-    });
+          );
+        }
+    );
   }
 
   Widget _buildForgotPasswordBtn() {
@@ -418,52 +398,6 @@ class _SignInOrRegisterState extends State<SignInOrRegister>
     );
   }
 
-  Widget _buildSocialBtn(Function onTap, AssetImage logo) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 60.0,
-        width: 60.0,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black26,
-              offset: Offset(0, 2),
-              blurRadius: 6.0,
-            ),
-          ],
-          image: DecorationImage(
-            image: logo,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSocialBtnRow(MainScopedModel model) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 30.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          _buildSocialBtn(
-            () {},
-            AssetImage(
-              'assets/icons/facebook.jpg',
-            ),
-          ),
-          _buildSocialBtn(
-            () {},
-            AssetImage(
-              'assets/icons/google.jpg',
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   void _submitLoginEmail(MainScopedModel model) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -693,7 +627,8 @@ class _SignInOrRegisterState extends State<SignInOrRegister>
       prefs.setString('token', responseData['data']['token']);
       prefs.setString('email', responseData['data']['email']);
       prefs.setString('login_type', '2');
-      prefs.setString('photo', userProfile["picture"]["data"]["url"]);
+      prefs.setString(
+          'photo', userProfile["picture"]["data"]["url"].toString());
 
       model.loggedInUser();
       model.fetchProfile();
@@ -897,8 +832,7 @@ class Register extends StatefulWidget {
   _RegisterState createState() => _RegisterState();
 }
 
-class _RegisterState extends State<Register>
-    with SingleTickerProviderStateMixin {
+class _RegisterState extends State<Register> with SingleTickerProviderStateMixin {
   final Map<String, dynamic> _formData = {
     'name': null,
     'email': null,
@@ -1016,6 +950,13 @@ class _RegisterState extends State<Register>
   }
 
   @override
+  void initState() {
+    FirebaseAnalytics().logEvent(name: 'Register_page',parameters:null);
+    super.initState();
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
@@ -1038,14 +979,14 @@ class _RegisterState extends State<Register>
       ),
       body: Stack(
         children: <Widget>[
-          Container(
+          /*Container(
             height: double.infinity,
-            /*decoration: new BoxDecoration(
+            decoration: new BoxDecoration(
                 image: new DecorationImage(
                     fit: BoxFit.cover,
                     image: new NetworkImage(
-                        'https://i.pinimg.com/originals/c2/47/e9/c247e913a0214313045a8a5c39f8522b.jpg'))),*/
-          ),
+                        'https://i.pinimg.com/originals/c2/47/e9/c247e913a0214313045a8a5c39f8522b.jpg'))),
+          ),*/
           Center(
             child: Form(
                 key: _formKey,
@@ -1065,21 +1006,12 @@ class _RegisterState extends State<Register>
                           ),
                         ),
                         SizedBox(
-                          height: 24,
+                          height: 32,
                         ),
                         Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              /*Text(
-                          'Sign Up',
-                          style: GoogleFonts.lato(
-                            textStyle: TextStyle(color: Colors.black, fontSize: 19, fontWeight: FontWeight.w700,),
-                          ),
-                        ),*/
-                              SizedBox(
-                                height: 8,
-                              ),
                               Text(
                                 'Create an account.',
                                 style: GoogleFonts.lato(
@@ -1090,7 +1022,8 @@ class _RegisterState extends State<Register>
                                   ),
                                 ),
                               ),
-                            ]),
+                            ]
+                        ),
                         SizedBox(
                           height: 24,
                         ),
@@ -1240,29 +1173,30 @@ class _RegisterState extends State<Register>
                             margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
                             child: Center(
                                 child: RichText(
-                              text: TextSpan(
-                                text: "Already have an account? ",
-                                style: GoogleFonts.lato(
-                                  textStyle: TextStyle(
-                                    color: Colors.grey.shade600,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: 'Sign in',
+                                  text: TextSpan(
+                                    text: "Already have an account? ",
                                     style: GoogleFonts.lato(
                                       textStyle: TextStyle(
-                                        color: Color(0xffCE0E27),
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700,
+                                        color: Colors.grey.shade600,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
                                       ),
                                     ),
+                                    children: <TextSpan>[
+                                      TextSpan(
+                                        text: 'Sign in',
+                                        style: GoogleFonts.lato(
+                                          textStyle: TextStyle(
+                                            color: Color(0xffCE0E27),
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            )),
+                                )
+                            ),
                           ),
                         ),
                         Container(
@@ -1270,7 +1204,9 @@ class _RegisterState extends State<Register>
                           height: 56,
                         ),
                       ],
-                    ))),
+                    )
+                )
+            ),
           ),
         ],
       ),

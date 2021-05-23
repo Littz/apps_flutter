@@ -91,19 +91,6 @@ class _NotificationPageState extends State<NotificationPage> {
     );
   }
 
-  _buildCircularProgressIndicator() {
-    return Center(
-      child: Container(
-        width: 50,
-        height: 50,
-        color: Colors.transparent,
-        child: CupertinoActivityIndicator(
-          radius: 22,
-        ),
-      ),
-    );
-  }
-
   _emptyContent() {
     return Center(
         child: Padding(

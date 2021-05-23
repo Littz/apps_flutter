@@ -5,6 +5,7 @@ import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/SABTitle.dart';
 import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
+import 'package:edagang/widgets/progressIndicator.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -92,7 +93,7 @@ class _BlurbPropertyListBodyState extends State<BlurbPropertyListPage> {
     return ScopedModelDescendant<BlurbScopedModel>(
       builder: (context, child, model) {
         this.model = model;
-        return model.isLoadingBl ? _buildCircularProgressIndicator() : model.blurbProp.length > 0 ? CustomScrollView(
+        return model.isLoadingBl ? buildCircularProgressIndicator() : model.blurbProp.length > 0 ? CustomScrollView(
           controller: _scrollController,
           slivers: <Widget>[
             SliverAppBar(
@@ -191,42 +192,6 @@ class _BlurbPropertyListBodyState extends State<BlurbPropertyListPage> {
                               ),
                             ),
                           ),
-                          /*Positioned(
-                            bottom: -40.0,
-                            right: 16.0,
-                            child: Container(
-                                alignment: Alignment.topRight,
-                                child: InkWell(
-                                  onTap: () async {
-                                    await FlutterShare.share(
-                                      title: 'GOilmu',
-                                      text: '',
-                                      linkUrl: 'https://upskillapp.e-dagang.asia/business/'+model.getCompanyId().toString(),
-                                      chooserTitle: model.getCompanyName() ?? '',
-                                    );
-                                  },
-                                  splashColor: Color(0xffA0CCE8),
-                                  highlightColor: Color(0xffA0CCE8),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.share, color: color),
-                                      Container(
-                                        margin: const EdgeInsets.only(top: 2),
-                                        child: Text('SHARE',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w600,
-                                            color: color,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                            ),
-                          ),*/
                         ],
                       ),
                     ]
@@ -379,15 +344,9 @@ class _BlurbPropertyListBodyState extends State<BlurbPropertyListPage> {
                                   ),
                                 ),
                               ),
-                              /*Container(
-                                padding: EdgeInsets.only(left: 2, right: 7),
-                                child: htmlText2(address),
-                              ),*/
                             ],
                           ),
                         ),
-                        //_reqBtn(),
-
                       ],
                     ),
                   ),
@@ -550,28 +509,5 @@ class _BlurbPropertyListBodyState extends State<BlurbPropertyListPage> {
     );
   }
 
-  _buildCircularProgressIndicator() {
-    return Center(
-      child: Container(
-          width: 75,
-          height: 75,
-          color: Colors.transparent,
-          child: Column(
-            children: <Widget>[
-              CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Color(0xff2877EA)),
-                strokeWidth: 1.7,
-              ),
-              SizedBox(height: 5.0,),
-              Text('Loading...',
-                style: GoogleFonts.lato(
-                  textStyle: TextStyle(color: Colors.grey.shade600, fontStyle: FontStyle.italic, fontSize: 13),
-                ),
-              ),
-            ],
-          )
-      ),
-    );
-  }
 
 }

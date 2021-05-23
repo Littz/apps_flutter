@@ -168,13 +168,13 @@ class _BizIdxPageState extends State<BizPage> {
                           backgroundColor: Colors.transparent,
                           child: Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.fill, height: 27, width: 27),
                         ) : Container(
-                          height: 30.0,
-                          width: 30.0,
+                          height: 28.0,
+                          width: 28.0,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             image: DecorationImage(
                               //fit: BoxFit.fill,
-                              image: CachedNetworkImageProvider(_photo),
+                              image: NetworkImage(_photo),
                               //scale: 30,
                             ),
                           ),
@@ -225,9 +225,6 @@ class _BizIdxPageState extends State<BizPage> {
                             child: PopupMenuButton(
                               icon: Icon(Icons.more_vert, color: Color(0xff084B8C),),
                               itemBuilder: (BuildContext bc) => [
-                                /*PopupMenuItem(child: ListTile(
-                                  title: Text('Quotation'),
-                                ), value: "1"),*/
                                 PopupMenuItem(child: ListTile(
                                   title: Text('Join Us'),
                                 ), value: "1"),
@@ -245,13 +242,6 @@ class _BizIdxPageState extends State<BizPage> {
                                 setState(() {
                                   _selectedItem = value;
                                   print("Selected context menu: $_selectedItem");
-                                  /*if(_selectedItem == '1'){
-                                    if(model.isAuthenticated) {
-                                      Navigator.push(context, SlideRightRoute(page: WebviewWidget('https://smartbiz.e-dagang.asia/biz/quot/' + model.getId().toString() + '/0', 'Quotation')));
-                                    }else{
-                                      Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
-                                    }
-                                  }*/
                                   if(_selectedItem == '1'){
                                       FirebaseAnalytics().logEvent(name: 'JoinUs_form',parameters:null);
                                       Navigator.push(context, SlideRightRoute(page: WebviewWidget('https://smartbiz.e-dagang.asia/biz/joinwebv','Join Us')));
@@ -759,102 +749,3 @@ class _BizIdxPageState extends State<BizPage> {
   }
 }
 
-class WebviewVr extends StatefulWidget {
-  final url, title;
-  WebviewVr(this.url, this.title);
-  @override
-  _WebviewVrState createState() => _WebviewVrState(this.url, this. title);
-}
-
-class _WebviewVrState extends State<WebviewVr> {
-  var _url, _title;
-  _WebviewVrState(this._url, this._title);
-  String selectedUrl = '';
-
-  final flutterWebViewPlugin = FlutterWebviewPlugin();
-  StreamSubscription _onDestroy;
-  StreamSubscription<String> _onUrlChanged;
-  StreamSubscription<WebViewStateChanged> _onStateChanged;
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
-  final _history = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _title = widget.title;
-    _url = widget.url;
-
-    print("URL Init: $_url");
-
-    flutterWebViewPlugin.close();
-
-    _onDestroy = flutterWebViewPlugin.onDestroy.listen((_) {
-      if (mounted) {
-        //_scaffoldKey.currentState.showSnackBar(const SnackBar(content: const Text('Webview Destroyed')));
-      }
-    });
-
-    _onUrlChanged = flutterWebViewPlugin.onUrlChanged.listen((String url) {
-      if (mounted) {
-        setState(() {
-          _history.add('onUrlChanged: $url');
-          print("URL changed: $url");
-        });
-      }
-    });
-
-    _onStateChanged = flutterWebViewPlugin.onStateChanged.listen((WebViewStateChanged state) {
-      if (mounted) {
-        setState(() {
-          _history.add('onStateChanged: ${state.type} ${state.url}');
-          print("URL state changed: ${state.url}");
-          print("URL state type: ${state.type}");
-        });
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _onDestroy.cancel();
-    _onUrlChanged.cancel();
-    _onStateChanged.cancel();
-    _history.clear();
-
-    super.dispose();
-    flutterWebViewPlugin.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return WebviewScaffold(
-      //primary: true,
-      /*appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          iconTheme: IconThemeData(color: Colors.blue),
-          elevation: 0.0,
-          brightness: Brightness.light,
-        ),*/
-      url: _url,
-      withZoom: true,
-      //withJavascript: true,
-      hidden: true,
-      userAgent: Constants.kAndroidUserAgent,
-      initialChild: Container(
-        child: const Center(
-          child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation(Color(0xff357FEB)),
-              strokeWidth: 1.9
-          ),
-        ),
-      ),
-      persistentFooterButtons: <Widget>[
-        new OutlinedButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text('Close')
-        ),
-      ],
-    );
-  }
-
-}

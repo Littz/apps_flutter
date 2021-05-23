@@ -3,7 +3,6 @@ import 'package:edagang/index.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:uni_links/uni_links.dart';
-
 import 'deeplink/ads_auto_deeplink.dart';
 import 'deeplink/ads_career_deeplink.dart';
 import 'deeplink/ads_company_deeplink.dart';
@@ -60,14 +59,6 @@ class _SplashScreenState extends State<SplashScreen> {
       if (initialLink != null) initialUri = Uri.parse(initialLink);
 
       if (initialLink!=null && initialLink.isNotEmpty) {
-        /*List<String> splitt = initialLink.toString().split('/');
-        print(initialLink.toString().split('/')[0]);
-        print(initialLink.toString().split('/')[1]);
-        print(initialLink.toString().split('/')[2]);
-        print(initialLink.toString().split('/')[3]);
-        print(initialLink.toString().split('/')[4]);
-        print(initialLink.toString().split('/')[5]);
-        print(splitt[splitt.length - 1]);*/
 
         String type = initialLink.toString().split('/')[3];
         String subtype = initialLink.toString().split('/')[4];

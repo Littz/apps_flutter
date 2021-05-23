@@ -8,6 +8,7 @@ import 'package:edagang/widgets/SABTitle.dart';
 import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
+import 'package:edagang/widgets/progressIndicator.dart';
 import 'package:edagang/widgets/webview.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
@@ -57,10 +58,7 @@ class _OtherDetailPageState extends State<OtherDetailPage> with TickerProviderSt
     });
 
     try {
-      //String id = await sharedPref.read("biz_id");
-
       setState(() {
-        //_bizId = id;
         print("job ID : "+widget.jobId);
 
         http.post(
@@ -105,8 +103,6 @@ class _OtherDetailPageState extends State<OtherDetailPage> with TickerProviderSt
             company = data.company_name;
             logo = 'https://blurbapp.e-dagang.asia'+data.company_logo;
             images = data.image;
-
-
           });
           isLoading = false;
         });
@@ -118,42 +114,22 @@ class _OtherDetailPageState extends State<OtherDetailPage> with TickerProviderSt
 
   @override
   void initState() {
+    FirebaseAnalytics().logEvent(name: 'Blurb_Others_'+widget.jobName,parameters:null);
     getDetails();
     super.initState();
     _scrollController = ScrollController()..addListener(() => setState(() {}));
     _animationController = AnimationController(vsync: this, duration: Duration(seconds: 2)) ..forward();
-    _movieInformationSlidingAnimation =
-        Tween<Offset>(begin: Offset(0, 1), end: Offset.zero).animate(
-            CurvedAnimation(
-                curve: Interval(0.25, 1.0, curve: Curves.fastOutSlowIn),
-                parent: _animationController));
-
-    FirebaseAnalytics().logEvent(name: 'Blurb_Career_'+widget.jobName,parameters:null);
+    _movieInformationSlidingAnimation = Tween<Offset>(begin: Offset(0, 1), end: Offset.zero).animate(
+      CurvedAnimation(
+          curve: Interval(0.25, 1.0, curve: Curves.fastOutSlowIn),
+          parent: _animationController
+      )
+    );
   }
 
   bool get _showTitle {
     return _scrollController.hasClients && _scrollController.offset > xpandedHeight - kToolbarHeight;
   }
-
-  /*void launchWhatsApp(
-      {@required int phone,
-        @required String message,
-      }) async {
-    String url() {
-      if (Platform.isAndroid) {
-        return "https://wa.me/$phone/?text=${Uri.parse(message)}";
-      } else {
-        return "https://api.whatsapp.com/send?phone=$phone&text=${Uri.parse(message)}";
-      }
-    }
-
-    if (await canLaunch(url())) {
-      await launch(url());
-    } else {
-      throw 'Could not launch ${url()}';
-    }
-  }*/
-
 
   @override
   Widget build(BuildContext context) {
@@ -162,7 +138,7 @@ class _OtherDetailPageState extends State<OtherDetailPage> with TickerProviderSt
       return Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.white,
-        body: isLoading ? _buildCircularProgressIndicator() : CustomScrollView(
+        body: isLoading ? buildCircularProgressIndicator() : CustomScrollView(
           controller: _scrollController,
           slivers: <Widget>[
             SliverAppBar(
@@ -196,33 +172,6 @@ class _OtherDetailPageState extends State<OtherDetailPage> with TickerProviderSt
                     )
                 ),
               ),
-              /*actions: [
-                PopupMenuButton(
-                  itemBuilder: (BuildContext bc) =>
-                  [
-                    PopupMenuItem(child: ListTile(
-                      leading: Icon(Icons.account_circle),
-                      title: Text('Career Profile'),
-                    ), value: "1"),
-                  ],
-                  onSelected: (value) {
-                    setState(() {
-                      _selectedItem = value;
-                      print("Selected context menu: $_selectedItem");
-                      Navigator.push(context, SlideRightRoute(
-                          page: WebviewWidget(
-                              'https://blurb.e-dagang.asia/wv/career/profile/' +
-                                  model.getId().toString(), 'Career Profile')));
-                    });
-                  },
-                  child: BlurIconLight(
-                    icon: Icon(
-                      Icons.more_vert,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ],*/
               flexibleSpace: _showTitle ? null : FlexibleSpaceBar(
                 background: Column(
                     children: <Widget>[
@@ -263,26 +212,11 @@ class _OtherDetailPageState extends State<OtherDetailPage> with TickerProviderSt
                               ),
                             ),
                           ),
-                          /*Positioned(
-                          bottom: -16.0,
-                          right: 16.0,
-                          child: vr_ofis == 'null' && vr_room == 'null' ? Container() : Container(
-                              alignment: Alignment.topRight,
-                              child: virtualBtn(context, vr_ofis, vr_room)
-                          ),
-                        ),*/
                         ],
                       ),
                     ]
                 ),
               ),
-              /*flexibleSpace: _showTitle ? null : FlexibleSpaceBar(
-              background: Image.asset(
-                'assets/bgblurb.png', fit: BoxFit.fill,
-                height: 150,
-              ),
-            ),*/
-
             ),
             SliverList(
               delegate: SliverChildListDelegate(
@@ -314,13 +248,11 @@ class _OtherDetailPageState extends State<OtherDetailPage> with TickerProviderSt
                             ),
                           ),
                         ),
-
                         Container(
                           padding: EdgeInsets.only(top: 1, bottom: 5),
                           child: _reqBtn(),
                         ),
                         _propertyDescription(),
-
                       ],
                     ),
                   ),
@@ -421,30 +353,6 @@ class _OtherDetailPageState extends State<OtherDetailPage> with TickerProviderSt
 
     });
 
-  }
-
-  _buildCircularProgressIndicator() {
-    return Center(
-      child: Container(
-          width: 75,
-          height: 75,
-          color: Colors.transparent,
-          child: Column(
-            children: <Widget>[
-              CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Color(0xff2877EA)),
-                strokeWidth: 1.7,
-              ),
-              SizedBox(height: 5.0,),
-              Text('Loading...',
-                style: GoogleFonts.lato(
-                  textStyle: TextStyle(color: Colors.grey.shade600, fontStyle: FontStyle.italic, fontSize: 13),
-                ),
-              ),
-            ],
-          )
-      ),
-    );
   }
 
   Future launchForm(String url) async {

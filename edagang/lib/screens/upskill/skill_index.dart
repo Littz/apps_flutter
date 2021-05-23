@@ -30,7 +30,6 @@ class _UpskillPageState extends State<UpskillPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   SharedPref sharedPref = SharedPref();
   BuildContext context;
-  List<Menus> quick_menu = new List();
   String _logType,_photo = "";
 
   loadPhoto() async {
@@ -90,7 +89,6 @@ class _UpskillPageState extends State<UpskillPage> {
   void initState() {
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
-    quick_menu = getUpskillCategory();
     super.initState();
     loadPhoto();
     FirebaseAnalytics().logEvent(name: 'Goilmu_Home',parameters:null);
@@ -173,13 +171,13 @@ class _UpskillPageState extends State<UpskillPage> {
                         )
                         //Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.fill, height: 20, width: 20)
                             : Container(
-                          height: 30.0,
-                          width: 30.0,
+                          height: 28.0,
+                          width: 28.0,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             image: DecorationImage(
                               //fit: BoxFit.fill,
-                              image: CachedNetworkImageProvider(_photo),
+                              image: NetworkImage(_photo),
                               //scale: 30,
                             ),
                           ),

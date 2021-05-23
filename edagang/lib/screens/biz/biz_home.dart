@@ -4,6 +4,7 @@ import 'package:edagang/scoped/biz_cat_scoped.dart';
 import 'package:edagang/screens/biz/biz_company_detail.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
+import 'package:edagang/widgets/progressIndicator.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +68,7 @@ class BizCategoryListCompanyBody extends StatelessWidget {
     return ScopedModelDescendant<SmartbizScopedModel>(
       builder: (context, child, model) {
         this.model = model;
-        return model.isLoadingCat ? _buildCircularProgressIndicator() : model.bizcat.length > 0 ? CustomScrollView(
+        return model.isLoadingCat ? buildCircularProgressIndicator() : model.bizcat.length > 0 ? CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(
               elevation: 0.0,
@@ -250,30 +251,6 @@ class BizCategoryListCompanyBody extends StatelessWidget {
         },
           childCount: model.bizcat.length,
         ),
-      ),
-    );
-  }
-
-  _buildCircularProgressIndicator() {
-    return Center(
-      child: Container(
-          width: 75,
-          height: 75,
-          color: Colors.transparent,
-          child: Column(
-            children: <Widget>[
-              CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Color(0xff2877EA)),
-                strokeWidth: 1.7,
-              ),
-              SizedBox(height: 5.0,),
-              Text('Loading...',
-                style: GoogleFonts.lato(
-                  textStyle: TextStyle(color: Colors.grey.shade600, fontStyle: FontStyle.italic, fontSize: 13),
-                ),
-              ),
-            ],
-          )
       ),
     );
   }

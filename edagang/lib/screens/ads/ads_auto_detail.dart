@@ -6,9 +6,9 @@ import 'package:edagang/utils/constant.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/SABTitle.dart';
 import 'package:edagang/widgets/blur_icon.dart';
-import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/photo_viewer.dart';
+import 'package:edagang/widgets/progressIndicator.dart';
 import 'package:edagang/widgets/webview.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,7 +17,6 @@ import 'package:flutter_share/flutter_share.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:page_indicator/page_indicator.dart';
-import 'package:photo_view/photo_view.dart';
 import 'dart:convert';
 
 import 'package:scoped_model/scoped_model.dart';
@@ -61,7 +60,6 @@ class _AutoShowcasePageState extends State<AutoShowcase> with TickerProviderStat
     });
 
     try {
-
       setState(() {
         http.post(
           'https://blurbapp.e-dagang.asia/api/blurb/auto/details?auto_id='+widget.autoId,
@@ -127,23 +125,22 @@ class _AutoShowcasePageState extends State<AutoShowcase> with TickerProviderStat
 
   @override
   void initState() {
+    FirebaseAnalytics().logEvent(name: 'Blurb_Auto_'+widget.autoTitle,parameters:null);
     getDetails();
     super.initState();
     _scrollController = ScrollController()..addListener(() => setState(() {}));
     _animationController = AnimationController(vsync: this, duration: Duration(seconds: 2)) ..forward();
-    _movieInformationSlidingAnimation =
-        Tween<Offset>(begin: Offset(0, 1), end: Offset.zero).animate(
-            CurvedAnimation(
-                curve: Interval(0.25, 1.0, curve: Curves.fastOutSlowIn),
-                parent: _animationController));
-
-    FirebaseAnalytics().logEvent(name: 'Blurb_Auto_'+widget.autoTitle,parameters:null);
+    _movieInformationSlidingAnimation = Tween<Offset>(begin: Offset(0, 1), end: Offset.zero).animate(
+      CurvedAnimation(
+        curve: Interval(0.25, 1.0, curve: Curves.fastOutSlowIn),
+        parent: _animationController
+      )
+    );
   }
 
   bool get _showTitle {
     return _scrollController.hasClients && _scrollController.offset > xpandedHeight - kToolbarHeight;
   }
-
 
   Future share() async {
     await FlutterShare.share(
@@ -161,7 +158,7 @@ class _AutoShowcasePageState extends State<AutoShowcase> with TickerProviderStat
       return Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.white,
-        body: isLoading ? _buildCircularProgressIndicator() : CustomScrollView(
+        body: isLoading ? buildCircularProgressIndicator() : CustomScrollView(
           controller: _scrollController,
           slivers: <Widget>[
             SliverAppBar(
@@ -198,13 +195,6 @@ class _AutoShowcasePageState extends State<AutoShowcase> with TickerProviderStat
               flexibleSpace: _showTitle ? null : FlexibleSpaceBar(
                 background: _propertyImages(),
               ),
-              /*flexibleSpace: _showTitle ? null : FlexibleSpaceBar(
-              background: Image.asset(
-                'assets/bgblurb.png', fit: BoxFit.fill,
-                height: 150,
-              ),
-            ),*/
-
             ),
             SliverList(
               delegate: SliverChildListDelegate(
@@ -246,56 +236,6 @@ class _AutoShowcasePageState extends State<AutoShowcase> with TickerProviderStat
                       ],
                     ),
                   ),
-
-                  /*AnimatedBuilder(
-                    animation: _animationController,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        CupertinoSegmentedControl(
-                          selectedColor: color,
-                          borderColor: color,
-                          groupValue: currentValue,
-                          children: const <int, Widget>{
-                            0: Text('Description', style: TextStyle(
-                                fontSize: 13, fontWeight: FontWeight.w600),),
-                            1: Text('Overview', style: TextStyle(
-                                fontSize: 13, fontWeight: FontWeight.w600),),
-                          },
-                          onValueChanged: (value) {
-                            if (value == 0) {
-                              currentTab = Padding(
-                                padding: EdgeInsets.only(left: 10, top: 10, right: 10),
-                                child: _propertyDescription(),
-                              );
-                            } else {
-                              currentTab = Padding(
-                                padding: EdgeInsets.only(left: 10, top: 10, right: 10),
-                                child: htmlText(overview ?? ''),
-                              );
-                            }
-                            setState(() {
-                              currentValue = value;
-                            });
-                          },
-                        ),
-                        currentTab ??
-                            Padding(
-                              padding: EdgeInsets.only(left: 10, top: 10, right: 10),
-                              child: _propertyDescription(),
-                            ),
-                      ],
-                    ),
-                    builder: (BuildContext context, Widget child) {
-                      return Opacity(
-                        opacity: _animationController.value,
-                        child: FractionalTranslation(
-                          translation: _movieInformationSlidingAnimation.value,
-                          child: child,
-                        ),
-                      );
-                    },
-                  ),*/
                 ],
               ),
             ),
@@ -305,7 +245,7 @@ class _AutoShowcasePageState extends State<AutoShowcase> with TickerProviderStat
           ],
         ),
         //bottomNavigationBar: isLoading ? null : _buildBottomNavigationBar(),
-      ); // Here you direct access using widget
+      );
     });
   }
 
@@ -535,33 +475,7 @@ class _AutoShowcasePageState extends State<AutoShowcase> with TickerProviderStat
           ],
         ),
       );
-
     });
-
-  }
-
-  _buildCircularProgressIndicator() {
-    return Center(
-      child: Container(
-          width: 75,
-          height: 75,
-          color: Colors.transparent,
-          child: Column(
-            children: <Widget>[
-              CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Color(0xff2877EA)),
-                strokeWidth: 1.7,
-              ),
-              SizedBox(height: 5.0,),
-              Text('Loading...',
-                style: GoogleFonts.lato(
-                  textStyle: TextStyle(color: Colors.grey.shade600, fontStyle: FontStyle.italic, fontSize: 13),
-                ),
-              ),
-            ],
-          )
-      ),
-    );
   }
 
   @override

@@ -144,5 +144,3 @@ class _VideoListState extends State<VideoList> {
     );
   }
 }
-
-

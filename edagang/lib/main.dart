@@ -1,8 +1,4 @@
-import 'dart:async';
-import 'dart:io';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
+import 'package:flutter/rendering.dart';
 import 'package:edagang/screens/ads/ads_index.dart';
 import 'package:edagang/screens/biz/biz_index.dart';
 import 'package:edagang/screens/fin/fin_index.dart';
@@ -19,7 +15,6 @@ import 'package:edagang/scoped/main_scoped.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,14 +25,12 @@ void main() {
 
   WidgetsFlutterBinding.ensureInitialized(); //imp line need to be added first
   FlutterError.onError = (FlutterErrorDetails details) {
-    //this line prints the default flutter gesture caught exception in console
-    //FlutterError.dumpErrorToConsole(details);
     print("Error From INSIDE FRAME_WORK");
-    print("----------------------");
+    print("----------------------------");
     print("Error :  ${details.exception}");
     print("StackTrace :  ${details.stack}");
   };
-  runApp(MyApp()); // starting point of app
+  runApp(MyApp());
 
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     systemNavigationBarColor: null,
@@ -102,8 +95,8 @@ class _MyAppPageState extends State<MyApp> {
     });
 
     OneSignal.shared.setEmailSubscriptionObserver((OSEmailSubscriptionStateChanges changes) {
-          print("EMAIL SUBSCRIPTION STATE CHANGED ${changes.jsonRepresentation()}");
-        });
+      print("EMAIL SUBSCRIPTION STATE CHANGED ${changes.jsonRepresentation()}");
+    });
 
     OneSignal.shared.setInFocusDisplayType(OSNotificationDisplayType.notification);
     OneSignal.shared.promptUserForPushNotificationPermission(fallbackToSettings: true);
@@ -290,123 +283,4 @@ class _NewHomePageState extends State<NewHomePage> {
     listBottomWidget.add(AdvertPage());
   }
 
-}
-
-
-
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  bool isLoggedIn = false;
-  var profileData;
-
-  var facebookLogin = FacebookLogin();
-
-  void onLoginStatusChanged(bool isLoggedIn, {profileData}) {
-    setState(() {
-      this.isLoggedIn = isLoggedIn;
-      this.profileData = profileData;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text("Facebook Login"),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(
-                Icons.exit_to_app,
-                color: Colors.white,
-              ),
-              onPressed: () => facebookLogin.isLoggedIn
-                  .then((isLoggedIn) => isLoggedIn ? _logout() : {}),
-            ),
-          ],
-        ),
-        body: Container(
-          child: Center(
-            child: isLoggedIn
-                ? _displayUserData(profileData)
-                : _displayLoginButton(),
-          ),
-        ),
-      ),
-    );
-  }
-
-  void initiateFacebookLogin() async {
-    var facebookLoginResult =
-    await facebookLogin.logIn(['email']);
-
-    switch (facebookLoginResult.status) {
-      case FacebookLoginStatus.error:
-        onLoginStatusChanged(false);
-        break;
-      case FacebookLoginStatus.cancelledByUser:
-        onLoginStatusChanged(false);
-        break;
-      case FacebookLoginStatus.loggedIn:
-        var graphResponse = await http.get(
-            'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email,picture.height(200)&access_token=${facebookLoginResult
-                .accessToken.token}');
-
-        var profile = json.decode(graphResponse.body);
-        print(profile.toString());
-
-        onLoginStatusChanged(true, profileData: profile);
-        break;
-    }
-  }
-
-  _displayUserData(profileData) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Container(
-          height: 200.0,
-          width: 200.0,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            image: DecorationImage(
-              fit: BoxFit.fill,
-              image: NetworkImage(
-                profileData['picture']['data']['url'],
-              ),
-            ),
-          ),
-        ),
-        SizedBox(height: 28.0),
-        Text(
-          "Logged in as: ${profileData['name']}",
-          style: TextStyle(
-            fontSize: 20.0,
-          ),
-        ),
-      ],
-    );
-  }
-
-  _displayLoginButton() {
-    return RaisedButton(
-      child: Text("Login with Facebook"),
-      onPressed: () => initiateFacebookLogin(),
-    );
-  }
-
-  _logout() async {
-    await facebookLogin.logOut();
-    onLoginStatusChanged(false);
-    print("Logged out");
-  }
 }

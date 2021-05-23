@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -19,16 +20,9 @@ class VideoPlay extends StatefulWidget {
 class _VideoPlayState extends State<VideoPlay> {
 
   YoutubePlayerController _controller;
-  bool _isPlayerReady;
-
-  Future<VideoY> fetchSnippet() async {
-    final response = await http.get(
-      Uri.parse('https://noembed.com/embed?url=https://www.youtube.com/watch?v=tUCC4TOBOQQ'),
-      headers: {HttpHeaders.contentTypeHeader: 'application/json'},
-    );
-    final responseJson = jsonDecode(response.body);
-    return VideoY.fromMap(responseJson);
-  }
+  PlayerState _playerState;
+  YoutubeMetaData _videoMetaData;
+  bool _isPlayerReady = false;
 
   @override
   void initState() {
@@ -37,16 +31,26 @@ class _VideoPlayState extends State<VideoPlay> {
     _isPlayerReady = false;
     _controller = YoutubePlayerController(
       initialVideoId: widget.vid,
-      flags: YoutubePlayerFlags(
+      flags: const YoutubePlayerFlags(
         mute: false,
         autoPlay: true,
+        disableDragSeek: false,
+        loop: false,
+        isLive: false,
+        forceHD: false,
+        enableCaption: true,
       ),
     )..addListener(_listener);
+    _videoMetaData = const YoutubeMetaData();
+    _playerState = PlayerState.unknown;
   }
 
   void _listener() {
     if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
-      //
+      setState(() {
+        _playerState = _controller.value.playerState;
+        _videoMetaData = _controller.metadata;
+      });
     }
   }
 
@@ -64,102 +68,130 @@ class _VideoPlayState extends State<VideoPlay> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => new VideoList()),);
-        Navigator.pop(context);
-        return Future.value(true);
-        /*SystemNavigator.pop();
-        return Future.value(true);*/
+    return YoutubePlayerBuilder(
+      onExitFullScreen: () {
+        // The player forces portraitUp after exiting fullscreen. This overrides the behaviour.
+        SystemChrome.setPreferredOrientations(DeviceOrientation.values);
       },
-      child: OrientationBuilder(builder:
-          (BuildContext context, Orientation orientation) {
-        if (orientation == Orientation.landscape) {
-          return Scaffold(
-            backgroundColor: Colors.black87,
-            body: Container(
-              child: YoutubePlayer(
-                controller: _controller,
-                showVideoProgressIndicator: true,
-                onReady: () {
-                  print('Player is ready.');
-                  _isPlayerReady = true;
-                },
+      player: YoutubePlayer(
+        controller: _controller,
+        showVideoProgressIndicator: true,
+        progressIndicatorColor: Colors.blueAccent,
+        topActions: <Widget>[
+          const SizedBox(width: 8.0),
+          Expanded(
+            child: Text(
+              _controller.metadata.title,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18.0,
               ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
-          );
-        } else {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(widget.title,
-                style: GoogleFonts.lato(
-                  textStyle: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16,),
-                ),
-              ),
-              actions: [
-                Padding(
-                  padding: EdgeInsets.only(left: 5, right: 10,),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.grey[200],
-                    child: IconButton(
-                      icon: Icon(
-                       Icons.share,
-                        color: Colors.deepOrange.shade500,
-                      ),
-                      onPressed: ()  async {
-                        await FlutterShare.share(
-                          title: 'Cartsini Video',
-                          text: '',
-                          linkUrl: 'https://shopapp.e-dagang.asia/video/'+widget.vid,
-                          chooserTitle: widget.title ?? '',
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ],
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.settings,
+              color: Colors.white,
+              size: 25.0,
             ),
-            body: Column(
-              children: [
-                Container(
-                  child: YoutubePlayer(
-                    controller: _controller,
-                    showVideoProgressIndicator: true,
-                    onReady: () {
-                      print('Player is ready.');
-                      _isPlayerReady = false;
-                    },
-                  ),
-                ),
-                Container(
-                  child: Text(
-                    '',
-                  ),
-                ),
-              ],
-            )
-          );
-        }
-      }),
-    );
-    /*return Scaffold(
-      appBar: AppBar(
-        title: Text(''),
+            onPressed: () {
+              print('Settings Tapped!');
+            },
+          ),
+        ],
+        bottomActions: [
+          CurrentPosition(),
+          ProgressBar(isExpanded: true),
+          FullScreenButton(),
+        ],
+        onReady: () {
+          _isPlayerReady = true;
+        },
+        /*onEnded: (data) {
+          _controller.load(_ids[(_ids.indexOf(data.videoId) + 1) % _ids.length]);
+          _showSnackBar('Next Video Started!');
+        },*/
       ),
-      body: Container(
-        child: YoutubePlayer(
-          controller: _controller,
-          showVideoProgressIndicator: true,
-          onReady: () {
-            print('Player is ready.');
-            _isPlayerReady = true;
-          },
+      builder: (context, player) => Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title,
+            style: GoogleFonts.lato(
+              textStyle: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 16,),
+            ),
+          ),
+          actions: [
+            Padding(
+              padding: EdgeInsets.only(left: 5, right: 10,),
+              child: CircleAvatar(
+                backgroundColor: Colors.grey[200],
+                child: IconButton(
+                  icon: Icon(
+                    Icons.share,
+                    color: Colors.deepOrange.shade500,
+                  ),
+                  onPressed: ()  async {
+                    await FlutterShare.share(
+                      title: 'Cartsini Video',
+                      text: '',
+                      linkUrl: 'https://shopapp.e-dagang.asia/video/'+widget.vid,
+                      chooserTitle: widget.title ?? '',
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+        body: ListView(
+          children: [
+            player,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _space,
+                  _text('Title', _videoMetaData.title),
+                  _space,
+                  _text('Channel', _videoMetaData.author),
+                  _space,
+                  _text('Video Id', _videoMetaData.videoId),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
-    );*/
+    );
   }
+
+  Widget _text(String title, String value) {
+    return RichText(
+      text: TextSpan(
+        text: '$title : ',
+        style: const TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+        ),
+        children: [
+          TextSpan(
+            text: value,
+            style: const TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget get _space => const SizedBox(height: 10);
+
 }
 
 class VideoY {

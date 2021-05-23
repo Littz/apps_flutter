@@ -9,6 +9,7 @@ import 'package:edagang/widgets/SABTitle.dart';
 import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/photo_viewer.dart';
+import 'package:edagang/widgets/progressIndicator.dart';
 import 'package:edagang/widgets/webview.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
@@ -158,7 +159,7 @@ class _AutoDlShowcasePageState extends State<AutoDlShowcase> with TickerProvider
       return Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.white,
-        body: isLoading ? _buildCircularProgressIndicator() : CustomScrollView(
+        body: isLoading ? buildCircularProgressIndicator() : CustomScrollView(
           controller: _scrollController,
           slivers: <Widget>[
             SliverAppBar(
@@ -532,33 +533,7 @@ class _AutoDlShowcasePageState extends State<AutoDlShowcase> with TickerProvider
           ],
         ),
       );
-
     });
-
-  }
-
-  _buildCircularProgressIndicator() {
-    return Center(
-      child: Container(
-          width: 75,
-          height: 75,
-          color: Colors.transparent,
-          child: Column(
-            children: <Widget>[
-              CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Color(0xff2877EA)),
-                strokeWidth: 1.7,
-              ),
-              SizedBox(height: 5.0,),
-              Text('Loading...',
-                style: GoogleFonts.lato(
-                  textStyle: TextStyle(color: Colors.grey.shade600, fontStyle: FontStyle.italic, fontSize: 13),
-                ),
-              ),
-            ],
-          )
-      ),
-    );
   }
 
   @override

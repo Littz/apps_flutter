@@ -133,20 +133,7 @@ class ProductsListKoopBody extends StatelessWidget {
       builder: (context, child, model) {
         this.model = model;
         return _buildGridList();
-        //return model.isLoadingPro ? _buildCircularProgressIndicator() : _buildGridList();
       },
-    );
-  }
-
-  _buildCircularProgressIndicator() {
-    return Container(
-      padding: EdgeInsets.only(top: 150),
-      child: Center(
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.deepOrange),
-        ),
-      ),
-      color: Colors.transparent,
     );
   }
 

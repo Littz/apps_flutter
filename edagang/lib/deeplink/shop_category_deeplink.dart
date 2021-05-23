@@ -4,6 +4,7 @@ import 'package:edagang/scoped/scoped_product.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/products_list_item.dart';
+import 'package:edagang/widgets/progressIndicator.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -132,21 +133,8 @@ class ProductsListCategoryBody extends StatelessWidget {
     return ScopedModelDescendant<ProductScopedModel>(
       builder: (context, child, model) {
         this.model = model;
-        return model.isLoadingCat ? _buildCircularProgressIndicator() : _buildListView();
+        return model.isLoadingCat ? buildCupertinoProgressIndicator() : _buildListView();
       },
-    );
-  }
-
-  _buildCircularProgressIndicator() {
-    return Center(
-      child: Container(
-        width: 50,
-        height: 50,
-        color: Colors.transparent,
-        child: CupertinoActivityIndicator(
-          radius: 22,
-        ),
-      ),
     );
   }
 

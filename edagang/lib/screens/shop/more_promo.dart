@@ -119,18 +119,6 @@ class ProductsListPromoBody extends StatelessWidget {
     );
   }
 
-  _buildCircularProgressIndicator() {
-    return Container(
-      padding: EdgeInsets.only(top: 150),
-      child: Center(
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.deepOrange),
-        ),
-      ),
-      color: Colors.transparent,
-    );
-  }
-
   _buildListView() {
     return MediaQuery.removePadding(
       removeTop: true,

@@ -100,7 +100,7 @@ class _WebviewBixonState extends State<WebviewBixon> {
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: CachedNetworkImageProvider(_title),
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fill,
                 ),
               ),
             ),

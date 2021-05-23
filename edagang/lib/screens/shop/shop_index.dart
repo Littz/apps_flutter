@@ -3,14 +3,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/data/datas.dart';
 import 'package:edagang/models/shop_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
-import 'package:edagang/screens/biz/biz_index.dart';
 import 'package:edagang/screens/shop/cart_history.dart';
 import 'package:edagang/screens/shop/cart_review.dart';
 import 'package:edagang/screens/shop/more_popular.dart';
 import 'package:edagang/screens/shop/product_category.dart';
 import 'package:edagang/screens/shop/product_detail.dart';
 import 'package:edagang/screens/shop/product_merchant.dart';
-import 'package:edagang/screens/shop/search.dart';
 import 'package:edagang/screens/shop/shop_NGO.dart';
 import 'package:edagang/screens/shop/shop_cart.dart';
 import 'package:edagang/screens/shop/shop_kooperasi.dart';
@@ -67,7 +65,6 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
         _photo = prefs.getString("photo");
         print("Sosmed photo : "+_photo);
       });
-
     } catch (Excepetion ) {
       print("error!");
     }
@@ -91,17 +88,14 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         Navigator.push(context, SlideRightRoute(page: ProductListCategory(catid, catname)));
       });
-
     } else if (ctype == "3") {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         Navigator.push(context, SlideRightRoute(page: ProductListMerchant(catid,catname)));
       });
-
     } else if (ctype == "4") {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         Navigator.push(context, SlideRightRoute(page: WebviewBixon(vrurl ?? '', imgurl ?? '')));
       });
-
     }
   }
 
@@ -109,21 +103,9 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
   void initState() {
     new_content = getShopNewContent();
     super.initState();
-    //selectedPosition = widget.selectedPage;
     loadPhoto();
     FirebaseAnalytics().logEvent(name: 'Cartsini_Home',parameters:null);
   }
-
-  /*final List<String> _videos = [
-    'tUCC4TOBOQQ',
-    'BmvD5OTH_I4',
-    '7dLo761n39k',
-    '7VbmaoKd9UA',
-    'wNjsrra_lPQ',
-    'fjMepC175Do',
-    'Z_gq8n4ZClo',
-    'ZkK4R0wyTHc',
-  ];*/
 
   @override
   Widget build(BuildContext context) {
@@ -144,29 +126,6 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
                       pinned: true,
                       floating: true,
                       backgroundColor: Colors.white,
-                      /*leading: _model.isAuthenticated ? Padding(
-                          padding: EdgeInsets.all(13),
-                          child:  _logType == '0' ? Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.scaleDown) : ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
-                            child: Image.network(_photo ?? '', fit: BoxFit.fill,),
-                          )
-                      ) : CircleAvatar(
-                        backgroundColor: Colors.transparent,
-                        child: IconButton(
-                          icon: Icon(
-                            CupertinoIcons.power,
-                            color: Color(0xff084B8C),
-                          ),
-                          onPressed: () {Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));},
-                        ),
-                      ),*/
-                      /*leading: _model.isAuthenticated ? Padding(
-                          padding: EdgeInsets.all(13),
-                          child:  _logType == '0' ? Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.scaleDown) : ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
-                            child: Image.network(_photo ?? '', fit: BoxFit.fill,),
-                          )
-                      ) : Container(),*/
                       centerTitle: true,
                       title: Image.asset('assets/icons/ic_cartsini.png', height: 24, width: 108,),
                       actions: [
@@ -178,23 +137,16 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
                             backgroundColor: Colors.transparent,
                             child: Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.fill, height: 27, width: 27),
                           )
-                              : CircleAvatar(
-                              backgroundColor: Colors.transparent,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(50),
-                                child: Container(
-                                  height: 30.0,
-                                  width: 30.0,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                      //fit: BoxFit.fill,
-                                      image: CachedNetworkImageProvider(_photo),
-                                      //scale: 30,
-                                    ),
-                                  ),
-                                )
-                              )
+                              : Container(
+                            height: 28.0,
+                            width: 28.0,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                //fit: BoxFit.fill,
+                                image: NetworkImage(_photo),
+                              ),
+                            ),
                           )
                               : CircleAvatar(
                             backgroundColor: Colors.transparent,
@@ -207,7 +159,6 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
                             ),
                           ),
                         ),
-
                       ],
                       bottom: AppBar(
                         elevation: 0,
@@ -271,11 +222,6 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
                                       //leading: Icon(Icons.settings),
                                       title: Text('My Review'),
                                     ), value: "2"),
-                                    //PopupMenuItem(child: ListTile(
-                                      //leading: Icon(Icons.settings),
-                                    //  title: Text('Search'),
-                                    //), value: "3"),
-
                                   ],
                                   onSelected: (value) {
                                     setState(() {
@@ -287,9 +233,6 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
                                       if(_selectedItem == '2'){
                                         _model.isAuthenticated ? Navigator.push(context, SlideRightRoute(page: MyReview())) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
                                       }
-                                      //if(_selectedItem == '3'){
-                                      //  Navigator.push(context, SlideRightRoute(page: SearchList3()));
-                                      //}
                                     });
                                   },
                                 ),
@@ -298,76 +241,9 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
                           ),
                         ),
                       ),
-                      /*flexibleSpace: FlexibleSpaceBar(
-                        background: Container(
-                            color: Colors.white,
-                            padding: EdgeInsets.only(bottom: 5, top: 90),
-                            child: Container(
-                                margin: EdgeInsets.only(left: 8, right: 8),
-                                child: Card(
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0),),
-                                    elevation: 1,
-                                    child: ClipPath(
-                                        clipper: ShapeBorderClipper(
-                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))
-                                        ),
-                                        child: Container(
-                                            height: 150.0,
-                                            decoration: new BoxDecoration(
-                                              color: Colors.transparent,
-                                              borderRadius: BorderRadius.all(Radius.circular(8)),
-                                            ),
-                                            child: Swiper(
-                                              autoplay: true,
-                                              itemBuilder: (BuildContext context, int index) {
-                                                return InkWell(
-                                                  onTap: () {
-                                                    goToDetailsPage(context, _model.banners[index]);
-                                                  },
-                                                  child: ClipRRect(
-                                                      borderRadius: new BorderRadius.circular(8.0),
-                                                      child: CachedNetworkImage(
-                                                        placeholder: (context, url) => Container(
-                                                          width: 40,
-                                                          height: 40,
-                                                          color: Colors.transparent,
-                                                          child: CupertinoActivityIndicator(radius: 15,),
-                                                        ),
-                                                        imageUrl: Constants.urlImage + _model.banners[index].imageUrl,
-                                                        fit: BoxFit.fill,
-                                                        height: 150,
-                                                        width: MediaQuery.of(context).size.width,
-                                                      )
-                                                  ),
-                                                );
-                                              },
-                                              itemCount: _model.banners.length,
-                                              pagination: new SwiperPagination(
-                                                  builder: new DotSwiperPaginationBuilder(
-                                                    activeColor: Colors.deepOrange.shade500,
-                                                    activeSize: 7.0,
-                                                    size: 7.0,
-                                                  )
-                                              ),
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        ),
-                      ),*/
                     ),
-                    /*SliverPersistentHeader(
-                      pinned: true,
-                      delegate: _SliverAppBarDelegate(
-                        minHeight: 48.0,
-                        maxHeight: 60.0,
-                        child: searchBarShop(context),
-                      ),
-                    )*/
                   ];
                 },
-
                 body: Padding(
                   padding: EdgeInsets.only(bottom: 16),
                   child: _fetchBody(key: "key1"),
@@ -451,11 +327,9 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
             ),),
           ),
         ),
-
         SliverToBoxAdapter(
           child: model.categories.length == 0 ? Container() : _fetchCategories(),
         ),
-
         SliverToBoxAdapter(
           child: Container(
             padding: EdgeInsets.only(left: 10, right: 10, top: 16, bottom: 10),
@@ -478,7 +352,6 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
         SliverToBoxAdapter(
           child: model.promoProducts.length == 0 ? Container() : _fetchPromoList(),
         ),
-
         SliverToBoxAdapter(
           child: Container(
             padding: EdgeInsets.only(left: 10, right: 10, top: 15),
@@ -489,12 +362,10 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
             ),
           ),
         ),
-
         SliverPadding(
           padding: EdgeInsets.fromLTRB(8, 10, 8, 5),
           sliver: _newContentList(context),
         ),
-
         SliverToBoxAdapter(
           child: Container(
             padding: EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 10),
@@ -538,11 +409,9 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
             ),
           ),
         ),
-
         SliverToBoxAdapter(
           child: model.bvirtual.length == 0 ? Container() : _fetchVideo(),
         ),
-
         SliverToBoxAdapter(
           child: Container(
             padding: EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 10),
@@ -592,7 +461,6 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
         SliverToBoxAdapter(
           child: model.topProducts.length == 0 ? Container() : _fetchPopular(),
         ),
-
         SliverToBoxAdapter(
           child: Container(
             padding: EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 0),
@@ -601,7 +469,6 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
             ),),
           ),
         ),
-
         SliverPadding(
           padding: EdgeInsets.only(left: 7, top: 10, right: 7, bottom: 15),
           sliver: _fetchFeatures(),
@@ -679,8 +546,6 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
                         ),
                       ),
                     ),
-
-                    //SizedBox(height: 5,),
                     Container(
                       height: 25,
                       margin: EdgeInsets.all(5.0),
@@ -724,16 +589,6 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
                     horizontal: 5.0,
                     vertical: 5.0,
                   ),
-                  /*alignment: Alignment.center,
-                decoration: new BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(8)),
-                  border: Border.all(
-                    color: Colors.white,
-                    style: BorderStyle.solid,
-                    width: 0.0,
-                  ),
-                ),*/
                   child: InkWell(
                       onTap: () {
                         FirebaseAnalytics().logEvent(name: 'Cartsini_cat_'+model.categories[index].catname,parameters:null);
@@ -960,35 +815,5 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
           );
         }
     );
-  }
-
-}
-
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  _SliverAppBarDelegate({
-    @required this.minHeight,
-    @required this.maxHeight,
-    @required this.child,
-  });
-  final double minHeight;
-  final double maxHeight;
-  final Widget child;
-  @override
-  double get minExtent => minHeight;
-  @override
-  double get maxExtent => math.max(maxHeight, minHeight);
-  @override
-  Widget build(
-      BuildContext context,
-      double shrinkOffset,
-      bool overlapsContent)
-  {
-    return new SizedBox.expand(child: child);
-  }
-  @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return maxHeight != oldDelegate.maxHeight ||
-        minHeight != oldDelegate.minHeight ||
-        child != oldDelegate.child;
   }
 }

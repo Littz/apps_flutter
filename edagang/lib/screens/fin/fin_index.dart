@@ -28,7 +28,6 @@ class _FinancePageState extends State<FinancePage> {
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   BuildContext context;
-  List<Menus> tabs_menu = new List();
   ScrollController _scrollController;
   bool lastStatus = true;
   String _logType,_photo = "";
@@ -45,6 +44,29 @@ class _FinancePageState extends State<FinancePage> {
     } catch (Excepetion ) {
       print("error!");
     }
+  }
+
+  ImageProvider _imageProvider() {
+    ImageProvider _p;
+    try {
+      _p = NetworkImage(_photo);
+    } catch (e, s) {
+      print('error caught from `ImageProvider` \n ####\n $e\n $s\n ####');
+    }
+    return _p;
+  }
+
+  Image _image() {
+    Image _i;
+    try {
+      final _p = _imageProvider();
+      if (_p != null) {
+        _i = Image(image: _p);
+      }
+    } catch (e, s) {
+      print('error caught from `Image` \n ####\n $e\n $s\n ####');
+    }
+    return _i;
   }
 
   _scrollListener() {
@@ -72,10 +94,8 @@ class _FinancePageState extends State<FinancePage> {
       print('CATEGORY #############################################');
       print(catid);
       print(catname);
-
       //Navigator.push(context, SlideRightRoute(page: ProductListCategory(catid, catname)));
     } else if (ctype == "3") {
-
       //Navigator.push(context,SlideRightRoute(page: BizCompanyDetailPage(catid,'')));
     } else if (ctype == "4") {
       SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -89,7 +109,6 @@ class _FinancePageState extends State<FinancePage> {
   void initState() {
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
-    tabs_menu = getFinInsurans();
     super.initState();
     loadPhoto();
     FirebaseAnalytics().logEvent(name: 'Fintools_Home',parameters:null);
@@ -151,14 +170,13 @@ class _FinancePageState extends State<FinancePage> {
                                   child: Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.fill, height: 27, width: 27),
                                 )
                                     : Container(
-                                  height: 30.0,
-                                  width: 30.0,
+                                  height: 28.0,
+                                  width: 28.0,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     image: DecorationImage(
                                       //fit: BoxFit.fill,
-                                      image: CachedNetworkImageProvider(_photo),
-                                      //scale: 30,
+                                      image: NetworkImage(_photo),
                                     ),
                                   ),
                                 )
