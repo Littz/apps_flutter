@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:edagang/data/datas.dart';
 import 'package:edagang/models/biz_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/screens/ads/ads_auto_detail.dart';
@@ -9,7 +8,6 @@ import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
-import 'package:edagang/widgets/webview.dart';
 import 'package:edagang/widgets/webview_bb.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,6 +17,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'ads_other_detail.dart';
 
 
@@ -36,6 +35,14 @@ class _AdvertPageState extends State<AdvertPage> {
   BuildContext context;
   String _logType,_photo = "";
   var listImgUrl = new List<String>();
+
+  Future launchForm(String url) async {
+    if (await canLaunch(url)) await launch(
+      url,
+      forceSafariVC: false,
+      forceWebView: false,
+    );
+  }
 
   loadPhoto() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -138,8 +145,9 @@ class _AdvertPageState extends State<AdvertPage> {
                                   CupertinoIcons.doc_person,
                                   color: Color(0xff084B8C),
                                 ),
-                                onPressed: () {Navigator.push(context, SlideRightRoute(
-                                    page: WebviewWidget('https://blurb.e-dagang.asia/wv/career/profile/' + model.getId().toString(), 'Career Profile')));
+                                onPressed: () {
+                                  launchForm('https://blurb.e-dagang.asia/wv/career/profile/' + model.getId().toString());
+                                  //Navigator.push(context, SlideRightRoute(page: WebviewWidget('https://blurb.e-dagang.asia/wv/career/profile/' + model.getId().toString(), 'Career Profile')));
                                 },
                               ),
                             ),

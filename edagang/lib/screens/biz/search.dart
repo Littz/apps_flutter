@@ -269,68 +269,6 @@ class SmartbizItem extends StatelessWidget {
           )
       ),
     );
-    /*return Card(
-      child: InkWell(
-          onTap: () {
-            sharedPref.save("biz_id", repo.prodId.toString());
-            Navigator.push(context, SlideRightRoute(page: BizCompanyDetailPage(repo.prodId.toString(),repo.companyName)));
-          },
-          highlightColor: Colors.lightBlueAccent,
-          splashColor: Colors.red,
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  alignment: Alignment.topCenter,
-                  width: 65,
-                  //height: 65,
-                  padding: const EdgeInsets.all(2.5),
-                  child: CachedNetworkImage(
-                    placeholder: (context, url) => Container(
-                      width: 40,
-                      height: 40,
-                      color: Colors.transparent,
-                      child: CupertinoActivityIndicator(radius: 15,),
-                    ),
-                    imageUrl: 'http://bizapp.e-dagang.asia'+repo.imgLogo ?? '',
-                    fit: BoxFit.cover,
-                    width: 60,
-                    //height: 56,
-                  ),
-                  decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(5))),
-                ),
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(2.5),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text((repo.companyName != null) ? repo.companyName ?? '' : '-',
-                          style: GoogleFonts.lato(
-                            textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w700,),
-                          ),
-                        ),
-                        Text((repo.website != null) ? repo.website ?? '' : '-',
-                          style: GoogleFonts.lato(
-                            textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w500,),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  //flex: 100,
-                )
-              ],
-            ),
-
-
-          )),
-    );*/
   }
 
 }

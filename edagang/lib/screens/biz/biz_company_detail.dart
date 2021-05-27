@@ -3,7 +3,6 @@ import 'package:edagang/models/biz_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/utils/constant.dart';
-import 'package:edagang/utils/custom_dialog.dart';
 import 'package:edagang/widgets/SABTitle.dart';
 import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
@@ -330,7 +329,6 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                           ),
                         ),
                         _reqBtn(),
-
                       ],
                     ),
                   ),
@@ -354,7 +352,11 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                             if (value == 0) {
                               currentTab = Padding(
                                 padding: EdgeInsets.only(left: 10, top: 10, right: 10),
-                                child: htmlText(overview),
+                                child: MediaQuery.removePadding(
+                                  removeTop: true,
+                                  context: context,
+                                  child: htmlText(overview),
+                                )
                               );
                             } else if(value == 1) {
                               currentTab = Padding(
@@ -577,7 +579,6 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
       //}else{
       //  return Container();
       //}
-
     });
 
   }
@@ -598,8 +599,9 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
         ),
       );
     }else{
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 0.0),
+      return MediaQuery.removePadding(
+        removeTop: true,
+        context: context,
         child: new SingleChildScrollView(
             child: Column(
                 children: <Widget>[
@@ -616,15 +618,16 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                       return InkWell(
                           onTap: () {
                             //Navigator.of(context).push(TutorialOverlay());
-                            showDialog(context: context,
+                            /*showDialog(context: context,
                                 builder: (BuildContext context){
                                   return CustomDialogBox(
+                                    file_img: data.file_path,
                                     title: data.product_name,
                                     descriptions: data.product_desc,
-                                    text: "Close",
+                                    text: '',
                                   );
                                 }
-                            );
+                            );*/
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -635,7 +638,14 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                                 child: Container(
                                   margin: EdgeInsets.only(left: 5.0, top: 5.0),
                                   alignment: Alignment.topLeft,
-                                  child: htmlText(data.product_name),
+                                  child: Text(
+                                    data.product_name,
+                                    style: GoogleFonts.lato(
+                                      textStyle: TextStyle(fontSize: 15, fontStyle: FontStyle.normal, fontWeight: FontWeight.w500),
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.left,
+                                  ),
                                 ),
                               ),
                               Expanded(
@@ -644,11 +654,11 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                                   height: 50,
                                   margin: EdgeInsets.only(right: 5.0, top: 5.0),
                                   alignment: Alignment.topRight,
-                                  child: Icon(
+                                  /*child: Icon(
                                     CupertinoIcons.right_chevron,
                                     size: 16,
                                     color: Colors.grey,
-                                  ),
+                                  ),*/
                                 ),
                               ),
                             ],
@@ -679,8 +689,9 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
         ),
       );
     }else{
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 0.0),
+      return MediaQuery.removePadding(
+        removeTop: true,
+        context: context,
         child: new SingleChildScrollView(
             child: Column(
                 children: <Widget>[
@@ -752,8 +763,9 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
         ),
       );
     }else{
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 0.0),
+      return MediaQuery.removePadding(
+        removeTop: true,
+        context: context,
         child: new SingleChildScrollView(
             child: Column(
                 children: <Widget>[
@@ -784,11 +796,11 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                               height: 50,
                               margin: EdgeInsets.only(right: 5.0, top: 5.0),
                               alignment: Alignment.topRight,
-                              child: Icon(
+                              /*child: Icon(
                                 CupertinoIcons.right_chevron,
                                 size: 16,
                                 color: Colors.grey,
-                              ),
+                              ),*/
                             ),
                           ),
                         ],

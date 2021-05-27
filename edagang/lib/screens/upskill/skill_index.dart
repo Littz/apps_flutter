@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:edagang/data/datas.dart';
 import 'package:edagang/models/biz_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/screens/upskill/search.dart';
@@ -122,34 +121,8 @@ class _UpskillPageState extends State<UpskillPage> {
                     pinned: true,
                     backgroundColor: Colors.white,
                     automaticallyImplyLeading: false,
-                    /*leading: model.isAuthenticated ? Padding(
-                        padding: EdgeInsets.all(13),
-                        child:  _logType == '0' ? Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.scaleDown) : ClipRRect(
-                          borderRadius: BorderRadius.circular(50),
-                          child: Image.network(_photo ?? '', fit: BoxFit.fill,),
-                        )
-                    ) : CircleAvatar(
-                      backgroundColor: Colors.transparent,
-                      child: IconButton(
-                        icon: Icon(
-                          CupertinoIcons.power,
-                          color: Color(0xff084B8C),
-                        ),
-                        onPressed: () {Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));},
-                      ),
-                    ),*/
                     centerTitle: true,
                     title: Image.asset('assets/icons/ic_goilmu.png', height: 24, width: 108,),
-                    /*SizedBox(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Image.asset('assets/icons/ic_edagang.png', height: 28, width: 30,),
-                          Image.asset('assets/icons/ic_goilmu.png', height: 24, width: 108,),
-                        ],
-                      ),
-                    ),*/
                     actions: [
                       CircleAvatar(
                         backgroundColor: Colors.grey[200],

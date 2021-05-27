@@ -38,10 +38,11 @@ class ProductScopedModel extends Model {
 
 
   int mid;
-  String user_id, brand_name, company_name, company_no, join_date, state, profile_pic, state_name;
+  String user_id, category_name, brand_name, company_name, company_no, join_date, state, profile_pic, state_name;
 
   int getMid() {return mid;}
   String getUserId() {return user_id;}
+  String getCategoryName() {return category_name;}
   String getBrandName() {return brand_name;}
   String getCompanyName() {return company_name;}
   String getCompanyNo() {return company_no;}
@@ -165,6 +166,8 @@ class ProductScopedModel extends Model {
     totCount = dataFromResponse["data"]["products"]["total"];
     print(totCount.toString());
     prefs.setString('total_item', totCount.toString());
+
+    category_name = dataFromResponse["data"]["category"]["name"];
 
     dataFromResponse["data"]["products"]["data"].forEach(
           (newProduct) {

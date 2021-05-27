@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+
 
 class VideoPlay extends StatefulWidget {
   String vid,title;
@@ -18,7 +16,6 @@ class VideoPlay extends StatefulWidget {
 }
 
 class _VideoPlayState extends State<VideoPlay> {
-
   YoutubePlayerController _controller;
   PlayerState _playerState;
   YoutubeMetaData _videoMetaData;
@@ -28,6 +25,7 @@ class _VideoPlayState extends State<VideoPlay> {
   void initState() {
     FirebaseAnalytics().logEvent(name: 'Video_player',parameters:null);
     super.initState();
+
     _isPlayerReady = false;
     _controller = YoutubePlayerController(
       initialVideoId: widget.vid,
@@ -50,6 +48,17 @@ class _VideoPlayState extends State<VideoPlay> {
       setState(() {
         _playerState = _controller.value.playerState;
         _videoMetaData = _controller.metadata;
+
+        SystemChrome.setPreferredOrientations([
+          DeviceOrientation.portraitUp,
+        ]);
+      });
+    } else if (_isPlayerReady && mounted && _controller.value.isFullScreen){
+      setState(() {
+        SystemChrome.setPreferredOrientations([
+          DeviceOrientation.landscapeLeft,
+          DeviceOrientation.landscapeRight,
+        ]);
       });
     }
   }
@@ -63,6 +72,9 @@ class _VideoPlayState extends State<VideoPlay> {
   @override
   void dispose() {
     _controller.dispose();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     super.dispose();
   }
 
@@ -70,7 +82,6 @@ class _VideoPlayState extends State<VideoPlay> {
   Widget build(BuildContext context) {
     return YoutubePlayerBuilder(
       onExitFullScreen: () {
-        // The player forces portraitUp after exiting fullscreen. This overrides the behaviour.
         SystemChrome.setPreferredOrientations(DeviceOrientation.values);
       },
       player: YoutubePlayer(
@@ -109,10 +120,6 @@ class _VideoPlayState extends State<VideoPlay> {
         onReady: () {
           _isPlayerReady = true;
         },
-        /*onEnded: (data) {
-          _controller.load(_ids[(_ids.indexOf(data.videoId) + 1) % _ids.length]);
-          _showSnackBar('Next Video Started!');
-        },*/
       ),
       builder: (context, player) => Scaffold(
         appBar: AppBar(
@@ -158,8 +165,8 @@ class _VideoPlayState extends State<VideoPlay> {
                   _text('Title', _videoMetaData.title),
                   _space,
                   _text('Channel', _videoMetaData.author),
-                  _space,
-                  _text('Video Id', _videoMetaData.videoId),
+                  //_space,
+                  //_text('Video Id', _videoMetaData.videoId),
                 ],
               ),
             ),

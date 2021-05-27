@@ -3,11 +3,13 @@ import 'package:edagang/main.dart';
 import 'package:edagang/scoped/scoped_product.dart';
 import 'package:edagang/utils/shared_prefs.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
+import 'package:edagang/widgets/product_grid_card.dart';
 import 'package:edagang/widgets/products_list_item.dart';
 import 'package:edagang/widgets/progressIndicator.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -74,14 +76,7 @@ class _CategoryDeeplinkState extends State<CategoryDeeplink> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0.0,
-          title: Text(widget.catName,
-            style: GoogleFonts.lato(
-              textStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.w600,),
-            ),
-          ),
-          iconTheme: IconThemeData(
-            color: Colors.white,
-          ),
+          title: CategoryName(catId: int.parse(widget.catId)),
           leading: InkWell(
             onTap: () {Navigator.pushReplacement(context, SlideRightRoute(page: NewHomePage(1)));},
             splashColor: Colors.deepOrange.shade100,
@@ -91,7 +86,8 @@ class _CategoryDeeplinkState extends State<CategoryDeeplink> {
             ),
           ),
           flexibleSpace: Container(
-            decoration: BoxDecoration(
+            color: Colors.white,
+            /*decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.topRight,
@@ -100,7 +96,7 @@ class _CategoryDeeplinkState extends State<CategoryDeeplink> {
                   Colors.deepOrangeAccent.shade100,
                 ],
               ),
-            ),
+            ),*/
           ),
           actions: <Widget>[
             Padding(
@@ -109,12 +105,50 @@ class _CategoryDeeplinkState extends State<CategoryDeeplink> {
             ),
           ],
         ),
-        body: ProductsListCategoryBody(catId: int.parse(widget.catId), filte: _currentlySelected),
-        backgroundColor: Colors.grey.shade200,
+          backgroundColor: Colors.grey.shade100,
+          body: CustomScrollView(
+              slivers: <Widget>[
+                SliverPadding(
+                  padding: EdgeInsets.fromLTRB(8, 5, 8, 10),
+                  sliver: ProductsListCategoryBody(catId: int.parse(widget.catId), filte: _currentlySelected),
+                ),
+                /*SliverFillRemaining(
+              child: new Container(color: Colors.transparent),
+            ),*/
+              ]
+          )
       ),
     );
   }
 
+}
+
+class CategoryName extends StatelessWidget {
+  BuildContext context;
+  ProductScopedModel model;
+  final int catId;
+  Map<dynamic, dynamic> responseBody;
+  CategoryName({@required this.catId});
+
+  @override
+  Widget build(BuildContext context) {
+    this.context = context;
+
+    return ScopedModelDescendant<ProductScopedModel>(
+      builder: (context, child, model) {
+        this.model = model;
+        return _getCatName();
+      },
+    );
+  }
+
+  _getCatName() {
+    return Text(model.getCategoryName() ?? '',
+      style: GoogleFonts.lato(
+        textStyle: TextStyle(fontSize: 18, color: Colors.black,),
+      ),
+    );
+  }
 }
 
 class ProductsListCategoryBody extends StatelessWidget {
@@ -133,7 +167,7 @@ class ProductsListCategoryBody extends StatelessWidget {
     return ScopedModelDescendant<ProductScopedModel>(
       builder: (context, child, model) {
         this.model = model;
-        return model.isLoadingCat ? buildCupertinoProgressIndicator() : _buildListView();
+        return _buildListView();
       },
     );
   }
@@ -142,53 +176,16 @@ class ProductsListCategoryBody extends StatelessWidget {
     return MediaQuery.removePadding(
       removeTop: true,
       context: context,
-      child: model.getProductsCount() == 0 ? Center(child: Text("No products available."))
-          : ListView.builder(
-        //padding: EdgeInsets.only(top: 5, left: 15, right: 15),
-        //physics: NeverScrollableScrollPhysics(),
-        //shrinkWrap: true,
-        itemCount: model.getProductsCount() + 2,
-        itemBuilder: (context, index) {
-          if (index == model.getProductsCount()) {
-            if (model.hasMoreProducts) {
-              pageIndex++;
-              model.parseCategoryProductsFromResponse(catId, pageIndex, filte);
-              return Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: Center(
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      color: Colors.transparent,
-                      child: CupertinoActivityIndicator(
-                        radius: 17,
-                      ),
-                    ),
-                  )
-              );
-            }
-            return Container();
-          } else if (index == 0) {
-            //0th index would contain filter icons
-            return Container();
-            //return _buildFilterWidgets(screenSize);
-          } else if (index % 2 == 0) {
-            //2nd, 4th, 6th.. index would contain nothing since this would
-            //be handled by the odd indexes where the row contains 2 items
-            return Container();
-          } else {
-            //1st, 3rd, 5th.. index would contain a row containing 2 products
-
-            if (index > model.getProductsCount() - 1) {
-              return Container();
-            }
-
-            return ProductsListItem(
-              product1: model.productsList[index - 1],
-              product2: model.productsList[index],
-            );
-          }
-        },
+      child: new SliverStaggeredGrid.countBuilder(
+        crossAxisCount: 4,
+        mainAxisSpacing: 0.5,
+        crossAxisSpacing: 0.5,
+        itemCount: model.productsList.length,
+        itemBuilder: (context, index) =>
+            ProductCardItem(
+              product: model.productsList[index],
+            ),
+        staggeredTileBuilder: (index) => StaggeredTile.fit(2),
       ),
     );
   }

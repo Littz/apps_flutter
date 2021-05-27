@@ -18,7 +18,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:page_indicator/page_indicator.dart';
 import 'dart:convert';
-
 import 'package:scoped_model/scoped_model.dart';
 
 

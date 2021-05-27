@@ -296,37 +296,10 @@ class _FinDetailPageState extends State<FinDetailPage> with TickerProviderStateM
                                 padding: EdgeInsets.only(left: 2, right: 7),
                                 child: htmlText2(address),
                               ),
-                              /*Container(
-                                padding: EdgeInsets.only(left: 2, right: 7),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(website ?? "",
-                                      style: GoogleFonts.lato(
-                                        textStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
-                                      ),
-                                    ),
-                                    SizedBox(height: 1.0,),
-                                    Text(office_phone ?? "",
-                                      style: GoogleFonts.lato(
-                                        textStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
-                                      ),
-                                    ),
-                                    SizedBox(height: 1.0,),
-                                    Text(email ?? "",
-                                      style: GoogleFonts.lato(
-                                        textStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),*/
                             ],
                           ),
                         ),
                         _reqBtn(),
-
                       ],
                     ),
                   ),
@@ -589,8 +562,9 @@ class _FinDetailPageState extends State<FinDetailPage> with TickerProviderStateM
         ),
       );
     }else{
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 0.0),
+      return MediaQuery.removePadding(
+        removeTop: true,
+        context: context,
         child: new SingleChildScrollView(
             child: Column(
                 children: <Widget>[
@@ -607,7 +581,66 @@ class _FinDetailPageState extends State<FinDetailPage> with TickerProviderStateM
                       return MediaQuery.removePadding(
                         context: context,
                         removeTop: true,
-                        child: ListTile(
+                        child: Container(
+                          margin: EdgeInsets.all(5.0),
+                          child: InkWell(
+                              onTap: () {
+                                showDialog(context: context,
+                                    builder: (BuildContext context){
+                                      return CustomDialogBox(
+                                        file_img: data.file_path,
+                                        title: data.product_name,
+                                        descriptions: data.overview,
+                                        text: co,
+                                      );
+                                    }
+                                );
+                              },
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Expanded(
+                                        flex: 3,
+                                        child: Container(
+                                          padding: EdgeInsets.only(left: 0.0, right: 7.0, top: 0.0),
+                                          child: Text(
+                                            data.product_name,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
+                                            ),
+                                            maxLines: 2,
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 1,
+                                        child: Container(
+                                          margin: EdgeInsets.only(right: 0.0, top: 0.0),
+                                          alignment: Alignment.topRight,
+                                          child: Icon(
+                                            CupertinoIcons.chevron_forward,
+                                            size: 20,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 0.0, right: 7.0, bottom: 7.0),
+                                    child: htmlText(data.product_desc),
+                                  ),
+                                ],
+                              )
+                          ),
+                        )
+                        /*ListTile(
                           contentPadding: EdgeInsets.symmetric(vertical: -3, horizontal: -3),
                           title: Text(data.product_name),
                           subtitle: htmlText(data.product_desc),
@@ -624,49 +657,8 @@ class _FinDetailPageState extends State<FinDetailPage> with TickerProviderStateM
                               }
                             );
                           },
-                        )
+                        )*/
                       );
-                      /*return InkWell(
-                          onTap: () {
-                            //Navigator.of(context).push(TutorialOverlay());
-                            showDialog(context: context,
-                                builder: (BuildContext context){
-                                  return CustomDialogBox(
-                                    title: data.product_name,
-                                    descriptions: data.product_desc,
-                                    text: "Close",
-                                  );
-                                }
-                            );
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Expanded(
-                                flex: 4,
-                                child: Container(
-                                  margin: EdgeInsets.only(left: 5.0, top: 5.0),
-                                  alignment: Alignment.topLeft,
-                                  child: htmlText(data.product_name),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Container(
-                                  height: 50,
-                                  margin: EdgeInsets.only(right: 5.0, top: 5.0),
-                                  alignment: Alignment.topRight,
-                                  child: Icon(
-                                    CupertinoIcons.right_chevron,
-                                    size: 16,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
-                      );*/
                     },
                   )
                 ]
@@ -692,8 +684,9 @@ class _FinDetailPageState extends State<FinDetailPage> with TickerProviderStateM
         ),
       );
     }else{
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 0.0),
+      return MediaQuery.removePadding(
+        removeTop: true,
+        context: context,
         child: new SingleChildScrollView(
             child: Column(
                 children: <Widget>[

@@ -9,6 +9,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scoped_model/scoped_model.dart';
 
+
 class ProductListCategory extends StatefulWidget {
   String catId, catName;
   ProductListCategory(this.catId, this.catName);
@@ -71,11 +72,7 @@ class ProductListCategoryState extends State<ProductListCategory> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0.0,
-          title: Text(widget.catName,
-            style: GoogleFonts.lato(
-              textStyle: TextStyle(fontSize: 18, color: Colors.black,),
-            ),
-          ),
+          title: CategoryName(catId: int.parse(widget.catId)),
           flexibleSpace: Container(
             color: Colors.white,
             /*decoration: BoxDecoration(
@@ -114,6 +111,34 @@ class ProductListCategoryState extends State<ProductListCategory> {
 
 }
 
+class CategoryName extends StatelessWidget {
+  BuildContext context;
+  ProductScopedModel model;
+  final int catId;
+  Map<dynamic, dynamic> responseBody;
+  CategoryName({@required this.catId});
+
+  @override
+  Widget build(BuildContext context) {
+    this.context = context;
+
+    return ScopedModelDescendant<ProductScopedModel>(
+      builder: (context, child, model) {
+        this.model = model;
+        return _getCatName();
+      },
+    );
+  }
+
+  _getCatName() {
+    return Text(model.getCategoryName() ?? '',
+      style: GoogleFonts.lato(
+        textStyle: TextStyle(fontSize: 18, color: Colors.black,),
+      ),
+    );
+  }
+}
+
 class ProductsListCategoryBody extends StatelessWidget {
   BuildContext context;
   ProductScopedModel model;
@@ -149,45 +174,6 @@ class ProductsListCategoryBody extends StatelessWidget {
             product: model.productsList[index],
           ),
         staggeredTileBuilder: (index) => StaggeredTile.fit(2),
-
-        /*GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 5.0,
-              crossAxisSpacing: 5.0,
-              childAspectRatio: 0.555,),
-            itemCount: model.getProductsCount(),
-            itemBuilder: (context, index) {
-              if (index == model.getProductsCount()) {
-                if (model.hasMoreProducts) {
-                  pageIndex++;
-                  model.parseCategoryProductsFromResponse(catId, pageIndex, filte);
-                  return Padding(
-                      padding: const EdgeInsets.only(top: 16.0),
-                      child: Center(
-                        child: Container(
-                          width: 50,
-                          height: 50,
-                          color: Colors.transparent,
-                          child: CupertinoActivityIndicator(
-                            radius: 17,
-                          ),
-                        ),
-                      )
-                  );
-                }
-                return Container();
-              } else {
-
-                if (index > model.getProductsCount() - 1) {
-                  return Container();
-                }
-                return ProductCardItem(
-                  product: model.productsList[index],
-                );
-              }
-            }
-        ),*/
       ),
     );
   }

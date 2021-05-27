@@ -283,7 +283,7 @@ class _BizIdxPageState extends State<BizPage> {
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))
                         ),
                         child: Container(
-                          height: 150.0,
+                          height: 138.0,
                           decoration: new BoxDecoration(
                             color: Colors.transparent,
                             borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -307,7 +307,7 @@ class _BizIdxPageState extends State<BizPage> {
                                       ),
                                       imageUrl: 'http://bizapp.e-dagang.asia' + model.bbanners[index].imageUrl,
                                       fit: BoxFit.fill,
-                                      height: 150,
+                                      height: 138,
                                       width: MediaQuery.of(context).size.width,
                                     )
                                   ),

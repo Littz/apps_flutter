@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:edagang/models/biz_model.dart';
 import 'package:edagang/scoped/upskill_company.dart';
 import 'package:edagang/screens/upskill/skill_detail.dart';
 import 'package:edagang/utils/shared_prefs.dart';
@@ -64,7 +63,7 @@ class GoilmuCourseListPage extends StatefulWidget {
   }
 }
 
-const xpandedHeight = 175.0;
+const xpandedHeight = 185.0;
 
 class _GoilmuCourseListBodyState extends State<GoilmuCourseListPage> {
   BuildContext context;
@@ -232,36 +231,6 @@ class _GoilmuCourseListBodyState extends State<GoilmuCourseListPage> {
                             ],
                           ),
                         ),
-                        //_reqBtn(),
-                        /*InkWell(
-                          onTap: () async {
-                            await FlutterShare.share(
-                              title: 'GOilmu',
-                              text: '',
-                              linkUrl: 'https://upskillapp.e-dagang.asia/business/'+model.cid.toString(),
-                              chooserTitle: model.getCompanyName() ?? '',
-                            );
-                          },
-                          splashColor: Color(0xffA0CCE8),
-                          highlightColor: Color(0xffA0CCE8),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.share, color: color),
-                              Container(
-                                margin: const EdgeInsets.only(top: 2),
-                                child: Text('SHARE',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: color,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),*/
                       ],
                     ),
                   ),

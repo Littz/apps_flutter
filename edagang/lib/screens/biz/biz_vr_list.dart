@@ -68,20 +68,6 @@ class _BizVrListPageState extends State<BizVrListPage> {
                       ),
                     )
                   ),
-                  /*leading: Hero(
-                  tag: "back",
-                  child: InkWell(
-                    onTap: () {Navigator.pop(context);},
-                    splashColor: Color(0xffA0CCE8),
-                    highlightColor: Color(0xffA0CCE8),
-                    child: BlurIconLight(
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: Colors.black,
-                      ),
-                    ),
-                  )
-                ),*/
                   pinned: true,
                   primary: true,
                   title: SABTs(
@@ -245,14 +231,7 @@ class _BizVrListPageState extends State<BizVrListPage> {
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                     ),
-                                    /*Text(
-                                          '',
-                                          style: GoogleFonts.lato(
-                                            textStyle: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500, fontStyle: FontStyle.normal),
-                                          ),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),*/
+
                                     SizedBox(height: 2,),
                                     Text(
                                       data.vr_desc,
@@ -457,14 +436,7 @@ class _BizVrListPageState extends State<BizVrListPage> {
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  /*Text(
-                                          '',
-                                          style: GoogleFonts.lato(
-                                            textStyle: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500, fontStyle: FontStyle.normal),
-                                          ),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),*/
+
                                   SizedBox(height: 2,),
                                   Text(
                                     data.vr_desc,

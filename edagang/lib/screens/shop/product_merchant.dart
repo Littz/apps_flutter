@@ -103,15 +103,7 @@ class _ProductListMerchantState extends State<ProductListMerchant> {
               pinned: true,
               primary: true,
               title: SABTs(
-                child: Container(
-                    child: Text(widget.mercName.replaceAll('%20', ' ').toUpperCase() ?? '',
-                      style: GoogleFonts.lato(
-                        textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                    )
-                ),
+                child: MerchantName(catId: int.parse(widget.mercId)),
               ),
               flexibleSpace: DecoratedBox(
                 decoration: BoxDecoration(
@@ -146,6 +138,36 @@ class _ProductListMerchantState extends State<ProductListMerchant> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class MerchantName extends StatelessWidget {
+  BuildContext context;
+  ProductScopedModel model;
+  final int catId;
+  Map<dynamic, dynamic> responseBody;
+  MerchantName({@required this.catId});
+
+  @override
+  Widget build(BuildContext context) {
+    this.context = context;
+
+    return ScopedModelDescendant<ProductScopedModel>(
+      builder: (context, child, model) {
+        this.model = model;
+        return _getMercName();
+      },
+    );
+  }
+
+  _getMercName() {
+    return Text(model.getCompanyName() ?? '',
+      style: GoogleFonts.lato(
+        textStyle: TextStyle(fontSize: 16, color: Colors.black,),
+      ),
+      overflow: TextOverflow.ellipsis,
+      maxLines: 2,
     );
   }
 }

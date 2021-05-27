@@ -62,7 +62,7 @@ class BlurbPropertyListDlPage extends StatefulWidget {
   }
 }
 
-const xpandedHeight = 175.0;
+const xpandedHeight = 185.0;
 
 class _BlurbPropertyListDlState extends State<BlurbPropertyListDlPage> {
   BuildContext context;

@@ -32,7 +32,6 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:math' as math;
 
 class CustomTab {
   const CustomTab({this.icon, this.title, this.color});
@@ -274,7 +273,7 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))
                           ),
                           child: Container(
-                              height: 150.0,
+                              height: 138.0,
                               decoration: new BoxDecoration(
                                 color: Colors.transparent,
                                 borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -297,7 +296,7 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
                                           ),
                                           imageUrl: Constants.urlImage + model.banners[index].imageUrl,
                                           fit: BoxFit.fill,
-                                          height: 150,
+                                          height: 138,
                                           width: MediaQuery.of(context).size.width,
                                         )
                                     ),

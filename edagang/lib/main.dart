@@ -15,6 +15,7 @@ import 'package:edagang/scoped/main_scoped.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -145,7 +146,20 @@ class _MyAppPageState extends State<MyApp> {
       model: _model,
       child: MaterialApp(
         builder: (BuildContext context, Widget widget) {
-          Widget error = Text('...rendering error...');
+          Widget error = Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.asset('assets/icons/empty.png', height: 120,),
+                Text('...rendering error...',
+                  style: GoogleFonts.lato(
+                    textStyle: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w600,),
+                  ),
+                ),
+              ],
+            ),
+          );
           if (widget is Scaffold || widget is Navigator)
             error = Scaffold(body: Center(child: error));
           ErrorWidget.builder = (FlutterErrorDetails errorDetails) => error;
