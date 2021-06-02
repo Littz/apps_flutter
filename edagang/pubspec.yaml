@@ -44,6 +44,7 @@ dependencies:
   url_launcher: ^5.7.10
   uni_links: ^0.4.0
   firebase_analytics: ^5.0.11
+  
   #pagination_view: ^1.0.4+2
   #faker:
   #flutter_youtube_view: ^2.0.0
