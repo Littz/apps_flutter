@@ -5,7 +5,7 @@ import 'package:edagang/screens/ads/ads_auto_detail.dart';
 import 'package:edagang/screens/ads/ads_career_detail.dart';
 import 'package:edagang/screens/ads/ads_prop_detail.dart';
 import 'package:edagang/sign_in.dart';
-import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/webview_bb.dart';
@@ -138,46 +138,19 @@ class _AdvertPageState extends State<AdvertPage> {
                           centerTitle: true,
                           title: Image.asset('assets/icons/ic_blurb.png', height: 24, width: 70,),
                           actions: [
-                            CircleAvatar(
-                              backgroundColor: Colors.grey[200],
-                              child: IconButton(
-                                icon: Icon(
-                                  CupertinoIcons.doc_person,
-                                  color: Color(0xff084B8C),
-                                ),
-                                onPressed: () {
-                                  launchForm('https://blurb.e-dagang.asia/wv/career/profile/' + model.getId().toString());
-                                  //Navigator.push(context, SlideRightRoute(page: WebviewWidget('https://blurb.e-dagang.asia/wv/career/profile/' + model.getId().toString(), 'Career Profile')));
-                                },
-                              ),
-                            ),
                             Padding(
                               padding: EdgeInsets.only(left: 2, right: 10,),
-                              child: model.isAuthenticated ?
-                                _logType == '0' ?
-                                  CircleAvatar(
-                                    backgroundColor: Colors.transparent,
-                                    child: Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.fill, height: 27, width: 27),
-                                  )
-                                : Container(
-                                  height: 28.0,
-                                  width: 28.0,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                      //fit: BoxFit.fill,
-                                      image: NetworkImage(_photo),
-                                    ),
-                                  ),
-                                )
-                              : CircleAvatar(
-                                backgroundColor: Colors.transparent,
+                              child: CircleAvatar(
+                                backgroundColor: Colors.grey[200],
                                 child: IconButton(
                                   icon: Icon(
-                                    CupertinoIcons.power,
+                                    CupertinoIcons.doc_person,
                                     color: Color(0xff084B8C),
                                   ),
-                                  onPressed: () {Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));},
+                                  onPressed: () {
+                                    launchForm('https://blurb.e-dagang.asia/wv/career/profile/' + model.getId().toString());
+                                    //Navigator.push(context, SlideRightRoute(page: WebviewWidget('https://blurb.e-dagang.asia/wv/career/profile/' + model.getId().toString(), 'Career Profile')));
+                                  },
                                 ),
                               ),
                             ),
@@ -212,12 +185,12 @@ class _AdvertPageState extends State<AdvertPage> {
                                                         child: Center(
                                                             child: CachedNetworkImage(
                                                               placeholder: (context, url) => Container(
-                                                                width: 40,
-                                                                height: 40,
+                                                                alignment: Alignment.center,
                                                                 color: Colors.transparent,
-                                                                child: CupertinoActivityIndicator(radius: 15,),
+                                                                child: Image.asset('assets/logo_edagang.png', width: 254,
+                                                                  height: 100,),
                                                               ),
-                                                              imageUrl: 'https://blurbapp.e-dagang.asia' + model.blb_banners[index].imageUrl,
+                                                              imageUrl: model.blb_banners[index].imageUrl,
                                                               fit: BoxFit.fill,
                                                               height: 150,
                                                               width: MediaQuery.of(context).size.width,
@@ -274,10 +247,10 @@ class _AdvertPageState extends State<AdvertPage> {
                       padding: EdgeInsets.only(bottom: 16),
                       child: TabBarView(
                           children: [
-                            _buildCareer(key: "key1"),
-                            _buildProperty(key: "key2"),
-                            _buildAuto(key: "key3"),
-                            _buildOther(key: "key4"),
+                            _buildCareer(),
+                            _buildProperty(),
+                            _buildAuto(),
+                            _buildOther(),
                           ]
                       ),
                     )
@@ -289,11 +262,11 @@ class _AdvertPageState extends State<AdvertPage> {
     );
   }
 
-  Widget _buildCareer({String key}) {
+  Widget _buildCareer() {
     return ScopedModelDescendant<MainScopedModel>(
         builder: (context, child, model){
           return ListView.builder(
-              key: PageStorageKey(key),
+              //key: PageStorageKey(key),
               itemCount: model.blbcareer.length,
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -322,14 +295,11 @@ class _AdvertPageState extends State<AdvertPage> {
                                 borderRadius: BorderRadius.circular(5),
                                 child: CachedNetworkImage(
                                   placeholder: (context, url) => Container(
-                                    width: 40,
-                                    height: 40,
                                     color: Colors.transparent,
-                                    child: CupertinoActivityIndicator(
-                                      radius: 15,
-                                    ),
+                                    child: Image.asset('assets/images/ed_logo_greys.png',width: 50,
+                                      height: 50,),
                                   ),
-                                  imageUrl: 'https://blurbapp.e-dagang.asia'+data.company_logo,
+                                  imageUrl: data.company_logo,
                                   fit: BoxFit.cover,
                                   width: 70,
                                   height: 70,
@@ -409,11 +379,11 @@ class _AdvertPageState extends State<AdvertPage> {
         });
   }
 
-  Widget _buildProperty({String key}) {
+  Widget _buildProperty() {
     return ScopedModelDescendant<MainScopedModel>(
         builder: (context, child, model){
           return ListView.builder(
-              key: PageStorageKey(key),
+              //key: PageStorageKey(key),
               itemCount: model.blbproperty.length,
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -443,14 +413,11 @@ class _AdvertPageState extends State<AdvertPage> {
                                 borderRadius: BorderRadius.circular(5),
                                 child: CachedNetworkImage(
                                   placeholder: (context, url) => Container(
-                                    width: 40,
-                                    height: 40,
                                     color: Colors.transparent,
-                                    child: CupertinoActivityIndicator(
-                                      radius: 15,
-                                    ),
+                                    child: Image.asset('assets/images/ed_logo_greys.png',width: 50,
+                                      height: 50,),
                                   ),
-                                  imageUrl: 'https://blurbapp.e-dagang.asia'+data.images[0].file_path,
+                                  imageUrl: data.images[0].file_path,
                                   fit: BoxFit.cover,
                                   width: 70,
                                   height: 70,
@@ -528,11 +495,11 @@ class _AdvertPageState extends State<AdvertPage> {
         });
   }
 
-  Widget _buildAuto({String key}) {
+  Widget _buildAuto() {
     return ScopedModelDescendant<MainScopedModel>(
         builder: (context, child, model){
           return ListView.builder(
-              key: PageStorageKey(key),
+              //key: PageStorageKey(key),
               itemCount: model.blbautomobile.length,
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -562,14 +529,11 @@ class _AdvertPageState extends State<AdvertPage> {
                                 borderRadius: BorderRadius.circular(5),
                                 child: CachedNetworkImage(
                                   placeholder: (context, url) => Container(
-                                    width: 40,
-                                    height: 40,
                                     color: Colors.transparent,
-                                    child: CupertinoActivityIndicator(
-                                      radius: 15,
-                                    ),
+                                    child: Image.asset('assets/images/ed_logo_greys.png',width: 50,
+                                      height: 50,),
                                   ),
-                                  imageUrl: 'https://blurbapp.e-dagang.asia'+data.images[0].file_path,
+                                  imageUrl: data.images[0].file_path,
                                   fit: BoxFit.cover,
                                   width: 70,
                                   height: 70,
@@ -647,11 +611,11 @@ class _AdvertPageState extends State<AdvertPage> {
         });
   }
 
-  Widget _buildOther({String key}) {
+  Widget _buildOther() {
     return ScopedModelDescendant<MainScopedModel>(
         builder: (context, child, model){
           return ListView.builder(
-              key: PageStorageKey(key),
+              //key: PageStorageKey(key),
               itemCount: model.blbother.length,
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -681,14 +645,11 @@ class _AdvertPageState extends State<AdvertPage> {
                                 borderRadius: BorderRadius.circular(5),
                                 child: CachedNetworkImage(
                                   placeholder: (context, url) => Container(
-                                    width: 40,
-                                    height: 40,
                                     color: Colors.transparent,
-                                    child: CupertinoActivityIndicator(
-                                      radius: 15,
-                                    ),
+                                    child: Image.asset('assets/images/ed_logo_greys.png',width: 50,
+                                      height: 50,),
                                   ),
-                                  imageUrl: 'https://blurbapp.e-dagang.asia'+data.image[0].file_path,
+                                  imageUrl: data.company_logo,
                                   fit: BoxFit.cover,
                                   width: 70,
                                   height: 70,
@@ -739,13 +700,18 @@ class _AdvertPageState extends State<AdvertPage> {
                                           child: Text(
                                             data.company_name,
                                             style: GoogleFonts.lato(
-                                              textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
+                                              textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontStyle: FontStyle.normal),
                                             ),
                                           ),
                                         ),
                                         Padding(
                                           padding: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
-                                          child: htmlText2(data.descr),
+                                          child: Text(
+                                            data.city_name+', '+data.state_name,
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, fontStyle: FontStyle.italic),
+                                            ),
+                                          ),
                                         ),
                                       ],
                                     )

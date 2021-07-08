@@ -1,5 +1,5 @@
 import 'package:edagang/models/shop_model.dart';
-import 'package:edagang/utils/constant.dart';
+import 'package:edagang/helper/constant.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -218,6 +218,8 @@ Future<dynamic> _getCartCount() async {
     return false;
   },
   );
+  print('CARTSINI CART TOTAL ##########################################');
+  print(Constants.shopAPI+'/cart/product/count');
   return json.decode(response.body);
 }
 
@@ -241,6 +243,8 @@ Future<dynamic> _getCartList() async {
     print(error.toString());
     return false;
   });
+  print('CARTSINI CART LIST ##########################################');
+  print(Constants.shopCart);
   return json.decode(response.body);
 }
 
@@ -251,7 +255,7 @@ Future fetchCartsFromResponse() async {
   currentCartCount = 0;
   var dataFromResponse = await _getCartList();
 
-  print(dataFromResponse.toString());
+  //print(dataFromResponse.toString());
 
   dataFromResponse['data']['cart'].forEach((newCart) {
     currentCartCount++;
@@ -327,6 +331,8 @@ Future<dynamic> _getCartReload() async {
     print(error.toString());
     return false;
   });
+  print('CARTSINI CART RELOAD ##########################################');
+  print(Constants.shopCart+'/reload');
   return json.decode(response.body);
 }
 
@@ -335,7 +341,7 @@ Future fetchCartReload() async {
   notifyListeners();
   var dataFromResponse = await _getCartReload();
 
-  print(dataFromResponse.toString());
+  //print(dataFromResponse.toString());
 
   dataFromResponse['data']['cart'].forEach((newCart) {
 
@@ -409,12 +415,12 @@ Future fetchAddressList() async {
     Constants.addressAPI,
     headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
   ).then((response) {
-    print(response.body);
+    //print(response.body);
     var responseBody = json.decode(response.body);
-    print('ADDRESS >>>>');
-    print(responseBody);
+    print('CARTSINI ADDRESS >>>>');
+    print(Constants.addressAPI);
 
-    print(responseBody['data']['addresses']);
+    //print(responseBody['data']['addresses']);
     responseBody['data']['addresses'].forEach((addr) {
 
       Address adres = new Address(
@@ -449,12 +455,12 @@ Future fetchBankList() async {
     Constants.getFpxbank,
     headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
   ).then((response) {
-    print(response.body);
+    //print(response.body);
     var responseBody = json.decode(response.body);
-    print('BANKING >>>>');
-    print(responseBody);
+    print('CARTSINI BANKING >>>>');
+    print(Constants.getFpxbank);
 
-    print(responseBody['data']);
+    //print(responseBody['data']);
     responseBody['data'].forEach((fpxbnk) {
 
       OnlineBanking bank = new OnlineBanking(

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:edagang/models/ads_model.dart';
 import 'package:edagang/models/biz_model.dart';
-import 'package:edagang/utils/constant.dart';
+import 'package:edagang/helper/constant.dart';
 import 'package:http/http.dart' as http;
 import 'package:scoped_model/scoped_model.dart';
 
@@ -25,6 +25,8 @@ Future<dynamic> _getJobcat() async {
     print(error.toString());
     return false;
   });
+  print('JOB Category==============================================');
+  print('https://blurbapp.e-dagang.asia/api/blurb/job/v2/listing');
   return json.decode(response.body);
 }
 
@@ -33,8 +35,7 @@ Future fetchJobsCat() async {
   notifyListeners();
 
   var dataFromResponse = await _getJobcat();
-  print('JOB Category==============================================');
-  print(dataFromResponse);
+  //print(dataFromResponse);
 
   dataFromResponse["data"]["jobs"].forEach((dataJob) {
     JobsCat _job = new JobsCat(
@@ -49,8 +50,6 @@ Future fetchJobsCat() async {
 
   notifyListeners();
 }
-
-
 
 List<Home_banner> blb_banners = [];
 List<Home_banner> get _blbbanners => blb_banners;
@@ -78,12 +77,14 @@ void addHomeOtherList(JobsCat other) {_blbothers.add(other);}
 
 Future<dynamic> _getBlurbOtherJson() async {
   var response = await http.get(
-    'https://blurbapp.e-dagang.asia/api/blurb/others/listing',
+    'https://blurbapp.e-dagang.asia/api/blurb/others/v2/listing',
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
     return false;
   });
+  print('BLURB OTHERS LIST #####################################');
+  print('https://blurbapp.e-dagang.asia/api/blurb/others/v2/listing');
   return json.decode(response.body);
 }
 
@@ -92,9 +93,7 @@ Future fetchBlurbOtherResponse() async {
 
   notifyListeners();
   var dataFromResponse = await _getBlurbOtherJson();
-
-  print('HOME BLURB OTHER #####################################');
-  print(dataFromResponse["data"]["other"]);
+  //print(dataFromResponse["data"]["other"]);
 
   dataFromResponse["data"]["other"].forEach((dataJobs) {
 
@@ -117,6 +116,8 @@ Future fetchBlurbOtherResponse() async {
       descr: dataJobs['product_desc'],
       company_name: dataJobs['company']['company_name'],
       company_logo: dataJobs['company']['logo'],
+      city_name: dataJobs['company']['city']['city_name'],
+      state_name: dataJobs['company']['state']['state_name'],
       image: imageOther,
     );
     addHomeOtherList(_other);
@@ -126,15 +127,16 @@ Future fetchBlurbOtherResponse() async {
 }
 
 
-
 Future<dynamic> _getHomeBlurbJson() async {
   var response = await http.get(
-    'https://blurbapp.e-dagang.asia/api/blurb/home',
+    'https://blurbapp.e-dagang.asia/api/blurb/v2/home',
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
     return false;
   });
+  print('BLURB HOME #####################################');
+  print('https://blurbapp.e-dagang.asia/api/blurb/v2/home');
   return json.decode(response.body);
 }
 
@@ -147,9 +149,7 @@ Future fetchHomeBlurbResponse() async {
 
   notifyListeners();
   var dataFromResponse = await _getHomeBlurbJson();
-
-  print('HOME BLURB BANNERRRRRR #####################################');
-  print(dataFromResponse["data"]["banner"]);
+  //print(dataFromResponse["data"]["banner"]);
 
   dataFromResponse["data"]["banner"].forEach((fBaner) {
     Home_banner _fbaner = new Home_banner(
@@ -162,8 +162,8 @@ Future fetchHomeBlurbResponse() async {
     addHomeBlurbBannerList(_fbaner);
   });
 
-  print('HOME FIN CATEGORYYY #####################################');
-  print(dataFromResponse["data"]["category"]);
+  //print('BLURB CATEGORYYY #####################################');
+  //print(dataFromResponse["data"]["category"]);
 
   dataFromResponse["data"]["category"].forEach((dataCat) {
     Home_category _cat = new Home_category(
@@ -173,8 +173,8 @@ Future fetchHomeBlurbResponse() async {
     addHomeBlurbCategoryList(_cat);
   });
 
-  print('HOME BLURB CAREER #####################################');
-  print(dataFromResponse["data"]["career"]);
+  //print('BLURB CAREER #####################################');
+  //print(dataFromResponse["data"]["career"]);
 
   dataFromResponse["data"]["career"].forEach((dataJobs) {
 
@@ -192,8 +192,8 @@ Future fetchHomeBlurbResponse() async {
     addHomeCareerList(_career);
   });
 
-  print('HOME BLURB PROPERTY #####################################');
-  print(dataFromResponse["data"]["property"]);
+  //print('BLURB PROPERTY #####################################');
+  //print(dataFromResponse["data"]["property"]);
 
   dataFromResponse["data"]["property"].forEach((dataInv) {
 
@@ -228,8 +228,8 @@ Future fetchHomeBlurbResponse() async {
     addHomePropertyList(_invest);
   });
 
-  print('HOME BLURB AUTOMOBILE #####################################');
-  print(dataFromResponse["data"]["auto"]);
+  //print('BLURB AUTOMOBILE #####################################');
+  //print(dataFromResponse["data"]["auto"]);
 
   dataFromResponse["data"]["auto"].forEach((dataCar) {
 

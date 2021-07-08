@@ -4,7 +4,7 @@ import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/screens/upskill/search.dart';
 import 'package:edagang/screens/upskill/skill_detail.dart';
 import 'package:edagang/sign_in.dart';
-import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/webview_bb.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -124,45 +125,16 @@ class _UpskillPageState extends State<UpskillPage> {
                     centerTitle: true,
                     title: Image.asset('assets/icons/ic_goilmu.png', height: 24, width: 108,),
                     actions: [
-                      CircleAvatar(
-                        backgroundColor: Colors.grey[200],
-                        child: IconButton(
-                          icon: Icon(
-                            CupertinoIcons.search,
-                            color: Color(0xff084B8C),
-                          ),
-                          onPressed: () {Navigator.push(context, SlideRightRoute(page: SearchList2()));},
-                        ),
-                      ),
                       Padding(
                         padding: EdgeInsets.only(left: 2, right: 10,),
-                        child: model.isAuthenticated ?
-                        _logType == '0' ?
-                        CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          child: Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.fill, height: 27, width: 27),
-                        )
-                        //Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.fill, height: 20, width: 20)
-                            : Container(
-                          height: 28.0,
-                          width: 28.0,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                              //fit: BoxFit.fill,
-                              image: NetworkImage(_photo),
-                              //scale: 30,
-                            ),
-                          ),
-                        )
-                            : CircleAvatar(
-                          backgroundColor: Colors.transparent,
+                        child: CircleAvatar(
+                          backgroundColor: Colors.grey[200],
                           child: IconButton(
                             icon: Icon(
-                              CupertinoIcons.power,
+                              LineAwesomeIcons.search,
                               color: Color(0xff084B8C),
                             ),
-                            onPressed: () {Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));},
+                            onPressed: () {Navigator.push(context, SlideRightRoute(page: SearchList2()));},
                           ),
                         ),
                       ),
@@ -198,12 +170,12 @@ class _UpskillPageState extends State<UpskillPage> {
                                                   child: Center(
                                                       child: CachedNetworkImage(
                                                         placeholder: (context, url) => Container(
-                                                          width: 40,
-                                                          height: 40,
+                                                          alignment: Alignment.center,
                                                           color: Colors.transparent,
-                                                          child: CupertinoActivityIndicator(radius: 15,),
+                                                          child: Image.asset('assets/logo_edagang.png', width: 254,
+                                                            height: 100,),
                                                         ),
-                                                        imageUrl: 'http://goilmuapp.e-dagang.asia' + model.gbanners[index].imageUrl,
+                                                        imageUrl: model.gbanners[index].imageUrl,
                                                         fit: BoxFit.fill,
                                                         height: 150,
                                                         width: MediaQuery.of(context).size.width,
@@ -229,7 +201,6 @@ class _UpskillPageState extends State<UpskillPage> {
                     ),
                   ),
                   SliverPersistentHeader(
-
                     delegate: _SliverAppBarDelegate(
                       TabBar(
                         isScrollable: true,
@@ -261,14 +232,13 @@ class _UpskillPageState extends State<UpskillPage> {
                 padding: EdgeInsets.only(bottom: 16),
                 child: TabBarView(
                   children: [
-                    _buildProfessional(key: "key1"),
-                    _buildTechnical(key: "key2"),
-                    _buildSafety(key: "key3"),
-                    _buildSkill(key: "key4"),
+                    _buildProfessional(),
+                    _buildTechnical(),
+                    _buildSafety(),
+                    _buildSkill(),
                   ]
                 ),
               )
-
             ),
           ),
         )
@@ -276,11 +246,11 @@ class _UpskillPageState extends State<UpskillPage> {
     });
   }
 
-  Widget _buildProfessional({String key}) {
+  Widget _buildProfessional() {
     return ScopedModelDescendant<MainScopedModel>(
       builder: (context, child, model){
       return ListView.builder(
-        key: PageStorageKey(key),
+        //key: PageStorageKey(key),
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         itemCount: model.skillProfessional.length,
@@ -299,74 +269,98 @@ class _UpskillPageState extends State<UpskillPage> {
                     onTap: () {
                       FirebaseAnalytics().logEvent(name: 'Goilmu_Pro_'+data.title,parameters:null);
                       sharedPref.save("skil_id", data.id.toString());
-                      Navigator.push(
-                          context, SlideRightRoute(page: UpskillDetailPage(data.id.toString(),data.title)));
+                      Navigator.push(context, SlideRightRoute(page: UpskillDetailPage(data.id.toString(),data.title)));
                     },
-                    child: Column(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Expanded(
-                              flex: 3,
-                              child: Container(
-                                padding: EdgeInsets.only(
-                                    left: 0.0, right: 7.0, top: 0.0),
-                                child: Text(
-                                  data.title,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.lato(
-                                    textStyle: TextStyle(fontSize: 14,
-                                      fontWeight: FontWeight.w600,),
-                                  ),
-                                  maxLines: 2,
-                                ),
-                              ),
+                      children: <Widget>[
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(5),
+                          child: CachedNetworkImage(
+                            placeholder: (context, url) => Container(
+                              color: Colors.transparent,
+                              child: Image.asset('assets/images/ed_logo_greys.png',width: 50,
+                                height: 50,),
                             ),
-                            Expanded(
-                              flex: 1,
-                              child: Container(
-                                margin: EdgeInsets.only(right: 0.0, top: 0.0),
-                                alignment: Alignment.topRight,
-                                child: Icon(
-                                  CupertinoIcons.chevron_forward,
-                                  size: 20,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: 0.0, right: 7.0, bottom: 7.0),
-                          child: Text(
-                            data.company_name,
-                            style: GoogleFonts.lato(
-                              textStyle: TextStyle(
-                                  fontSize: 13, fontWeight: FontWeight.w500),
-                            ),
+                            imageUrl: data.logo,
+                            fit: BoxFit.cover,
+                            width: 70,
+                            height: 70,
                           ),
                         ),
-                        Container(
-                          margin: EdgeInsets.only(
-                              left: 0.0, right: 7.0, bottom: 7.0),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: <Widget>[
-                                Text(
-                                  data.cat_name,
-                                  style: GoogleFonts.lato(
-                                    textStyle: TextStyle(fontSize: 12,
-                                        fontWeight: FontWeight.w400,
-                                        fontStyle: FontStyle.italic),
+                        Expanded(
+                          child: Padding(
+                              padding: const EdgeInsets.only(left: 5),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Expanded(
+                                        flex: 3,
+                                        child: Container(
+                                          padding: EdgeInsets.only(
+                                              left: 0.0, right: 7.0, top: 0.0),
+                                          child: Text(
+                                            data.title,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(fontSize: 14,
+                                                fontWeight: FontWeight.w600,),
+                                            ),
+                                            maxLines: 2,
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 1,
+                                        child: Container(
+                                          margin: EdgeInsets.only(right: 0.0, top: 0.0),
+                                          alignment: Alignment.topRight,
+                                          child: Icon(
+                                            CupertinoIcons.chevron_forward,
+                                            size: 20,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ]
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 0.0, right: 7.0, bottom: 7.0),
+                                    child: Text(
+                                      data.company_name,
+                                      style: GoogleFonts.lato(
+                                        textStyle: TextStyle(
+                                            fontSize: 13, fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(
+                                        left: 0.0, right: 7.0, bottom: 7.0),
+                                    child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: <Widget>[
+                                          Text(
+                                            data.cat_name,
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(fontSize: 12,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontStyle: FontStyle.italic),
+                                            ),
+                                          ),
+                                        ]
+                                    ),
+                                  ),
+                                ],
+                              )
                           ),
                         ),
                       ],
@@ -379,11 +373,11 @@ class _UpskillPageState extends State<UpskillPage> {
     });
   }
 
-  Widget _buildTechnical({String key}) {
+  Widget _buildTechnical() {
     return ScopedModelDescendant<MainScopedModel>(
         builder: (context, child, model){
           return ListView.builder(
-            key: PageStorageKey(key),
+            //key: PageStorageKey(key),
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemCount: model.skillTechnical.length,
@@ -400,68 +394,100 @@ class _UpskillPageState extends State<UpskillPage> {
                     margin: EdgeInsets.all(5.0),
                     child: InkWell(
                         onTap: () {
-                          FirebaseAnalytics().logEvent(name: 'Goilmu_Tech_'+data.title,parameters:null);
+                          FirebaseAnalytics().logEvent(name: 'Goilmu_Pro_'+data.title,parameters:null);
                           sharedPref.save("skil_id", data.id.toString());
                           Navigator.push(context, SlideRightRoute(page: UpskillDetailPage(data.id.toString(),data.title)));
                         },
-                        child: Column(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Expanded(
-                                  flex: 3,
-                                  child: Container(
-                                    padding: EdgeInsets.only(left: 0.0, right: 7.0, top: 0.0),
-                                    child: Text(
-                                      data.title,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.lato(
-                                        textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
-                                      ),
-                                      maxLines: 2,
-                                    ),
-                                  ),
+                          children: <Widget>[
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(5),
+                              child: CachedNetworkImage(
+                                placeholder: (context, url) => Container(
+                                  color: Colors.transparent,
+                                  child: Image.asset('assets/images/ed_logo_greys.png',width: 50,
+                                    height: 50,),
                                 ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Container(
-                                    margin: EdgeInsets.only(right: 0.0, top: 0.0),
-                                    alignment: Alignment.topRight,
-                                    child: Icon(
-                                      CupertinoIcons.chevron_forward,
-                                      size: 20,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left:0.0, right: 7.0, bottom: 7.0),
-                              child: Text(
-                                data.company_name,
-                                style: GoogleFonts.lato(
-                                  textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-                                ),
+                                imageUrl: data.logo,
+                                fit: BoxFit.cover,
+                                width: 70,
+                                height: 70,
                               ),
                             ),
-                            Container(
-                              margin: EdgeInsets.only(left: 0.0, right: 7.0, bottom: 7.0),
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: <Widget>[
-                                    Text(
-                                      data.cat_name,
-                                      style: GoogleFonts.lato(
-                                        textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, fontStyle: FontStyle.italic),
+                            Expanded(
+                              child: Padding(
+                                  padding: const EdgeInsets.only(left: 5),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Expanded(
+                                            flex: 3,
+                                            child: Container(
+                                              padding: EdgeInsets.only(
+                                                  left: 0.0, right: 7.0, top: 0.0),
+                                              child: Text(
+                                                data.title,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: GoogleFonts.lato(
+                                                  textStyle: TextStyle(fontSize: 14,
+                                                    fontWeight: FontWeight.w600,),
+                                                ),
+                                                maxLines: 2,
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 1,
+                                            child: Container(
+                                              margin: EdgeInsets.only(right: 0.0, top: 0.0),
+                                              alignment: Alignment.topRight,
+                                              child: Icon(
+                                                CupertinoIcons.chevron_forward,
+                                                size: 20,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                  ]
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 0.0, right: 7.0, bottom: 7.0),
+                                        child: Text(
+                                          data.company_name,
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(
+                                                fontSize: 13, fontWeight: FontWeight.w500),
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(
+                                            left: 0.0, right: 7.0, bottom: 7.0),
+                                        child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            children: <Widget>[
+                                              Text(
+                                                data.cat_name,
+                                                style: GoogleFonts.lato(
+                                                  textStyle: TextStyle(fontSize: 12,
+                                                      fontWeight: FontWeight.w400,
+                                                      fontStyle: FontStyle.italic),
+                                                ),
+                                              ),
+                                            ]
+                                        ),
+                                      ),
+                                    ],
+                                  )
                               ),
                             ),
                           ],
@@ -474,11 +500,11 @@ class _UpskillPageState extends State<UpskillPage> {
         });
   }
 
-  Widget _buildSafety({String key}) {
+  Widget _buildSafety() {
     return ScopedModelDescendant<MainScopedModel>(
         builder: (context, child, model){
           return ListView.builder(
-            key: PageStorageKey(key),
+            //key: PageStorageKey(key),
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemCount: model.skillSafety.length,
@@ -495,68 +521,100 @@ class _UpskillPageState extends State<UpskillPage> {
                     margin: EdgeInsets.all(5.0),
                     child: InkWell(
                         onTap: () {
-                          FirebaseAnalytics().logEvent(name: 'Goilmu_Safety_'+data.title,parameters:null);
+                          FirebaseAnalytics().logEvent(name: 'Goilmu_Pro_'+data.title,parameters:null);
                           sharedPref.save("skil_id", data.id.toString());
                           Navigator.push(context, SlideRightRoute(page: UpskillDetailPage(data.id.toString(),data.title)));
                         },
-                        child: Column(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Expanded(
-                                  flex: 3,
-                                  child: Container(
-                                    padding: EdgeInsets.only(left: 0.0, right: 7.0, top: 0.0),
-                                    child: Text(
-                                      data.title,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.lato(
-                                        textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
-                                      ),
-                                      maxLines: 2,
-                                    ),
-                                  ),
+                          children: <Widget>[
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(5),
+                              child: CachedNetworkImage(
+                                placeholder: (context, url) => Container(
+                                  color: Colors.transparent,
+                                  child: Image.asset('assets/images/ed_logo_greys.png',width: 50,
+                                    height: 50,),
                                 ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Container(
-                                    margin: EdgeInsets.only(right: 0.0, top: 0.0),
-                                    alignment: Alignment.topRight,
-                                    child: Icon(
-                                      CupertinoIcons.chevron_forward,
-                                      size: 20,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 0.0, right: 7.0, bottom: 7.0),
-                              child: Text(
-                                data.company_name,
-                                style: GoogleFonts.lato(
-                                  textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-                                ),
+                                imageUrl: data.logo,
+                                fit: BoxFit.cover,
+                                width: 70,
+                                height: 70,
                               ),
                             ),
-                            Container(
-                              margin: EdgeInsets.only(left: 0.0, right: 7.0, bottom: 7.0),
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: <Widget>[
-                                    Text(
-                                      data.cat_name,
-                                      style: GoogleFonts.lato(
-                                        textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, fontStyle: FontStyle.italic),
+                            Expanded(
+                              child: Padding(
+                                  padding: const EdgeInsets.only(left: 5),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Expanded(
+                                            flex: 3,
+                                            child: Container(
+                                              padding: EdgeInsets.only(
+                                                  left: 0.0, right: 7.0, top: 0.0),
+                                              child: Text(
+                                                data.title,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: GoogleFonts.lato(
+                                                  textStyle: TextStyle(fontSize: 14,
+                                                    fontWeight: FontWeight.w600,),
+                                                ),
+                                                maxLines: 2,
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 1,
+                                            child: Container(
+                                              margin: EdgeInsets.only(right: 0.0, top: 0.0),
+                                              alignment: Alignment.topRight,
+                                              child: Icon(
+                                                CupertinoIcons.chevron_forward,
+                                                size: 20,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                  ]
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 0.0, right: 7.0, bottom: 7.0),
+                                        child: Text(
+                                          data.company_name,
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(
+                                                fontSize: 13, fontWeight: FontWeight.w500),
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(
+                                            left: 0.0, right: 7.0, bottom: 7.0),
+                                        child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            children: <Widget>[
+                                              Text(
+                                                data.cat_name,
+                                                style: GoogleFonts.lato(
+                                                  textStyle: TextStyle(fontSize: 12,
+                                                      fontWeight: FontWeight.w400,
+                                                      fontStyle: FontStyle.italic),
+                                                ),
+                                              ),
+                                            ]
+                                        ),
+                                      ),
+                                    ],
+                                  )
                               ),
                             ),
                           ],
@@ -569,11 +627,11 @@ class _UpskillPageState extends State<UpskillPage> {
         });
   }
 
-  Widget _buildSkill({String key}) {
+  Widget _buildSkill() {
     return ScopedModelDescendant<MainScopedModel>(
         builder: (context, child, model){
           return ListView.builder(
-            key: PageStorageKey(key),
+            //key: PageStorageKey(key),
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemCount: model.skillTraining.length,
@@ -590,68 +648,100 @@ class _UpskillPageState extends State<UpskillPage> {
                     margin: EdgeInsets.all(5.0),
                     child: InkWell(
                         onTap: () {
-                          FirebaseAnalytics().logEvent(name: 'Goilmu_Skill_'+data.title,parameters:null);
+                          FirebaseAnalytics().logEvent(name: 'Goilmu_Pro_'+data.title,parameters:null);
                           sharedPref.save("skil_id", data.id.toString());
                           Navigator.push(context, SlideRightRoute(page: UpskillDetailPage(data.id.toString(),data.title)));
                         },
-                        child: Column(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Expanded(
-                                  flex: 3,
-                                  child: Container(
-                                    padding: EdgeInsets.only(left: 0.0, right: 7.0, top: 0.0),
-                                    child: Text(
-                                      data.title,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.lato(
-                                        textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
-                                      ),
-                                      maxLines: 2,
-                                    ),
-                                  ),
+                          children: <Widget>[
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(5),
+                              child: CachedNetworkImage(
+                                placeholder: (context, url) => Container(
+                                  color: Colors.transparent,
+                                  child: Image.asset('assets/images/ed_logo_greys.png',width: 50,
+                                    height: 50,),
                                 ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Container(
-                                    margin: EdgeInsets.only(right: 0.0, top: 0.0),
-                                    alignment: Alignment.topRight,
-                                    child: Icon(
-                                      CupertinoIcons.chevron_forward,
-                                      size: 20,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 05.0, right: 7.0, bottom: 7.0),
-                              child: Text(
-                                data.company_name,
-                                style: GoogleFonts.lato(
-                                  textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-                                ),
+                                imageUrl: data.logo,
+                                fit: BoxFit.cover,
+                                width: 70,
+                                height: 70,
                               ),
                             ),
-                            Container(
-                              margin: EdgeInsets.only(left: 0.0, right: 7.0, bottom: 7.0),
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: <Widget>[
-                                    Text(
-                                      data.cat_name,
-                                      style: GoogleFonts.lato(
-                                        textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, fontStyle: FontStyle.italic),
+                            Expanded(
+                              child: Padding(
+                                  padding: const EdgeInsets.only(left: 5),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Expanded(
+                                            flex: 3,
+                                            child: Container(
+                                              padding: EdgeInsets.only(
+                                                  left: 0.0, right: 7.0, top: 0.0),
+                                              child: Text(
+                                                data.title,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: GoogleFonts.lato(
+                                                  textStyle: TextStyle(fontSize: 14,
+                                                    fontWeight: FontWeight.w600,),
+                                                ),
+                                                maxLines: 2,
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 1,
+                                            child: Container(
+                                              margin: EdgeInsets.only(right: 0.0, top: 0.0),
+                                              alignment: Alignment.topRight,
+                                              child: Icon(
+                                                CupertinoIcons.chevron_forward,
+                                                size: 20,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                  ]
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 0.0, right: 7.0, bottom: 7.0),
+                                        child: Text(
+                                          data.company_name,
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(
+                                                fontSize: 13, fontWeight: FontWeight.w500),
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(
+                                            left: 0.0, right: 7.0, bottom: 7.0),
+                                        child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            children: <Widget>[
+                                              Text(
+                                                data.cat_name,
+                                                style: GoogleFonts.lato(
+                                                  textStyle: TextStyle(fontSize: 12,
+                                                      fontWeight: FontWeight.w400,
+                                                      fontStyle: FontStyle.italic),
+                                                ),
+                                              ),
+                                            ]
+                                        ),
+                                      ),
+                                    ],
+                                  )
                               ),
                             ),
                           ],
@@ -661,11 +751,11 @@ class _UpskillPageState extends State<UpskillPage> {
               );
             },
           );
-        });
+        }
+    );
   }
 
 }
-
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   _SliverAppBarDelegate(this._tabBar);

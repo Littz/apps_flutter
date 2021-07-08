@@ -1,7 +1,7 @@
 import 'package:edagang/models/search_model.dart';
 import 'package:edagang/screens/upskill/skill_detail.dart';
-import 'package:edagang/utils/constant.dart';
-import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/helper/constant.dart';
+import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -249,7 +249,7 @@ class Api {
   static final String _url = "upskillapp.e-dagang.asia";
 
   static Future<List<Repo2>> getRepositoriesWithSearchQuery(String query) async {
-    final uri = Uri.https(_url, '/api/course/search', {
+    final uri = Uri.https(_url, '/api/course/v2/search', {
       'search_text': query,
     });
 

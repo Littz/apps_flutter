@@ -24,3 +24,17 @@ class CityStates {
   CityStates(this.id, this.ctname);
 
 }
+
+class StateX {
+  final int id;
+  final String state_name;
+
+  StateX(this.id, this.state_name);
+
+  static List<StateX> mapJSONStringToList(List<dynamic> jsonList) {
+    return jsonList.map((r) =>StateX(
+        r['id'],
+        r['state_name'])
+    ).toList();
+  }
+}

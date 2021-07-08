@@ -2,11 +2,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/widgets/SABTitle.dart';
 import 'package:edagang/widgets/blur_icon.dart';
-import 'package:edagang/widgets/emptyData.dart';
+import 'package:edagang/widgets/emptyList.dart';
+import 'package:edagang/widgets/page_slide_right.dart';
+import 'package:edagang/widgets/webview.dart';
+import 'package:edagang/widgets/webview_f.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -136,15 +140,15 @@ class _BizVrListPageState extends State<BizVrListPage> {
                 children: [
                   Padding(
                     padding: EdgeInsets.all(8),
-                    child: model.bvirtuals[0].vr_list.length > 0 ? _buildCompanyVr(key: "key1") : EmptyList(),
+                    child: model.bvirtuals[0].vr_list.length > 0 ? _buildCompanyVr(key: "key1") : EmptyList('Virtual company not available yet.',subTitle: 'No listing at the moment.'),
                   ),
                   Padding(
                     padding: EdgeInsets.all(8),
-                    child: model.bvirtuals[1].vr_list.length > 0 ? _buildGalleryVr(key: "key2") : EmptyList(),
+                    child: model.bvirtuals[1].vr_list.length > 0 ? _buildGalleryVr(key: "key2") : EmptyList('Virtual gallery not available yet.',subTitle: 'No listing at the moment.'),
                   ),
                   Padding(
                     padding: EdgeInsets.all(8),
-                    child: model.bvirtuals[2].vr_list.length > 0 ? _buildExhibitionVr(key: "key3") : EmptyList(),
+                    child: model.bvirtuals[2].vr_list.length > 0 ? _buildExhibitionVr(key: "key3") : EmptyList('Virtual exibition not available yet.',subTitle: 'No listing at the moment.'),
                   ),
                 ]
               ),
@@ -180,14 +184,18 @@ class _BizVrListPageState extends State<BizVrListPage> {
                       borderRadius: BorderRadius.all(Radius.circular(8)),
                     ),
                     child: InkWell(
-                      onTap: () async {
+                      onTap: () {
+                        Navigator.push(context, SlideRightRoute(
+                            page: VirtualWebView(data.vr_list[index].vr_url,data.vr_list[index].vr_name)));
+                      },
+                      /*onTap: () async {
                         final String url = data.vr_list[index].vr_url ?? '';
                         if (await canLaunch(url)) await launch(
                           url,
                           forceSafariVC: false,
                           forceWebView: false,
                         );
-                      },
+                      },*/
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -197,6 +205,31 @@ class _BizVrListPageState extends State<BizVrListPage> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.only(topLeft: Radius.circular(7), topRight: Radius.circular(7)),
                                 child: CachedNetworkImage(
+                                  fit: BoxFit.cover,
+                                  width: MediaQuery.of(context).size.width,
+                                  imageUrl: data.vr_list[index].vr_image ?? '',
+                                  imageBuilder: (context, imageProvider) => Container(
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          alignment: Alignment.center,
+                                          image: imageProvider,
+                                          fit: BoxFit.cover,
+                                        ),
+                                        borderRadius: BorderRadius.all(Radius.circular(8.0),)
+                                    ),
+                                  ),
+                                  //placeholder: (context, url) => Container(color: Colors.grey.shade200,),
+                                  placeholder: (context, url) => Container(
+                                    alignment: Alignment.center,
+                                    color: Colors.transparent,
+                                    child: Image.asset('assets/images/ed_logo_greys.png', width: 120,
+                                      height: 120,),
+                                  ),
+                                  errorWidget: (context, url, error) => Icon(LineAwesomeIcons.file_image_o, size: 44, color: Color(0xffcecece),),
+                                ),
+
+
+                                /*CachedNetworkImage(
                                   placeholder: (context, url) => Container(
                                     width: 40,
                                     height: 40,
@@ -206,7 +239,7 @@ class _BizVrListPageState extends State<BizVrListPage> {
                                   imageUrl: 'http://bizapp.e-dagang.asia' + data.vr_list[index].vr_image ?? '',
                                   fit: BoxFit.cover,
                                   width: MediaQuery.of(context).size.width,
-                                ),
+                                ),*/
                               ),
                             ),
 
@@ -280,14 +313,18 @@ class _BizVrListPageState extends State<BizVrListPage> {
                     borderRadius: BorderRadius.all(Radius.circular(8)),
                   ),
                   child: InkWell(
-                    onTap: () async {
+                    onTap: () {
+                      Navigator.push(context, SlideRightRoute(
+                          page: VirtualWebView(data.vr_list[index].vr_url,data.vr_list[index].vr_name)));
+                    },
+                    /*onTap: () async {
                       final String url = data.vr_list[index].vr_url ?? '';
                       if (await canLaunch(url)) await launch(
                         url,
                         forceSafariVC: false,
                         forceWebView: false,
                       );
-                    },
+                    },*/
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -297,15 +334,27 @@ class _BizVrListPageState extends State<BizVrListPage> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.only(topLeft: Radius.circular(7), topRight: Radius.circular(7)),
                               child: CachedNetworkImage(
-                                placeholder: (context, url) => Container(
-                                  width: 40,
-                                  height: 40,
-                                  color: Colors.transparent,
-                                  child: CupertinoActivityIndicator(radius: 15,),
-                                ),
-                                imageUrl: 'http://bizapp.e-dagang.asia' + data.vr_list[index].vr_image ?? '',
                                 fit: BoxFit.cover,
                                 width: MediaQuery.of(context).size.width,
+                                imageUrl: data.vr_list[index].vr_image ?? '',
+                                imageBuilder: (context, imageProvider) => Container(
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        alignment: Alignment.center,
+                                        image: imageProvider,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      borderRadius: BorderRadius.all(Radius.circular(8.0),)
+                                  ),
+                                ),
+                                //placeholder: (context, url) => Container(color: Colors.grey.shade200,),
+                                placeholder: (context, url) => Container(
+                                  alignment: Alignment.center,
+                                  color: Colors.transparent,
+                                  child: Image.asset('assets/images/ed_logo_greys.png', width: 120,
+                                    height: 120,),
+                                ),
+                                errorWidget: (context, url, error) => Icon(LineAwesomeIcons.file_image_o, size: 44, color: Color(0xffcecece),),
                               ),
                             ),
                           ),
@@ -386,14 +435,21 @@ class _BizVrListPageState extends State<BizVrListPage> {
                     borderRadius: BorderRadius.all(Radius.circular(8)),
                   ),
                   child: InkWell(
-                    onTap: () async {
+                    onTap: () {
+                      /*Navigator.push(context, SlideRightRoute(
+                          page: WebviewWidget(data.vr_list[index].vr_url,data.vr_list[index].vr_name)));*/
+                      Navigator.push(context, SlideRightRoute(
+                          page: VirtualWebView(data.vr_list[index].vr_url,data.vr_list[index].vr_name)));
+                    },
+
+                    /*async {
                       final String url = data.vr_list[index].vr_url ?? '';
                       if (await canLaunch(url)) await launch(
                         url,
                         forceSafariVC: false,
                         forceWebView: false,
                       );
-                    },
+                    },*/
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -403,15 +459,27 @@ class _BizVrListPageState extends State<BizVrListPage> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.only(topLeft: Radius.circular(7), topRight: Radius.circular(7)),
                               child: CachedNetworkImage(
-                                placeholder: (context, url) => Container(
-                                  width: 40,
-                                  height: 40,
-                                  color: Colors.transparent,
-                                  child: CupertinoActivityIndicator(radius: 15,),
-                                ),
-                                imageUrl: 'http://bizapp.e-dagang.asia' + data.vr_list[index].vr_image ?? '',
                                 fit: BoxFit.cover,
                                 width: MediaQuery.of(context).size.width,
+                                imageUrl: data.vr_list[index].vr_image ?? '',
+                                imageBuilder: (context, imageProvider) => Container(
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        alignment: Alignment.center,
+                                        image: imageProvider,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      borderRadius: BorderRadius.all(Radius.circular(8.0),)
+                                  ),
+                                ),
+                                //placeholder: (context, url) => Container(color: Colors.grey.shade200,),
+                                placeholder: (context, url) => Container(
+                                  alignment: Alignment.center,
+                                  color: Colors.transparent,
+                                  child: Image.asset('assets/images/ed_logo_greys.png', width: 120,
+                                    height: 120,),
+                                ),
+                                errorWidget: (context, url, error) => Icon(LineAwesomeIcons.file_image_o, size: 44, color: Color(0xffcecece),),
                               ),
                             ),
                           ),

@@ -3,8 +3,8 @@ import 'package:edagang/models/ads_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/screens/ads/ads_company.dart';
 import 'package:edagang/sign_in.dart';
-import 'package:edagang/utils/constant.dart';
-import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/helper/constant.dart';
+import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:edagang/widgets/SABTitle.dart';
 import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
@@ -66,7 +66,7 @@ class _PropShowcasePageState extends State<PropShowcase> with TickerProviderStat
 
       setState(() {
         http.post(
-          'https://blurbapp.e-dagang.asia/api/blurb/property/details?property_id='+widget.propId,
+          'https://blurbapp.e-dagang.asia/api/blurb/property/v2/details?property_id='+widget.propId,
           headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
         ).then((response) {
           responseBody = json.decode(response.body);
@@ -82,7 +82,7 @@ class _PropShowcasePageState extends State<PropShowcase> with TickerProviderStat
                 new Images(
                   id: newImage["id"],
                   property_id: newImage["property_id"],
-                  file_path: 'https://blurbapp.e-dagang.asia'+newImage["file_path"],
+                  file_path: newImage["file_path"],
                 ),
               );
             });
@@ -152,16 +152,6 @@ class _PropShowcasePageState extends State<PropShowcase> with TickerProviderStat
     return _scrollController.hasClients && _scrollController.offset > xpandedHeight - kToolbarHeight;
   }
 
-
-  Future share() async {
-    await FlutterShare.share(
-    title: 'Blurb',
-    text: '',
-    linkUrl: 'https://blurbapp.e-dagang.asia/property/',
-    chooserTitle: widget.propTitle,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainScopedModel>(builder: (context, child, model)
@@ -195,8 +185,7 @@ class _PropShowcasePageState extends State<PropShowcase> with TickerProviderStat
                 child: Container(
                     child: Text(ptitle ?? '',
                       style: GoogleFonts.lato(
-                        textStyle: TextStyle(
-                          fontSize: 15, color: Color(0xff084B8C)),
+                        textStyle: TextStyle(fontSize: 17 , fontWeight: FontWeight.w600,),
                       ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
@@ -368,12 +357,10 @@ class _PropShowcasePageState extends State<PropShowcase> with TickerProviderStat
                         tag: "Cartsini",
                         child: CachedNetworkImage(
                           placeholder: (context, url) => Container(
-                            width: 50,
-                            height: 50,
+                            alignment: Alignment.center,
                             color: Colors.transparent,
-                            child: CupertinoActivityIndicator(
-                              radius: 17,
-                            ),
+                            child: Image.asset('assets/logo_edagang.png', width: 254,
+                              height: 100,),
                           ),
                           imageUrl: image.file_path,
                           fit: BoxFit.cover,
@@ -523,7 +510,7 @@ class _PropShowcasePageState extends State<PropShowcase> with TickerProviderStat
                         await FlutterShare.share(
                           title: 'Blurb',
                           text: '',
-                          linkUrl: 'https://blurbapp.e-dagang.asia/property/'+_pid.toString(),
+                          linkUrl: 'https://edagang.page.link/?link=https://blurbapp.e-dagang.asia/property/'+_pid.toString(),
                           chooserTitle: ptitle ?? '',
                         );
                       },

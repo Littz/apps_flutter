@@ -5,8 +5,8 @@ import 'package:edagang/models/shop_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/screens/shop/product_merchant.dart';
 import 'package:edagang/sign_in.dart';
-import 'package:edagang/utils/constant.dart';
-import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/helper/constant.dart';
+import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
@@ -298,7 +298,7 @@ class _ProductDeeplinkPageState extends State<ProductDeeplink> with TickerProvid
                     await FlutterShare.share(
                       title: 'Cartsini',
                       text: '',
-                      linkUrl: 'https://shopapp.e-dagang.asia/product/'+pid.toString(),
+                      linkUrl: 'https://edagang.page.link/?link=https://shopapp.e-dagang.asia/product/'+pid.toString(),
                       chooserTitle: merchant_name,
                     );
                   },
@@ -657,12 +657,10 @@ class _ProductDeeplinkPageState extends State<ProductDeeplink> with TickerProvid
           tag: "Cartsini",
           child: CachedNetworkImage(
             placeholder: (context, url) => Container(
-              width: 50,
-              height: 50,
+              alignment: Alignment.center,
               color: Colors.transparent,
-              child: CupertinoActivityIndicator(
-                radius: 17,
-              ),
+              child: Image.asset('assets/images/ed_logo_greys.png', width: 120,
+                height: 120,),
             ),
             imageUrl: image ?? "",
             fit: merchant_name.contains('NI HSIN') || merchant_name.contains('Hijrah Water') ? BoxFit.fitWidth : BoxFit.cover,
@@ -696,12 +694,10 @@ class _ProductDeeplinkPageState extends State<ProductDeeplink> with TickerProvid
                           tag: "Cartsini",
                           child: CachedNetworkImage(
                             placeholder: (context, url) => Container(
-                              width: 50,
-                              height: 50,
+                              alignment: Alignment.center,
                               color: Colors.transparent,
-                              child: CupertinoActivityIndicator(
-                                radius: 17,
-                              ),
+                              child: Image.asset('assets/images/ed_logo_greys.png', width: 120,
+                                height: 120,),
                             ),
                             imageUrl: image.imageURL,
                             fit: merchant_name.contains('NI HSIN') || merchant_name.contains('Hijrah Water') ? BoxFit.fitWidth : BoxFit.cover,

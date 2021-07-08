@@ -44,7 +44,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
 
     _onDestroy = flutterWebViewPlugin.onDestroy.listen((_) {
       if (mounted) {
-        _scaffoldKeyFpx.currentState.showSnackBar(const SnackBar(content: const Text('Webview Destroyed')));
+        print('Webview Destroyed');
       }
     });
 

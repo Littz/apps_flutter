@@ -1,9 +1,9 @@
 import 'package:edagang/models/shop_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
-import 'package:edagang/screens/shop/acc_address.dart';
+import 'package:edagang/screens/address_book.dart';
 import 'package:edagang/screens/shop/webview_fpx.dart';
-import 'package:edagang/utils/constant.dart';
-import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/helper/constant.dart';
+import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -443,7 +443,7 @@ class CheckoutActivityState extends State<CheckoutActivity> {
                           elevation: 0,
                           color: Colors.white,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                          onPressed: () {Navigator.push(context,MaterialPageRoute(builder: (context) => AddNewAddress(frm: 'chk')));},
+                          onPressed: () {Navigator.push(context,MaterialPageRoute(builder: (context) => AddAddress(frm: 'chk')));},
                           child: Text("New Address", textAlign: TextAlign.center,
                             style: GoogleFonts.lato(
                               textStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.orangeAccent.shade700),
@@ -464,7 +464,7 @@ class CheckoutActivityState extends State<CheckoutActivity> {
                   scrollDirection: Axis.horizontal,
                   children: _buildAddressListItems(model),
                 ) : GestureDetector(
-                  onTap: () {Navigator.push(context,MaterialPageRoute(builder: (context) => AddNewAddress(frm: 'chk')));},
+                  onTap: () {Navigator.push(context,MaterialPageRoute(builder: (context) => AddAddress(frm: 'chk')));},
                   child: Container(
                     margin: EdgeInsets.only(left: 7.0, right: 7.0),
                     width: 255,
@@ -894,4 +894,5 @@ class CheckoutActivityState extends State<CheckoutActivity> {
         )
     );
   }
+
 }

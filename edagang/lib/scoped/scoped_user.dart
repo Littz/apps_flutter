@@ -1,5 +1,5 @@
 import 'package:edagang/scoped/main_scoped.dart';
-import 'package:edagang/utils/constant.dart';
+import 'package:edagang/helper/constant.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
@@ -18,11 +18,11 @@ mixin UserScopedModel on Model {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String xsToken = prefs.getString('token');
     if (xsToken != null) {
-      print("XS TOKEN >>>> "+xsToken);
+      //print("XS TOKEN >>>> "+xsToken);
       _isAuthenticated = true;
       notifyListeners();
     } else {
-      print("GUEST TOKEN >>>> "+Constants.tokenGuest);
+      //print("GUEST TOKEN >>>> "+Constants.tokenGuest);
       _isAuthenticated = false;
       notifyListeners();
     }
@@ -60,12 +60,16 @@ mixin UserScopedModel on Model {
     notifyListeners();
 
     var dataFromResponse = prefs.getString('token') != null ? await _getProfileJson() : null;
+    print('USER INFO DATA *******************************************************');
+    print(dataFromResponse);
+    String gen;
+    if(dataFromResponse['data']['user']['gender'] == 'M') {gen = 'Male';} else if(dataFromResponse['data']['user']['gender'] == 'F') {gen = 'Female';}
 
     _id = dataFromResponse['data']['user']['id'];
     _name = dataFromResponse['data']['user']['fullname'];
     _email = dataFromResponse['data']['user']['email'];
     _phone = dataFromResponse['data']['user']['mobile_no'];
-    _gender = dataFromResponse['data']['user']['gender'];
+    _gender = gen;
     _dob = dataFromResponse['data']['user']['dob'];
 
     _isLoading = false;

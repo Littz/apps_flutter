@@ -1,32 +1,35 @@
+import 'package:edagang/screens/address_book.dart';
+import 'package:edagang/screens/drawerbar.dart';
+import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:flutter/rendering.dart';
 import 'package:edagang/screens/ads/ads_index.dart';
 import 'package:edagang/screens/biz/biz_index.dart';
 import 'package:edagang/screens/fin/fin_index.dart';
-import 'package:edagang/screens/shop/acc_address.dart';
 import 'package:edagang/screens/shop/cart_checkout.dart';
 import 'package:edagang/screens/shop/shop_cart.dart';
 import 'package:edagang/screens/shop/shop_index.dart';
 import 'package:edagang/screens/upskill/skill_index.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/splash.dart';
-import 'package:edagang/utils/constant.dart';
-import 'package:ff_navigation_bar/ff_navigation_bar.dart';
+import 'package:edagang/helper/constant.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
+import 'dart:ui';
 
 
 void main() {
 
   WidgetsFlutterBinding.ensureInitialized(); //imp line need to be added first
   FlutterError.onError = (FlutterErrorDetails details) {
-    print("Error From INSIDE FRAME_WORK");
+    print("Error INSIDE FRAME_WORK");
     print("----------------------------");
     print("Error :  ${details.exception}");
     print("StackTrace :  ${details.stack}");
@@ -56,6 +59,7 @@ class _MyAppPageState extends State<MyApp> {
   final MainScopedModel _model = MainScopedModel();
   bool _requireConsent = false;
   String _debugLabelString = "";
+  SharedPref sharedPref = SharedPref();
 
   loadAuth() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -121,11 +125,6 @@ class _MyAppPageState extends State<MyApp> {
     _model.fetchGoilmuResponse();
     _model.fetchHomeBizResponse();
     _model.fetchVrBizResponse();
-    _model.fetchVisitedList();
-    _model.fetchCompanyList();
-    _model.fetchSkillCat();
-    //_model.fetchJobsCat();
-    _model.fetchCourseList();
     _model.fetchCourseProfessional();
     _model.fetchCourseTechnical();
     _model.fetchCourseSafety();
@@ -134,6 +133,7 @@ class _MyAppPageState extends State<MyApp> {
     _model.fetchVideoListResponse();
     _model.fetchKoopListResponse();
     _model.fetchNgoListResponse();
+    _model.fetchOrderStatusResponse();
     loadAuth();
 
     super.initState();
@@ -151,8 +151,14 @@ class _MyAppPageState extends State<MyApp> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.asset('assets/icons/empty.png', height: 120,),
-                Text('...rendering error...',
+                Image.asset('assets/images/ed_logo_greys.png', height: 120,),
+                SizedBox(height: 26,),
+                Icon(
+                  LineAwesomeIcons.exclamation_triangle,
+                  color: Colors.grey.shade500,
+                  size: 36,
+                ),
+                Text('Rendering error...',
                   style: GoogleFonts.lato(
                     textStyle: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w600,),
                   ),
@@ -173,6 +179,11 @@ class _MyAppPageState extends State<MyApp> {
           accentColor: Colors.cyan[600],
           scaffoldBackgroundColor: Colors.white,
         ),
+
+        /*routes: <String, WidgetBuilder>{
+          '/': (BuildContext context) => _MainScreen(),
+          '/helloworld': (BuildContext context) => _DynamicLinkScreen(),
+        },*/
 
         home: SplashScreen(),
         routes: <String, WidgetBuilder>{
@@ -200,26 +211,236 @@ class NewHomePage extends StatefulWidget {
 }
 
 class _NewHomePageState extends State<NewHomePage> {
-
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool navBarMode = false;
   int selectedIndex = 2;
   List<Widget> listBottomWidget = new List();
+  List<Widget> tabWidget = [
+    FinancePage(),
+    ShopIndexPage(),
+    BizPage(),
+    UpskillPage(),
+    AdvertPage(),
+  ];
+  void addHomePage() {
+    listBottomWidget.add(FinancePage());
+    listBottomWidget.add(ShopIndexPage());
+    listBottomWidget.add(BizPage());
+    listBottomWidget.add(UpskillPage());
+    listBottomWidget.add(AdvertPage());
+  }
 
   @override
   void initState() {
     super.initState();
     selectedIndex = widget.selectedPage;
-    addHomePage();
+  }
+
+  void onTabTapped(int index){
+    setState(() {
+      selectedIndex = index;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffEEEEEE),
-      body: Builder(builder: (context) {
-        return listBottomWidget[selectedIndex];
-      }),
-      bottomNavigationBar: FFNavigationBar(
+      key: _scaffoldKey,
+      backgroundColor: Colors.grey[200],
+      drawer: DrawerBarMenu(),
+      body: Stack(
+        children: [
+          tabWidget[selectedIndex],
+          Positioned(
+            left: 0,
+            top: MediaQueryData.fromWindow(window).padding.top,
+            child: Container(
+              color: Colors.transparent,
+              height: 56.0,
+              width: 56.0,
+              alignment: Alignment.center,
+              child: CircleAvatar(
+                  backgroundColor: Colors.grey[200],
+                  child: IconButton(icon: Icon(LineAwesomeIcons.bars, color: Colors.black87,),
+                    onPressed: () => _scaffoldKey.currentState.openDrawer(),
+                  )
+              ),
+            )
+          ),
+        ],
+      ),
+      /*body: Builder(builder: (context) {
+        return tabWidget[selectedIndex];
+      }),*/
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: onTabTapped,
+        currentIndex: selectedIndex,
+        //backgroundColor: Colors.redAccent.shade100,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Color(0xff006FBD),
+        //selectedItemColor: selectedIndex == 0 ? Color(0xffD91B3E) : selectedIndex == 1 ? Color(0xffF3552E) : selectedIndex == 2 ? Color(0xff084B8C) : selectedIndex == 3 ? Color(0xff70286D) : Color(0xff57585A)
+        selectedLabelStyle: TextStyle(color: Colors.black87, fontWeight: FontWeight.w600),
+        elevation: 0,
+        iconSize: 32,
+
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+              icon: ImageIcon(
+                AssetImage("assets/images/ic_fintools.png"),
+              ),
+              activeIcon: ImageIcon(
+                AssetImage("assets/images/ic_fintools2.png"),
+              ),
+              title: Text('Fintools')
+          ),
+          BottomNavigationBarItem(
+              icon: ImageIcon(
+                AssetImage("assets/images/ic_cartsini.png"),
+              ),
+              activeIcon: ImageIcon(
+                AssetImage("assets/images/ic_cartsini2.png"),
+              ),
+              title: Text('Cartsini')
+          ),
+          BottomNavigationBarItem(
+              icon: ImageIcon(
+                AssetImage("assets/images/ic_smartbiz.png"),
+              ),
+              activeIcon: ImageIcon(
+                AssetImage("assets/images/ic_smartbiz2.png"),
+              ),
+              title: Text('Smartbiz')
+          ),
+          BottomNavigationBarItem(
+              icon: ImageIcon(
+                AssetImage("assets/images/ic_goilmu.png"),
+              ),
+              activeIcon: ImageIcon(
+                AssetImage("assets/images/ic_goilmu2.png"),
+              ),
+              title: Text('GoIlmu')
+          ),
+          BottomNavigationBarItem(
+              icon: ImageIcon(
+                AssetImage("assets/images/ic_blurb.png"),
+              ),
+              activeIcon: ImageIcon(
+                AssetImage("assets/images/ic_blurb2.png"),
+              ),
+              title: Text('Blurb'),
+          )
+        ],
+        /*items: [
+          BottomNavigationBarItem(
+            icon: Icon(LineAwesomeIcons.dollar),
+            title: Text("Fintools"),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(LineAwesomeIcons.shopping_cart),
+            title: Text("Cartsini"),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(LineAwesomeIcons.user),
+            title: Text("Smartbiz"),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(LineAwesomeIcons.bell_o),
+            title: Text("Notification"),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(LineAwesomeIcons.user),
+            title: Text("Profile"),
+          ),
+        ],*/
+      ),
+      /*bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: selectedIndex,
+        onTap: (int index) {
+          setState(() {
+            selectedIndex = index;
+            //currentPage = pages[index];
+          });
+        },
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+              icon: ImageIcon(
+                AssetImage("assets/images/ic_fintools.png"),
+                size: 20,
+                color: selectedIndex == 0
+                    ? Colors.orange
+                    : Colors.black,
+              ),
+              title: Text('Fintools',
+                style: TextStyle(
+                    fontSize: 13.0,
+                    color: selectedIndex == 0
+                        ? Colors.orange
+                        : Colors.black),
+              )
+          ),
+          BottomNavigationBarItem(
+              icon: ImageIcon(
+                AssetImage("assets/images/ic_cartsini.png"),
+                color: selectedIndex == 1
+                    ? Colors.orange
+                    : Colors.black,
+              ),
+              title: Text('Cartsini',
+                style: TextStyle(
+                    fontSize: 10.0,
+                    color: selectedIndex == 1
+                        ? Colors.orange
+                        : Colors.black),)
+          ),
+          BottomNavigationBarItem(
+              icon: ImageIcon(
+                AssetImage("assets/images/ic_smartbiz.png"),
+                color: selectedIndex == 2
+                    ? Colors.orange
+                    : Colors.black,
+              ),
+              title: Text('Smartbiz',
+                style: TextStyle(
+                    fontSize: 10.0,
+                    color: selectedIndex == 2
+                        ? Colors.orange
+                        : Colors.black),)
+          ),
+          BottomNavigationBarItem(
+              icon: ImageIcon(
+                AssetImage("assets/images/ic_goilmu.png"),
+                color: selectedIndex == 3
+                    ? Colors.orange
+                    : Colors.black,
+              ),
+              title: Text('GoIlmu',
+                style: TextStyle(
+                    fontSize: 10.0,
+                    color: selectedIndex == 3
+                        ? Colors.orange
+                        : Colors.black),)
+          ),
+          BottomNavigationBarItem(
+              icon: ImageIcon(
+                AssetImage("assets/images/ic_blurb.png"),
+                color: selectedIndex == 4
+                    ? Colors.orange
+                    : Colors.black,
+              ),
+              title: Text('Blurb',
+                style: TextStyle(
+                    fontSize: 10.0,
+                    color: selectedIndex == 4
+                        ? Colors.orange
+                        : Colors.black),)
+          )
+
+        ],
+      ),*/
+      /*bottomNavigationBar: FFNavigationBar(
         theme: FFNavigationBarTheme(
           barBackgroundColor: Colors.white,
           selectedItemBorderColor: Color(0xFFEEEEEE),
@@ -230,7 +451,7 @@ class _NewHomePageState extends State<NewHomePage> {
         onSelectTab: (index) {
           setState(() {
             selectedIndex = index;
-            /*switch (index) {
+            switch (index) {
               case 0:
                 FirebaseAnalytics().logEvent(name: 'Fintools_Tab',parameters:null);
                 break;
@@ -249,7 +470,7 @@ class _NewHomePageState extends State<NewHomePage> {
               default:
                 FirebaseAnalytics().logEvent(name: 'Smartbiz_Tab',parameters:null);
                 break;
-            }*/
+            }
           });
         },
         items: [
@@ -284,17 +505,7 @@ class _NewHomePageState extends State<NewHomePage> {
             selectedLabelColor: Color(0xff57585A),
           ),
         ],
-      ),
-
+      ),*/
     );
   }
-
-  void addHomePage() {
-    listBottomWidget.add(FinancePage());
-    listBottomWidget.add(ShopIndexPage());
-    listBottomWidget.add(BizPage());
-    listBottomWidget.add(UpskillPage());
-    listBottomWidget.add(AdvertPage());
-  }
-
 }

@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/models/search_model.dart';
 import 'package:edagang/screens/biz/biz_company_detail.dart';
-import 'package:edagang/utils/constant.dart';
-import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/helper/constant.dart';
+import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
@@ -229,14 +229,12 @@ class SmartbizItem extends StatelessWidget {
                   borderRadius: BorderRadius.circular(4),
                   child: repo.imgLogo == null ? Image.asset('assets/icons/ic_launcher_new.png', width: 60, fit: BoxFit.cover,) : CachedNetworkImage(
                     placeholder: (context, url) => Container(
-                      width: 40,
-                      height: 40,
+                      alignment: Alignment.center,
                       color: Colors.transparent,
-                      child: CupertinoActivityIndicator(
-                        radius: 15,
-                      ),
+                      child: Image.asset('assets/images/ed_logo_greys.png', width: 40,
+                        height: 40,),
                     ),
-                    imageUrl: 'http://bizapp.e-dagang.asia'+repo.imgLogo,
+                    imageUrl: repo.imgLogo,
                     fit: BoxFit.scaleDown,
                     width: 60,
                     //height: 76,
@@ -278,7 +276,7 @@ class Api {
   static final String _url = "bizapp.e-dagang.asia";
 
   static Future<List<Repo>> getRepositoriesWithSearchQuery(String query) async {
-    final uri = Uri.https(_url, '/api/biz/search', {
+    final uri = Uri.https(_url, '/api/biz/v2/search', {
       'search_text': query,
     });
 

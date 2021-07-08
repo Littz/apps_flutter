@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/models/biz_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/sign_in.dart';
-import 'package:edagang/utils/constant.dart';
+import 'package:edagang/helper/constant.dart';
 import 'package:edagang/widgets/SABTitle.dart';
 import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
@@ -15,6 +15,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
@@ -61,17 +62,18 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
         print("product ID : "+widget.bizId);
 
         http.post(
-          Constants.bizAPI+'/biz/details?business_id='+widget.bizId,
+          Constants.bizAPI+'/biz/v2/details?business_id='+widget.bizId,
           headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
         ).then((response) {
+          print(Constants.bizAPI+'/biz/v2/details?business_id='+widget.bizId);
           print('BIZZZZZZZZZ RESPONSE CODE /////////////////');
           print(response.statusCode.toString());
 
           var resBody = json.decode(response.body);
-          print('BIZZZZZZZZZ VR OFFICE >>>>>>>>>>>>>>'+resBody['data']['businesses']['vr_office'].toString());
-          print('BIZZZZZZZZZ VR SHOWROOM >>>>>>>>>>>>>>'+resBody['data']['businesses']['vr_showroom'].toString());
-          print('BIZZZZZZZZZ DETAIL RESPONSE ===============');
-          print(resBody);
+          //print('BIZZZZZZZZZ VR OFFICE >>>>>>>>>>>>>>'+resBody['data']['businesses']['vr_office'].toString());
+          //print('BIZZZZZZZZZ VR SHOWROOM >>>>>>>>>>>>>>'+resBody['data']['businesses']['vr_showroom'].toString());
+          //print('BIZZZZZZZZZ DETAIL RESPONSE ===============');
+          //print(resBody);
 
           setState(() {
 
@@ -83,6 +85,8 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                     business_id: produk['business_id'],
                     product_name: produk['product_name'],
                     product_desc: produk['product_desc'],
+                    file_path: produk['images'] == null ? 'null' : produk['images']['file_path'],
+                    video_link: produk['video_link'],
                   )
               );
             });
@@ -94,7 +98,7 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                     id: awad['id'],
                     business_id: awad['business_id'],
                     award_desc: awad['award_desc'],
-                    filename: awad['filename'] == null ? 'null' : 'https://bizapp.e-dagang.asia'+awad['filename'],
+                    filename: awad['filename'] == null ? 'null' : awad['filename'],
                   )
               );
             });
@@ -120,7 +124,7 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
               office_fax: resBody['data']['businesses']['office_fax'].toString(),
               email: resBody['data']['businesses']['email'].toString(),
               website: resBody['data']['businesses']['website'].toString(),
-              logo: 'https://bizapp.e-dagang.asia'+resBody['data']['businesses']['logo'],
+              logo: resBody['data']['businesses']['logo'],
               vr_office: resBody['data']['businesses']['vr_office'].toString(),
               vr_showroom: resBody['data']['businesses']['vr_showroom'].toString(),
               product: _product,
@@ -210,7 +214,7 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                 child: Container(
                     child: Text(company_name ?? '',
                       style: GoogleFonts.lato(
-                        textStyle: TextStyle(fontSize: 15, color: Color(0xff084B8C)),
+                        textStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.w600,),
                       ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
@@ -249,11 +253,34 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(50),
                                 child: CachedNetworkImage(
+                                  //fit: BoxFit.fitHeight,
+                                  imageUrl: _logo ?? '',
+                                  imageBuilder: (context, imageProvider) => Container(
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          alignment: Alignment.center,
+                                          image: imageProvider,
+                                          //fit: BoxFit.fitHeight,
+                                        ),
+                                        borderRadius: BorderRadius.all(Radius.circular(8.0),)
+                                    ),
+                                  ),
+                                  //placeholder: (context, url) => Container(color: Colors.grey.shade200,),
+                                  placeholder: (context, url) => Container(
+                                    alignment: Alignment.center,
+                                    color: Colors.transparent,
+                                    child: Image.asset('assets/images/ed_logo_greys.png', width: 60,
+                                      height: 60,),
+                                  ),
+                                  errorWidget: (context, url, error) => Icon(LineAwesomeIcons.file_image_o, size: 44, color: Color(0xffcecece),),
+                                ),
+
+
+                                /*CachedNetworkImage(
                                   imageUrl: _logo ?? "",
-                                  //fit: BoxFit.cover,
                                   placeholder: (context, url) => CircularProgressIndicator(),
                                   errorWidget: (context, url, error) => Icon(Icons.error_outline),
-                                ),
+                                ),*/
                               ),
                             ),
                           ),
@@ -361,7 +388,7 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                             } else if(value == 1) {
                               currentTab = Padding(
                                 padding: EdgeInsets.only(left: 10, top: 10, right: 10),
-                                child: _productList(),
+                                child: _productList(widget.bizName),
                               );
                             } else if(value == 2) {
                               currentTab = Padding(
@@ -533,7 +560,7 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                       await FlutterShare.share(
                         title: 'SmartBiz',
                         text: '',
-                        linkUrl: 'https://bizapp.e-dagang.asia/company/'+_id.toString(),
+                        linkUrl: 'https://edagang.page.link/?link=https://bizapp.e-dagang.asia/company/'+_id.toString(),
                         chooserTitle: widget.bizName,
                       );
                     },
@@ -583,7 +610,7 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
 
   }
 
-  Widget _productList() {
+  Widget _productList(String co) {
     if(products.length == 0) {
       return Padding(
         padding: const EdgeInsets.all(10.0),
@@ -615,9 +642,11 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                     itemCount: products.length,
                     itemBuilder: (context, index) {
                       var data = products[index];
+                      var d1 = data.video_link != null ? data.video_link.split("/") : null;
+                      var vlink = data.video_link != null ? d1[3].toString() : null;
                       return InkWell(
                           onTap: () {
-                            //Navigator.of(context).push(TutorialOverlay());
+                            _viewSvcProduct(data.file_path, data.product_name, data.product_desc, widget.bizName);
                             /*showDialog(context: context,
                                 builder: (BuildContext context){
                                   return CustomDialogBox(
@@ -654,11 +683,11 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                                   height: 50,
                                   margin: EdgeInsets.only(right: 5.0, top: 5.0),
                                   alignment: Alignment.topRight,
-                                  /*child: Icon(
+                                  child: Icon(
                                     CupertinoIcons.right_chevron,
                                     size: 16,
                                     color: Colors.grey,
-                                  ),*/
+                                  ),
                                 ),
                               ),
                             ],
@@ -722,7 +751,7 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                                 imageUrl: data.filename ?? "",
                                 fit: BoxFit.cover,
                                 //placeholder: (context, url) => CircularProgressIndicator(),
-                                errorWidget: (context, url, error) => Icon(Icons.error_outline),
+                                errorWidget: (context, url, error) => Icon(LineAwesomeIcons.file_image_o, size: 44, color: Color(0xffcecece),),
                               )),
 
                               /*FadeInImage.assetNetwork(
@@ -813,6 +842,97 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
       );
 
     }
+  }
+
+  _viewSvcProduct(String image, String title, String oview, String biz) {
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Container(
+          color: Color.fromRGBO(0, 0, 0, 0.001),
+          child: GestureDetector(
+            onTap: () {Navigator.pop(context);},
+            child: DraggableScrollableSheet(
+              initialChildSize: 0.90,
+              minChildSize: 0.2,
+              maxChildSize: 0.95,
+              builder: (_, controller) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(20.0),
+                      topRight: const Radius.circular(20.0),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.all(16),
+                        child: Icon(
+                          LineAwesomeIcons.close,
+                          color: Colors.red[600],
+                        ),
+                      ),
+                      Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.only(left: Constants.padding,top: 0, right: Constants.padding,bottom: Constants.padding),
+                                  //margin: EdgeInsets.only(top: Constants.padding),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      //SizedBox(height: 15,),
+                                      Card(
+                                        elevation: 0,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8.0),
+                                        ),
+                                        child: image == 'null' ? Container() : Container(
+                                            decoration: new BoxDecoration(
+                                              borderRadius: BorderRadius.all(Radius.circular(8)),
+                                            ),
+                                            child: ClipRRect(
+                                              borderRadius: BorderRadius.all(Radius.circular(8)),
+                                              child: CachedNetworkImage(
+                                                placeholder: (context, url) => Container(
+                                                  alignment: Alignment.center,
+                                                  color: Colors.transparent,
+                                                  child: Image.asset('assets/images/ed_logo_greys.png', width: 90,
+                                                    height: 90,),
+                                                ),
+                                                imageUrl: image,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            )
+                                        ),
+                                      ),
+                                      SizedBox(height: 10,),
+                                      biz.toLowerCase().contains('ta investment') ? SizedBox(height: 0,) : Text(title, style: TextStyle(fontSize: 22,fontWeight: FontWeight.w600, color: Color(0xff2877EA)),),
+                                      biz.toLowerCase().contains('ta investment') ? SizedBox(height: 0,) : SizedBox(height: 15,),
+                                      htmlText(oview),
+                                      SizedBox(height: 22,),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
   }
 
 }

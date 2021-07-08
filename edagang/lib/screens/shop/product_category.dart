@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:edagang/scoped/scoped_product.dart';
-import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:edagang/widgets/product_grid_card.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
@@ -133,7 +133,7 @@ class CategoryName extends StatelessWidget {
   _getCatName() {
     return Text(model.getCategoryName() ?? '',
       style: GoogleFonts.lato(
-        textStyle: TextStyle(fontSize: 18, color: Colors.black,),
+        textStyle: TextStyle(fontSize: 17 , fontWeight: FontWeight.w600,),
       ),
     );
   }

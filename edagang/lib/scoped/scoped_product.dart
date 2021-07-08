@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:edagang/models/shop_model.dart';
-import 'package:edagang/utils/constant.dart';
+import 'package:edagang/helper/constant.dart';
 import 'package:http/http.dart' as http;
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -164,7 +164,7 @@ class ProductScopedModel extends Model {
     var dataFromResponse = await _getProductsByCategory(categoryId, pageIndex, filte);
 
     totCount = dataFromResponse["data"]["products"]["total"];
-    print(totCount.toString());
+    //print(totCount.toString());
     prefs.setString('total_item', totCount.toString());
 
     category_name = dataFromResponse["data"]["category"]["name"];
@@ -481,12 +481,12 @@ class ProductScopedModel extends Model {
       headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
       body: json.encode(postData),
     ).then((response) {
-      print(response.body);
+      //print(response.body);
       var dataFromResponse = json.decode(response.body);
-      print(dataFromResponse);
+      //print(dataFromResponse);
 
       totCount = dataFromResponse["data"]["products"]["total"];
-      print(totCount.toString());
+      //print(totCount.toString());
       prefs.setString('total_item', totCount.toString());
 
       dataFromResponse["data"]["products"]["data"].forEach(

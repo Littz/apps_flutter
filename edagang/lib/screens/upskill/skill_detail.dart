@@ -3,8 +3,8 @@ import 'package:edagang/models/upskill_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/screens/upskill/skill_company.dart';
 import 'package:edagang/sign_in.dart';
-import 'package:edagang/utils/constant.dart';
-import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/helper/constant.dart';
+import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:edagang/widgets/SABTitle.dart';
 import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
@@ -19,6 +19,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class UpskillDetailPage extends StatefulWidget {
@@ -65,7 +66,7 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
         print("product ID : "+_skillId);
 
         http.post(
-          Constants.tuneupAPI+'/course/details?course_id='+widget.skillId,
+          Constants.tuneupAPI+'/course/v2/details?course_id='+widget.skillId,
           headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
         ).then((response) {
           print('UPSKILLLLL RESPONSE CODE /////////////////');
@@ -119,7 +120,7 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
             price = data.price;
             course_category_id = data.course_category_id;
             company_name = data.company_name;
-            logo = 'https://goilmuapp.e-dagang.asia'+data.logo;
+            logo = data.logo;
             cat_name = data.cat_name;
             schedule = data.schedule;
 
@@ -180,7 +181,7 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
               child: Container(
                   child: Text(title ?? '',
                     style: GoogleFonts.lato(
-                      textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w700,),
+                      textStyle: TextStyle(fontSize: 17 , fontWeight: FontWeight.w600,),
                     ),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
@@ -219,10 +220,26 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(50),
                               child: CachedNetworkImage(
-                                imageUrl: logo ?? "",
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) => CircularProgressIndicator(),
-                                errorWidget: (context, url, error) => Icon(Icons.error_outline),
+                                //fit: BoxFit.fitHeight,
+                                imageUrl: logo ?? '',
+                                imageBuilder: (context, imageProvider) => Container(
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        alignment: Alignment.center,
+                                        image: imageProvider,
+                                        //fit: BoxFit.fitHeight,
+                                      ),
+                                      borderRadius: BorderRadius.all(Radius.circular(8.0),)
+                                  ),
+                                ),
+                                //placeholder: (context, url) => Container(color: Colors.grey.shade200,),
+                                placeholder: (context, url) => Container(
+                                  alignment: Alignment.center,
+                                  color: Colors.transparent,
+                                  child: Image.asset('assets/images/ed_logo_greys.png', width: 60,
+                                    height: 60,),
+                                ),
+                                errorWidget: (context, url, error) => Icon(LineAwesomeIcons.file_image_o, size: 44, color: Color(0xffcecece),),
                               ),
                             ),
                           ),
@@ -478,7 +495,7 @@ class _UpskillDetailPageState extends State<UpskillDetailPage> with SingleTicker
                         await FlutterShare.share(
                           title: 'GOilmu',
                           text: '',
-                          linkUrl: 'https://goilmuapp.e-dagang.asia/course/'+_id.toString(),
+                          linkUrl: 'https://edagang.page.link/?link=https://goilmuapp.e-dagang.asia/course/'+_id.toString(),
                           chooserTitle: title ?? '',
                         );
                       },

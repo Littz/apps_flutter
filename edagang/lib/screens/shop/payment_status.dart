@@ -1,6 +1,6 @@
 import 'package:edagang/scoped/main_scoped.dart';
-import 'package:edagang/utils/constant.dart';
-import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/helper/constant.dart';
+import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +70,7 @@ class FpxStatusState extends State<FpxStatus> {
               title: Text(
                 "Payment Status",
                 style: GoogleFonts.lato(
-                  textStyle: TextStyle(color: Colors.black, fontSize: 18),
+                  textStyle: TextStyle(fontSize: 17 , fontWeight: FontWeight.w600,),
                 ),
               ),
             ),

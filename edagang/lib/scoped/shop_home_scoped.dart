@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:edagang/models/shop_model.dart';
-import 'package:edagang/utils/constant.dart';
+import 'package:edagang/helper/constant.dart';
 import 'package:http/http.dart' as http;
 import 'package:scoped_model/scoped_model.dart';
 
@@ -81,6 +81,8 @@ Future<dynamic> _getHomeJson() async {
     return false;
   },
   );
+  print('CARTSINI HOME #####################################');
+  print(Constants.shopHome);
   return json.decode(response.body);
 }
 
@@ -98,8 +100,7 @@ Future fetchHomePageResponse() async {
   totalProducts = dataFromResponse["data"]["product_count"];
 
 //DATA BANNER =========================================================================================
-  print('BANNERRRRRR#####################################');
-  print(dataFromResponse["data"]["banner"]);
+
 
   dataFromResponse["data"]["banner"].forEach((dataBaner) {
     Banner_ _baner = new Banner_(

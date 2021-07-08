@@ -2,7 +2,7 @@ import 'package:edagang/models/biz_model.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'dart:async';
 import 'dart:convert';
-import 'package:edagang/utils/constant.dart';
+import 'package:edagang/helper/constant.dart';
 import 'package:http/http.dart' as http;
 
 class SmartbizScopedModel extends Model {
@@ -26,14 +26,16 @@ class SmartbizScopedModel extends Model {
     };
 
     var response = await http.post(
-      Constants.bizAPI+'/biz/category',
+      Constants.bizAPI+'/biz/v2/category',
       headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
       body: json.encode(postData),
     ).catchError((error) {
-      print(error.toString());
+      print('BIZ Category Error: '+error.toString());
       return false;
     },
     );
+    print('BIZ Category ==============================================');
+    print(Constants.bizAPI+'/biz/v2/category?category_id='+catId.toString());
     return json.decode(response.body);
   }
 
@@ -44,8 +46,7 @@ class SmartbizScopedModel extends Model {
     notifyListeners();
 
     var dataFromResponse = await _getBizcat(catId);
-    print('BIZ Category==============================================');
-    print(dataFromResponse);
+    //print(dataFromResponse);
 
     ctr = dataFromResponse["data"]["businesses"].length;
     category_name = dataFromResponse['data']['category']['category_name'];

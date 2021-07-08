@@ -7,8 +7,8 @@ import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/screens/shop/product_merchant.dart';
 import 'package:edagang/screens/shop/shop_cart.dart';
 import 'package:edagang/sign_in.dart';
-import 'package:edagang/utils/constant.dart';
-import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/helper/constant.dart';
+import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
@@ -293,7 +293,7 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
                     await FlutterShare.share(
                       title: 'Cartsini',
                       text: '',
-                      linkUrl: 'https://shopapp.e-dagang.asia/product/'+pid.toString(),
+                      linkUrl: 'https://edagang.page.link/?link=https://shopapp.e-dagang.asia/product/'+pid.toString(),
                       chooserTitle: _title,
                     );
                   },

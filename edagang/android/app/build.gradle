@@ -4,7 +4,7 @@ buildscript {
     }
     dependencies {
         // OneSignal-Gradle-Plugin
-        //classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.10.2, 0.99.99]'
+        //classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.13.2, 0.99.99]'
         //classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.12.6, 0.99.99]'
         classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.12.9, 0.99.99]'
     }
@@ -57,7 +57,7 @@ android {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         applicationId "com.digital.dagang.asia.edagang"
-        minSdkVersion 19
+        minSdkVersion 20
         targetSdkVersion 29
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -101,6 +101,7 @@ dependencies {
     implementation "androidx.multidex:multidex:2.0.1"
     implementation 'com.google.firebase:firebase-core:16.0.9'
     implementation 'com.facebook.android:facebook-login:[8.1)'
+    //implementation 'com.onesignal:OneSignal:3.12.7'
     implementation 'com.huawei.hms:push:4.0.3.300'
     implementation 'com.huawei.hms:location:4.0.0.300'
     androidTestImplementation 'androidx.test:runner:1.2.0'

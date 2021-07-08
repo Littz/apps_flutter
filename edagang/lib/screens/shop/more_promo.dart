@@ -4,6 +4,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class ProductListPromotion extends StatefulWidget {
@@ -75,8 +76,8 @@ class KeyValuePairDropdownState3 extends State<ProductListPromotion> {
           ),
           title: Text(
             widget.catName, //+' - '+widget.total.toString(),
-            style: TextStyle(
-              fontSize: 18, color: Colors.black,
+            style: GoogleFonts.lato(
+              textStyle: TextStyle(fontSize: 17 , fontWeight: FontWeight.w600,),
             ),
           ),
           actions: <Widget>[

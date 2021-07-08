@@ -3,8 +3,8 @@ import 'package:edagang/main.dart';
 import 'package:edagang/models/ads_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/sign_in.dart';
-import 'package:edagang/utils/constant.dart';
-import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/helper/constant.dart';
+import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:edagang/widgets/SABTitle.dart';
 import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
@@ -140,16 +140,6 @@ class _AutoDlShowcasePageState extends State<AutoDlShowcase> with TickerProvider
 
   bool get _showTitle {
     return _scrollController.hasClients && _scrollController.offset > xpandedHeight - kToolbarHeight;
-  }
-
-
-  Future share() async {
-    await FlutterShare.share(
-    title: 'Blurb',
-    text: '',
-    linkUrl: 'https://blurbapp.e-dagang.asia/auto/',
-    chooserTitle: widget.autoTitle,
-    );
   }
 
   @override
@@ -334,12 +324,10 @@ class _AutoDlShowcasePageState extends State<AutoDlShowcase> with TickerProvider
                         tag: "Cartsini",
                         child: CachedNetworkImage(
                           placeholder: (context, url) => Container(
-                            width: 50,
-                            height: 50,
+                            alignment: Alignment.center,
                             color: Colors.transparent,
-                            child: CupertinoActivityIndicator(
-                              radius: 17,
-                            ),
+                            child: Image.asset('assets/logo_edagang.png', width: 254,
+                              height: 100,),
                           ),
                           imageUrl: image.file_path,
                           fit: BoxFit.cover,
@@ -489,7 +477,7 @@ class _AutoDlShowcasePageState extends State<AutoDlShowcase> with TickerProvider
                         await FlutterShare.share(
                           title: 'Blurb',
                           text: '',
-                          linkUrl: 'https://blurbapp.e-dagang.asia/auto/'+_aid.toString(),
+                          linkUrl: 'https://edagang.page.link/?link=https://blurbapp.e-dagang.asia/auto/'+_aid.toString(),
                           chooserTitle: atitle ?? '',
                         );
                       },

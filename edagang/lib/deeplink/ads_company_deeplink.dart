@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/main.dart';
 import 'package:edagang/scoped/ads_company.dart';
 import 'package:edagang/screens/ads/ads_prop_detail.dart';
-import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:edagang/widgets/SABTitle.dart';
 import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
@@ -12,6 +12,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:intl/intl.dart';
 
@@ -40,7 +41,7 @@ class _BlurbCompanyPropertyDlPageState extends State<BlurbCompanyPropertyDlPage>
   @override
   Widget build(BuildContext context) {
     BlurbScopedModel propertyModel = BlurbScopedModel();
-    propertyModel.fetchCourseList(int.parse(widget.bizId));
+    propertyModel.fetchBlurbCompany(int.parse(widget.bizId));
 
     return ScopedModel<BlurbScopedModel>(
       model: propertyModel,
@@ -136,7 +137,7 @@ class _BlurbPropertyListDlState extends State<BlurbPropertyListDlPage> {
                           await FlutterShare.share(
                             title: 'BlurbProperty',
                             text: '',
-                            linkUrl: 'https://blurbapp.e-dagang.asia/company/'+model.cid.toString(),
+                            linkUrl: 'https://edagang.page.link/?link=https://blurbapp.e-dagang.asia/company/'+model.cid.toString(),
                             chooserTitle: model.getCompanyName() ?? '',
                           );
                         },
@@ -187,8 +188,13 @@ class _BlurbPropertyListDlState extends State<BlurbPropertyListDlPage> {
                                 child: CachedNetworkImage(
                                   imageUrl: model.getLogo() ?? "",
                                   //fit: BoxFit.cover,
-                                  placeholder: (context, url) => CircularProgressIndicator(),
-                                  errorWidget: (context, url, error) => Icon(Icons.error_outline),
+                                  placeholder: (context, url) => Container(
+                                    alignment: Alignment.center,
+                                    color: Colors.transparent,
+                                    child: Image.asset('assets/images/ed_logo_greys.png', width: 60,
+                                      height: 60,),
+                                  ),
+                                  errorWidget: (context, url, error) => Icon(LineAwesomeIcons.file_image_o, size: 44, color: Color(0xffcecece),),
                                 ),
                               ),
                             ),
@@ -346,7 +352,7 @@ class _BlurbPropertyListDlState extends State<BlurbPropertyListDlPage> {
                                   imageUrl: model.getLogo() ?? "",
                                   fit: BoxFit.cover,
                                   placeholder: (context, url) => CircularProgressIndicator(),
-                                  errorWidget: (context, url, error) => Icon(Icons.error_outline),
+                                  errorWidget: (context, url, error) => Icon(LineAwesomeIcons.file_image_o, size: 44, color: Color(0xffcecece),),
                                 ),
                               ),
                             ),
@@ -405,7 +411,7 @@ class _BlurbPropertyListDlState extends State<BlurbPropertyListDlPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Image.asset('assets/icons/empty.png', height: 120,),
+                        Image.asset('assets/images/ed_logo_grey.png', height: 150,),
                         Text('No listing at the moment.',
                           style: GoogleFonts.lato(
                             textStyle: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w600,),
@@ -465,12 +471,10 @@ class _BlurbPropertyListDlState extends State<BlurbPropertyListDlPage> {
                           borderRadius: BorderRadius.circular(5),
                           child: CachedNetworkImage(
                             placeholder: (context, url) => Container(
-                              width: 40,
-                              height: 40,
+                              alignment: Alignment.center,
                               color: Colors.transparent,
-                              child: CupertinoActivityIndicator(
-                                radius: 15,
-                              ),
+                              child: Image.asset('assets/images/ed_logo_greys.png', width: 60,
+                                height: 60,),
                             ),
                             imageUrl: data.images[0].file_path,
                             fit: BoxFit.cover,

@@ -2,8 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/main.dart';
 import 'package:edagang/models/shop_model.dart';
 import 'package:edagang/scoped/scoped_product.dart';
-import 'package:edagang/utils/constant.dart';
-import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/helper/constant.dart';
+import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:edagang/widgets/SABTitle.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/product_grid_card.dart';
@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 
@@ -237,9 +238,12 @@ class ProfileMerchant extends StatelessWidget {
                           ),
                         ),
                         placeholder: (context, url) => Container(
-                          child: CupertinoActivityIndicator(radius: 15,),
+                          alignment: Alignment.center,
+                          color: Colors.transparent,
+                          child: Image.asset('assets/images/ed_logo_greys.png', width: 50,
+                            height: 50,),
                         ),
-                        errorWidget: (context, url, error) => ClipOval(child: Image.asset('assets/icons/ic_image_error.png', height: 75, width: 75, fit: BoxFit.cover,)),
+                        errorWidget: (context, url, error) => Icon(LineAwesomeIcons.file_image_o, size: 44, color: Color(0xffcecece),),
                       ),
                     ),
                   ),
@@ -296,7 +300,7 @@ class ProfileMerchant extends StatelessWidget {
                               await FlutterShare.share(
                                 title: 'Cartsini',
                                 text: '',
-                                linkUrl: 'https://shopapp.e-dagang.asia/merchant/'+model.getMid().toString(),
+                                linkUrl: 'https://edagang.page.link/?link=https://shopapp.e-dagang.asia/merchant/'+model.getMid().toString(),
                                 chooserTitle: model.getCompanyName(),
                               );
                             },

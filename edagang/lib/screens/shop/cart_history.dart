@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/main.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/screens/shop/cart_review.dart';
-import 'package:edagang/utils/constant.dart';
+import 'package:edagang/helper/constant.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/progressIndicator.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -43,7 +43,7 @@ class _CartHistoryOrderPageState extends State<CartHistory> {
           title: Text(
             "My Orders",
             style: GoogleFonts.lato(
-              textStyle: TextStyle(fontSize: 18, color: Colors.black,),
+              textStyle: TextStyle(fontSize: 17 , fontWeight: FontWeight.w600,),
             ),
           ),
         ),
@@ -213,34 +213,13 @@ class HistoryOrdersBody extends StatelessWidget {
                                                         Container(
                                                           height: 40,
                                                           alignment: Alignment.bottomRight,
-                                                          child: pstatus == '0' ? Text('') : item.reviewed == '0' ?
-                                                          RaisedButton(
-                                                            shape: StadiumBorder(),
-                                                            onPressed: () {Navigator.push(context, SlideRightRoute(page: WriteReview(item.product_id,item.main_image,item.product_name,data.id.toString(),ogrp.merchant_name,kurier)));},
-                                                            child: new Text(
-                                                              "Review",
-                                                              textAlign: TextAlign.center,
-                                                              style: GoogleFonts.lato(
-                                                                textStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
-                                                              ),
-                                                            ),
-                                                            color: Colors.deepOrange,
-                                                            textColor: Colors.white,
-                                                            elevation: 1.0,
-                                                            padding: EdgeInsets.all(0.0),
-                                                          ) : Text(
-                                                            'Reviewed',
-                                                            textAlign: TextAlign.right,
-                                                            style: GoogleFonts.lato(
-                                                              textStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Colors.grey.shade600),
-                                                            ),
-                                                          )
+                                                          child: prdReview(data.status, item.reviewed, item.product_id,item.main_image,item.product_name,data.id,ogrp.merchant_name,kurier)
                                                         )
                                                       ],
                                                     ),
                                                     Container(
                                                       padding: EdgeInsets.only(top: 3),
-                                                      child: pstatus == '1' ? Row(
+                                                      child: data.status == '1' ? Row(
                                                         mainAxisAlignment: MainAxisAlignment.start,
                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                         mainAxisSize: MainAxisSize.min,
@@ -309,17 +288,7 @@ class HistoryOrdersBody extends StatelessWidget {
                             ),
                           ),
                           Container(
-                            child: data.payment_err_code == '00' ? Text(
-                              'Delivered',
-                              style: GoogleFonts.lato(
-                                textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.green.shade600),
-                              ),
-                            ) : Text(
-                              'Cancelled',
-                              style: GoogleFonts.lato(
-                                textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.red),
-                              ),
-                            ),
+                            child: odrStatus(data.status.toString()),
                           ),
                         ]
                       ),
@@ -332,6 +301,82 @@ class HistoryOrdersBody extends StatelessWidget {
         },
       ),
     );
+  }
+
+
+  Widget prdReview(String status, String review, String pid, String img, String pname, int id, String merchant, String kurier) {
+    switch (status) {
+      case '1':
+        {
+          switch (review) {
+            case "0":
+              return RaisedButton(
+                shape: StadiumBorder(),
+                onPressed: () {
+                  Navigator.push(context, SlideRightRoute(page: WriteReview(pid,img,pname,id.toString(),merchant,kurier)));
+                },
+                child: new Text(
+                  "Review",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.lato(
+                    textStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
+                  ),
+                ),
+                color: Colors.deepOrange,
+                textColor: Colors.white,
+                elevation: 1.0,
+                padding: EdgeInsets.all(0.0),
+              );
+              break;
+            default:
+              return Text(
+                'Reviewed',
+                textAlign: TextAlign.right,
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Colors.grey.shade600),
+                ),
+              );
+              break;
+          }
+        }
+        break;
+      default:
+        return Container();
+        break;
+    }
+  }
+
+  Widget odrStatus(String value) {
+    switch (value) {
+      case '1':
+        return Text(
+          'Delivered',
+          style: GoogleFonts.lato(
+            textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.green.shade600),
+          ),
+        );
+        break;
+      case '0':
+        return Text(
+          'Unpaid',
+          style: GoogleFonts.lato(
+            textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.red),
+          ),
+        );
+        break;
+      case '6':
+        return Text(
+          'Cancelled',
+          style: GoogleFonts.lato(
+            textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.red),
+          ),
+        );
+        break;
+      default:
+        return Container();
+        break;
+    }
+
   }
 
   Widget dateStatus(String txndate, String status) {

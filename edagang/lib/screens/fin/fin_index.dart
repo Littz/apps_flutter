@@ -3,7 +3,7 @@ import 'package:edagang/models/biz_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/screens/fin/fin_prod_list.dart';
 import 'package:edagang/sign_in.dart';
-import 'package:edagang/widgets/emptyData.dart';
+import 'package:edagang/widgets/emptyList.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/webview_bb.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -120,7 +121,7 @@ class _FinancePageState extends State<FinancePage> {
                             automaticallyImplyLeading: false,
                             centerTitle: true,
                             title: Image.asset('assets/icons/ic_fintool.png', height: 24, width: 107,),
-                            actions: [
+                            /*actions: [
                               Padding(
                                 padding: EdgeInsets.only(left: 2, right: 10,),
                                 child: model.isAuthenticated ?
@@ -151,7 +152,7 @@ class _FinancePageState extends State<FinancePage> {
                                   ),
                                 ),
                               ),
-                            ],
+                            ],*/
                             flexibleSpace: FlexibleSpaceBar(
                               background: Container(
                                   color: Colors.white,
@@ -182,12 +183,11 @@ class _FinancePageState extends State<FinancePage> {
                                                           child: Center(
                                                             child: CachedNetworkImage(
                                                               placeholder: (context, url) => Container(
-                                                                width: 40,
-                                                                height: 40,
+                                                                alignment: Alignment.center,
                                                                 color: Colors.transparent,
-                                                                child: CupertinoActivityIndicator(radius: 15,),
+                                                                child: Image.asset('assets/logo_edagang.png', height: 90,),
                                                               ),
-                                                              imageUrl: 'https://finapp.e-dagang.asia' + model.fbanners[index].imageUrl,
+                                                              imageUrl: model.fbanners[index].imageUrl,
                                                               fit: BoxFit.fill,
                                                               height: 150,
                                                               width: MediaQuery.of(context).size.width,
@@ -244,9 +244,9 @@ class _FinancePageState extends State<FinancePage> {
                         padding: EdgeInsets.only(left: 8, top: 8, right: 8, bottom: 16),
                         child: TabBarView(
                             children: [
-                              model.finsurans.length > 0 ? _buildInsurance(key: "key1") : EmptyList(),
-                              model.finvests.length > 0 ? _buildInvestment(key: "key2") : EmptyList(),
-                              model.finances.length > 0 ? _buildFinancial(key: "key3") : EmptyList(),
+                              model.finsurans.length > 0 ? _buildInsurance(key: "key1") : EmptyList('No Insurance activity at the moment.',subTitle: 'Please come back later.'),
+                              model.finvests.length > 0 ? _buildInvestment(key: "key2") : EmptyList('No Investment activity at the moment.',subTitle: 'Please come back later.'),
+                              model.finances.length > 0 ? _buildFinancial(key: "key3") : EmptyList('No Financial activity at the moment.',subTitle: 'Please come back later.'),
                             ]
                         ),
                       )
@@ -266,66 +266,94 @@ class _FinancePageState extends State<FinancePage> {
               removeTop: true,
               child: GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 0.805,
-                      crossAxisSpacing: 1.5,
-                      mainAxisSpacing: 1.5),
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 1.5,
+                    crossAxisSpacing: 1.5,
+                    childAspectRatio: 0.820,),
                   key: PageStorageKey(key),
                   itemCount: model.finsurans.length,
                   itemBuilder: (ctx, index) {
                     var data = model.finsurans[index];
-                    return Container(
-                        alignment: Alignment.center,
-                        child: Card(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.push(context, SlideRightRoute(page: FinDetailPage(data.id.toString(),data.company_name)));
-                              //Navigator.push(context, SlideRightRoute(page: WebviewGeneral(data.webviewUrl, data.title)));
-                            },
-                            child: Container(
-                                alignment: Alignment.bottomCenter,
-                                padding: new EdgeInsets.only(bottom: 8.0),
-                                decoration: new BoxDecoration(
-                                  image: data.id == 6 || data.id == 10 ? DecorationImage(
-                                    image: CachedNetworkImageProvider('http://finapp.e-dagang.asia' + data.logo ?? ''),
-                                  ) : DecorationImage(
-                                    image: CachedNetworkImageProvider('http://finapp.e-dagang.asia' + data.logo ?? ''),
-                                    fit: BoxFit.cover,
-                                  ),
-                                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                                ),
-                                child: Padding(
-                                    padding: EdgeInsets.only(left: 7.0, right: 7.0),
-                                    child: Stack(
-                                      children: <Widget>[
-                                        Text(data.company_licno.toLowerCase() == 'na' ? data.company_name ?? '' : data.company_name + '\n' + data.company_licno  ?? '',
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(context, SlideRightRoute(page: FinDetailPage(data.id.toString(),data.company_name)));
+                      },
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Container(
+                            padding: const EdgeInsets.all(0.0),
+                            child: Card(
+                              color: Colors.white,
+                              elevation: 0.0,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.transparent,
+                                            borderRadius: BorderRadius.circular(7)
+                                        ),
+                                        child: data.logo == null ? Image.asset(
+                                          'assets/icons/ic_launcher_new.png',
+                                          fit: BoxFit.cover,)
+                                            : CachedNetworkImage(
+                                          //fit: BoxFit.fitHeight,
+                                          imageUrl: data.logo ?? '',
+                                          imageBuilder: (context, imageProvider) => Container(
+                                            decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                  alignment: Alignment.center,
+                                                  image: imageProvider,
+                                                  //fit: BoxFit.fitHeight, //data.company_name.toUpperCase() == 'KELANA MOTOR' ? BoxFit.fitWidth : BoxFit.fitHeight,
+                                                ),
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(8.0),
+                                                    //topRight: Radius.circular(8.0)
+                                                )
+                                            ),
+                                          ),
+                                          placeholder: (context, url) => Container(
+                                            alignment: Alignment.center,
+                                            width: 90,
+                                            height: 90,
+                                            color: Colors.transparent,
+                                            child: Image.asset('assets/images/ed_logo_greys.png'),
+                                          ),
+                                          errorWidget: (context, url, error) =>
+                                              Icon(LineAwesomeIcons.file_image_o, size: 44, color: Color(0xffcecece),),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 5.0),
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text(data.pic_name == null ? data.company_name.toUpperCase() : data.pic_name.toUpperCase(),
                                           textAlign: TextAlign.center,
                                           style: GoogleFonts.lato(
-                                            textStyle: TextStyle(fontSize: 13,
-                                                foreground: Paint()
-                                                  ..style = PaintingStyle.stroke
-                                                  ..strokeWidth = 4
-                                                  ..color = Colors.black38, fontWeight: FontWeight.w600),
+                                            textStyle: TextStyle(color: Colors.black87, fontSize: 12, fontWeight: FontWeight.w600),
                                           ),
-                                          maxLines: 5,
+                                          maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
                                         ),
-
-                                        Text(data.company_licno.toLowerCase() == 'na' ? data.company_name ?? '' : data.company_name + '\n' + data.company_licno ?? '',
+                                        /*Text(data.company_licno.toString(),
                                           textAlign: TextAlign.center,
                                           style: GoogleFonts.lato(
-                                            textStyle: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
+                                            textStyle: TextStyle(color: Colors.black87, fontSize: 12, fontWeight: FontWeight.w500),
                                           ),
-                                          maxLines: 5,
-                                          overflow: TextOverflow.ellipsis,
-                                        )
-                                      ],
+                                        ),*/
+                                      ]
                                     ),
-                                )
+                                    SizedBox(height: 5.0)
+                                  ]
+                              ),
                             ),
-                          ),
-                        )
+                          )
+                      ),
                     );
                   }
               )
@@ -343,67 +371,89 @@ class _FinancePageState extends State<FinancePage> {
               child: GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      childAspectRatio: 0.805,
+                      childAspectRatio: 0.820,
                       crossAxisSpacing: 1.5,
                       mainAxisSpacing: 1.5),
                   key: PageStorageKey(key),
                   itemCount: model.finvests.length,
                   itemBuilder: (ctx, index) {
                     var data = model.finvests[index];
-                    return Container(
-                        alignment: Alignment.center,
-                        child: Card(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                          child: InkWell(
-                            onTap: () {
-                              FirebaseAnalytics().logEvent(name: 'Fintools_Investment_'+data.company_name,parameters:null);
-                              Navigator.push(context, SlideRightRoute(page: FinDetailPage(data.id.toString(),data.company_name)));
-                              //Navigator.push(context, SlideRightRoute(page: WebviewWidget(data., data.title)));
-                              //Navigator.push(context, SlideRightRoute(page: WebviewGeneral(data.webviewUrl, data.title)));
-                            },
-                            child: Container(
-                                alignment: Alignment.bottomCenter,
-                                padding: new EdgeInsets.only(bottom: 8.0),
-                                decoration: new BoxDecoration(
-                                  image: data.id == 5 ? DecorationImage(
-                                    image: CachedNetworkImageProvider('http://finapp.e-dagang.asia' + data.logo ?? ''),
-                                  ) : DecorationImage(
-                                    image: CachedNetworkImageProvider('http://finapp.e-dagang.asia' + data.logo ?? ''),
-                                    fit: BoxFit.cover,
-                                  ),
-                                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.only(left: 7.0, right: 7.0),
-                                  child: Stack(
-                                    children: <Widget>[
-                                      Text(data.company_licno.toLowerCase() == 'na' ? data.company_name ?? '' : data.company_name + '\n' + data.company_licno  ?? '',
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.lato(
-                                          textStyle: TextStyle(fontSize: 13,
-                                              foreground: Paint()
-                                                ..style = PaintingStyle.stroke
-                                                ..strokeWidth = 4
-                                                ..color = Colors.black38, fontWeight: FontWeight.w600),
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(context, SlideRightRoute(page: FinDetailPage(data.id.toString(),data.company_name)));
+                      },
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Container(
+                            padding: const EdgeInsets.all(0.0),
+                            child: Card(
+                              color: Colors.white,
+                              elevation: 0.0,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.transparent,
+                                            borderRadius: BorderRadius.circular(8)
                                         ),
-                                        maxLines: 5,
-                                        overflow: TextOverflow.ellipsis,
+                                        child: data.logo == null ? Image.asset(
+                                          'assets/icons/ic_launcher_new.png',
+                                          fit: BoxFit.cover,)
+                                            : CachedNetworkImage(
+                                          //fit: BoxFit.fitHeight,
+                                          imageUrl: data.logo ?? '',
+                                          imageBuilder: (context, imageProvider) => Container(
+                                            decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                  alignment: Alignment.center,
+                                                  image: imageProvider,
+                                                  //fit: BoxFit.fitHeight,
+                                                ),
+                                                borderRadius: BorderRadius.all(Radius.circular(8.0),)
+                                            ),
+                                          ),
+                                          //placeholder: (context, url) => Container(color: Colors.grey.shade200,),
+                                          placeholder: (context, url) => Container(
+                                            alignment: Alignment.center,
+                                            color: Colors.transparent,
+                                            child: Image.asset('assets/images/ed_logo_greys.png', width: 110,
+                                              height: 110,),
+                                          ),
+                                          errorWidget: (context, url, error) => Icon(LineAwesomeIcons.file_image_o, size: 44, color: Color(0xffcecece),),
+                                        ),
                                       ),
-
-                                      Text(data.company_licno.toLowerCase() == 'na' ? data.company_name ?? '' : data.company_name + '\n' + data.company_licno ?? '',
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.lato(
-                                          textStyle: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
-                                        ),
-                                        maxLines: 5,
-                                        overflow: TextOverflow.ellipsis,
-                                      )
-                                    ],
-                                  ),
-                                )
+                                    ),
+                                    SizedBox(height: 5.0),
+                                    Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Text(data.company_name.toUpperCase(),
+                                            textAlign: TextAlign.center,
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(color: Colors.black87, fontSize: 12, fontWeight: FontWeight.w600),
+                                            ),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          /*Text(data.company_licno.toLowerCase() == 'na' ? '' : data.company_licno,
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(color: Colors.black87, fontSize: 12, fontWeight: FontWeight.w500),
+                                          ),
+                                        ),*/
+                                        ]
+                                    ),
+                                    SizedBox(height: 5.0)
+                                  ]
+                              ),
                             ),
-                          ),
-                        )
+                          )
+                      ),
                     );
                   }
               )
@@ -421,64 +471,83 @@ class _FinancePageState extends State<FinancePage> {
               child: GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      childAspectRatio: 0.805,
+                      childAspectRatio: 0.705,
                       crossAxisSpacing: 1.5,
                       mainAxisSpacing: 1.5),
                   key: PageStorageKey(key),
                   itemCount: model.finances.length,
                   itemBuilder: (ctx, index) {
                     var data = model.finances[index];
-                    return Container(
-                        alignment: Alignment.center,
-                        child: Card(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                          child: InkWell(
-                            onTap: () {
-                              FirebaseAnalytics().logEvent(name: 'Fintools_Financial_'+data.company_name,parameters:null);
-                              //Navigator.push(context, SlideRightRoute(page: WebviewWidget(data., data.title)));
-                              //Navigator.push(context, SlideRightRoute(page: WebviewGeneral(data.webviewUrl, data.title)));
-                            },
-                            child: Container(
-                                alignment: Alignment.bottomCenter,
-                                padding: new EdgeInsets.only(bottom: 8.0),
-                                decoration: new BoxDecoration(
-                                  image: new DecorationImage(
-                                    image: CachedNetworkImageProvider('http://finapp.e-dagang.asia' + data.logo ?? ''),
-                                    fit: BoxFit.cover,
-                                  ),
-                                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                                ),
-                                child: Padding(
-                                    padding: EdgeInsets.only(left: 7.0, right: 7.0),
-                                    child: Stack(
-                                      children: <Widget>[
-                                        Text(data.company_name ?? '',
-                                          textAlign: TextAlign.center,
-                                          style: GoogleFonts.lato(
-                                            textStyle: TextStyle(fontSize: 14,
-                                                foreground: Paint()
-                                                  ..style = PaintingStyle.stroke
-                                                  ..strokeWidth = 4
-                                                  ..color = Colors.black38, fontWeight: FontWeight.w600),
-                                          ),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(context, SlideRightRoute(page: FinDetailPage(data.id.toString(),data.company_name)));
+                      },
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Container(
+                            padding: const EdgeInsets.all(0.0),
+                            child: Card(
+                              color: Colors.white,
+                              elevation: 0.0,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.transparent,
+                                            borderRadius: BorderRadius.circular(7)
                                         ),
-
-                                        Text(data.company_name ?? '',
+                                        child: data.logo == null ? Image.asset(
+                                          'assets/icons/ic_launcher_new.png',
+                                          fit: BoxFit.cover,)
+                                            : CachedNetworkImage(
+                                          fit: BoxFit.fitHeight,
+                                          imageUrl: data.logo ?? '',
+                                          imageBuilder: (context, imageProvider) => Container(
+                                            decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                  alignment: Alignment.center,
+                                                  image: imageProvider,
+                                                  fit: BoxFit.fitHeight,
+                                                ),
+                                                borderRadius: BorderRadius.all(Radius.circular(8.0),)
+                                            ),
+                                          ),
+                                          placeholder: (context, url) => Container(color: Colors.grey.shade200,),
+                                          errorWidget: (context, url, error) => Icon(Icons.image_rounded, size: 36,),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 5.0),
+                                    Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Text(data.company_name.toUpperCase(),
+                                            textAlign: TextAlign.center,
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(color: Colors.black87, fontSize: 12, fontWeight: FontWeight.w600),
+                                            ),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          /*Text(data.company_licno.toLowerCase() == 'na' ? '' : data.company_licno,
                                           textAlign: TextAlign.center,
                                           style: GoogleFonts.lato(
-                                            textStyle: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
+                                            textStyle: TextStyle(color: Colors.black87, fontSize: 12, fontWeight: FontWeight.w500),
                                           ),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        )
-                                      ],
-                                    )
-                                )
+                                        ),*/
+                                        ]
+                                    ),
+                                    SizedBox(height: 5.0)
+                                  ]
+                              ),
                             ),
-                          ),
-                        )
+                          )
+                      ),
                     );
                   }
               )

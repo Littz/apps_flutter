@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:edagang/models/biz_model.dart';
-import 'package:edagang/utils/constant.dart';
+import 'package:edagang/helper/constant.dart';
 import 'package:http/http.dart' as http;
 import 'package:scoped_model/scoped_model.dart';
 
@@ -31,12 +31,14 @@ void addHomeFinanceList(Home_business finance) {_finances.add(finance);}
 
 Future<dynamic> _getHomeFinJson() async {
   var response = await http.get(
-    'https://finapp.e-dagang.asia/api/fintools/home',
+    'https://finapp.e-dagang.asia/api/fintools/v2/home',
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
     return false;
   });
+  print('FINTOOLS HOME #####################################');
+  print('https://finapp.e-dagang.asia/api/fintools/v2/home');
   return json.decode(response.body);
 }
 
@@ -50,9 +52,6 @@ Future fetchHomeFinResponse() async {
   notifyListeners();
   var dataFromResponse = await _getHomeFinJson();
 
-  print('HOME FIN BANNERRRRRR #####################################');
-  print(dataFromResponse["data"]["banner"]);
-
   dataFromResponse["data"]["banner"].forEach((fBaner) {
     Home_banner _fbaner = new Home_banner(
       title: fBaner['title'],
@@ -64,8 +63,8 @@ Future fetchHomeFinResponse() async {
     addHomeFinBannerList(_fbaner);
   });
 
-  print('HOME FIN CATEGORYYY #####################################');
-  print(dataFromResponse["data"]["category"]);
+  //print('HOME FIN CATEGORYYY #####################################');
+  //print(dataFromResponse["data"]["category"]);
 
   dataFromResponse["data"]["category"].forEach((dataCat) {
     Home_category _cat = new Home_category(
@@ -75,8 +74,8 @@ Future fetchHomeFinResponse() async {
     addHomeFinCategoryList(_cat);
   });
 
-  print('HOME FIN INSURANCE #####################################');
-  print(dataFromResponse["data"]["insurans"]);
+  //print('HOME FIN INSURANCE #####################################');
+  //print(dataFromResponse["data"]["insurans"]);
 
   dataFromResponse["data"]["insurans"].forEach((dataIns) {
 
@@ -96,8 +95,8 @@ Future fetchHomeFinResponse() async {
     addHomeInsuranList(_insuran);
   });
 
-  print('HOME FIN INVESTMENT #####################################');
-  print(dataFromResponse["data"]["investment"]);
+  //print('HOME FIN INVESTMENT #####################################');
+  //print(dataFromResponse["data"]["investment"]);
 
   dataFromResponse["data"]["investment"].forEach((dataInv) {
 
@@ -117,8 +116,8 @@ Future fetchHomeFinResponse() async {
     addHomeInvestmentList(_invest);
   });
 
-  print('HOME FIN FINANCIAL #####################################');
-  print(dataFromResponse["data"]["financial"]);
+  //print('HOME FIN FINANCIAL #####################################');
+  //print(dataFromResponse["data"]["financial"]);
 
   dataFromResponse["data"]["financial"].forEach((dataFin) {
 

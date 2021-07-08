@@ -7,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:edagang/scoped/main_scoped.dart';
-import 'package:edagang/utils/constant.dart';
+import 'package:edagang/helper/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -446,7 +446,6 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
       message = responseData["data"];
     }
     print("MESG >>>> " + message);
-    //print("MESG >>>> "+responseData["data"]);
 
     final Map<String, dynamic> successInformation = {
       'success': !hasError,
@@ -456,7 +455,9 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
     if (successInformation['success']) {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('token', responseData['data']['token']);
+      prefs.setString('nama', model.getFname());
       prefs.setString('email', responseData['data']['email']);
+      prefs.setString('photo', Constants.dummyProfilePic);
       prefs.setString('login_type', '0');
 
       model.loggedInUser();
@@ -467,6 +468,7 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
       model.fetchAddressList();
       model.fetchBankList();
       model.fetchOrderHistoryResponse();
+      model.fetchOrderStatusResponse();
 
       Navigator.of(context).pushReplacementNamed("/Main");
       print('Sukses login! => ' + successInformation['message']);
@@ -625,10 +627,10 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
     if (successInformation['success']) {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('token', responseData['data']['token']);
-      prefs.setString('email', responseData['data']['email']);
+      prefs.setString('nama', userProfile["name"]);
+      prefs.setString('email', userProfile["email"]);
       prefs.setString('login_type', '2');
-      prefs.setString(
-          'photo', userProfile["picture"]["data"]["url"].toString());
+      prefs.setString('photo', userProfile["picture"]["data"]["url"].toString());
 
       model.loggedInUser();
       model.fetchProfile();
@@ -638,6 +640,7 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
       model.fetchAddressList();
       model.fetchBankList();
       model.fetchOrderHistoryResponse();
+      model.fetchOrderStatusResponse();
 
       Navigator.of(context).pushReplacementNamed("/Main");
       print('Sukses login! => ' + successInformation['message']);
@@ -748,7 +751,8 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
     if (successInformation['success']) {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('token', responseData['data']['token']);
-      prefs.setString('email', responseData['data']['email']);
+      prefs.setString('nama', _googleSignIn.currentUser.displayName);
+      prefs.setString('email', _googleSignIn.currentUser.email);
       prefs.setString('login_type', '1');
       prefs.setString('photo', _googleSignIn.currentUser.photoUrl.toString());
 
@@ -760,6 +764,7 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
       model.fetchAddressList();
       model.fetchBankList();
       model.fetchOrderHistoryResponse();
+      model.fetchOrderStatusResponse();
 
       Navigator.of(context).pushReplacementNamed("/Main");
       print('Sukses login! => ' + successInformation['message']);

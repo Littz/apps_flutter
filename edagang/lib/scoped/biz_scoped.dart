@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:edagang/models/address_model.dart';
 import 'package:edagang/models/biz_model.dart';
-import 'package:edagang/utils/constant.dart';
+import 'package:edagang/helper/constant.dart';
 import 'package:http/http.dart' as http;
 import 'package:scoped_model/scoped_model.dart';
 
@@ -29,12 +30,14 @@ bool get isLoadingCo => _isLoadingCo;
 
 Future<dynamic> _getVisitlist() async {
   var response = await http.get(
-    Constants.bizAPI+'/biz/latest',
+    Constants.bizAPI+'/biz/v2/latest',
   ).catchError((error) {
     print(error.toString());
     return false;
   });
-  return json.decode(response.body);
+  print('BIZ LATEST ==============================================');
+  print(Constants.bizAPI+'/biz/v2/latest');
+  //return json.decode(response.body);
 }
 
 Future fetchVisitedList() async {
@@ -42,8 +45,6 @@ Future fetchVisitedList() async {
   visitedlist.clear();
   notifyListeners();
   var dataFromResponse = await _getVisitlist();
-  print('BIZ COMPANY LIST==============================================');
-  print(dataFromResponse);
 
   dataFromResponse['data']['businesses'].forEach((bizList) {
 
@@ -92,7 +93,7 @@ Future fetchVisitedList() async {
       office_fax: bizList['office_fax'], // after migration -> int to string
       email: bizList['email'],
       website: bizList['website'],
-      logo: 'https://bizapp.e-dagang.asia'+bizList['logo'],
+      logo: bizList['logo'],
       verify: bizList['verified'],
       product: _product ?? [],
       award: _award ?? [],
@@ -105,14 +106,20 @@ Future fetchVisitedList() async {
   notifyListeners();
 }
 
+int totCompany;
+int getTotalCompany() {return totCompany;}
+int totCompanyPlus;
+int getTotalCompanyPlus() {return totCompanyPlus;}
 
 Future<dynamic> _getCompanylist() async {
   var response = await http.get(
-    Constants.bizAPI+'/biz/companies',
+    Constants.bizAPI+'/biz/v2/companies',
   ).catchError((error) {
     print(error.toString());
     return false;
   });
+  print('BIZ COMPANY LIST ==============================================');
+  print(Constants.bizAPI+'/biz/v2/companies');
   return json.decode(response.body);
 }
 
@@ -121,8 +128,6 @@ Future fetchCompanyList() async {
   notifyListeners();
   _isLoadingCo = true;
   var dataFromResponse = await _getCompanylist();
-  print('BIZ COMPANY LIST==============================================');
-  print(dataFromResponse);
 
   dataFromResponse['data']['companies'].forEach((comList) {
 
@@ -159,12 +164,14 @@ void addHomeVirtualList(Home_virtual vr) {_bvirtual.add(vr);}
 
 Future<dynamic> _getHomeBizJson() async {
   var response = await http.get(
-    'https://bizapp.e-dagang.asia/api/biz/home',
+    'https://bizapp.e-dagang.asia/api/biz/v2/home',
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
     return false;
   });
+  print('BIZ HOME #####################################');
+  print('https://bizapp.e-dagang.asia/api/biz/v2/home');
   return json.decode(response.body);
 }
 
@@ -177,8 +184,8 @@ Future fetchHomeBizResponse() async {
   notifyListeners();
   var dataFromResponse = await _getHomeBizJson();
 
-  print('HOME BIZ BANNERRRRRR #####################################');
-  print(dataFromResponse["data"]["banner"]);
+  totCompany = dataFromResponse["data"]["total"];
+  totCompanyPlus = dataFromResponse["data"]["total"] - 10;
 
   dataFromResponse["data"]["banner"].forEach((dataBaner) {
     Home_banner _banner = new Home_banner(
@@ -191,9 +198,6 @@ Future fetchHomeBizResponse() async {
     addHomeBannerList(_banner);
   });
 
-  print('HOME BIZ CATEGORYYY #####################################');
-  print(dataFromResponse["data"]["banner"]);
-
   dataFromResponse["data"]["category"].forEach((dataCat) {
     Home_category _cat = new Home_category(
       cat_id: dataCat['id'],
@@ -203,8 +207,8 @@ Future fetchHomeBizResponse() async {
     addHomeCategoryList(_cat);
   });
 
-  print('HOME BIZ BUSINESSSS #####################################');
-  print(dataFromResponse["data"]["businesses"]);
+  //print('HOME BIZ BUSINESSSS #####################################');
+  //print(dataFromResponse["data"]["businesses"]);
 
   dataFromResponse["data"]["businesses"].forEach((dataBiz) {
     Home_business _cat = new Home_business(
@@ -222,8 +226,8 @@ Future fetchHomeBizResponse() async {
     addHomeBusinessList(_cat);
   });
 
-  print('HOME BIZ VIRTUALLL #####################################');
-  print(dataFromResponse["data"]["virtual"]);
+  //print('HOME BIZ VIRTUALLL #####################################');
+  //print(dataFromResponse["data"]["virtual"]);
 
   dataFromResponse["data"]["virtual"].forEach((dataVr) {
 
@@ -259,12 +263,14 @@ void addVirtualPageList(Home_virtual vrp) {_bvirtuals.add(vrp);}
 
 Future<dynamic> _getVrBizJson() async {
   var response = await http.get(
-    'https://bizapp.e-dagang.asia/api/biz/vr',
+    'https://bizapp.e-dagang.asia/api/biz/v2/vr',
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
     return false;
   });
+  print('BIZ VIRTUAL REALITY #####################################');
+  print('https://bizapp.e-dagang.asia/api/biz/v2/vr');
   return json.decode(response.body);
 }
 
@@ -274,8 +280,8 @@ Future fetchVrBizResponse() async {
   notifyListeners();
   var dataFromResponse = await _getVrBizJson();
 
-  print('VR BIZ VIRTUALLL #####################################');
-  print(dataFromResponse["data"]["virtual"]);
+  //print('VR BIZ VIRTUALLL #####################################');
+  //print(dataFromResponse["data"]["virtual"]);
 
   dataFromResponse["data"]["virtual"].forEach((dataVr) {
 
@@ -298,8 +304,56 @@ Future fetchVrBizResponse() async {
     );
     addVirtualPageList(_vr);
   });
+  notifyListeners();
+}
 
 
+
+
+List<StateX> stlookup = [];
+List<StateX> get _stlookup => stlookup;
+void addStateList(StateX ste) {_stlookup.add(ste);}
+
+Future<dynamic> _getStateJson() async {
+  var response = await http.get(
+    'http://cartsini.my/api/lookup/state',
+    headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
+  ).catchError((error) {
+    print(error.toString());
+    return false;
+  });
+  print('API STATE LOOKUP #####################################');
+  print('http://cartsini.my/api/lookup/state');
+  return json.decode(response.body);
+}
+
+Future fetchStateLokup() async {
+  _stlookup.clear();
+
+  notifyListeners();
+  var dataFromResponse = await _getStateJson();
+
+  dataFromResponse["data"].forEach((dataVr) {
+
+    List<VRList> vrList = [];
+    dataVr["vr_list"].forEach((newVr) {
+      vrList.add(
+        new VRList(
+          vr_type: newVr["vr_type"], // after migration -> int to string
+          vr_name: newVr["vr_name"], // after migration -> int to string
+          vr_url: newVr["vr_url"],
+          vr_image: newVr["vr_image"], // after migration -> int to string
+        ),
+      );
+    });
+
+    Home_virtual _vr = new Home_virtual(
+      vr_id: dataVr['id'],
+      vr_desc: dataVr['desc'],
+      vr_list: vrList,
+    );
+    addVirtualPageList(_vr);
+  });
   notifyListeners();
 }
 

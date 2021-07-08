@@ -2,8 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/models/ads_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/sign_in.dart';
-import 'package:edagang/utils/constant.dart';
-import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/helper/constant.dart';
+import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:edagang/widgets/SABTitle.dart';
 import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'dart:convert';
 
 import 'package:scoped_model/scoped_model.dart';
@@ -62,7 +63,7 @@ class _OtherDetailPageState extends State<OtherDetailPage> with TickerProviderSt
         print("job ID : "+widget.jobId);
 
         http.post(
-          'https://blurbapp.e-dagang.asia/api/blurb/others/details?others_id='+widget.jobId,
+          'https://blurbapp.e-dagang.asia/api/blurb/others/v2/details?others_id='+widget.jobId,
           headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
         ).then((response) {
           print('OTHERS RESPONSE CODE /////////////////');
@@ -81,7 +82,7 @@ class _OtherDetailPageState extends State<OtherDetailPage> with TickerProviderSt
                 new Images(
                   id: newImage["id"],
                   property_id: newImage["product_id"],
-                  file_path: 'https://blurbapp.e-dagang.asia'+newImage["file_path"],
+                  file_path: newImage["file_path"],
                 ),
               );
             });
@@ -101,7 +102,7 @@ class _OtherDetailPageState extends State<OtherDetailPage> with TickerProviderSt
             title = data.title;
             descr = data.descr;
             company = data.company_name;
-            logo = 'https://blurbapp.e-dagang.asia'+data.company_logo;
+            logo = data.company_logo;
             images = data.image;
           });
           isLoading = false;
@@ -164,8 +165,7 @@ class _OtherDetailPageState extends State<OtherDetailPage> with TickerProviderSt
                 child: Container(
                     child: Text(title ?? '',
                       style: GoogleFonts.lato(
-                        textStyle: TextStyle(
-                          fontSize: 18, color: Color(0xff084B8C)),
+                        textStyle: TextStyle(fontSize: 17 , fontWeight: FontWeight.w600,),
                       ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
@@ -204,11 +204,35 @@ class _OtherDetailPageState extends State<OtherDetailPage> with TickerProviderSt
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(50),
                                 child: CachedNetworkImage(
+                                  //fit: BoxFit.fitHeight,
+                                  imageUrl: logo ?? '',
+                                  imageBuilder: (context, imageProvider) => Container(
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          alignment: Alignment.center,
+                                          image: imageProvider,
+                                          //fit: BoxFit.fitHeight,
+                                        ),
+                                        borderRadius: BorderRadius.all(Radius.circular(8.0),)
+                                    ),
+                                  ),
+                                  //placeholder: (context, url) => Container(color: Colors.grey.shade200,),
+                                  placeholder: (context, url) => Container(
+                                    alignment: Alignment.center,
+                                    color: Colors.transparent,
+                                    child: Image.asset('assets/images/ed_logo_greys.png', width: 60,
+                                      height: 60,),
+                                  ),
+                                  errorWidget: (context, url, error) => Icon(LineAwesomeIcons.file_image_o, size: 44, color: Color(0xffcecece),),
+                                ),
+
+
+                                /*CachedNetworkImage(
                                   imageUrl: logo ?? "",
                                   //fit: BoxFit.cover,
                                   placeholder: (context, url) => CircularProgressIndicator(),
                                   errorWidget: (context, url, error) => Icon(Icons.error_outline),
-                                ),
+                                ),*/
                               ),
                             ),
                           ),
@@ -306,7 +330,7 @@ class _OtherDetailPageState extends State<OtherDetailPage> with TickerProviderSt
                         await FlutterShare.share(
                           title: 'Blurb',
                           text: '',
-                          linkUrl: 'https://blurbapp.e-dagang.asia/others/'+_id.toString(),
+                          linkUrl: 'https://edagang.page.link/?link=https://blurbapp.e-dagang.asia/others/'+_id.toString(),
                           chooserTitle: title ?? '',
                         );
                       },

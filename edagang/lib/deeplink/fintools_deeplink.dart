@@ -2,8 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/main.dart';
 import 'package:edagang/models/biz_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
-import 'package:edagang/utils/constant.dart';
-import 'package:edagang/utils/custom_dialog.dart';
+import 'package:edagang/helper/constant.dart';
 import 'package:edagang/widgets/SABTitle.dart';
 import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
@@ -15,6 +14,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
@@ -236,8 +236,13 @@ class _FintoolDlPageState extends State<FintoolDlPage> with TickerProviderStateM
                                 borderRadius: BorderRadius.circular(50),
                                 child: CachedNetworkImage(
                                   imageUrl: _logo ?? "",
-                                  placeholder: (context, url) => CircularProgressIndicator(),
-                                  errorWidget: (context, url, error) => Icon(Icons.error_outline),
+                                  placeholder: (context, url) => Container(
+                                    alignment: Alignment.center,
+                                    color: Colors.transparent,
+                                    child: Image.asset('assets/images/ed_logo_greys.png', width: 60,
+                                      height: 60,),
+                                  ),
+                                  errorWidget: (context, url, error) => Icon(LineAwesomeIcons.file_image_o, size: 44, color: Color(0xffcecece),),
                                 ),
                               ),
                             ),
@@ -517,7 +522,7 @@ class _FintoolDlPageState extends State<FintoolDlPage> with TickerProviderStateM
                         await FlutterShare.share(
                           title: 'Fintools',
                           text: '',
-                          linkUrl: 'https://finapp.e-dagang.asia/fintools/'+_id.toString(),
+                          linkUrl: 'https://edagang.page.link/?link=https://finapp.e-dagang.asia/fintools/'+_id.toString(),
                           //linkUrl: reftype == 1 ? 'https://finapp.e-dagang.asia/insuran/'+widget.bizId : reftype == 2 ? 'https://finapp.e-dagang.asia/invest/'+widget.bizId : 'https://finapp.e-dagang.asia/finance/'+widget.bizId,
                           chooserTitle: widget.bizName,
                         );
@@ -611,15 +616,7 @@ class _FintoolDlPageState extends State<FintoolDlPage> with TickerProviderStateM
                           //leading: Icon(Icons.pin_drop, color: Color(0xff084B8C)),
                           trailing: Icon(Icons.chevron_right,color: Colors.grey),
                           onTap: () {
-                            showDialog(context: context,
-                                builder: (BuildContext context){
-                                  return CustomDialogBox(
-                                    title: data.product_name,
-                                    descriptions: data.overview,
-                                    text: "Close",
-                                  );
-                                }
-                            );
+                            _viewSvcProduct(data.file_path, data.product_name, data.overview, widget.bizName);
                           },
                         )
                       );
@@ -721,7 +718,7 @@ class _FintoolDlPageState extends State<FintoolDlPage> with TickerProviderStateM
                                   imageUrl: data.filename ?? "",
                                   fit: BoxFit.cover,
                                   //placeholder: (context, url) => CircularProgressIndicator(),
-                                  errorWidget: (context, url, error) => Icon(Icons.error_outline),
+                                  errorWidget: (context, url, error) => Icon(LineAwesomeIcons.file_image_o, size: 44, color: Color(0xffcecece),),
                                 ),
 
                               ),
@@ -740,6 +737,97 @@ class _FintoolDlPageState extends State<FintoolDlPage> with TickerProviderStateM
         ),
       );
     }
+  }
+
+  _viewSvcProduct(String image, String title, String oview, String biz) {
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Container(
+          color: Color.fromRGBO(0, 0, 0, 0.001),
+          child: GestureDetector(
+            onTap: () {Navigator.pop(context);},
+            child: DraggableScrollableSheet(
+              initialChildSize: 0.90,
+              minChildSize: 0.2,
+              maxChildSize: 0.95,
+              builder: (_, controller) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(20.0),
+                      topRight: const Radius.circular(20.0),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.all(16),
+                        child: Icon(
+                          LineAwesomeIcons.close,
+                          color: Colors.red[600],
+                        ),
+                      ),
+                      Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.only(left: Constants.padding,top: 0, right: Constants.padding,bottom: Constants.padding),
+                                  //margin: EdgeInsets.only(top: Constants.padding),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      //SizedBox(height: 15,),
+                                      Card(
+                                        elevation: 0,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8.0),
+                                        ),
+                                        child: image == 'null' ? Container() : Container(
+                                            decoration: new BoxDecoration(
+                                              borderRadius: BorderRadius.all(Radius.circular(8)),
+                                            ),
+                                            child: ClipRRect(
+                                              borderRadius: BorderRadius.all(Radius.circular(8)),
+                                              child: CachedNetworkImage(
+                                                placeholder: (context, url) => Container(
+                                                  alignment: Alignment.center,
+                                                  color: Colors.transparent,
+                                                  child: Image.asset('assets/images/ed_logo_greys.png', width: 90,
+                                                    height: 90,),
+                                                ),
+                                                imageUrl: image,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            )
+                                        ),
+                                      ),
+                                      SizedBox(height: 10,),
+                                      biz.toLowerCase().contains('ta investment') ? SizedBox(height: 0,) : Text(title, style: TextStyle(fontSize: 22,fontWeight: FontWeight.w600, color: Color(0xff2877EA)),),
+                                      biz.toLowerCase().contains('ta investment') ? SizedBox(height: 0,) : SizedBox(height: 15,),
+                                      htmlText(oview),
+                                      SizedBox(height: 22,),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
   }
 
 }

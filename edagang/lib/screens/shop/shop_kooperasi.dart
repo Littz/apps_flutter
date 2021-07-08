@@ -1,13 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/screens/shop/product_koop.dart';
-import 'package:edagang/utils/constant.dart';
-import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/helper/constant.dart';
+import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 
@@ -41,7 +42,7 @@ class _KooperasiPageState extends State<KooperasiPage> {
               automaticallyImplyLeading: true,
               title: new Text('Koperasi',
                 style: GoogleFonts.lato(
-                  textStyle: TextStyle(color: Colors.black),
+                  textStyle: TextStyle(fontSize: 17 , fontWeight: FontWeight.w600,),
                 ),
               ),
               flexibleSpace: Container(
@@ -124,9 +125,12 @@ class _KooperasiPageState extends State<KooperasiPage> {
                                                   ),
                                                 ),
                                                 placeholder: (context, url) => Container(
-                                                  color: Colors.grey.shade200,
+                                                  alignment: Alignment.center,
+                                                  color: Colors.transparent,
+                                                  child: Image.asset('assets/images/ed_logo_greys.png', width: 100,
+                                                    height: 100,),
                                                 ),
-                                                errorWidget: (context, url, error) => Icon(Icons.image, size: 36,),
+                                                errorWidget: (context, url, error) => Icon(LineAwesomeIcons.file_image_o, size: 44, color: Color(0xffcecece),),
                                               ),
                                             ),
                                           ),

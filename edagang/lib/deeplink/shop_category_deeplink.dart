@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:edagang/main.dart';
 import 'package:edagang/scoped/scoped_product.dart';
-import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/product_grid_card.dart';
 import 'package:edagang/widgets/products_list_item.dart';

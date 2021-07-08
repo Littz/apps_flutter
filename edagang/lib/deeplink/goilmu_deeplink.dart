@@ -3,8 +3,8 @@ import 'package:edagang/main.dart';
 import 'package:edagang/models/upskill_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/sign_in.dart';
-import 'package:edagang/utils/constant.dart';
-import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/helper/constant.dart';
+import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:edagang/widgets/SABTitle.dart';
 import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
@@ -19,6 +19,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class GoilmuDlPage extends StatefulWidget {
@@ -251,8 +252,13 @@ class _GoilmuDlPageState extends State<GoilmuDlPage> with SingleTickerProviderSt
                               child: CachedNetworkImage(
                                 imageUrl: logo ?? "",
                                 //fit: BoxFit.cover,
-                                placeholder: (context, url) => CircularProgressIndicator(),
-                                errorWidget: (context, url, error) => Icon(Icons.error_outline),
+                                placeholder: (context, url) => Container(
+                                  alignment: Alignment.center,
+                                  color: Colors.transparent,
+                                  child: Image.asset('assets/images/ed_logo_greys.png', width: 60,
+                                    height: 60,),
+                                ),
+                                errorWidget: (context, url, error) => Icon(LineAwesomeIcons.file_image_o, size: 44, color: Color(0xffcecece),),
                               ),
                             ),
                           ),
@@ -479,7 +485,7 @@ class _GoilmuDlPageState extends State<GoilmuDlPage> with SingleTickerProviderSt
                         await FlutterShare.share(
                           title: 'GOilmu',
                           text: '',
-                          linkUrl: 'https://goilmuapp.e-dagang.asia/course/'+_id.toString(),
+                          linkUrl: 'https://edagang.page.link/?link=https://goilmuapp.e-dagang.asia/course/'+_id.toString(),
                           chooserTitle: title ?? '',
                         );
                       },

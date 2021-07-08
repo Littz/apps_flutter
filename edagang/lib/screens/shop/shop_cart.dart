@@ -8,6 +8,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -42,19 +43,21 @@ class _ShopCartPageState extends State<ShopCartPage> {
             child: Text(
               title,
               style: GoogleFonts.lato(
-                textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w700,),
+                textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600,),
               ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
-          Container(
+          /*Container(
             margin: EdgeInsets.all(3),
             child: Text(
               '('+displayAmount+')',
               style: GoogleFonts.lato(
-                textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, fontStyle: FontStyle.italic),
+                textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, fontStyle: FontStyle.italic),
               ),
             ),
-          )
+          )*/
         ]
     );
   }
@@ -67,12 +70,11 @@ class _ShopCartPageState extends State<ShopCartPage> {
         return null;
       },
         child: Scaffold(
-          key: _scaffoldKey,
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
             backgroundColor: Colors.white,
             elevation: 0.0,
-            centerTitle: true,
+            centerTitle: false,
             title: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -80,8 +82,7 @@ class _ShopCartPageState extends State<ShopCartPage> {
                   new Text(
                     'My Cart ',
                     style: GoogleFonts.lato(
-                      textStyle: TextStyle(
-                        fontSize: 18,),
+                      textStyle: TextStyle(fontSize: 17 , fontWeight: FontWeight.w600,),
                     ),
                   ),
                   new Text(
@@ -108,7 +109,7 @@ class _ShopCartPageState extends State<ShopCartPage> {
 
   _cartItems(MainScopedModel model) {
     return Padding(
-        padding: const EdgeInsets.only(left: 8, right: 8, top: 0, bottom: 0),
+        padding: const EdgeInsets.only(left: 2, right: 2, top: 2, bottom: 2),
         child: ListView.builder(
           shrinkWrap: true,
           physics: ScrollPhysics(),
@@ -127,7 +128,7 @@ class _ShopCartPageState extends State<ShopCartPage> {
                       padding: EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                        borderRadius: BorderRadius.all(Radius.circular(1)),
                         border: Border.all(color: Colors.grey.shade300, ),
                       ),
                       child: Column(
@@ -143,7 +144,7 @@ class _ShopCartPageState extends State<ShopCartPage> {
                               )
                           ),
                           Padding(
-                            padding: EdgeInsets.only(left: 5, right: 5),
+                            padding: EdgeInsets.only(left: 5, right: 0),
                             child: ListView.builder(
                               shrinkWrap: true,
                               physics: ClampingScrollPhysics(),
@@ -166,9 +167,44 @@ class _ShopCartPageState extends State<ShopCartPage> {
                                             children: <Widget>[
                                               Row(
                                                 mainAxisAlignment: MainAxisAlignment.start,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
                                                 children: <Widget>[
                                                   Container(
+                                                    //alignment: Alignment.center,
+                                                    //padding: EdgeInsets.only(right: 10),
+                                                    child: IconButton(
+                                                      padding: EdgeInsets.only(right: 5),
+                                                      constraints: BoxConstraints(),
+                                                      alignment: Alignment.center,
+                                                      icon: Icon(LineAwesomeIcons.trash_o,color: Colors.red.shade600,),
+                                                      onPressed: () {
+                                                        model.removeProduct(int.parse(cart.cart_id),int.parse(cart.product_id));
+                                                      },
+                                                    )
+                                                  ),
+                                                  Container(
+                                                    padding: EdgeInsets.only(right: 5, top: 2),
+                                                    width: 60,
+                                                    height: 60,
+                                                    alignment: Alignment.topLeft,
+                                                    color: Colors.white,
+                                                    child: ClipRRect(
+                                                      borderRadius: new BorderRadius.circular(5.0),
+                                                      child: CachedNetworkImage(
+                                                        alignment: Alignment.topLeft,
+                                                        placeholder: (context, url) => Container(
+                                                          color: Colors.transparent,
+                                                          child: Image.asset('assets/images/ed_logo_greys.png',width: 50,
+                                                            height: 50,),
+                                                        ),
+                                                        imageUrl: cart.main_image,
+                                                        fit: BoxFit.cover,
+                                                        width: 60,
+                                                        height: 60,
+                                                      )
+                                                    ),
+                                                  ),
+                                                  /*Container(
                                                     width: 65,
                                                     height: 65,
                                                     padding: const EdgeInsets.all(2.0),
@@ -187,59 +223,53 @@ class _ShopCartPageState extends State<ShopCartPage> {
                                                     decoration: BoxDecoration(
                                                       borderRadius: BorderRadius.all(Radius.circular(5)),
                                                     ),
-                                                  ),
+                                                  ),*/
                                                   Expanded(
                                                     child: Container(
                                                       padding: const EdgeInsets.all(2.0),
+                                                      alignment: Alignment.topLeft,
                                                       child: Column(
                                                         mainAxisSize: MainAxisSize.max,
                                                         mainAxisAlignment: MainAxisAlignment.start,
                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: <Widget>[
                                                           Container(
+                                                            alignment: Alignment.topLeft,
                                                             padding: EdgeInsets.only(left: 2, right: 2, top: 0),
-                                                            child: Row(
-                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                //crossAxisAlignment: CrossAxisAlignment.start,
-                                                                mainAxisSize: MainAxisSize.max,
-                                                                children: [
-                                                                  Expanded(
-                                                                    child: Text(
-                                                                      cart.name,
-                                                                      textAlign: TextAlign.left,
-                                                                      style: GoogleFonts.lato(
-                                                                        textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600,),
-                                                                      ),
-                                                                      overflow: TextOverflow.ellipsis,
-                                                                      maxLines: 2,
-                                                                    ),
-                                                                  ),
-                                                                  SizedBox(width: 5,),
-                                                                  SizedBox(
-                                                                    height: 18,
-                                                                    child: FlatButton(
-                                                                      shape: RoundedRectangleBorder(
-                                                                        borderRadius: new BorderRadius.circular(1.0),
-                                                                      ),
-                                                                      color: Colors.transparent,
-                                                                      child: Text('Delete',
-                                                                          style: GoogleFonts.lato(
-                                                                            textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Colors.red),
-                                                                          ),
-                                                                      ),
-                                                                      highlightColor: Colors.grey,
-                                                                      splashColor: Colors.grey,
-                                                                      onPressed: () {
-                                                                        model.removeProduct(int.parse(cart.cart_id),int.parse(cart.product_id));
-                                                                      },
-                                                                    ),
-                                                                  )
-
-                                                                ]
+                                                            child: Text(
+                                                              cart.name,
+                                                              textAlign: TextAlign.left,
+                                                              style: GoogleFonts.lato(
+                                                                textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600,),
+                                                              ),
+                                                              overflow: TextOverflow.ellipsis,
+                                                              maxLines: 2,
                                                             ),
                                                           ),
                                                           Container(
-                                                            padding: EdgeInsets.only(left: 2, right: 2, top: 0),
+                                                            padding: EdgeInsets.only(left: 2, right: 2, bottom: 0),
+                                                            child: cart.have_variation == '1' ? Row(
+                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                mainAxisSize: MainAxisSize.min,
+                                                                children: <Widget>[
+                                                                  Text(
+                                                                    cart.cart_variation[0].variation_name+' : ',
+                                                                    style: GoogleFonts.lato(
+                                                                      textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.grey.shade700),
+                                                                    ),
+                                                                  ),
+                                                                  Text(
+                                                                    cart.cart_variation.length > 1 ? cart.cart_variation[1].option_name : cart.cart_variation[0].option_name,
+                                                                    style: GoogleFonts.lato(
+                                                                      textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.grey.shade700),
+                                                                    ),
+                                                                  ),
+                                                                ]
+                                                            ) : null,
+                                                          ),
+                                                          Container(
+                                                            padding: EdgeInsets.only(left: 0, right: 2, top: 0),
                                                             child: Row(
                                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                               mainAxisSize: MainAxisSize.max,
@@ -256,7 +286,7 @@ class _ShopCartPageState extends State<ShopCartPage> {
                                                                               child: Text(
                                                                                 "RM${double.parse(cart.promo_price).toStringAsFixed(2)}",
                                                                                 style: GoogleFonts.lato(
-                                                                                  textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Colors.red),
+                                                                                  textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Colors.black87),
                                                                                 ),
                                                                               ),
                                                                             ),
@@ -266,7 +296,7 @@ class _ShopCartPageState extends State<ShopCartPage> {
                                                                               child: Text(
                                                                                 "RM${hrgOri.toStringAsFixed(2)}" ?? "RM0.00",
                                                                                 style: GoogleFonts.lato(
-                                                                                  textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Colors.grey.shade600, decoration: TextDecoration.lineThrough),
+                                                                                  textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Colors.grey.shade500, decoration: TextDecoration.lineThrough),
                                                                                 ),
                                                                               ),
                                                                             ),
@@ -277,7 +307,7 @@ class _ShopCartPageState extends State<ShopCartPage> {
                                                                     child: Text(
                                                                       "RM${hrgOri.toStringAsFixed(2)}" ?? "RM0.00",
                                                                       style: GoogleFonts.lato(
-                                                                        textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Colors.red),
+                                                                        textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Colors.black87),
                                                                       ),
                                                                     ),
                                                                   ),
@@ -332,37 +362,6 @@ class _ShopCartPageState extends State<ShopCartPage> {
                                                                 ),
                                                               ],
                                                             ),
-                                                          ),
-                                                          Container(
-                                                            padding: EdgeInsets.only(left: 7, right: 2, bottom: 0),
-                                                            child: cart.have_variation == '1' ? Row(
-                                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                                mainAxisSize: MainAxisSize.min,
-                                                                children: <Widget>[
-                                                                  Text(
-                                                                    cart.cart_variation[0].variation_name+' : ',
-                                                                    style: GoogleFonts.lato(
-                                                                      textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500,),
-                                                                    ),
-                                                                  ),
-                                                                  Transform(
-                                                                    transform: new Matrix4.identity()..scale(0.8),
-                                                                    child: new Chip(
-                                                                      label: Text(
-                                                                        cart.cart_variation.length > 1 ? cart.cart_variation[1].option_name.toUpperCase() : cart.cart_variation[0].option_name.toUpperCase(),
-                                                                        style: GoogleFonts.lato(
-                                                                          textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Colors.deepOrangeAccent.shade400),
-                                                                        ),
-                                                                      ),
-                                                                      backgroundColor: Colors.white70,
-                                                                      shape: StadiumBorder(
-                                                                        side: BorderSide(width: 1,color: Colors.deepOrangeAccent.shade400,),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ]
-                                                            ) : null,
                                                           ),
 
                                                         ],

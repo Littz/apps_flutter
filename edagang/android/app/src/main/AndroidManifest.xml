@@ -62,8 +62,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
                 <data
-                    android:scheme="app"
-                    android:host="edagang"/>
+                    android:scheme="https"
+                    android:host="edagang.page.link"/>
                 <!-- note that the leading "/" is required for pathPrefix-->
             </intent-filter>
 

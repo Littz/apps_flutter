@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/scoped/upskill_company.dart';
 import 'package:edagang/screens/upskill/skill_detail.dart';
-import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:edagang/widgets/SABTitle.dart';
 import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
@@ -11,6 +11,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:intl/intl.dart';
 
@@ -118,9 +119,9 @@ class _GoilmuCourseListBodyState extends State<GoilmuCourseListPage> {
               ),
               title: SABTs(
                 child: Container(
-                    child: Text(model.getCompanyName().toUpperCase() ?? '',
+                    child: Text(model.getCompanyName() ?? '',
                       style: GoogleFonts.lato(
-                        textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w700,),
+                        textStyle: TextStyle(fontSize: 17 , fontWeight: FontWeight.w600,),
                       ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
@@ -137,7 +138,7 @@ class _GoilmuCourseListBodyState extends State<GoilmuCourseListPage> {
                           await FlutterShare.share(
                             title: 'GOilmu',
                             text: '',
-                            linkUrl: 'https://goilmuapp.e-dagang.asia/business/'+model.cid.toString(),
+                            linkUrl: 'https://edagang.page.link/?link=https://goilmuapp.e-dagang.asia/business/'+model.cid.toString(),
                             chooserTitle: model.getCompanyName() ?? '',
                           );
                         },
@@ -186,10 +187,26 @@ class _GoilmuCourseListBodyState extends State<GoilmuCourseListPage> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(50),
                                 child: CachedNetworkImage(
-                                  imageUrl: model.getLogo() ?? "",
-                                  //fit: BoxFit.cover,
-                                  placeholder: (context, url) => CircularProgressIndicator(),
-                                  errorWidget: (context, url, error) => Icon(Icons.error_outline),
+                                  //fit: BoxFit.fitHeight,
+                                  imageUrl: model.getLogo() ?? '',
+                                  imageBuilder: (context, imageProvider) => Container(
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          alignment: Alignment.center,
+                                          image: imageProvider,
+                                          //fit: BoxFit.fitHeight,
+                                        ),
+                                        borderRadius: BorderRadius.all(Radius.circular(8.0),)
+                                    ),
+                                  ),
+                                  //placeholder: (context, url) => Container(color: Colors.grey.shade200,),
+                                  placeholder: (context, url) => Container(
+                                    alignment: Alignment.center,
+                                    color: Colors.transparent,
+                                    child: Image.asset('assets/images/ed_logo_greys.png', width: 60,
+                                      height: 60,),
+                                  ),
+                                  errorWidget: (context, url, error) => Icon(LineAwesomeIcons.file_image_o, size: 44, color: Color(0xffcecece),),
                                 ),
                               ),
                             ),
@@ -309,8 +326,13 @@ class _GoilmuCourseListBodyState extends State<GoilmuCourseListPage> {
                                 child: CachedNetworkImage(
                                   imageUrl: model.getLogo() ?? "",
                                   fit: BoxFit.cover,
-                                  placeholder: (context, url) => CircularProgressIndicator(),
-                                  errorWidget: (context, url, error) => Icon(Icons.error_outline),
+                                  placeholder: (context, url) => Container(
+                                    alignment: Alignment.center,
+                                    color: Colors.transparent,
+                                    child: Image.asset('assets/images/ed_logo_greys.png', width: 60,
+                                      height: 60,),
+                                  ),
+                                  errorWidget: (context, url, error) => Icon(LineAwesomeIcons.file_image_o, size: 44, color: Color(0xffcecece),),
                                 ),
                               ),
                             ),
@@ -368,7 +390,7 @@ class _GoilmuCourseListBodyState extends State<GoilmuCourseListPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Image.asset('assets/icons/empty.png', height: 120,),
+                        Image.asset('assets/images/ed_logo_grey.png', height: 150,),
                         Text('No listing at the moment.',
                           style: GoogleFonts.lato(
                             textStyle: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w600,),

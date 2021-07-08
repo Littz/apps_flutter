@@ -1,9 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/scoped/ads_company.dart';
 import 'package:edagang/screens/ads/ads_prop_detail.dart';
-import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:edagang/widgets/SABTitle.dart';
 import 'package:edagang/widgets/blur_icon.dart';
+import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/progressIndicator.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:intl/intl.dart';
 
@@ -39,7 +41,7 @@ class _BlurbCompanyPropertyPageState extends State<BlurbCompanyPropertyPage> {
   @override
   Widget build(BuildContext context) {
     BlurbScopedModel propertyModel = BlurbScopedModel();
-    propertyModel.fetchCourseList(int.parse(widget.bizId));
+    propertyModel.fetchBlurbCompany(int.parse(widget.bizId));
 
     return ScopedModel<BlurbScopedModel>(
       model: propertyModel,
@@ -135,7 +137,7 @@ class _BlurbPropertyListBodyState extends State<BlurbPropertyListPage> {
                           await FlutterShare.share(
                             title: 'BlurbProperty',
                             text: '',
-                            linkUrl: 'https://blurbapp.e-dagang.asia/company/'+model.cid.toString(),
+                            linkUrl: 'https://edagang.page.link/?link=https://blurbapp.e-dagang.asia/company/'+model.cid.toString(),
                             chooserTitle: model.getCompanyName() ?? '',
                           );
                         },
@@ -184,11 +186,33 @@ class _BlurbPropertyListBodyState extends State<BlurbPropertyListPage> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(50),
                                 child: CachedNetworkImage(
+                                  //fit: BoxFit.fitHeight,
+                                  imageUrl: model.getLogo() ?? '',
+                                  imageBuilder: (context, imageProvider) => Container(
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          alignment: Alignment.center,
+                                          image: imageProvider,
+                                          //fit: BoxFit.fitHeight,
+                                        ),
+                                        borderRadius: BorderRadius.all(Radius.circular(8.0),)
+                                    ),
+                                  ),
+                                  //placeholder: (context, url) => Container(color: Colors.grey.shade200,),
+                                  placeholder: (context, url) => Container(
+                                    alignment: Alignment.center,
+                                    color: Colors.transparent,
+                                    child: Image.asset('assets/images/ed_logo_greys.png', width: 60,
+                                      height: 60,),
+                                  ),
+                                  errorWidget: (context, url, error) => Icon(LineAwesomeIcons.file_image_o, size: 44, color: Color(0xffcecece),),
+                                ),
+
+                                /*CachedNetworkImage(
                                   imageUrl: model.getLogo() ?? "",
-                                  //fit: BoxFit.cover,
                                   placeholder: (context, url) => CircularProgressIndicator(),
                                   errorWidget: (context, url, error) => Icon(Icons.error_outline),
-                                ),
+                                ),*/
                               ),
                             ),
                           ),
@@ -222,10 +246,36 @@ class _BlurbPropertyListBodyState extends State<BlurbPropertyListPage> {
                                   ),
                                 ),
                               ),
-                              /*Container(
+                              Container(
                                 padding: EdgeInsets.only(left: 2, right: 7),
-                                child: htmlText2(address),
-                              ),*/
+                                child: htmlText2(model.getCompanyAddr()),
+                              ),
+                              Container(
+                                padding: EdgeInsets.only(left: 2, right: 7),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(model.getCompanyWeb(),
+                                      style: GoogleFonts.lato(
+                                        textStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
+                                      ),
+                                    ),
+                                    SizedBox(height: 1.0,),
+                                    Text(model.getCompanyTel(),
+                                      style: GoogleFonts.lato(
+                                        textStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
+                                      ),
+                                    ),
+                                    SizedBox(height: 1.0,),
+                                    Text(model.getCompanyEmel() ?? "",
+                                      style: GoogleFonts.lato(
+                                        textStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 13),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -282,7 +332,7 @@ class _BlurbPropertyListBodyState extends State<BlurbPropertyListPage> {
                         alignment: Alignment.bottomLeft,
                         children: <Widget>[
                           Image.asset(
-                            'assets/bggoilmu.png', fit: BoxFit.fill,
+                            'assets/blurbpromo.png', fit: BoxFit.fill,
                             height: 165,
                           ),
                           FractionalTranslation(
@@ -308,8 +358,13 @@ class _BlurbPropertyListBodyState extends State<BlurbPropertyListPage> {
                                 child: CachedNetworkImage(
                                   imageUrl: model.getLogo() ?? "",
                                   fit: BoxFit.cover,
-                                  placeholder: (context, url) => CircularProgressIndicator(),
-                                  errorWidget: (context, url, error) => Icon(Icons.error_outline),
+                                  placeholder: (context, url) => Container(
+                                    alignment: Alignment.center,
+                                    color: Colors.transparent,
+                                    child: Image.asset('assets/images/ed_logo_greys.png', width: 60,
+                                      height: 60,),
+                                  ),
+                                  errorWidget: (context, url, error) => Icon(LineAwesomeIcons.file_image_o, size: 44, color: Color(0xffcecece),),
                                 ),
                               ),
                             ),
@@ -362,7 +417,7 @@ class _BlurbPropertyListBodyState extends State<BlurbPropertyListPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Image.asset('assets/icons/empty.png', height: 120,),
+                      Image.asset('assets/images/ed_logo_grey.png', height: 150,),
                         Text('No listing at the moment.',
                           style: GoogleFonts.lato(
                             textStyle: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w600,),

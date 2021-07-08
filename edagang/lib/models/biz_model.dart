@@ -30,6 +30,7 @@ class Home_business {
   String logo;
   int verify;
   String company_licno;
+  String pic_name;
   List<Product> product;
   List<Award> award;
   List<Cert> cert;
@@ -47,6 +48,7 @@ class Home_business {
     this.logo,
     this.verify,
     this.company_licno,
+    this.pic_name,
     this.product,
     this.award,
     this.cert,
@@ -128,6 +130,7 @@ class Product {
   final String company_name;
   final String file_path;
   final String overview;
+  final String video_link;
 
   Product({
     this.id,
@@ -137,6 +140,7 @@ class Product {
     this.company_name,
     this.file_path,
     this.overview,
+    this.video_link,
   });
 }
 

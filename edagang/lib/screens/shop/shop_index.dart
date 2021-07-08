@@ -3,19 +3,18 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/data/datas.dart';
 import 'package:edagang/models/shop_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
-import 'package:edagang/screens/shop/cart_history.dart';
-import 'package:edagang/screens/shop/cart_review.dart';
 import 'package:edagang/screens/shop/more_popular.dart';
+import 'package:edagang/screens/shop/my_account.dart';
 import 'package:edagang/screens/shop/product_category.dart';
 import 'package:edagang/screens/shop/product_detail.dart';
 import 'package:edagang/screens/shop/product_merchant.dart';
+import 'package:edagang/screens/shop/search.dart';
 import 'package:edagang/screens/shop/shop_NGO.dart';
 import 'package:edagang/screens/shop/shop_cart.dart';
 import 'package:edagang/screens/shop/shop_kooperasi.dart';
-import 'package:edagang/screens/shop/shop_msg.dart';
 import 'package:edagang/sign_in.dart';
-import 'package:edagang/utils/constant.dart';
-import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/helper/constant.dart';
+import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:edagang/utube/video_list.dart';
 import 'package:edagang/utube/video_play.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
@@ -30,6 +29,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -128,38 +128,57 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
                       centerTitle: true,
                       title: Image.asset('assets/icons/ic_cartsini.png', height: 24, width: 108,),
                       actions: [
+                        CircleAvatar(
+                          backgroundColor: Colors.grey[200],
+                          child: IconButton(
+                            icon: _model.isAuthenticated ? _model.getCartotal() == 0 ? Icon(LineAwesomeIcons.shopping_cart,color: Colors.black87,) : Badge(
+                              badgeColor: Colors.red,
+                              shape: BadgeShape.circle,
+                              padding: _model.getCartotal().toString().length == 1 ? EdgeInsets.all(5.5) : EdgeInsets.all(3),
+                              child: Icon(LineAwesomeIcons.shopping_cart,
+                                color: Colors.black87,
+                              ),
+                              badgeContent: Text(
+                                _model.getCartotal().toString(),
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(fontSize: 9, fontWeight: FontWeight.w500, color: Colors.white),
+                                ),
+                              ),
+                            ) : Icon(LineAwesomeIcons.shopping_cart,color: Colors.black87,),
+                            onPressed: () {
+                              _model.isAuthenticated ? Navigator.push(context, SlideRightRoute(page: ShopCartPage())) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
+                            },
+                          ),
+                        ),
                         Padding(
                           padding: EdgeInsets.only(left: 2, right: 10,),
-                          child: _model.isAuthenticated ?
-                          _logType == '0' ?
-                          CircleAvatar(
-                            backgroundColor: Colors.transparent,
-                            child: Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.fill, height: 27, width: 27),
-                          )
-                              : Container(
-                            height: 28.0,
-                            width: 28.0,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                //fit: BoxFit.fill,
-                                image: NetworkImage(_photo),
-                              ),
-                            ),
-                          )
-                              : CircleAvatar(
-                            backgroundColor: Colors.transparent,
+                          child: CircleAvatar(
+                            backgroundColor: Colors.grey[200],
                             child: IconButton(
-                              icon: Icon(
-                                CupertinoIcons.power,
-                                color: Color(0xff084B8C),
-                              ),
-                              onPressed: () {Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));},
+                              icon: _model.isAuthenticated ? _model.getTotalOrder() == 0 ? Icon(LineAwesomeIcons.user,color: Colors.black87,) : Badge(
+                                badgeColor: Colors.red,
+                                shape: BadgeShape.circle,
+                                padding: _model.getTotalOrder().toString().length == 1 ? EdgeInsets.all(5.5) : EdgeInsets.all(3),
+                                child: Icon(LineAwesomeIcons.user,
+                                  color: Colors.black87,
+                                ),
+                                badgeContent: Text(
+                                  _model.getTotalOrder().toString(),
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.lato(
+                                    textStyle: TextStyle(fontSize: 9, fontWeight: FontWeight.w500, color: Colors.white),
+                                  ),
+                                ),
+                              ) : Icon(LineAwesomeIcons.user, color: Colors.black87,),
+                              onPressed: () {
+                                _model.isAuthenticated ? Navigator.push(context, SlideRightRoute(page: CartsiniAccount())) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
+                              },
                             ),
                           ),
                         ),
                       ],
-                      bottom: AppBar(
+                      /*bottom: AppBar(
                         elevation: 0,
                         automaticallyImplyLeading: false,
                         title: Container(
@@ -172,74 +191,15 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
                               Expanded(
                                 child: searchBarShop(context),
                               ),
-                              SizedBox(width: 8,),
-                              CircleAvatar(
-                                backgroundColor: Colors.grey[200],
-                                child: IconButton(
-                                  icon: _model.isAuthenticated ? _model.getCartotal() == 0 ? Icon(CupertinoIcons.shopping_cart,color: Color(0xff084B8C)) : Badge(
-                                    badgeColor: Colors.red,
-                                    shape: BadgeShape.circle,
-                                    borderRadius: BorderRadius.circular(100),
-                                    child: Icon(CupertinoIcons.shopping_cart,color: Color(0xff084B8C)),
-                                    badgeContent: Text(
-                                      _model.getCartotal().toString(),
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.lato(
-                                        textStyle: TextStyle(fontSize: 9, fontWeight: FontWeight.w500, color: Colors.white),
-                                      ),
-                                    ),
-                                  ) : Icon(CupertinoIcons.shopping_cart,color: Color(0xff084B8C)),
-                                  onPressed: () {
-                                    _model.isAuthenticated ? Navigator.push(context, SlideRightRoute(page: ShopCartPage())) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
-                                  },
-                                ),
-                              ),
                               SizedBox(width: 2,),
-                              CircleAvatar(
-                                backgroundColor: Colors.grey[200],
-                                child: IconButton(
-                                  icon: Icon(
-                                    CupertinoIcons.bell_fill,
-                                    color: Color(0xff084B8C),
-                                  ),
-                                  onPressed: () {
-                                    _model.isAuthenticated ? Navigator.push(context, SlideRightRoute(page: ShopMessagePage())) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
-                                  },
-                                ),
-                              ),
-                              SizedBox(width: 2,),
-                              CircleAvatar(
-                                backgroundColor: Colors.grey[200],
-                                child: PopupMenuButton(
-                                  icon: Icon(Icons.person, color: Color(0xff084B8C),),
-                                  itemBuilder: (BuildContext bc) => [
-                                    PopupMenuItem(child: ListTile(
-                                      //leading: Icon(Icons.notifications),
-                                      title: Text('My Orders'),
-                                    ), value: "1"),
-                                    PopupMenuItem(child: ListTile(
-                                      //leading: Icon(Icons.settings),
-                                      title: Text('My Review'),
-                                    ), value: "2"),
-                                  ],
-                                  onSelected: (value) {
-                                    setState(() {
-                                      _selectedItem = value;
-                                      print("Selected context menu: $_selectedItem");
-                                      if(_selectedItem == '1'){
-                                        _model.isAuthenticated ? Navigator.push(context, SlideRightRoute(page: CartHistory())) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
-                                      }
-                                      if(_selectedItem == '2'){
-                                        _model.isAuthenticated ? Navigator.push(context, SlideRightRoute(page: MyReview())) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
-                                      }
-                                    });
-                                  },
-                                ),
-                              ),
                             ],
                           ),
                         ),
-                      ),
+                      ),*/
+                    ),
+                    SliverPersistentHeader(
+                      delegate: Delegate(Colors.white,'Search'),
+                      pinned: true,
                     ),
                   ];
                 },
@@ -289,10 +249,10 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
                                         borderRadius: new BorderRadius.circular(8.0),
                                         child: CachedNetworkImage(
                                           placeholder: (context, url) => Container(
-                                            width: 40,
-                                            height: 40,
+                                            alignment: Alignment.center,
                                             color: Colors.transparent,
-                                            child: CupertinoActivityIndicator(radius: 15,),
+                                            child: Image.asset('assets/logo_edagang.png', width: 254,
+                                              height: 100,),
                                           ),
                                           imageUrl: Constants.urlImage + model.banners[index].imageUrl,
                                           fit: BoxFit.fill,
@@ -618,7 +578,7 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(50),
                               child: CachedNetworkImage(
-                                fit: BoxFit.cover,
+                                //fit: BoxFit.cover,
                                 height: 65.0,
                                 width: 65.0,
                                 imageUrl: Constants.urlImage + data.catimage ?? '',
@@ -626,18 +586,20 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
                                   decoration: BoxDecoration(
                                     image: DecorationImage(
                                       image: imageProvider,
-                                      fit: BoxFit.cover,
+                                      //fit: BoxFit.cover,
                                     ),
                                     borderRadius: BorderRadius.all(Radius.circular(35.0)),
                                   ),
                                 ),
                                 placeholder: (context, url) => Container(
+                                  alignment: Alignment.center,
                                   width: 30,
                                   height: 30,
                                   color: Colors.transparent,
-                                  child: CupertinoActivityIndicator(radius: 15,),
+                                  child: Image.asset('assets/images/ed_logo_greys.png', width: 30,
+                                    height: 30,),
                                 ),
-                                errorWidget: (context, url, error) => Icon(Icons.error),
+                                errorWidget: (context, url, error) => Icon(LineAwesomeIcons.file_image_o, size: 44, color: Color(0xffcecece),),
                               ),
                             ),
                           ),
@@ -758,15 +720,12 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
                                       child: CachedNetworkImage(
                                         imageUrl: 'http://img.youtube.com/vi/'+ vlink +'/0.jpg',
                                         placeholder: (context, url) => Container(
-                                          width: 30,
-                                          height: 30,
+                                          alignment: Alignment.center,
                                           color: Colors.transparent,
-                                          child: CupertinoActivityIndicator(radius: 15,),
+                                          child: Image.asset('assets/images/ed_logo_greys.png', width: 90,
+                                            height: 90,),
                                         ),
-                                        errorWidget: (context, url, error) => Image.asset(
-                                          'assets/icons/ic_image_error.png',
-                                          fit: BoxFit.cover,
-                                        ),
+                                        errorWidget: (context, url, error) => Icon(LineAwesomeIcons.file_image_o, size: 44, color: Color(0xffcecece),),
                                         fit: BoxFit.fill,
                                         //height: 155,
                                         width: MediaQuery.of(context).size.width * 0.6,
@@ -814,5 +773,92 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
           );
         }
     );
+  }
+}
+
+class Delegate extends SliverPersistentHeaderDelegate {
+  final Color backgroundColor;
+  final String _title;
+
+  Delegate(this.backgroundColor, this._title);
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Container(
+      color: backgroundColor,
+      padding: EdgeInsets.only(left: 16, right: 16,),
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            InkWell(
+              splashColor: Colors.deepOrange.shade600,
+              onTap: () {
+                Navigator.push(context, SlideRightRoute(page: SearchList3()));
+              },
+              child: Container(
+                //margin: EdgeInsets.only(left: 1, right: 1, top: 1, bottom: 5),
+                decoration: BoxDecoration(
+                  //border: Border.all(width: 1, color: Color(0xff2877EA),),
+                  borderRadius: BorderRadius.all(Radius.circular(25)),
+                  color: Colors.grey.shade200,
+                  /*boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.shade500,
+                    blurRadius: 2.0,
+                    spreadRadius: 0.0,
+                    offset: Offset(2.0, 2.0), // shadow direction: bottom right
+                  )
+                ],*/
+                ),
+                height: 37,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.only(left: 16, right: 16),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        color: Colors.transparent,
+                      ),
+                      height: 37,
+                      width: 40,
+                      child: Center(
+                        child: Icon(LineAwesomeIcons.search,
+                          color: Colors.black87,),
+
+                      ),
+                    ),
+                    SizedBox(width: 3,),
+                    Expanded(
+                      child: Text(_title,
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.normal,
+                          fontFamily: "Quicksand",
+                          color: Colors.grey[500],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ]
+      ),
+    );
+  }
+
+  @override
+  double get maxExtent => 45;
+
+  @override
+  double get minExtent => 45;
+
+  @override
+  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
+    return true;
   }
 }

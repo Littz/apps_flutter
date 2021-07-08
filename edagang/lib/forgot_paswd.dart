@@ -69,7 +69,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         title: Text(
           'Forgot Password',
           style: GoogleFonts.lato(
-            textStyle: TextStyle(color: Color(0xff084B8C), fontSize: 18,),
+            textStyle: TextStyle(fontSize: 17 , fontWeight: FontWeight.w600,),
           ),
         ),
       ),
@@ -140,12 +140,12 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               Container(
                 margin: EdgeInsets.only(top: 0),
                 child: RaisedButton(
-                  color: Color(0xffC41E34),
+                  color: Color(0xff006FBD),
                   shape: StadiumBorder(),
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 80),
                     child: Text(
-                      "Submit Request",
+                      "Submit",
                       style: GoogleFonts.lato(
                         textStyle: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
                       ),

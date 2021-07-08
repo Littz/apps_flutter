@@ -1,18 +1,14 @@
 import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/models/biz_model.dart';
-import 'package:edagang/notification.dart';
 import 'package:edagang/scoped/main_scoped.dart';
-import 'package:edagang/screens/biz/biz_home.dart';
+import 'package:edagang/screens/biz/biz_categories.dart';
 import 'package:edagang/screens/biz/biz_vr_list.dart';
-import 'package:edagang/settings.dart';
-import 'package:edagang/sign_in.dart';
-import 'package:edagang/utils/constant.dart';
-import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/screens/biz/search.dart';
+import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
-import 'package:edagang/widgets/searchbar.dart';
-import 'package:edagang/widgets/webview.dart';
 import 'package:edagang/widgets/webview_bb.dart';
+import 'package:edagang/widgets/webview_f.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,13 +16,12 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:edagang/screens/biz/biz_company_detail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
 
@@ -39,7 +34,6 @@ class BizPage extends StatefulWidget {
 }
 
 class _BizIdxPageState extends State<BizPage> {
-  final flutterWebviewPlugin = new FlutterWebviewPlugin();
   GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
   final facebookLogin = FacebookLogin();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -140,6 +134,303 @@ class _BizIdxPageState extends State<BizPage> {
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainScopedModel>(
+        builder: (context, child, model){
+          return WillPopScope(
+              key: _scaffoldKey,
+              onWillPop: () {
+                SystemNavigator.pop();
+                return Future.value(true);
+              },
+              child: Scaffold(
+                backgroundColor: Color(0xffEEEEEE),
+                body: NestedScrollView(
+                    headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+                      return <Widget>[
+                        SliverAppBar(
+                          elevation: 0.0,
+                          expandedHeight: 210.0,
+                          floating: false,
+                          pinned: true,
+                          backgroundColor: Colors.white,
+                          automaticallyImplyLeading: false,
+                          centerTitle: true,
+                          title: Image.asset('assets/icons/ic_smartbiz.png', height: 24, width: 107,),
+                          actions: [
+                            Padding(
+                              padding: EdgeInsets.only(left: 2, right: 10,),
+                              child: CircleAvatar(
+                                backgroundColor: Colors.grey[200],
+                                child: IconButton(
+                                  icon: Icon(
+                                    LineAwesomeIcons.search,
+                                    color: Colors.black87,
+                                  ),
+                                  onPressed: () {Navigator.push(context, SlideRightRoute(page: SearchList()));},
+                                ),
+                              ),
+                            ),
+                          ],
+                          flexibleSpace: FlexibleSpaceBar(
+                            background: Container(
+                                color: Colors.white,
+                                padding: EdgeInsets.only(bottom: 5, top: 90),
+                                child: Container(
+                                    margin: EdgeInsets.only(left: 8, right: 8),
+                                    child: Card(
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                                        elevation: 1,
+                                        child: ClipPath(
+                                            clipper: ShapeBorderClipper(
+                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                                            child: Container(
+                                                height: 150.0,
+                                                decoration: new BoxDecoration(
+                                                  color: Colors.transparent,
+                                                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                                                ),
+                                                child: Swiper(
+                                                  autoplay: true,
+                                                  itemBuilder: (BuildContext context, int index) {
+                                                    return InkWell(
+                                                      onTap: () {
+                                                        goToNextPage(context, model.bbanners[index]);
+                                                      },
+                                                      child: ClipRRect(
+                                                        borderRadius: new BorderRadius.circular(8.0),
+                                                        child: Center(
+                                                            child: CachedNetworkImage(
+                                                              placeholder: (context, url) => Container(
+                                                                alignment: Alignment.center,
+                                                                color: Colors.transparent,
+                                                                child: Image.asset('assets/logo_edagang.png', height: 90,),
+                                                              ),
+                                                              imageUrl: model.bbanners[index].imageUrl,
+                                                              fit: BoxFit.fill,
+                                                              height: 150,
+                                                              width: MediaQuery.of(context).size.width,
+                                                            )
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  itemCount: model.fbanners.length,
+                                                  pagination: new SwiperPagination(
+                                                      builder: new DotSwiperPaginationBuilder(
+                                                        activeColor: Colors.deepOrange.shade500,
+                                                        activeSize: 7.0,
+                                                        size: 7.0,
+                                                      )
+                                                  ),
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                            ),
+                          ),
+                        ),
+                      ];
+                    },
+                  body: CustomScrollView(slivers: <Widget>[
+                    SliverToBoxAdapter(
+                      child: Container(
+                        padding: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Biz Category',
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    SliverToBoxAdapter(
+                      child: model.bcategory.length == 0 ? Container(
+                        height: 135,
+                        width: 100,
+                        alignment: Alignment.center,
+                        color: Colors.white,
+                        child: CupertinoActivityIndicator(radius: 15,),
+                      ) : _fetchCategories(),
+                    ),
+
+                    SliverToBoxAdapter(
+                      child: Container(
+                        padding: EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Virtual Trade',
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 0,),
+                              child: InkWell(
+                                highlightColor: Colors.blue.shade100,
+                                splashColor: Colors.blue.shade100,
+                                onTap: () {
+                                  Navigator.push(context,SlideRightRoute(page: BizVrListPage()));
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Text(
+                                      'More ',
+                                      style: GoogleFonts.lato(
+                                        textStyle: TextStyle(fontStyle: FontStyle.italic ,fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xff357FEB)),
+                                      ),
+                                    ),
+                                    Icon(
+                                      CupertinoIcons.right_chevron,
+                                      size: 17,
+                                      color: Color(0xff357FEB),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    SliverToBoxAdapter(
+                      child: model.bvirtual.length == 0 ? Container(
+                        height: MediaQuery.of(context).size.height * 0.25,
+                        width: MediaQuery.of(context).size.width * 0.6,
+                        alignment: Alignment.center,
+                        color: Colors.white,
+                        child: CupertinoActivityIndicator(radius: 15,),
+                      ) : _fetchVirtualList(),
+                    ),
+
+                    SliverToBoxAdapter(
+                      child: Container(
+                        padding: EdgeInsets.only(left: 10, right: 10, top: 24, bottom: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Highlighted Company',
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 0,),
+                              child: InkWell(
+                                highlightColor: Colors.blue.shade100,
+                                splashColor: Colors.blue.shade100,
+                                onTap: () {
+                                  Navigator.push(context, SlideRightRoute(page: MyDashboard(0, model.bcategory.length)));
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Text(
+                                      'All ('+model.getTotalCompany().toString()+') ',
+                                      style: GoogleFonts.lato(
+                                        textStyle: TextStyle(fontStyle: FontStyle.italic ,fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xff357FEB)),
+                                      ),
+                                    ),
+                                    Icon(
+                                      CupertinoIcons.right_chevron,
+                                      size: 17,
+                                      color: Color(0xff357FEB),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    topList(),
+
+                    SliverToBoxAdapter(
+                      child: Container(
+                          padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                          child: InkWell(
+                              onTap: () {
+                                Navigator.push(context, SlideRightRoute(page: MyDashboard(0, model.bcategory.length)));
+                              },
+                              child: Card(
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0),),
+                                  elevation: 1,
+                                  child: ClipPath(
+                                      clipper: ShapeBorderClipper(
+                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))
+                                      ),
+                                      child: Container(
+                                          height: 70.0,
+                                          decoration: new BoxDecoration(
+                                            color: Colors.transparent,
+                                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                                          ),
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            color: Colors.transparent,
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: <Widget>[
+                                                Expanded(
+                                                  flex: 3,
+                                                  child: Container(
+                                                    alignment: Alignment.center,
+                                                    child: Text('+'+model.getTotalCompanyPlus().toString()+' more companies.',
+                                                      style: GoogleFonts.lato(
+                                                        textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Color(0xff084B8C)),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: Container(
+                                                    margin: EdgeInsets.only(right: 10.0, left: 5.0),
+                                                    alignment: Alignment.centerRight,
+                                                    child: CircleAvatar(
+                                                      backgroundColor: Colors.grey[200],
+                                                      child: Icon(
+                                                        CupertinoIcons.arrow_right,
+                                                        size: 20,
+                                                        color: Color(0xff084B8C),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                      )
+                                  )
+                              )
+                          )
+                      ),
+                    ),
+
+                  ]),
+                ),
+              )
+          );
+        }
+    );
+  }
+  /*Widget build(BuildContext context) {
+    return ScopedModelDescendant<MainScopedModel>(
       builder: (context, child, model) {
         return WillPopScope(
           key: _scaffoldKey,
@@ -163,108 +454,18 @@ class _BizIdxPageState extends State<BizPage> {
                   actions: [
                     Padding(
                       padding: EdgeInsets.only(left: 2, right: 10,),
-                      child: model.isAuthenticated ?
-                        _logType == '0' ? CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          child: Image.asset('assets/icons/ic_edagang.png', fit: BoxFit.fill, height: 27, width: 27),
-                        ) : Container(
-                          height: 28.0,
-                          width: 28.0,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                              //fit: BoxFit.fill,
-                              image: NetworkImage(_photo),
-                              //scale: 30,
-                            ),
-                          ),
-                        )
-                      : CircleAvatar(
-                        backgroundColor: Colors.transparent,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.grey[200],
                         child: IconButton(
                           icon: Icon(
-                            CupertinoIcons.power,
-                            color: Color(0xff084B8C),
+                            LineAwesomeIcons.search,
+                            color: Colors.black87,
                           ),
-                          onPressed: () {
-                              Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
-                          },
+                          onPressed: () {Navigator.push(context, SlideRightRoute(page: SearchList()));},
                         ),
                       ),
                     ),
                   ],
-                  bottom: AppBar(
-                    elevation: 0,
-                    automaticallyImplyLeading: false,
-                    title: Container(
-                      height: 44,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Expanded(
-                            child: searchBar(context),
-                          ),
-                          SizedBox(width: 8,),
-                          CircleAvatar(
-                            backgroundColor: Colors.grey[200],
-                            child: IconButton(
-                              icon: Icon(
-                                CupertinoIcons.bell_fill,
-                                color: Color(0xff084B8C),
-                              ),
-                              onPressed: () {
-                                  Navigator.push(context, SlideRightRoute(page: NotificationPage()));
-                              },
-                            ),
-                          ),
-                          SizedBox(width: 2,),
-                          CircleAvatar(
-                            backgroundColor: Colors.grey[200],
-                            child: PopupMenuButton(
-                              icon: Icon(Icons.more_vert, color: Color(0xff084B8C),),
-                              itemBuilder: (BuildContext bc) => [
-                                PopupMenuItem(child: ListTile(
-                                  title: Text('Join Us'),
-                                ), value: "1"),
-                                PopupMenuItem(child: ListTile(
-                                  title: Text('Settings'),
-                                ), value: "2"),
-                                PopupMenuItem(child: model.isAuthenticated ? ListTile(
-                                  title: Text('Logout'),
-                                ) : ListTile(
-                                  title: Text('Login'),
-                                ), value: model.isAuthenticated ? "3" : "4"),
-                              ],
-
-                              onSelected: (value) {
-                                setState(() {
-                                  _selectedItem = value;
-                                  print("Selected context menu: $_selectedItem");
-                                  if(_selectedItem == '1'){
-                                      FirebaseAnalytics().logEvent(name: 'JoinUs_form',parameters:null);
-                                      Navigator.push(context, SlideRightRoute(page: WebviewWidget('https://smartbiz.e-dagang.asia/biz/joinwebv','Join Us')));
-                                  }
-                                  if(_selectedItem == '2'){
-                                      Navigator.push(context, SlideRightRoute(page: SettingPage()));
-                                  }
-                                  if(_selectedItem == '3'){
-                                      FirebaseAnalytics().logEvent(name: 'Logout_app',parameters:null);
-                                      logoutUser(context, model);
-                                  }
-                                  if(_selectedItem == '4'){
-                                      FirebaseAnalytics().logEvent(name: 'Login_page',parameters:null);
-                                      Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
-                                  }
-                                });
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
                 ),
               ];
             },
@@ -300,10 +501,9 @@ class _BizIdxPageState extends State<BizPage> {
                                   child: Center(
                                     child: CachedNetworkImage(
                                       placeholder: (context, url) => Container(
-                                        width: 40,
-                                        height: 40,
+                                        alignment: Alignment.center,
                                         color: Colors.transparent,
-                                        child: CupertinoActivityIndicator(radius: 15,),
+                                        child: Image.asset('assets/logo_edagang.png', height: 90,),
                                       ),
                                       imageUrl: 'http://bizapp.e-dagang.asia' + model.bbanners[index].imageUrl,
                                       fit: BoxFit.fill,
@@ -337,10 +537,8 @@ class _BizIdxPageState extends State<BizPage> {
                     children: [
                       Text(
                         'Biz Category',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xff084B8C),
+                        style: GoogleFonts.lato(
+                          textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                         ),
                       ),
                     ],
@@ -349,7 +547,13 @@ class _BizIdxPageState extends State<BizPage> {
               ),
 
               SliverToBoxAdapter(
-                child: model.bcategory.length == 0 ? Container() : _fetchCategories(),
+                child: model.bcategory.length == 0 ? Container(
+                  height: 135,
+                  width: 100,
+                  alignment: Alignment.center,
+                  color: Colors.white,
+                  child: CupertinoActivityIndicator(radius: 15,),
+                ) : _fetchCategories(),
               ),
 
               SliverToBoxAdapter(
@@ -360,10 +564,8 @@ class _BizIdxPageState extends State<BizPage> {
                     children: [
                       Text(
                         'Virtual Trade',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xff084B8C),
+                        style: GoogleFonts.lato(
+                          textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                         ),
                       ),
                       Padding(
@@ -381,7 +583,7 @@ class _BizIdxPageState extends State<BizPage> {
                               Text(
                                 'More ',
                                 style: GoogleFonts.lato(
-                                  textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Color(0xff357FEB)),
+                                  textStyle: TextStyle(fontStyle: FontStyle.italic ,fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xff357FEB)),
                                 ),
                               ),
                               Icon(
@@ -399,43 +601,138 @@ class _BizIdxPageState extends State<BizPage> {
               ),
 
               SliverToBoxAdapter(
-                child: model.bvirtual.length == 0 ? Container() : _fetchVirtualList(),
+                child: model.bvirtual.length == 0 ? Container(
+                  height: MediaQuery.of(context).size.height * 0.25,
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  alignment: Alignment.center,
+                  color: Colors.white,
+                  child: CupertinoActivityIndicator(radius: 15,),
+                ) : _fetchVirtualList(),
               ),
 
               SliverToBoxAdapter(
                 child: Container(
-                  padding: EdgeInsets.only(left: 10, right: 10, top: 24, bottom: 0),
+                  padding: EdgeInsets.only(left: 10, right: 10, top: 24, bottom: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         'Highlighted Company',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xff084B8C),
+                        style: GoogleFonts.lato(
+                          textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 0,),
+                        child: InkWell(
+                          highlightColor: Colors.blue.shade100,
+                          splashColor: Colors.blue.shade100,
+                          onTap: () {
+                            Navigator.push(context, SlideRightRoute(page: MyDashboard(0, model.bcategory.length)));
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Text(
+                                'All ('+model.getTotalCompany().toString()+') ',
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(fontStyle: FontStyle.italic ,fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xff357FEB)),
+                                ),
+                              ),
+                              Icon(
+                                CupertinoIcons.right_chevron,
+                                size: 17,
+                                color: Color(0xff357FEB),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
+
               topList(),
+
+              SliverToBoxAdapter(
+                child: Container(
+                    padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(context, SlideRightRoute(page: MyDashboard(0, model.bcategory.length)));
+                      },
+                      child: Card(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0),),
+                        elevation: 1,
+                        child: ClipPath(
+                            clipper: ShapeBorderClipper(
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))
+                            ),
+                            child: Container(
+                                height: 70.0,
+                                decoration: new BoxDecoration(
+                                  color: Colors.transparent,
+                                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                                ),
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  color: Colors.transparent,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      Expanded(
+                                        flex: 3,
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          child: Text('+'+model.getTotalCompanyPlus().toString()+' more companies.',
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Color(0xff084B8C)),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 1,
+                                        child: Container(
+                                          margin: EdgeInsets.only(right: 10.0, left: 5.0),
+                                          alignment: Alignment.centerRight,
+                                          child: CircleAvatar(
+                                            backgroundColor: Colors.grey[200],
+                                            child: Icon(
+                                              CupertinoIcons.arrow_right,
+                                              size: 20,
+                                              color: Color(0xff084B8C),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                            )
+                        )
+                      )
+                    )
+                ),
+              ),
 
             ]),
           )
         );
       }
     );
-  }
+  }*/
 
   Widget _fetchCategories() {
     return ScopedModelDescendant<MainScopedModel>(
         builder: (context, child, model){
           return Container(
-            padding: EdgeInsets.only(left: 8, top: 0, right: 8, bottom: 0),
+            padding: EdgeInsets.only(left: 10, top: 0, right: 10, bottom: 0),
             color: Colors.transparent,
-            height: 145,
+            height: 125,
             alignment: Alignment.center,
             child: ListView.builder(
               shrinkWrap: true,
@@ -451,50 +748,72 @@ class _BizIdxPageState extends State<BizPage> {
                   child: InkWell(
                     onTap: () {
                       print("category name : " + data.cat_name);
-                      Navigator.push(context, SlideRightRoute(page: BizCategoryPage(data.cat_id.toString(),data.cat_name)));
+                      Navigator.push(context, SlideRightRoute(page: MyDashboard(index, model.bcategory.length)));
+                      //Navigator.push(context, SlideRightRoute(page: BizCategoryPage(data.cat_id.toString(),data.cat_name)));
                     },
-                    child: Container(
-                      height: 145,
-                      width: 100,
-                      alignment: Alignment.bottomCenter,
-                      decoration: new BoxDecoration(
-                        color: Colors.grey,
-                        image: new DecorationImage(
-                          image: CachedNetworkImageProvider('http://bizapp.e-dagang.asia' + data.cat_image ?? ''),
-                          fit: BoxFit.cover,
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                      child: Container(
-                        width: 100.0,
-                        alignment: Alignment.bottomCenter,
-                        margin: EdgeInsets.all(2.5),
-                        child: Stack(
-                          children: <Widget>[
-                            Text(data.cat_name ?? '',
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.lato(
-                                textStyle: TextStyle(fontSize: 12,
-                                    foreground: Paint()
-                                      ..style = PaintingStyle.stroke
-                                      ..strokeWidth = 4
-                                      ..color = Colors.white70, fontWeight: FontWeight.w600),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          height: 80,
+                          width: 81,
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 0),
+                          decoration: new BoxDecoration(
+                            color: Colors.grey.shade200,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.shade500,
+                                blurRadius: 1.5,
+                                spreadRadius: 0.0,
+                                offset: Offset(1.5, 1.5),
+                              )
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: new BorderRadius.circular(100.0),
+                            child: CachedNetworkImage(
+                              height: 80,
+                              width: 80,
+                              fit: BoxFit.cover,
+                              imageUrl: data.cat_image ?? '',
+                              imageBuilder: (context, imageProvider) => Container(
+                                decoration: BoxDecoration(
+                                    color: Color(0xffcecece),
+                                    image: DecorationImage(
+                                      alignment: Alignment.center,
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    borderRadius: BorderRadius.all(Radius.circular(10.0), //topRight: Radius.circular(8.0)
+                                    )
+                                ),
                               ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
+                              placeholder: (context, url) => Container(
+                                alignment: Alignment.center,
+                                color: Colors.transparent,
+                                child: Image.asset('assets/images/ed_logo_white.png',width: 50,
+                                  height: 50,),
+                              ),
+                              errorWidget: (context, url, error) => Icon(Icons.image_rounded,size: 36,),
                             ),
-
-                            Text(data.cat_name ?? '',
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.lato(
-                                textStyle: TextStyle(color: Colors.black87, fontSize: 12, fontWeight: FontWeight.w600),
-                              ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            )
-                          ],
-                        )
-                      )
+                          ),
+                        ),
+                        Container(
+                          width: 81,
+                          alignment: Alignment.topCenter,
+                          padding: EdgeInsets.only(top: 3.5),
+                          child: Text(data.cat_name ?? '',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.lato(
+                              textStyle: TextStyle(color: Colors.black87, fontSize: 11, fontWeight: FontWeight.w600),
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,),
+                        ),
+                      ],
                     ),
                   ),
                 );
@@ -532,10 +851,15 @@ class _BizIdxPageState extends State<BizPage> {
                       ),
                       onTap: () {
                         FirebaseAnalytics().logEvent(name: 'Biz_virtual_'+data.vr_list[index].vr_name,parameters:null);
-                        launchVr(data.vr_list[index].vr_url);
+                        Navigator.push(context, SlideRightRoute(
+                            page: VirtualWebView(data.vr_list[index].vr_url,data.vr_list[index].vr_name)));
                       },
+                      /*onTap: () {
+                        FirebaseAnalytics().logEvent(name: 'Biz_virtual_'+data.vr_list[index].vr_name,parameters:null);
+                        launchVr(data.vr_list[index].vr_url);
+                      },*/
                       child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Expanded(
@@ -544,19 +868,19 @@ class _BizIdxPageState extends State<BizPage> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.only(topLeft: Radius.circular(7), topRight: Radius.circular(7)),
                                 child: CachedNetworkImage(
-                                  imageUrl: 'https://bizapp.e-dagang.asia'+data.vr_list[index].vr_image ?? '',
+                                  imageUrl: data.vr_list[index].vr_image ?? '',
                                   placeholder: (context, url) => Container(
-                                    width: 30,
-                                    height: 30,
+                                    alignment: Alignment.center,
                                     color: Colors.transparent,
-                                    child: CupertinoActivityIndicator(radius: 15,),
+                                    child: Image.asset('assets/images/ed_logo_greys.png', width: 110,
+                                      height: 110,),
                                   ),
                                   errorWidget: (context, url, error) => Image.asset(
                                     'assets/icons/ic_image_error.png',
                                     fit: BoxFit.cover,
                                   ),
                                   fit: BoxFit.cover,
-                                  //height: 155,
+                                  alignment: Alignment.center,
                                 ),
                               ),
                             ),
@@ -601,7 +925,7 @@ class _BizIdxPageState extends State<BizPage> {
     return ScopedModelDescendant<MainScopedModel>(
       builder: (context, child, model) {
         return SliverPadding(
-          padding: EdgeInsets.all(10),
+          padding: EdgeInsets.only(left: 10, top: 0, right: 10, bottom: 0),
           sliver: SliverGrid(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
@@ -611,104 +935,109 @@ class _BizIdxPageState extends State<BizPage> {
             ),
             delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
               var data = model.bbusiness[index];
-              return InkWell(
-                onTap: () {
-                  sharedPref.save("biz_id", data.id.toString());
-                  sharedPref.save("biz_name", data.company_name);
-                  //FirebaseAnalytics().logEvent(name: 'Biz_company_'+data.company_name,parameters:null);
-                  Navigator.push(context,SlideRightRoute(page: BizCompanyDetailPage(data.id.toString(),data.company_name)));
-
-                },
-                child: Card(
-                  elevation: 1.0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Stack(
-                    children: [
-                      Center(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Container(
-                            padding: const EdgeInsets.all(0.0),
-                            color: Colors.white,
-                            child: Card(
+                return InkWell(
+                  onTap: () {
+                    sharedPref.save("biz_id", data.id.toString());
+                    sharedPref.save("biz_name", data.company_name);
+                    //FirebaseAnalytics().logEvent(name: 'Biz_company_'+data.company_name,parameters:null);
+                    Navigator.push(context, SlideRightRoute(
+                        page: BizCompanyDetailPage(
+                            data.id.toString(), data.company_name)));
+                  },
+                  child: Card(
+                    elevation: 1.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Container(
+                              padding: const EdgeInsets.all(0.0),
                               color: Colors.white,
-                              elevation: 0.0,
-                              clipBehavior: Clip.antiAliasWithSaveLayer,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.transparent,
-                                        borderRadius: BorderRadius.circular(7)
-                                      ),
-                                      child: data.logo == null ? Image.asset(
-                                        'assets/icons/ic_launcher_new.png', height: 80.0, width: 80.0,
-                                        fit: BoxFit.cover,)
-
-                                          : CachedNetworkImage(
-                                        fit: BoxFit.fitWidth,
-                                        imageUrl: 'http://bizapp.e-dagang.asia'+data.logo ?? '',
-                                        imageBuilder: (context, imageProvider) => Container(
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              alignment: Alignment.center,
-                                              image: imageProvider,
-                                              fit: BoxFit.fitWidth,
-                                            ),
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(8.0),
-                                              topRight: Radius.circular(8.0)
-                                            )
-                                          ),
+                              child: Card(
+                                color: Colors.white,
+                                elevation: 0.0,
+                                clipBehavior: Clip.antiAliasWithSaveLayer,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.transparent,
+                                            borderRadius: BorderRadius
+                                                .circular(7)
                                         ),
-                                        placeholder: (context, url) => Container(color: Colors.grey.shade200,),
-                                        errorWidget: (context, url, error) => Icon(Icons.image_rounded, size: 36,),
+                                        child: data.logo == null ? Image.asset(
+                                            'assets/icons/ic_edagang.png',
+                                            height: 80.0, width: 80.0,
+                                            fit: BoxFit.cover,
+                                          ) : CachedNetworkImage(
+                                            //fit: BoxFit.fitWidth,
+                                            imageUrl: data.logo ?? '',
+                                            imageBuilder: (context, imageProvider) => Container(
+                                                decoration: BoxDecoration(
+                                                  image: DecorationImage(
+                                                    alignment: Alignment.center,
+                                                    image: imageProvider,
+                                                    //fit: BoxFit.fitWidth,
+                                                  ),
+                                                  borderRadius: BorderRadius.only(
+                                                      topLeft: Radius.circular(8.0),
+                                                      topRight: Radius.circular(8.0)
+                                                  )
+                                                ),
+                                            ),
+                                            placeholder: (context, url) => Container(
+                                              alignment: Alignment.center,
+                                              color: Colors.transparent,
+                                              child: Image.asset('assets/images/ed_logo_greys.png', width: 110,
+                                                height: 110,),
+                                            ),
+                                            errorWidget: (context, url, error) => Icon(LineAwesomeIcons.file_image_o, size: 44, color: Color(0xffcecece),),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(height: 8.0),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 8.0),
-                                    child: Text(data.company_name,
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.lato(
-                                        textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                                    SizedBox(height: 8.0),
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                      child: Text(data.company_name,
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.lato(
+                                          textStyle: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                  ),
-                                  SizedBox(height: 8.0)
-                                ]
+                                    SizedBox(height: 8.0)
+                                  ]
+                                ),
                               ),
-                            ),
-                          )
+                            )
+                          ),
                         ),
-                      ),
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: data.verify == 1 ? Padding(
-                          padding: EdgeInsets.only(top: 5, right: 5),
-                          child: Image.asset('assets/icons/verify.png', fit: BoxFit.cover, height: 21,),
-
-                          /*Text('Verified',
-                            style: GoogleFonts.lato(
-                              textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.green.shade700),
-                            ),
-                          ),*/
-                        ) : Container(),
-                      ),
-                    ]
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: data.verify == 1 ? Padding(
+                            padding: EdgeInsets.only(top: 5, right: 5),
+                            child: Image.asset(
+                              'assets/icons/verify.png', fit: BoxFit.cover,
+                              height: 21,),
+                          ) : Container(),
+                        ),
+                      ]
+                    ),
                   ),
-                ),
-              );
-            },
+                );
+              },
               childCount: model.bbusiness.length,
             ),
           )
@@ -717,35 +1046,5 @@ class _BizIdxPageState extends State<BizPage> {
     );
   }
 
-  logoutUser(BuildContext context, MainScopedModel model) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String logtype = prefs.getString('login_type');
-
-    Map<String, String> headers = await getHeaders();
-    http.get(Constants.apiLogout, headers: headers).then((response) {
-      prefs.remove('token');
-      model.loggedInUser();
-    });
-
-    if(logtype == '1') {
-      _googleSignIn.signOut();
-    }else if(logtype == '2') {
-      facebookLogin.logOut();
-    }
-    Navigator.of(context).pushReplacementNamed("/Main");
-  }
-
-  Future<Map<String, String>> getHeaders() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    Map<String, String> headers = {
-      'Content-Type': 'application/json',
-      'token-type': 'Bearer',
-      'ng-api': 'true',
-      'auth-token': prefs.getString('token') == null ? Constants.tokenGuest : prefs.getString('token'),
-      'Guest-Order-Token': Constants.tokenGuest
-    };
-    return headers;
-  }
 }
 

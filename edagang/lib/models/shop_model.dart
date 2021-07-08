@@ -296,24 +296,70 @@ class OdrHistory {
   String order_no;
   String total_price;
   String status;
-  //String payment_status;
+  String address_id;
   String payment_err_code;
   String payment_err_desc;
   String payment_bank;
   String payment_txn_date;
   List<OrderGroup> order_group;
+  String name;
+  String address;
+  String postcode;
+  String city_id;
+  String state_id;
+  String full_address;
+  String city_name;
+  String state_name;
+
 
   OdrHistory(
       {this.id,
         this.order_no,
         this.total_price,
         this.status,
-        //this.payment_status,
+        this.address_id,
         this.payment_err_code,
         this.payment_err_desc,
         this.payment_bank,
         this.payment_txn_date,
-        this.order_group});
+        this.order_group,
+        this.name,
+        this.address,
+        this.postcode,
+        this.city_id,
+        this.state_id,
+        this.full_address,
+        this.city_name,
+        this.state_name});
+}
+
+
+class OrderStatus {
+  int id;
+  String order_no;
+  String total_price;
+  String status;
+  String payment_status;
+  String payment_error_code;
+  String payment_error_desc;
+  String payment_bank;
+  String transaction_date;
+  List<OrderGroup> order_group;
+
+  OrderStatus(
+      { this.id,
+        this.order_no,
+        this.total_price,
+        this.status,
+        this.payment_status,
+        this.payment_error_code,
+        this.payment_error_desc,
+        this.payment_bank,
+        this.transaction_date,
+        this.order_group,
+      }
+  );
+
 }
 
 class OrderGroup {
@@ -326,6 +372,7 @@ class OrderGroup {
   String order_status_name;
   String courier_id;
   String tracking_no;
+  int company_id;
   String merchant_name;
   String courier_company;
   List<OrderItem> order_items;
@@ -340,6 +387,7 @@ class OrderGroup {
         this.order_status_name,
         this.courier_id,
         this.tracking_no,
+        this.company_id,
         this.merchant_name,
         this.courier_company,
         this.order_items});

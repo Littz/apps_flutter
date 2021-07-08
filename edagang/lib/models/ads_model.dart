@@ -64,11 +64,16 @@ class PropertyCat {
   final String developer;
   final String overview;
   final String company_name;
+  final String address;
+  final String office_phone;
+  final String office_fax;
+  final String email;
+  final String website;
   final String logo;
   final List<Images> images;
 
 
-  PropertyCat({this.id, this.company_id, this.title, this.location, this.proptype, this.prop_id, this.prop_name, this.prop_type, this.built_up_size, this.price, this.bedrooms, this.bathrooms, this.developer, this.overview, this.company_name, this.logo, this.images});
+  PropertyCat({this.id, this.company_id, this.title, this.location, this.proptype, this.prop_id, this.prop_name, this.prop_type, this.built_up_size, this.price, this.bedrooms, this.bathrooms, this.developer, this.overview, this.company_name, this.address, this.office_phone, this.office_fax, this.email, this.website, this.logo, this.images});
 }
 
 

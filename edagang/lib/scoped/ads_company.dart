@@ -2,7 +2,7 @@ import 'package:edagang/models/ads_model.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'dart:async';
 import 'dart:convert';
-import 'package:edagang/utils/constant.dart';
+import 'package:edagang/helper/constant.dart';
 import 'package:http/http.dart' as http;
 
 class BlurbScopedModel extends Model {
@@ -17,9 +17,13 @@ class BlurbScopedModel extends Model {
 
   int cid,ctr;
   int getCount() {return ctr;}
-  String company, logo;
+  String company, address, ofis_phone, ofis_fax, emel, website, logo;
   int getCompanyId() {return cid;}
   String getCompanyName() {return company;}
+  String getCompanyAddr() {return address;}
+  String getCompanyTel() {return ofis_phone;}
+  String getCompanyEmel() {return emel;}
+  String getCompanyWeb() {return website;}
   String getLogo() {return logo;}
 
   Future<dynamic> _getPropertyCompany(bizId) async {
@@ -27,8 +31,7 @@ class BlurbScopedModel extends Model {
       'business_id': bizId,
     };
 
-    var response = await http.post(
-      'https://blurbapp.e-dagang.asia/api/blurb/property/company',
+    var response = await http.post('https://blurbapp.e-dagang.asia/api/blurb/property/v2/company',
       headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
       body: json.encode(postData),
     ).catchError((error) {
@@ -36,24 +39,31 @@ class BlurbScopedModel extends Model {
       return false;
     },
     );
+    print('BLURB PROPERTY COMPANY DETAIL ==============================================');
+    print('https://blurbapp.e-dagang.asia/api/blurb/property/v2/company?business_id='+bizId.toString());
     return json.decode(response.body);
 
   }
 
-  Future fetchCourseList (int bizId) async {
+  Future fetchBlurbCompany (int bizId) async {
     blurbProp.clear();
 
     _isLoadingBl = true;
     notifyListeners();
 
     var dataFromResponse = await _getPropertyCompany(bizId);
-    print('BLURB PROPERTY list ==============================================');
-    print(dataFromResponse);
+    //print('BLURB PROPERTY ==============================================');
+    //print(dataFromResponse);
 
     //ctr = dataFromResponse["data"]["course_count"];
     cid = dataFromResponse['data']['company'][0]['id'];
     company = dataFromResponse['data']['company'][0]['company_name'];
-    logo = 'https://blurbapp.e-dagang.asia'+dataFromResponse['data']['company'][0]['logo'];
+    address = dataFromResponse['data']['company'][0]['address'];
+    ofis_phone = dataFromResponse['data']['company'][0]['office_phone'];
+    ofis_fax = dataFromResponse['data']['company'][0]['office_fax'];
+    emel = dataFromResponse['data']['company'][0]['email'];
+    website = dataFromResponse['data']['company'][0]['website'];
+    logo = dataFromResponse['data']['company'][0]['logo'];
 
     print(ctr.toString());
     print(company);
@@ -66,7 +76,7 @@ class BlurbScopedModel extends Model {
           new Images(
             id: propImage["id"],
             property_id: propImage["property_id"],
-            file_path: 'https://blurbapp.e-dagang.asia'+propImage["file_path"],
+            file_path: propImage["file_path"],
           ),
         );
       });

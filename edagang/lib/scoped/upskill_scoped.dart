@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:edagang/models/biz_model.dart';
 import 'package:edagang/models/upskill_model.dart';
-import 'package:edagang/utils/constant.dart';
+import 'package:edagang/helper/constant.dart';
 import 'package:http/http.dart' as http;
 import 'package:scoped_model/scoped_model.dart';
 
@@ -55,6 +55,8 @@ String _name;
 int getId() {return _id;}
 String getCatName() {return _name;}
 
+
+
 Future<dynamic> _getSkillcat() async {
   var response = await http.get(
     Constants.tuneupAPI+'/course/category',
@@ -67,11 +69,13 @@ Future<dynamic> _getSkillcat() async {
 
 Future<dynamic> _getSkillist() async {
   var response = await http.get(
-    Constants.tuneupAPI+'/course/latest',
+    Constants.tuneupAPI+'/course/v2/latest',
   ).catchError((error) {
     print(error.toString());
     return false;
   });
+  print('GOILMU COURSE LATEST ==============================================');
+  print(Constants.tuneupAPI+'/course/v2/latest');
   return json.decode(response.body);
 }
 
@@ -80,8 +84,7 @@ Future fetchSkillCat() async {
   notifyListeners();
 
   var dataFromResponse = await _getSkillcat();
-  print('UPSKILL==============================================');
-  print(dataFromResponse);
+
 
   dataFromResponse["data"]["category"].forEach((dataCat) {
     SkillCat _cat = new SkillCat(
@@ -102,8 +105,8 @@ Future fetchCourseList() async {
   skillist.clear();
   notifyListeners();
   var dataFromResponse = await _getSkillist();
-  print('COURSE LIST==============================================');
-  print(dataFromResponse);
+  //print('COURSE LIST==============================================');
+  //print(dataFromResponse);
 
   dataFromResponse['data']['courses'].forEach((courseList) {
 
@@ -132,7 +135,7 @@ Future fetchCourseList() async {
       price: courseList['price'],
       course_category_id: courseList['course_category_id'],
       company_name: courseList['business']['company_name'],
-      logo: 'https://bizapp.e-dagang.asia'+courseList['business']['logo'],
+      logo: courseList['business']['logo'],
       cat_id: courseList['category']['id'],
       cat_name: courseList['category']['name'],
       schedule: _schedule,
@@ -147,12 +150,14 @@ Future fetchCourseList() async {
 
 Future<dynamic> _getSkillProfessional() async {
   var response = await http.post(
-    Constants.tuneupAPI+'/course/category?category_id=1',
+    Constants.tuneupAPI+'/course/v2/category?category_id=1',
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
     return false;
   });
+  print('GOILMU COURSE CATEGORY 1 ==============================================');
+  print(Constants.tuneupAPI+'/course/v2/category?category_id=1');
   return json.decode(response.body);
 }
 
@@ -161,8 +166,7 @@ Future fetchCourseProfessional() async {
   skillProfessional.clear();
   notifyListeners();
   var dataFromResponse = await _getSkillProfessional();
-  print('COURSE LIST==============================================');
-  print(dataFromResponse);
+
 
   _id = dataFromResponse['data']['category']['id'];
   _name = dataFromResponse['data']['category']['name'];
@@ -194,7 +198,7 @@ Future fetchCourseProfessional() async {
       price: courseList['price'],
       course_category_id: courseList['course_category_id'],
       company_name: courseList['business']['company_name'],
-      logo: 'https://bizapp.e-dagang.asia'+courseList['business']['logo'],
+      logo: courseList['business']['logo'],
       cat_id: _id,
       cat_name: _name,
       schedule: _schedule,
@@ -209,12 +213,14 @@ Future fetchCourseProfessional() async {
 
 Future<dynamic> _getSkillTechnical() async {
   var response = await http.post(
-    Constants.tuneupAPI+'/course/category?category_id=2',
+    Constants.tuneupAPI+'/course/v2/category?category_id=2',
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
     return false;
   });
+  print('GOILMU COURSE CATEGORY 2 ==============================================');
+  print(Constants.tuneupAPI+'/course/v2/category?category_id=2');
   return json.decode(response.body);
 }
 
@@ -223,8 +229,7 @@ Future fetchCourseTechnical() async {
   skillTechnical.clear();
   notifyListeners();
   var dataFromResponse = await _getSkillTechnical();
-  print('COURSE LIST==============================================');
-  print(dataFromResponse);
+
 
   _id = dataFromResponse['data']['category']['id'];
   _name = dataFromResponse['data']['category']['name'];
@@ -256,7 +261,7 @@ Future fetchCourseTechnical() async {
       price: courseList['price'],
       course_category_id: courseList['course_category_id'],
       company_name: courseList['business']['company_name'],
-      logo: 'https://bizapp.e-dagang.asia'+courseList['business']['logo'],
+      logo: courseList['business']['logo'],
       cat_id: _id,
       cat_name: _name,
       schedule: _schedule,
@@ -271,12 +276,14 @@ Future fetchCourseTechnical() async {
 
 Future<dynamic> _getSkillSafety() async {
   var response = await http.post(
-    Constants.tuneupAPI+'/course/category?category_id=3',
+    Constants.tuneupAPI+'/course/v2/category?category_id=3',
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
     return false;
   });
+  print('GOILMU COURSE CATEGORY 3 ==============================================');
+  print(Constants.tuneupAPI+'/course/v2/category?category_id=3');
   return json.decode(response.body);
 }
 
@@ -285,8 +292,6 @@ Future fetchCourseSafety() async {
   skillSafety.clear();
   notifyListeners();
   var dataFromResponse = await _getSkillSafety();
-  print('COURSE LIST==============================================');
-  print(dataFromResponse);
 
   _id = dataFromResponse['data']['category']['id'];
   _name = dataFromResponse['data']['category']['name'];
@@ -318,7 +323,7 @@ Future fetchCourseSafety() async {
       price: courseList['price'],
       course_category_id: courseList['course_category_id'],
       company_name: courseList['business']['company_name'],
-      logo: 'https://bizapp.e-dagang.asia'+courseList['business']['logo'],
+      logo: courseList['business']['logo'],
       cat_id: _id,
       cat_name: _name,
       schedule: _schedule,
@@ -333,12 +338,14 @@ Future fetchCourseSafety() async {
 
 Future<dynamic> _getSkillTraining() async {
   var response = await http.post(
-    Constants.tuneupAPI+'/course/category?category_id=4',
+    Constants.tuneupAPI+'/course/v2/category?category_id=4',
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
     return false;
   });
+  print('GOILMU COURSE CATEGORY 4 ==============================================');
+  print(Constants.tuneupAPI+'/course/v2/category?category_id=4');
   return json.decode(response.body);
 }
 
@@ -347,8 +354,6 @@ Future fetchCourseTraining() async {
   skillTraining.clear();
   notifyListeners();
   var dataFromResponse = await _getSkillTraining();
-  print('COURSE LIST==============================================');
-  print(dataFromResponse);
 
   _id = dataFromResponse['data']['category']['id'];
   _name = dataFromResponse['data']['category']['name'];
@@ -380,7 +385,7 @@ Future fetchCourseTraining() async {
       price: courseList['price'],
       course_category_id: courseList['course_category_id'],
       company_name: courseList['business']['company_name'],
-      logo: 'https://bizapp.e-dagang.asia'+courseList['business']['logo'],
+      logo: courseList['business']['logo'],
       cat_id: _id,
       cat_name: _name,
       schedule: _schedule,
@@ -399,12 +404,14 @@ void addGoilmuBannerList(Home_banner gbaner) {_gbanners.add(gbaner);}
 
 Future<dynamic> _getGoilmuJson() async {
   var response = await http.get(
-    'https://goilmuapp.e-dagang.asia/api/course/home',
+    'https://goilmuapp.e-dagang.asia/api/course/v2/home',
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
     return false;
   });
+  print('GOILMU COURSE HOME ==============================================');
+  print('https://goilmuapp.e-dagang.asia/api/course/v2/home');
   return json.decode(response.body);
 }
 
@@ -413,9 +420,6 @@ Future fetchGoilmuResponse() async {
 
   notifyListeners();
   var dataFromResponse = await _getGoilmuJson();
-
-  print('HOME GOILMU BANNERRRRRR #####################################');
-  print(dataFromResponse["data"]["banner"]);
 
   dataFromResponse["data"]["banner"].forEach((dataBaner) {
     Home_banner _banner = new Home_banner(

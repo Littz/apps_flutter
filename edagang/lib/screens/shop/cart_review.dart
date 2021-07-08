@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/screens/shop/cart_history.dart';
 import 'package:edagang/sign_in.dart';
-import 'package:edagang/utils/constant.dart';
+import 'package:edagang/helper/constant.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
@@ -102,7 +102,7 @@ class _MyReviewState extends State<MyReview> {
               title: new Text(
                 'My Reviews',
                 style: GoogleFonts.lato(
-                  textStyle: TextStyle(fontSize: 18, color: Colors.black,),
+                  textStyle: TextStyle(fontSize: 17 , fontWeight: FontWeight.w600,),
                 ),
               ),
             ),

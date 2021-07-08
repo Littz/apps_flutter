@@ -1,13 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/models/shop_model.dart';
 import 'package:edagang/screens/shop/product_detail.dart';
-import 'package:edagang/utils/shared_prefs.dart';
+import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:line_awesome_icons/line_awesome_icons.dart';
 
 
 class ProductCardItem extends StatelessWidget {
@@ -64,15 +65,12 @@ class ProductCardItem extends StatelessWidget {
                     child: CachedNetworkImage(
                       imageUrl: product.image ?? '',
                       placeholder: (context, url) => Container(
-                        width: 30,
-                        height: 30,
+                        alignment: Alignment.center,
                         color: Colors.transparent,
-                        child: CupertinoActivityIndicator(radius: 15,),
+                        child: Image.asset('assets/images/ed_logo_greys.png', width: 120,
+                          height: 120,),
                       ),
-                      errorWidget: (context, url, error) => Image.asset(
-                        'assets/icons/ic_image_error.png',
-                        fit: BoxFit.cover,
-                      ),
+                      errorWidget: (context, url, error) => Icon(LineAwesomeIcons.file_image_o, size: 44, color: Color(0xffcecece),),
                       fit: product.merchant_name.contains('NI HSIN') || product.merchant_name.contains('Hijrah Water') ? BoxFit.fitWidth : BoxFit.cover,
                     ),
                   ),
@@ -270,15 +268,12 @@ class PopularCardItem extends StatelessWidget {
                     child: CachedNetworkImage(
                       imageUrl: product.image ?? '',
                       placeholder: (context, url) => Container(
-                        width: 30,
-                        height: 30,
+                        alignment: Alignment.center,
                         color: Colors.transparent,
-                        child: CupertinoActivityIndicator(radius: 15,),
+                        child: Image.asset('assets/images/ed_logo_greys.png', width: 80,
+                          height: 80,),
                       ),
-                      errorWidget: (context, url, error) => Image.asset(
-                        'assets/icons/ic_image_error.png',
-                        fit: BoxFit.cover,
-                      ),
+                      errorWidget: (context, url, error) => Icon(LineAwesomeIcons.file_image_o, size: 44, color: Color(0xffcecece),),
                       fit: BoxFit.cover,
                       height: 135,
                     ),
@@ -424,15 +419,12 @@ class PromoCardItem extends StatelessWidget {
                   child: CachedNetworkImage(
                     imageUrl: product.image ?? '',
                     placeholder: (context, url) => Container(
-                      width: 30,
-                      height: 30,
+                      alignment: Alignment.center,
                       color: Colors.transparent,
-                      child: CupertinoActivityIndicator(radius: 15,),
+                      child: Image.asset('assets/images/ed_logo_greys.png', width: 90,
+                        height: 90,),
                     ),
-                    errorWidget: (context, url, error) => Image.asset(
-                      'assets/icons/ic_image_error.png',
-                      fit: BoxFit.cover,
-                    ),
+                    errorWidget: (context, url, error) => Icon(LineAwesomeIcons.file_image_o, size: 44, color: Color(0xffcecece),),
                     fit: product.merchant_name.contains('NI HSIN') ? BoxFit.fitWidth : BoxFit.cover,
                     height: 140,
                   ),

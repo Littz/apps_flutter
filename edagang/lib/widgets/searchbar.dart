@@ -5,6 +5,7 @@ import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:line_awesome_icons/line_awesome_icons.dart';
 
 Widget searchBar(BuildContext context) {
   return Container(
@@ -23,23 +24,24 @@ Widget searchBar(BuildContext context) {
               decoration: BoxDecoration(
                 //border: Border.all(width: 1, color: Color(0xff2877EA),),
                 borderRadius: BorderRadius.all(Radius.circular(20)),
-                color: Colors.grey.shade100,
-                boxShadow: [
+                color: Colors.grey.shade200,
+                /*boxShadow: [
                   BoxShadow(
                     color: Colors.grey.shade500,
                     blurRadius: 2.0,
                     spreadRadius: 0.0,
                     offset: Offset(2.0, 2.0), // shadow direction: bottom right
                   )
-                ],
+                ],*/
               ),
-              height: 37,
+              height: 36,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Container(
-                    padding: EdgeInsets.only(left: 16),
+                    padding: EdgeInsets.only(left: 10, right: 16),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                       color: Colors.transparent,
@@ -47,18 +49,19 @@ Widget searchBar(BuildContext context) {
                     height: 37,
                     width: 40,
                     child: Center(
-                      child: Icon(CupertinoIcons.search,
-                        color: Color(0xff2877EA),),
+                      child: Icon(LineAwesomeIcons.search,
+                        color: Color(0xff084B8C),),
+
                     ),
                   ),
                   SizedBox(width: 3,),
                   Expanded(
-                    child: Text('Search',
+                    child: Text(' Search',
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 13,
                         fontWeight: FontWeight.normal,
                         fontFamily: "Quicksand",
-                        color: Color(0xff2877EA),
+                        color: Colors.grey[500],
                       ),
                     ),
                   ),
@@ -87,23 +90,24 @@ Widget searchBar2(BuildContext context) {
               decoration: BoxDecoration(
                 //border: Border.all(width: 1, color: Color(0xff2877EA),),
                 borderRadius: BorderRadius.all(Radius.circular(20)),
-                color: Colors.grey.shade100,
-                boxShadow: [
+                color: Colors.grey.shade200,
+                /*boxShadow: [
                   BoxShadow(
                     color: Colors.grey.shade500,
                     blurRadius: 2.0,
                     spreadRadius: 0.0,
                     offset: Offset(2.0, 2.0), // shadow direction: bottom right
                   )
-                ],
+                ],*/
               ),
-              height: 37,
+              height: 36,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Container(
-                    padding: EdgeInsets.only(left: 16),
+                    padding: EdgeInsets.only(left: 10, right: 16),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                       color: Colors.transparent,
@@ -111,18 +115,19 @@ Widget searchBar2(BuildContext context) {
                     height: 37,
                     width: 40,
                     child: Center(
-                      child: Icon(CupertinoIcons.search,
-                        color: Color(0xff2877EA),),
+                      child: Icon(LineAwesomeIcons.search,
+                        color: Color(0xff084B8C),),
+
                     ),
                   ),
                   SizedBox(width: 3,),
                   Expanded(
-                    child: Text('Search',
+                    child: Text(' Search',
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 13,
                         fontWeight: FontWeight.normal,
                         fontFamily: "Quicksand",
-                        color: Color(0xff2877EA),
+                        color: Colors.grey[500],
                       ),
                     ),
                   ),
@@ -151,23 +156,24 @@ Widget searchBarShop(BuildContext context) {
               decoration: BoxDecoration(
                 //border: Border.all(width: 1, color: Color(0xff2877EA),),
                 borderRadius: BorderRadius.all(Radius.circular(20)),
-                color: Colors.grey.shade100,
-                boxShadow: [
+                color: Colors.grey.shade200,
+                /*boxShadow: [
                   BoxShadow(
                     color: Colors.grey.shade500,
                     blurRadius: 2.0,
                     spreadRadius: 0.0,
                     offset: Offset(2.0, 2.0), // shadow direction: bottom right
                   )
-                ],
+                ],*/
               ),
-              height: 37,
+              height: 36,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Container(
-                    padding: EdgeInsets.only(left: 10),
+                    padding: EdgeInsets.only(left: 10, right: 16),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                       color: Colors.transparent,
@@ -175,18 +181,19 @@ Widget searchBarShop(BuildContext context) {
                     height: 37,
                     width: 40,
                     child: Center(
-                      child: Icon(CupertinoIcons.search,
-                        color: Color(0xffF45432),),
+                      child: Icon(LineAwesomeIcons.search,
+                        color: Colors.black87,),
+
                     ),
                   ),
-                  SizedBox(width: 10,),
+                  SizedBox(width: 3,),
                   Expanded(
-                    child: Text('Search',
+                    child: Text(' Search',
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 13,
                         fontWeight: FontWeight.normal,
                         fontFamily: "Quicksand",
-                        color: Color(0xffF45432),
+                        color: Colors.grey[500],
                       ),
                     ),
                   ),

@@ -2,7 +2,7 @@ import 'package:edagang/models/upskill_model.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'dart:async';
 import 'dart:convert';
-import 'package:edagang/utils/constant.dart';
+import 'package:edagang/helper/constant.dart';
 import 'package:http/http.dart' as http;
 
 class Upskill2ScopedModel extends Model {
@@ -28,7 +28,7 @@ class Upskill2ScopedModel extends Model {
     };
 
     var response = await http.post(
-      'https://goilmuapp.e-dagang.asia/api/course/business',
+      'https://goilmuapp.e-dagang.asia/api/course/v2/business',
       headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
       body: json.encode(postData),
     ).catchError((error) {
@@ -36,6 +36,8 @@ class Upskill2ScopedModel extends Model {
       return false;
     },
     );
+    print('GOILMU COURSE list ==============================================');
+    print('https://goilmuapp.e-dagang.asia/api/course/v2/business?business_id='+bizId.toString());
     return json.decode(response.body);
 
   }
@@ -47,16 +49,15 @@ class Upskill2ScopedModel extends Model {
     notifyListeners();
 
     var dataFromResponse = await _getGoilmuCompany(bizId);
-    print('GOILMU COURSE list ==============================================');
-    print(dataFromResponse);
+
 
     ctr = dataFromResponse["data"]["course_count"];
     cid = dataFromResponse['data']['business']['id'];
     company = dataFromResponse['data']['business']['company_name'];
-    logo = 'https://goilmuapp.e-dagang.asia'+dataFromResponse['data']['business']['logo'];
+    logo = dataFromResponse['data']['business']['logo'];
 
-    print(ctr.toString());
-    print(company);
+    //print(ctr.toString());
+    //print(company);
 
     dataFromResponse["data"]["courses"].forEach((dataComp) {
       SkillList _course = new SkillList(

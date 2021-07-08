@@ -6,6 +6,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 
@@ -75,15 +76,12 @@ class _VideoListState extends State<VideoList> {
                                         borderRadius: BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8)),
                                         child: CachedNetworkImage(imageUrl: 'http://img.youtube.com/vi/' + vlink + '/0.jpg',
                                           placeholder: (context, url) => Container(
-                                            width: 30,
-                                            height: 30,
+                                            alignment: Alignment.center,
                                             color: Colors.transparent,
-                                            child: CupertinoActivityIndicator(radius: 15,),
+                                            child: Image.asset('assets/images/ed_logo_greys.png', width: 90,
+                                              height: 90,),
                                           ),
-                                          errorWidget: (context, url, error) => Image.asset(
-                                            'assets/icons/ic_image_error.png',
-                                            fit: BoxFit.cover,
-                                          ),
+                                          errorWidget: (context, url, error) => Icon(LineAwesomeIcons.file_image_o, size: 44, color: Color(0xffcecece),),
                                           fit: BoxFit.fill,
                                           width: MediaQuery.of(context).size.width,
                                           //height: 260,

@@ -144,7 +144,7 @@ class _VideoPlayState extends State<VideoPlay> {
                     await FlutterShare.share(
                       title: 'Cartsini Video',
                       text: '',
-                      linkUrl: 'https://shopapp.e-dagang.asia/video/'+widget.vid,
+                      linkUrl: 'https://edagang.page.link/?link=https://shopapp.e-dagang.asia/video/'+widget.vid,
                       chooserTitle: widget.title ?? '',
                     );
                   },
