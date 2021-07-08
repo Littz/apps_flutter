@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>61884815226-hts9khmiumm9739t86m9g6klfhsqq93b.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.61884815226-hts9khmiumm9739t86m9g6klfhsqq93b</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>61884815226-0u88k0u4klmnn4qj92thd16j8fa1of7o.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAdxZHNv_aPi0aa9ggdrFXJd8pLR0F6CkI</string>
+	<key>GCM_SENDER_ID</key>
+	<string>61884815226</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.digital.dagang.asia.edagang</string>
+	<key>PROJECT_ID</key>
+	<string>edagang-d8876</string>
+	<key>STORAGE_BUCKET</key>
+	<string>edagang-d8876.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:61884815226:ios:d59f54570cd71583da28c3</string>
+</dict>
+</plist>

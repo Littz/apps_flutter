@@ -46,6 +46,7 @@ dependencies:
   carousel_slider: any
   line_awesome_icons: ^1.0.4+2
   firebase_analytics: ^5.0.11
+<<<<<<< HEAD
   firebase_remote_config: ^0.6.0
   firebase_dynamic_links:
   package_info:
@@ -54,6 +55,12 @@ dependencies:
   dartz: ^0.9.2
   share: ^0.6.5+4
   flutter_link_preview: ^1.5.6
+=======
+  
+  #pagination_view: ^1.0.4+2
+  #faker:
+  #flutter_youtube_view: ^2.0.0
+>>>>>>> 92d8077771c57240b2283c853e0773bbc538bafb
 
 flutter_icons:
   image_path: "assets/icons/ic_launcher_new.png"
