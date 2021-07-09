@@ -27,7 +27,7 @@ class ReOrderScopedModel extends Model {
       'order_id': odrId,
     };
 
-    var response = await http.post(Constants.postReorder,
+    var response = await http.post(Uri.parse(Constants.postReorder),
       headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
       body: json.encode(postData),
     ).catchError((error) {

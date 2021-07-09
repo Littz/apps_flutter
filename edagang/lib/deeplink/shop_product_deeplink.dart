@@ -95,7 +95,7 @@ class _ProductDeeplinkPageState extends State<ProductDeeplink> with TickerProvid
         print("product NAME : "+_title);
 
         http.get(
-          Constants.shopSingleProduct+id,
+          Uri.parse(Constants.shopSingleProduct+id),
           headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
         ).then((response) {
           responseBody = json.decode(response.body);
@@ -540,7 +540,7 @@ class _ProductDeeplinkPageState extends State<ProductDeeplink> with TickerProvid
     });
 
     http.get(
-      Constants.shopSingleProduct+pid,
+      Uri.parse(Constants.shopSingleProduct+pid),
       headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
     ).then((response) {
       print(response.body);

@@ -80,7 +80,7 @@ class ReCheckoutActivityState extends State<ReCheckoutActivity> {
         };
 
         http.post(
-          Constants.postReorder,
+            Uri.parse(Constants.postReorder),
           headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
           body: json.encode(postData),
         ).then((response) {
@@ -578,14 +578,14 @@ class ReCheckoutActivityState extends State<ReCheckoutActivity> {
                       };
 
                       http.post(
-                        Constants.postRepayment,
-                        headers: {'Authorization' : 'Bearer '+prefs.getString('token'),},
+                          Uri.parse(Constants.postRepayment),
+                        headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
                         body: json.encode(postData),
                       ).then((response) {
                         //var resBody = json.decode(response.body);
                         print(response.statusCode.toString());
                         print(response.body);
-                        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => WebViewContainer(Constants.postRepayment+params, prefs.getString('token'), _bank, total, full_address )));
+                        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => WebViewContainer(Constants.postRepayment+params, prefs.getString('token'), _bank, total)));
                       });
 
                     }
@@ -618,7 +618,7 @@ class ReCheckoutActivityState extends State<ReCheckoutActivity> {
                             )
                         ),
                         Text(
-                          "Make Payment",
+                          "PAY",
                           style: GoogleFonts.lato(
                             textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.white),
                           ),

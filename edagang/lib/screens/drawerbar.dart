@@ -208,7 +208,7 @@ class _DrawerBarMenuState extends State<DrawerBarMenu> {
     String logtype = prefs.getString('login_type');
 
     Map<String, String> headers = await getHeaders();
-    http.get(Constants.apiLogout, headers: headers).then((response) {
+    http.get(Uri.parse(Constants.apiLogout), headers: headers).then((response) {
       prefs.remove('token');
       model.loggedInUser();
     });

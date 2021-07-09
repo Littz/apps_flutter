@@ -192,7 +192,7 @@ class ChangePaswdState extends State<ChangePaswd> with SingleTickerProviderState
     print(newPasswordController.text);
 
     final http.Response response = await http.post(
-      Constants.shopAPI+'/account/password',
+        Uri.parse(Constants.shopAPI+'/account/password'),
       body: json.encode(userData), //{'fullname': 'Cartsini Sana', 'email': _formData['email'], 'password': _formData['password'], 'channel': 0},
       headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
     );

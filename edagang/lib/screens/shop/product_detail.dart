@@ -92,7 +92,7 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
         print("product NAME : "+_title);
 
         http.get(
-          Constants.shopSingleProduct+id,
+            Uri.parse(Constants.shopSingleProduct+id),
           headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
         ).then((response) {
           responseBody = json.decode(response.body);
@@ -564,7 +564,7 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
     });
 
     http.get(
-      Constants.shopSingleProduct+pid,
+        Uri.parse(Constants.shopSingleProduct+pid),
       headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
     ).then((response) {
       print(response.body);

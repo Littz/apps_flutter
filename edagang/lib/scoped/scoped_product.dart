@@ -66,7 +66,7 @@ class ProductScopedModel extends Model {
     };
 
     var response = await http.post(
-      Constants.shopProductCategory,
+        Uri.parse(Constants.shopProductCategory),
       headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
       body: json.encode(postData),
     ).catchError(
@@ -93,7 +93,7 @@ class ProductScopedModel extends Model {
     };
 
     var response = await http.post(
-      Constants.shopProductMerchant,
+        Uri.parse(Constants.shopProductMerchant),
       headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
       body: json.encode(postData),
     ).catchError(
@@ -118,7 +118,7 @@ class ProductScopedModel extends Model {
     };
 
     var response = await http.post(
-      Constants.shopAPI+'/product/promo',
+        Uri.parse(Constants.shopAPI+'/product/promo'),
       headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
       body: json.encode(postData),
     ).catchError(
@@ -143,7 +143,7 @@ class ProductScopedModel extends Model {
     };
 
     var response = await http.post(
-      Constants.shopAPI+'/product/top',
+        Uri.parse(Constants.shopAPI+'/product/top'),
       headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
       body: json.encode(postData),
     ).catchError(
@@ -477,7 +477,7 @@ class ProductScopedModel extends Model {
     };
 
     http.post(
-      Constants.shopProductCategory,
+        Uri.parse(Constants.shopProductCategory),
       headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
       body: json.encode(postData),
     ).then((response) {
@@ -570,7 +570,7 @@ class ProductScopedModel extends Model {
     };
 
     var response = await http.post(
-      Constants.shopNgoProduct,
+        Uri.parse(Constants.shopNgoProduct),
       headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
       body: json.encode(postData),
     ).catchError(
@@ -663,7 +663,7 @@ class ProductScopedModel extends Model {
     };
 
     var response = await http.post(
-      Constants.shopKoopProduct,
+        Uri.parse(Constants.shopKoopProduct),
       headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
       body: json.encode(postData),
     ).catchError(

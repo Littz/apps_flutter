@@ -67,7 +67,7 @@ class _OtherDlPageState extends State<OtherDlPage> with TickerProviderStateMixin
         print("job ID : "+widget.jobId);
 
         http.post(
-          'https://blurbapp.e-dagang.asia/api/blurb/others/details?others_id='+widget.jobId,
+          Uri.parse('https://blurbapp.e-dagang.asia/api/blurb/others/details?others_id='+widget.jobId),
           headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
         ).then((response) {
           print('OTHERS RESPONSE CODE /////////////////');

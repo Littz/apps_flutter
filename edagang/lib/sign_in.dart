@@ -426,7 +426,7 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
     print(_deviceid);
 
     final http.Response response = await http.post(
-      Constants.apiLogin,
+        Uri.parse(Constants.apiLogin),
       body: JSON.jsonEncode(authData),
       headers: {
         'Content-Type': 'application/json',
@@ -551,7 +551,7 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
       case FacebookLoginStatus.loggedIn:
         final token = result.accessToken.token;
         final graphResponse = await http.get(
-            'https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=${token}');
+            Uri.parse('https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=${token}'));
         final profile = JSON.jsonDecode(graphResponse.body);
         print(profile);
         setState(() {
@@ -598,7 +598,7 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
     print(_deviceid);
 
     final http.Response response = await http.post(
-      Constants.apiLogin,
+        Uri.parse(Constants.apiLogin),
       body: JSON.jsonEncode(authData),
       headers: {
         'Content-Type': 'application/json',
@@ -722,7 +722,7 @@ class _SignInOrRegisterState extends State<SignInOrRegister> with SingleTickerPr
     print(_deviceid);
 
     final http.Response response = await http.post(
-      Constants.apiLogin,
+        Uri.parse(Constants.apiLogin),
       body: JSON.jsonEncode(authData),
       headers: {
         'Content-Type': 'application/json',
@@ -871,7 +871,7 @@ class _RegisterState extends State<Register> with SingleTickerProviderStateMixin
     };
 
     final http.Response response = await http.post(
-      Constants.apiRegister,
+        Uri.parse(Constants.apiRegister),
       body: JSON.jsonEncode(
           authData), //{'fullname': 'Cartsini Sana', 'email': _formData['email'], 'password': _formData['password'], 'channel': 0},
       headers: {'Content-Type': 'application/json'},

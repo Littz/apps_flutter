@@ -416,7 +416,7 @@ class MyCustomFormState extends State<MyCustomForm> {
     print('Profile data ==================================================');
     print(userData);
     final http.Response response = await http.post(
-      Constants.shopAPI+'/account/profile',
+        Uri.parse(Constants.shopAPI+'/account/profile'),
       body: json.encode(userData),
       headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
     );

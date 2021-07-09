@@ -378,7 +378,7 @@ class _WriteReviewState extends State<WriteReview> {
     print(_dropdownValue.toString());
     print(_formData['review']);
 
-    http.post('https://shopapp.e-dagang.asia/api/product/review',
+    http.post(Uri.parse('https://shopapp.e-dagang.asia/api/product/review'),
         headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
         body: JSON.jsonEncode(rvwData)
     ).then((response) {

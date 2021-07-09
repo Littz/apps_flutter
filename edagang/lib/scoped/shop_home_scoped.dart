@@ -74,7 +74,7 @@ void addToVideoList(Video vid2) {
 
 Future<dynamic> _getHomeJson() async {
   var response = await http.get(
-    Constants.shopHome,
+      Uri.parse(Constants.shopHome),
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
@@ -283,7 +283,7 @@ Future fetchHomePageResponse() async {
 
 Future<dynamic> _getVideoJson() async {
   var response = await http.get(
-    'https://shopapp.e-dagang.asia/api/video',
+      Uri.parse('https://shopapp.e-dagang.asia/api/video'),
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
@@ -318,7 +318,7 @@ Future fetchVideoListResponse() async {
 
 Future<dynamic> _getKoopJson() async {
   var response = await http.get(
-    Constants.shopKoop,
+      Uri.parse(Constants.shopKoop),
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
@@ -351,7 +351,7 @@ Future fetchKoopListResponse() async {
 
 Future<dynamic> _getNgoJson() async {
   var response = await http.get(
-    Constants.shopNgo,
+      Uri.parse(Constants.shopNgo),
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());

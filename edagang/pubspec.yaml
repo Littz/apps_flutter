@@ -12,55 +12,49 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^1.0.2
+  ffi: ^1.1.2
+  cupertino_icons: ^1.0.3
   flutter_swiper : ^1.1.6
-  flutter_html: ^0.11.0
-  scoped_model: ^1.0.1
-  http: ^0.12.0+2
-  dio: ^1.0.0
-  google_fonts: ^1.1.1
-  loading_gifs: ^0.2.3
-  provider: ^4.3.3
-  shared_preferences: ^0.5.8
-  cached_network_image: ^2.0.0
-  flutter_webview_plugin: ^0.3.11
-  webview_flutter: ^2.0.8
-  flutter_staggered_grid_view: ^0.3.0
-  date_format: ^1.0.4
-  photo_view: ^0.4.2
-  page_indicator: ^0.3.0
-  fluttertoast:
-  badges: ^1.1.4
-  flutter_share: ^1.0.5
-  path_provider: ^1.3.0
-  onesignal_flutter: ^2.6.4
-  google_sign_in: ^4.0.1+3
+  flutter_html: ^2.1.0
+  scoped_model: ^1.1.0
+  http: ^0.13.3
+  dio: ^4.0.0
+  intl: ^0.17.0
+  google_fonts: ^2.1.0
+  #loading_gifs: ^0.3.0
+  provider: ^5.0.0
+  shared_preferences: ^2.0.6
+  cached_network_image: ^3.0.0
+  flutter_webview_plugin: ^0.4.0
+  webview_flutter: ^2.0.9
+  flutter_staggered_grid_view: ^0.4.0
+  date_format: ^2.0.2
+  photo_view: ^0.11.1
+  page_indicator: ^0.4.1
+  fluttertoast: ^8.0.7
+  badges: ^2.0.1
+  flutter_share: ^2.0.0
+  path_provider: ^2.0.2
+  onesignal_flutter: ^3.0.0
+  google_sign_in: ^5.0.4
   flutter_facebook_login: ^3.0.0
-  intro_slider: ^2.3.3
+  intro_slider: ^3.0.2
   device_id: ^0.2.0
-  ff_navigation_bar: ^0.1.4
+  #ff_navigation_bar: ^0.1.5
   youtube_player_flutter: ^8.0.0
-  url_launcher: ^6.0.3
+  url_launcher: ^6.0.9
   huawei_push: ^5.1.1+301
-  shimmer: ^1.1.1
-  carousel_slider: any
+  shimmer: ^2.0.0
+  #carousel_slider: ^4.0.0
   line_awesome_icons: ^1.0.4+2
-  firebase_analytics: ^5.0.11
-<<<<<<< HEAD
-  firebase_remote_config: ^0.6.0
-  firebase_dynamic_links:
-  package_info:
+  firebase_analytics: ^8.1.2
+  firebase_dynamic_links: ^2.0.6
   native_updater: ^0.1.0
-  equatable: ^2.0.0
+  equatable: ^2.0.3
   dartz: ^0.9.2
-  share: ^0.6.5+4
-  flutter_link_preview: ^1.5.6
-=======
-  
-  #pagination_view: ^1.0.4+2
-  #faker:
-  #flutter_youtube_view: ^2.0.0
->>>>>>> 92d8077771c57240b2283c853e0773bbc538bafb
+  share: ^2.0.4
+  #flutter_link_preview: ^1.5.6
+
 
 flutter_icons:
   image_path: "assets/icons/ic_launcher_new.png"

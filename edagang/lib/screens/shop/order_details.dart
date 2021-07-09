@@ -1,6 +1,8 @@
+import 'dart:convert';
+
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
 import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/helper/constant.dart';
@@ -31,6 +33,7 @@ class MyOrders extends StatefulWidget {
 }
 
 class _MyOrdersState extends State<MyOrders> with TickerProviderStateMixin {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   TabController _tabController;
   bool isLoading = false;
   Color color = Color(0xff2877EA);
@@ -66,6 +69,7 @@ class _MyOrdersState extends State<MyOrders> with TickerProviderStateMixin {
         builder: (context, child, model)
     {
       return Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           elevation: 0.0,
           title: Text("My Orders",
@@ -197,52 +201,46 @@ class _MyOrdersState extends State<MyOrders> with TickerProviderStateMixin {
           children: [
             Container(
               height:MediaQuery.of(context).size.height,
-              child: model.getTotalPay() == 0 ? EmptyList('Oops!.',subTitle: 'There are no payment item to made yet.') : Column(
+              child: model.getTotalPay() == 0 ? EmptyListCartsini('Oops! Sorry..',subTitle: 'There are no purchased items placed yet.') : Column(
                 children: <Widget>[
                   Container(),
-                  Expanded(child: _buildToPay(key: "key1"))
+                  Expanded(child: _buildToPay(key: "key1", ctx: context))
                 ]
               ),
             ),
             Container(
               height:MediaQuery.of(context).size.height,
-              child: model.getTotalShip() == 0 ? EmptyList('Oops!.',subTitle: 'There are no item to ship yet.') : Column(
+              child: model.getTotalShip() == 0 ? EmptyListCartsini('Oops! Sorry..',subTitle: 'There are no purchased items placed yet.') : Column(
                 children: <Widget>[
                   Container(),
-                  Expanded(child: _buildToShip(key: "key2"))
+                  Expanded(child: _buildToShip(key: "key2", ctx: context))
                 ]
               ),
             ),
             Container(
               height:MediaQuery.of(context).size.height,
-              child: Column(
+              child: model.getTotalReceive() == 0 ? EmptyListCartsini('Oops! Sorry..',subTitle: 'There are no purchased items placed yet.') : Column(
                   children: <Widget>[
                     Container(),
-                    Expanded(
-                        child: model.getTotalReceive() > 0 ? _buildToReceive(key: "key3") : EmptyList('Oops!.',subTitle: 'There are no item to receive yet.')
-                    )
+                    Expanded(child: _buildToReceive(key: "key3", ctx: context))
                   ]
               ),
             ),
             Container(
               height:MediaQuery.of(context).size.height,
-              child: Column(
+              child: model.getTotalReview() == 0 ? EmptyListCartsini('Oops! Sorry..',subTitle: 'There are no purchased items placed yet.') : Column(
                   children: <Widget>[
                     Container(),
-                    Expanded(
-                        child: model.getTotalReview() > 0 ? _buildToReview(key: "key4") : EmptyList('Oops!.',subTitle: 'There are no item to review yet.')
-                    )
+                    Expanded(child: _buildToReview(key: "key4", ctx: context))
                   ]
               ),
             ),
             Container(
               height:MediaQuery.of(context).size.height,
-              child: Column(
+              child: model.getTotalCancel() == 0 ? EmptyListCartsini('Oops! Sorry..',subTitle: 'There are no purchased items placed yet.') : Column(
                   children: <Widget>[
                     Container(),
-                    Expanded(
-                        child: model.getTotalCancel() > 0 ? _buildCancellation(key: "key5") : EmptyList('Oops!.',subTitle: 'There are no cancellation item.')
-                    )
+                    Expanded(child: _buildCancellation(key: "key5", ctx: context))
                   ]
               ),
             ),
@@ -253,9 +251,9 @@ class _MyOrdersState extends State<MyOrders> with TickerProviderStateMixin {
     });
   }
 
-  Widget _buildToPay({String key}) {
+  Widget _buildToPay({String key, BuildContext ctx}) {
     return ScopedModelDescendant<MainScopedModel>(
-        builder: (context, child, model){
+        builder: (ctx, child, model){
           return ListView.builder(
             key: PageStorageKey(key),
             shrinkWrap: true,
@@ -480,7 +478,57 @@ class _MyOrdersState extends State<MyOrders> with TickerProviderStateMixin {
                     Container(
                         padding: EdgeInsets.all(10),
                         alignment: Alignment.topRight,
-                        child: SizedBox(
+                        child: ButtonBar(
+                          children: <Widget>[
+                            OutlineButton(
+                              shape: StadiumBorder(),
+                              color: Colors.transparent,
+                              borderSide: BorderSide(color: Colors.deepOrange.shade700),
+                              child: Text(' Cancel ',
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.deepOrange.shade700),
+                                ),
+                              ),
+                              onPressed: () async{
+                                SharedPreferences prefs = await SharedPreferences.getInstance();
+                                Map<String, dynamic> postData = {
+                                  'order_id': odrid,
+                                };
+
+                                http.post(Uri.parse('https://shopapp.e-dagang.asia/api/order/cancel'),
+                                  headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
+                                  body: json.encode(postData),
+                                ).then((response) {
+                                  //var resBody = json.decode(response.body);
+                                  print(response.statusCode.toString());
+                                  print(response.body);
+                                });
+                              },
+                            ),
+                            RaisedButton(
+                              color: Colors.deepOrange.shade700,
+                              shape: StadiumBorder(),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: Text(
+                                  "Pay Now",
+                                  style: GoogleFonts.lato(
+                                    textStyle: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                              ),
+                              onPressed: () async{
+                                SharedPreferences prefs = await SharedPreferences.getInstance();
+                                prefs.setDouble('total', double.tryParse(data.total_price));
+                                prefs.setDouble('ship', double.tryParse(data.order_group[0].courier_charges));
+
+                                Navigator.push(context, SlideRightRoute(page: ReCheckoutActivity(odrid)));
+                              },
+                            )
+                          ],
+                        ),
+
+                        /*SizedBox(
                           width: MediaQuery.of(context).size.width/2.35,
                           child: RaisedButton(
                             color: Colors.deepOrange.shade600,
@@ -499,19 +547,10 @@ class _MyOrdersState extends State<MyOrders> with TickerProviderStateMixin {
                               prefs.setDouble('total', double.tryParse(data.total_price));
                               prefs.setDouble('ship', double.tryParse(data.order_group[0].courier_charges));
 
-                              //sharedPref.save("total", data.total_price);
-                              //sharedPref.save("ship", data.order_group[0].courier_charges);
                               Navigator.push(context, SlideRightRoute(page: ReCheckoutActivity(odrid)));
-                              /*print(listCartId);
-                                List<String> cartIdListString = listCartId.map((i)=>i.toString()).toSet().toList();
-
-                                SharedPreferences prefs = await SharedPreferences.getInstance();
-                                prefs.setStringList('list_cartid', cartIdListString);
-                                prefs.setDouble('subtotal', model.getTotalCost());
-                                Navigator.push(context, SlideRightRoute(page: CheckoutActivity()));*/
                             },
                           ),
-                        )
+                        )*/
                     ),
                   ],
                 ),
@@ -522,9 +561,9 @@ class _MyOrdersState extends State<MyOrders> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildToShip({String key}) {
+  Widget _buildToShip({String key, BuildContext ctx}) {
     return ScopedModelDescendant<MainScopedModel>(
-        builder: (context, child, model){
+        builder: (ctx, child, model){
           return ListView.builder(
             key: PageStorageKey(key),
             shrinkWrap: true,
@@ -761,9 +800,9 @@ class _MyOrdersState extends State<MyOrders> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildToReceive({String key}) {
+  Widget _buildToReceive({String key, BuildContext ctx}) {
     return ScopedModelDescendant<MainScopedModel>(
-        builder: (context, child, model){
+        builder: (ctx, child, model){
           return ListView.builder(
             key: PageStorageKey(key),
             shrinkWrap: true,
@@ -989,9 +1028,9 @@ class _MyOrdersState extends State<MyOrders> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildToReview({String key}) {
+  Widget _buildToReview({String key, BuildContext ctx}) {
     return ScopedModelDescendant<MainScopedModel>(
-        builder: (context, child, model){
+        builder: (ctx, child, model){
           return ListView.builder(
             key: PageStorageKey(key),
             shrinkWrap: true,
@@ -1231,9 +1270,9 @@ class _MyOrdersState extends State<MyOrders> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildCancellation({String key}) {
+  Widget _buildCancellation({String key, BuildContext ctx}) {
     return ScopedModelDescendant<MainScopedModel>(
-        builder: (context, child, model){
+        builder: (ctx, child, model){
           return ListView.builder(
             key: PageStorageKey(key),
             shrinkWrap: true,
@@ -1461,7 +1500,7 @@ class _MyOrdersState extends State<MyOrders> with TickerProviderStateMixin {
                         padding: EdgeInsets.all(10),
                         alignment: Alignment.topRight,
                         child: SizedBox(
-                          width: MediaQuery.of(context).size.width/2.35,
+                          width: MediaQuery.of(context).size.width/2.8,
                           child: RaisedButton(
                             color: Colors.deepOrange.shade600,
                             shape: StadiumBorder(),
@@ -1589,7 +1628,14 @@ class _MyOrdersState extends State<MyOrders> with TickerProviderStateMixin {
     );
   }
 
-  
+
+  Widget _buildList({String key}) {
+    return ListView.builder(
+      key: PageStorageKey(key),
+      itemBuilder: (_, i) => ListTile(title: Text("testing.. ${i}")),
+    );
+  }
+
 }
 
 class OrderDetailPage extends StatefulWidget {

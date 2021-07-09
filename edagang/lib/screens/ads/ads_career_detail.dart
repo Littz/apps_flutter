@@ -60,7 +60,7 @@ class _CareerDetailPageState extends State<CareerDetailPage> with TickerProvider
         print("job ID : "+widget.jobId);
 
         http.post(
-          'https://blurbapp.e-dagang.asia/api/blurb/job/v2/details?job_id='+widget.jobId,
+            Uri.parse('https://blurbapp.e-dagang.asia/api/blurb/job/v2/details?job_id='+widget.jobId),
           headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
         ).then((response) {
           print('JOBBBBB RESPONSE CODE /////////////////');

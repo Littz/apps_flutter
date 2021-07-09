@@ -677,7 +677,7 @@ class CheckoutActivityState extends State<CheckoutActivity> {
                         showAlertToast('Please select fpx banking.');
                       }else{
                         sharedPref.save('paid_amount', "RM${model.totalNettR().toStringAsFixed(2)}");
-                        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => WebViewContainer(Constants.postCheckout+params, prefs.getString('token'), _bank, model.totalNettR().toStringAsFixed(2), _addr )));
+                        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => WebViewContainer(Constants.postCheckout+params, prefs.getString('token'), _bank, model.totalNettR().toStringAsFixed(2))));
                       }
                     },
                     color: Colors.green.shade600,

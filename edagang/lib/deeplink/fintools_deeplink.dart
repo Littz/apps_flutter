@@ -61,7 +61,7 @@ class _FintoolDlPageState extends State<FintoolDlPage> with TickerProviderStateM
         print("product ID : "+widget.bizId);
 
         http.post(
-          'https://finapp.e-dagang.asia/api/fintools/details?business_id='+widget.bizId,
+          Uri.parse('https://finapp.e-dagang.asia/api/fintools/details?business_id='+widget.bizId),
           headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
         ).then((response) {
           print('BIZZZZZZZZZ RESPONSE CODE /////////////////');

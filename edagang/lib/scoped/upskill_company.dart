@@ -28,7 +28,7 @@ class Upskill2ScopedModel extends Model {
     };
 
     var response = await http.post(
-      'https://goilmuapp.e-dagang.asia/api/course/v2/business',
+        Uri.parse('https://goilmuapp.e-dagang.asia/api/course/v2/business'),
       headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
       body: json.encode(postData),
     ).catchError((error) {

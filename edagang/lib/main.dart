@@ -60,6 +60,7 @@ class _MyAppPageState extends State<MyApp> {
   bool _requireConsent = false;
   String _debugLabelString = "";
   SharedPref sharedPref = SharedPref();
+  bool _enableConsentButton = false;
 
   loadAuth() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -77,8 +78,81 @@ class _MyAppPageState extends State<MyApp> {
     }
   }
 
-  void initOneSignal() {
+  Future<void> initOneSignal() async {
     if (!mounted) return;
+
+    OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+
+    OneSignal.shared.setRequiresUserPrivacyConsent(_requireConsent);
+
+    OneSignal.shared
+        .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+      print('NOTIFICATION OPENED HANDLER CALLED WITH: ${result}');
+      this.setState(() {
+        _debugLabelString =
+        "Opened notification: \n${result.notification.jsonRepresentation().replaceAll("\\n", "\n")}";
+      });
+    });
+
+    OneSignal.shared
+        .setNotificationWillShowInForegroundHandler((OSNotificationReceivedEvent event) {
+      print('FOREGROUND HANDLER CALLED WITH: ${event}');
+      /// Display Notification, send null to not display
+      event.complete(null);
+
+      this.setState(() {
+        _debugLabelString =
+        "Notification received in foreground notification: \n${event.notification.jsonRepresentation().replaceAll("\\n", "\n")}";
+      });
+    });
+
+    OneSignal.shared
+        .setInAppMessageClickedHandler((OSInAppMessageAction action) {
+      this.setState(() {
+        _debugLabelString =
+        "In App Message Clicked: \n${action.jsonRepresentation().replaceAll("\\n", "\n")}";
+      });
+    });
+
+    OneSignal.shared
+        .setSubscriptionObserver((OSSubscriptionStateChanges changes) {
+      print("SUBSCRIPTION STATE CHANGED: ${changes.jsonRepresentation()}");
+    });
+
+    OneSignal.shared.setPermissionObserver((OSPermissionStateChanges changes) {
+      print("PERMISSION STATE CHANGED: ${changes.jsonRepresentation()}");
+    });
+
+    OneSignal.shared.setEmailSubscriptionObserver(
+            (OSEmailSubscriptionStateChanges changes) {
+          print("EMAIL SUBSCRIPTION STATE CHANGED ${changes.jsonRepresentation()}");
+        });
+
+    OneSignal.shared.setSMSSubscriptionObserver(
+            (OSSMSSubscriptionStateChanges changes) {
+          print("SMS SUBSCRIPTION STATE CHANGED ${changes.jsonRepresentation()}");
+        });
+
+    // NOTE: Replace with your own app ID from https://www.onesignal.com
+    await OneSignal.shared.setAppId("2ee5bcc3-30a9-40cd-9de8-1aaec0d71fe3");
+
+    bool requiresConsent = await OneSignal.shared.requiresUserPrivacyConsent();
+
+    this.setState(() {
+    _enableConsentButton = requiresConsent;
+    });
+
+    // Some examples of how to use In App Messaging public methods with OneSignal SDK
+    //oneSignalInAppMessagingTriggerExamples();
+
+    OneSignal.shared.disablePush(false);
+
+    // Some examples of how to use Outcome Events public methods with OneSignal SDK
+    //oneSignalOutcomeEventsExamples();
+
+    bool userProvidedPrivacyConsent = await OneSignal.shared.userProvidedPrivacyConsent();
+    print("USER PROVIDED PRIVACY CONSENT: $userProvidedPrivacyConsent");
+    /*if (!mounted) return;
 
     OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
     OneSignal.shared.setRequiresUserPrivacyConsent(_requireConsent);
@@ -113,7 +187,7 @@ class _MyAppPageState extends State<MyApp> {
           OSiOSSettings.autoPrompt: false,
           OSiOSSettings.inAppLaunchUrl : true
         }
-    );
+    );*/
   }
 
   @override

@@ -61,7 +61,7 @@ class _AutoShowcasePageState extends State<AutoShowcase> with TickerProviderStat
     try {
       setState(() {
         http.post(
-          'https://blurbapp.e-dagang.asia/api/blurb/auto/v2/details?auto_id='+widget.autoId,
+            Uri.parse('https://blurbapp.e-dagang.asia/api/blurb/auto/v2/details?auto_id='+widget.autoId),
           headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
         ).then((response) {
           responseBody = json.decode(response.body);

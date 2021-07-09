@@ -26,7 +26,7 @@ class SmartbizScopedModel extends Model {
     };
 
     var response = await http.post(
-      Constants.bizAPI+'/biz/v2/category',
+        Uri.parse(Constants.bizAPI+'/biz/v2/category'),
       headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
       body: json.encode(postData),
     ).catchError((error) {

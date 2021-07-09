@@ -63,7 +63,7 @@ class _CompanyDeeplinkPageState extends State<CompanyDeeplinkPage> with TickerPr
         print("product ID : "+widget.bizId);
 
         http.post(
-          Constants.bizAPI+'/biz/details?business_id='+widget.bizId,
+          Uri.parse(Constants.bizAPI+'/biz/details?business_id='+widget.bizId),
           headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
         ).then((response) {
           print('BIZZZZZZZZZ RESPONSE CODE /////////////////');

@@ -121,7 +121,7 @@ void removeProduct(int cartId, int prodId) async {
   orderParams = {'_method': 'DELETE', 'product_id': prodId};
   _kartsList.clear();
   notifyListeners();
-  http.post(Constants.shopCart+'/'+cartId.toString(),
+  http.post(Uri.parse(Constants.shopCart+'/'+cartId.toString()),
       headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
       body: json.encode(orderParams)
   ).then((response) {
@@ -139,7 +139,7 @@ void updateLineItem(int cartId, int productId, int quantity) async {
   print(Constants.shopCart+"/"+cartId.toString());
   print(orderParams);
 
-  http.post(Constants.shopCart+"/"+cartId.toString(),
+  http.post(Uri.parse(Constants.shopCart+"/"+cartId.toString()),
     headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
     body: json.encode(orderParams)
   ).then((response) {
@@ -158,7 +158,7 @@ void createNewLineItem(String params) async {
   //  "product_id": productId, "quantity": quantity
   //};
   http.post(
-      Constants.shopCart+'?'+params,
+      Uri.parse(Constants.shopCart+'?'+params),
       headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
       //body: json.encode(lineItemObject)
   ).then((response) {
@@ -197,7 +197,7 @@ void setShippingAddress(int addr_id) async {
     'default_billing': 'Y',
   };
 
-  http.post(Constants.addressAPI + '/setdefault',
+  http.post(Uri.parse(Constants.addressAPI + '/setdefault'),
     headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
     body: json.encode(addrData)
   ).then((response) {
@@ -211,7 +211,7 @@ void setShippingAddress(int addr_id) async {
 Future<dynamic> _getCartCount() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   var response = await http.get(
-    Constants.shopAPI+'/cart/product/count',
+      Uri.parse(Constants.shopAPI+'/cart/product/count'),
     headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
@@ -237,7 +237,7 @@ Future fetchCartTotal() async {
 Future<dynamic> _getCartList() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   var response = await http.get(
-    Constants.shopCart,
+      Uri.parse(Constants.shopCart),
     headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
@@ -325,7 +325,7 @@ Future fetchCartsFromResponse() async {
 Future<dynamic> _getCartReload() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   var response = await http.get(
-    Constants.shopCart+'/reload',
+      Uri.parse(Constants.shopCart+'/reload'),
     headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
@@ -412,7 +412,7 @@ Future fetchAddressList() async {
   currentCartCount = 0;
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   http.get(
-    Constants.addressAPI,
+      Uri.parse(Constants.addressAPI),
     headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
   ).then((response) {
     //print(response.body);
@@ -451,8 +451,7 @@ Future fetchBankList() async {
   notifyListeners();
   currentCartCount = 0;
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  http.get(
-    Constants.getFpxbank,
+  http.get(Uri.parse(Constants.getFpxbank),
     headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
   ).then((response) {
     //print(response.body);

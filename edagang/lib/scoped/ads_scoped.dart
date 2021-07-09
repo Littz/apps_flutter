@@ -20,7 +20,7 @@ bool get isLoading => _isLoading;
 
 Future<dynamic> _getJobcat() async {
   var response = await http.get(
-    'https://blurbapp.e-dagang.asia/api/career/job/listing',
+      Uri.parse('https://blurbapp.e-dagang.asia/api/career/job/listing'),
   ).catchError((error) {
     print(error.toString());
     return false;
@@ -77,7 +77,7 @@ void addHomeOtherList(JobsCat other) {_blbothers.add(other);}
 
 Future<dynamic> _getBlurbOtherJson() async {
   var response = await http.get(
-    'https://blurbapp.e-dagang.asia/api/blurb/others/v2/listing',
+      Uri.parse('https://blurbapp.e-dagang.asia/api/blurb/others/v2/listing'),
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
@@ -129,7 +129,7 @@ Future fetchBlurbOtherResponse() async {
 
 Future<dynamic> _getHomeBlurbJson() async {
   var response = await http.get(
-    'https://blurbapp.e-dagang.asia/api/blurb/v2/home',
+      Uri.parse('https://blurbapp.e-dagang.asia/api/blurb/v2/home'),
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());

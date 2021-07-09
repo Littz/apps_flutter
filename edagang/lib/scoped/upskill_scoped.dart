@@ -59,7 +59,7 @@ String getCatName() {return _name;}
 
 Future<dynamic> _getSkillcat() async {
   var response = await http.get(
-    Constants.tuneupAPI+'/course/category',
+      Uri.parse(Constants.tuneupAPI+'/course/category'),
   ).catchError((error) {
     print(error.toString());
     return false;
@@ -69,7 +69,7 @@ Future<dynamic> _getSkillcat() async {
 
 Future<dynamic> _getSkillist() async {
   var response = await http.get(
-    Constants.tuneupAPI+'/course/v2/latest',
+      Uri.parse(Constants.tuneupAPI+'/course/v2/latest'),
   ).catchError((error) {
     print(error.toString());
     return false;
@@ -150,7 +150,7 @@ Future fetchCourseList() async {
 
 Future<dynamic> _getSkillProfessional() async {
   var response = await http.post(
-    Constants.tuneupAPI+'/course/v2/category?category_id=1',
+      Uri.parse(Constants.tuneupAPI+'/course/v2/category?category_id=1'),
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
@@ -213,7 +213,7 @@ Future fetchCourseProfessional() async {
 
 Future<dynamic> _getSkillTechnical() async {
   var response = await http.post(
-    Constants.tuneupAPI+'/course/v2/category?category_id=2',
+      Uri.parse(Constants.tuneupAPI+'/course/v2/category?category_id=2'),
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
@@ -276,7 +276,7 @@ Future fetchCourseTechnical() async {
 
 Future<dynamic> _getSkillSafety() async {
   var response = await http.post(
-    Constants.tuneupAPI+'/course/v2/category?category_id=3',
+      Uri.parse(Constants.tuneupAPI+'/course/v2/category?category_id=3'),
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
@@ -338,7 +338,7 @@ Future fetchCourseSafety() async {
 
 Future<dynamic> _getSkillTraining() async {
   var response = await http.post(
-    Constants.tuneupAPI+'/course/v2/category?category_id=4',
+      Uri.parse(Constants.tuneupAPI+'/course/v2/category?category_id=4'),
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
@@ -404,7 +404,7 @@ void addGoilmuBannerList(Home_banner gbaner) {_gbanners.add(gbaner);}
 
 Future<dynamic> _getGoilmuJson() async {
   var response = await http.get(
-    'https://goilmuapp.e-dagang.asia/api/course/v2/home',
+      Uri.parse('https://goilmuapp.e-dagang.asia/api/course/v2/home'),
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());

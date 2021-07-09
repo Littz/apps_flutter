@@ -66,7 +66,7 @@ class _GoilmuDlPageState extends State<GoilmuDlPage> with SingleTickerProviderSt
         print("product ID : "+_skillId);
 
         http.post(
-          Constants.tuneupAPI+'/course/details?course_id='+widget.skillId,
+          Uri.parse(Constants.tuneupAPI+'/course/details?course_id='+widget.skillId),
           headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
         ).then((response) {
           print('UPSKILLLLL RESPONSE CODE /////////////////');

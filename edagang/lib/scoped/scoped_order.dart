@@ -82,7 +82,7 @@ mixin OrderScopedModel on Model {
   Future<dynamic> _getOrdersJson() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     var response = await http.get(
-      Constants.getHistory,
+        Uri.parse(Constants.getHistory),
       headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
     ).catchError((error) {
       print(error.toString());
@@ -162,7 +162,7 @@ mixin OrderScopedModel on Model {
   Future<dynamic> _getMyOrderStatusJson() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     var response = await http.get(
-      'http://shopapp.e-dagang.asia/api/order/statuscount',
+        Uri.parse('http://shopapp.e-dagang.asia/api/order/statuscount'),
       headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
     ).catchError((error) {
       print(error.toString());

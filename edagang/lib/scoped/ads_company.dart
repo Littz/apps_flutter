@@ -31,7 +31,7 @@ class BlurbScopedModel extends Model {
       'business_id': bizId,
     };
 
-    var response = await http.post('https://blurbapp.e-dagang.asia/api/blurb/property/v2/company',
+    var response = await http.post(Uri.parse('https://blurbapp.e-dagang.asia/api/blurb/property/v2/company'),
       headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
       body: json.encode(postData),
     ).catchError((error) {

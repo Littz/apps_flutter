@@ -31,7 +31,7 @@ void addHomeFinanceList(Home_business finance) {_finances.add(finance);}
 
 Future<dynamic> _getHomeFinJson() async {
   var response = await http.get(
-    'https://finapp.e-dagang.asia/api/fintools/v2/home',
+      Uri.parse('https://finapp.e-dagang.asia/api/fintools/v2/home'),
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());

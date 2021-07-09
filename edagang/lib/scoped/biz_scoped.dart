@@ -30,7 +30,7 @@ bool get isLoadingCo => _isLoadingCo;
 
 Future<dynamic> _getVisitlist() async {
   var response = await http.get(
-    Constants.bizAPI+'/biz/v2/latest',
+      Uri.parse(Constants.bizAPI+'/biz/v2/latest'),
   ).catchError((error) {
     print(error.toString());
     return false;
@@ -113,7 +113,7 @@ int getTotalCompanyPlus() {return totCompanyPlus;}
 
 Future<dynamic> _getCompanylist() async {
   var response = await http.get(
-    Constants.bizAPI+'/biz/v2/companies',
+      Uri.parse(Constants.bizAPI+'/biz/v2/companies'),
   ).catchError((error) {
     print(error.toString());
     return false;
@@ -164,7 +164,7 @@ void addHomeVirtualList(Home_virtual vr) {_bvirtual.add(vr);}
 
 Future<dynamic> _getHomeBizJson() async {
   var response = await http.get(
-    'https://bizapp.e-dagang.asia/api/biz/v2/home',
+      Uri.parse('https://bizapp.e-dagang.asia/api/biz/v2/home'),
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
@@ -263,7 +263,7 @@ void addVirtualPageList(Home_virtual vrp) {_bvirtuals.add(vrp);}
 
 Future<dynamic> _getVrBizJson() async {
   var response = await http.get(
-    'https://bizapp.e-dagang.asia/api/biz/v2/vr',
+      Uri.parse('https://bizapp.e-dagang.asia/api/biz/v2/vr'),
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
@@ -316,7 +316,7 @@ void addStateList(StateX ste) {_stlookup.add(ste);}
 
 Future<dynamic> _getStateJson() async {
   var response = await http.get(
-    'http://cartsini.my/api/lookup/state',
+      Uri.parse('http://cartsini.my/api/lookup/state'),
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());

@@ -65,7 +65,7 @@ class _CareerDlPageState extends State<CareerDlPage> with TickerProviderStateMix
         print("job ID : "+widget.jobId);
 
         http.post(
-          'https://blurbapp.e-dagang.asia/api/blurb/job/details?job_id='+widget.jobId,
+          Uri.parse('https://blurbapp.e-dagang.asia/api/blurb/job/details?job_id='+widget.jobId),
           headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
         ).then((response) {
           print('JOBBBBB RESPONSE CODE /////////////////');

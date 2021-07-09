@@ -79,10 +79,10 @@ class FpxStatusState extends State<FpxStatus> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Icon(widget.status == 'failed' ? CupertinoIcons.clear_circled : CupertinoIcons.check_mark_circled, color: widget.status == 'failed' ? Colors.red.shade500 : Colors.green.shade500, size: 50,),
+                    Icon(widget.status == 'failed' ? CupertinoIcons.clear : CupertinoIcons.check_mark, color: widget.status == 'failed' ? Colors.red.shade500 : Colors.green.shade600, size: 50,),
                     Text(widget.status == 'failed' ? 'Order Failed' : 'Successfully Ordered',
                       style: GoogleFonts.lato(
-                        textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: widget.status == 'failed' ? Colors.red : Colors.green,),
+                        textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: widget.status == 'failed' ? Colors.red.shade500 : Colors.green.shade600,),
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -108,9 +108,9 @@ class FpxStatusState extends State<FpxStatus> {
 
                       },
                       child: new Padding(
-                          padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                          padding: EdgeInsets.only(top: 16.0, bottom: 10.0),
                           child: new Text(
-                            "CLOSE",
+                            " CLOSE ",
                             style: GoogleFonts.lato(
                               textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.white),
                             ),

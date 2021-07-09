@@ -8,7 +8,7 @@ import 'package:edagang/helper/utility.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/models/link_media_info.dart';
 import 'package:edagang/widgets/customWidgets.dart';
-import 'package:edagang/widgets/url_text/link_preview.dart';
+//import 'package:edagang/widgets/url_text/link_preview.dart';
 import 'package:edagang/helper/shared_prefrence_helper.dart';
 
 class CustomLinkMediaInfo extends StatelessWidget {
@@ -34,7 +34,7 @@ class CustomLinkMediaInfo extends StatelessWidget {
       String url) async {
     try {
       var response = await http.Client()
-          .get("https://noembed.com/embed?url=" + url)
+          .get(Uri.parse("https://noembed.com/embed?url=" + url))
           .then((result) => result.body)
           .then(json.decode)
           .then((json) => LinkMediaInfo.fromJson(json));
@@ -79,11 +79,11 @@ class CustomLinkMediaInfo extends StatelessWidget {
     /// Other url preview is displayed on `LinkPreview` widget.
     /// `LinkPreview` uses [flutter_link_preview] package to fetch url metadata.
     /// It is seen that `flutter_link_preview` package is unable to fetch youtube metadata
-    if (!uri.contains("youtu")) {
+    /*if (!uri.contains("youtu")) {
       return LinkPreview(
         url: uri,
       );
-    }
+    }*/
 
     /// Youtube thumbnail preview builder
     return FutureBuilder(

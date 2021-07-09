@@ -41,7 +41,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       'email': _formData['email'],
     };
 
-    http.post('https://shopapp.e-dagang.asia/api/account/reset',
+    http.post(Uri.parse('https://shopapp.e-dagang.asia/api/account/reset'),
         //headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
         body: JSON.jsonEncode(reqData)
     ).then((response) {

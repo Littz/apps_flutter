@@ -60,10 +60,10 @@ class _AutoDlShowcasePageState extends State<AutoDlShowcase> with TickerProvider
     });
 
     try {
-
+      var url = Uri.parse('https://blurbapp.e-dagang.asia/api/blurb/auto/details?auto_id='+widget.autoId);
       setState(() {
         http.post(
-          'https://blurbapp.e-dagang.asia/api/blurb/auto/details?auto_id='+widget.autoId,
+          url,
           headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
         ).then((response) {
           responseBody = json.decode(response.body);

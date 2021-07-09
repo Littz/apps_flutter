@@ -66,7 +66,7 @@ class _PropDlShowcasePageState extends State<PropDlShowcase> with TickerProvider
 
       setState(() {
         http.post(
-          'https://blurbapp.e-dagang.asia/api/blurb/property/details?property_id='+widget.propId,
+          Uri.parse('https://blurbapp.e-dagang.asia/api/blurb/property/details?property_id='+widget.propId),
           headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
         ).then((response) {
           responseBody = json.decode(response.body);

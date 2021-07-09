@@ -9,8 +9,8 @@ import 'package:google_fonts/google_fonts.dart';
 class WebViewContainer extends StatefulWidget {
   final token;
   final url;
-  final title, nett, addrs;
-  WebViewContainer(this.url, this.token, this.title, this.nett, this.addrs);
+  final title, nett;
+  WebViewContainer(this.url, this.token, this.title, this.nett);
   @override
   createState() => _WebViewContainerState(this.url);
 }
@@ -34,7 +34,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
     super.initState();
     _title = widget.title;
     _nett = widget.nett;
-    _addr = widget.addrs;
+    //_addr = widget.addrs;
     _url = widget.url;
     _token = widget.token;
 
@@ -112,11 +112,12 @@ class _WebViewContainerState extends State<WebViewContainer> {
                     fontFamily: "Quicksand",
                   ),
                 ),*/
-                new Text(_addr,
+                new Text(_title.toUpperCase(),
                   style: GoogleFonts.lato(
-                    textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
+                    textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, fontStyle: FontStyle.normal),
                   ),
-                  maxLines: 2,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
@@ -131,7 +132,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
                 child: new Text('RM'+_nett,
                   textAlign: TextAlign.center,
                   style: GoogleFonts.lato(
-                    textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w600,),
+                    textStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.w500,),
                   ),
                 ),
               ),

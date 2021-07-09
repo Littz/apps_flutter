@@ -62,7 +62,7 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
         print("product ID : "+widget.bizId);
 
         http.post(
-          Constants.bizAPI+'/biz/v2/details?business_id='+widget.bizId,
+            Uri.parse(Constants.bizAPI+'/biz/v2/details?business_id='+widget.bizId),
           headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
         ).then((response) {
           print(Constants.bizAPI+'/biz/v2/details?business_id='+widget.bizId);

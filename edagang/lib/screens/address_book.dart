@@ -304,7 +304,7 @@ class _AddressBookState extends State<AddressBook> {
                       final SharedPreferences prefs = await SharedPreferences.getInstance();
                       Map<dynamic, dynamic> orderParams = Map();
                       orderParams = {'_method': 'DELETE'};
-                      http.post(Constants.addressAPI +'/'+aid.toString(),
+                      http.post(Uri.parse(Constants.addressAPI +'/'+aid.toString()),
                           headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
                           body: json.encode(orderParams)
                       ).then((response) {
@@ -356,7 +356,7 @@ class _AddressBookState extends State<AddressBook> {
                     final SharedPreferences prefs = await SharedPreferences.getInstance();
                     Map<dynamic, dynamic> orderParams = Map();
                     orderParams = {'_method': 'DELETE'};
-                    http.post(Constants.addressAPI +'/'+aid.toString(),
+                    http.post(Uri.parse(Constants.addressAPI +'/'+aid.toString()),
                         headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
                         body: json.encode(orderParams)
                     ).then((response) {
@@ -404,7 +404,7 @@ class _AddAddressState extends State<AddAddress> {
   String cityInfoUrl = 'http://cartsini.my/api/lookup/city/';
 
   Future<String> _getStateList() async {
-    await http.get(stateInfoUrl, headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',}).then((response) {
+    await http.get(Uri.parse(stateInfoUrl), headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',}).then((response) {
       var data = json.decode(response.body);
       //print('STATE LOOKUP ####################################################################################');
       //print(data);
@@ -415,7 +415,7 @@ class _AddAddressState extends State<AddAddress> {
   }
 
   Future<String> _getCitiesList() async {
-    await http.get(cityInfoUrl+_state, headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',}).then((response) {
+    await http.get(Uri.parse(cityInfoUrl+_state), headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',}).then((response) {
       var data = json.decode(response.body);
       //print('CITY LOOKUP ####################################################################################');
       //print(data);
@@ -773,7 +773,7 @@ class _AddAddressState extends State<AddAddress> {
     print('mobile_no: '+ phoneFieldController.text);
 
     final http.Response response = await http.post(
-      Constants.addressAPI,
+        Uri.parse(Constants.addressAPI),
       body: json.encode(addrData), //{'fullname': 'Cartsini Sana', 'email': _formData['email'], 'password': _formData['password'], 'channel': 0},
       headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
     );
@@ -869,7 +869,7 @@ class _EditAddressState extends State<EditAddress> {
   String cityInfoUrl = 'http://cartsini.my/api/lookup/city/';
 
   Future<String> _getStateList() async {
-    await http.get(stateInfoUrl, headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',}).then((response) {
+    await http.get(Uri.parse(stateInfoUrl), headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',}).then((response) {
       var data = json.decode(response.body);
       //print('STATE LOOKUP ####################################################################################');
       //print(data);
@@ -880,7 +880,7 @@ class _EditAddressState extends State<EditAddress> {
   }
 
   Future<String> _getCitiesList() async {
-    await http.get(cityInfoUrl+_state, headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',}).then((response) {
+    await http.get(Uri.parse(cityInfoUrl+_state), headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',}).then((response) {
       var data = json.decode(response.body);
       //print('CITY LOOKUP ####################################################################################');
       //print(data);
@@ -939,7 +939,7 @@ class _EditAddressState extends State<EditAddress> {
                                   final SharedPreferences prefs = await SharedPreferences.getInstance();
                                   Map<dynamic, dynamic> orderParams = Map();
                                   orderParams = {'_method': 'DELETE'};
-                                  http.post(Constants.addressAPI +'/'+widget.addrid.toString()+"?_method=DELETE",
+                                  http.post(Uri.parse(Constants.addressAPI +'/'+widget.addrid.toString()+"?_method=DELETE"),
                                     headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
                                   ).then((response) {
                                     print('Deleting Address.. >>>>');
@@ -1525,7 +1525,7 @@ class _EditAddressState extends State<EditAddress> {
     };
 
     final http.Response response = await http.post(
-      Constants.addressAPI + '/' + widget.addrid.toString(),
+        Uri.parse(Constants.addressAPI + '/' + widget.addrid.toString()),
       body: json.encode(addrData), //{'fullname': 'Cartsini Sana', 'email': _formData['email'], 'password': _formData['password'], 'channel': 0},
       headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
     );
