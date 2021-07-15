@@ -74,15 +74,17 @@ void addToVideoList(Video vid2) {
 
 Future<dynamic> _getHomeJson() async {
   var response = await http.get(
-      Uri.parse(Constants.shopHome),
+    Uri.parse(Constants.shopHome),
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
     return false;
-  },
-  );
+  });
   print('CARTSINI HOME #####################################');
   print(Constants.shopHome);
+  print(response.statusCode.toString());
+  print(response.body);
+
   return json.decode(response.body);
 }
 
@@ -279,17 +281,18 @@ Future fetchHomePageResponse() async {
   notifyListeners();
 }
 
-// https://shopapp.e-dagang.asia/api/video
-
 Future<dynamic> _getVideoJson() async {
   var response = await http.get(
-      Uri.parse('https://shopapp.e-dagang.asia/api/video'),
+    Uri.parse('https://shopapp.e-dagang.asia/api/video'),
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
     return false;
-  },
-  );
+  });
+  print('VIDEO CONTENT #####################################');
+  print('https://shopapp.e-dagang.asia/api/video');
+  print(response.statusCode.toString());
+  print(response.body);
   return json.decode(response.body);
 }
 
@@ -315,16 +318,18 @@ Future fetchVideoListResponse() async {
 }
 
 
-
 Future<dynamic> _getKoopJson() async {
   var response = await http.get(
-      Uri.parse(Constants.shopKoop),
+    Uri.parse(Constants.shopKoop),
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
     return false;
-  },
-  );
+  });
+  print('KOPERASI #####################################');
+  print(Constants.shopKoop);
+  print(response.statusCode.toString());
+  print(response.body);
   return json.decode(response.body);
 }
 
@@ -351,13 +356,16 @@ Future fetchKoopListResponse() async {
 
 Future<dynamic> _getNgoJson() async {
   var response = await http.get(
-      Uri.parse(Constants.shopNgo),
+    Uri.parse(Constants.shopNgo),
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
     return false;
-  },
-  );
+  });
+  print('NGO #####################################');
+  print(Constants.shopNgo);
+  print(response.statusCode.toString());
+  print(response.body);
   return json.decode(response.body);
 }
 

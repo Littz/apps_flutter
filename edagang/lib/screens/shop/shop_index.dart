@@ -20,8 +20,7 @@ import 'package:edagang/utube/video_play.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/product_grid_card.dart';
 import 'package:edagang/widgets/searchbar.dart';
-import 'package:edagang/widgets/webview.dart';
-import 'package:edagang/widgets/webview_bb.dart';
+import 'package:edagang/widgets/webview_f.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -33,12 +32,6 @@ import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class CustomTab {
-  const CustomTab({this.icon, this.title, this.color});
-  final Icon icon;
-  final String title;
-  final Color color;
-}
 
 class ShopIndexPage extends StatefulWidget {
 
@@ -52,9 +45,10 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   List<Widget> listBottomWidget = new List();
   String _logType,_photo = "";
-  String _selectedItem = 'Notification';
+
   SharedPref sharedPref = SharedPref();
   List<Menus> new_content = new List();
+  SwiperController _controller;
 
   loadPhoto() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -70,7 +64,7 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
   }
 
   goToDetailsPage(BuildContext context, Banner_ item) {
-    String imgurl = 'https://shopapp.e-dagang.asia'+item.imageUrl;
+    String imgurl = item.imageUrl;
     String catname = item.title ?? '';
     String catid = item.itemId.toString();
     String ctype = item.type.toString();
@@ -93,13 +87,14 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
       });
     } else if (ctype == "4") {
       SchedulerBinding.instance.addPostFrameCallback((_) {
-        Navigator.push(context, SlideRightRoute(page: WebviewBixon(vrurl ?? '', imgurl ?? '')));
+        Navigator.push(context, SlideRightRoute(page: WebViewBb(vrurl ?? '', imgurl ?? '')));
       });
     }
   }
 
   @override
   void initState() {
+    _controller = new SwiperController();
     new_content = getShopNewContent();
     super.initState();
     loadPhoto();
@@ -109,116 +104,93 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainScopedModel>(
-        builder: (context, child, _model){
-          return WillPopScope(key: _scaffoldKey, onWillPop: () {
-            Navigator.of(context).pushReplacementNamed("/Main");
-            return Future.value(true);
-          },
-            child: Scaffold(
-              backgroundColor: Color(0xffEEEEEE),
-              body: NestedScrollView(
-                headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-                  return <Widget>[
-                    SliverAppBar(
-                      elevation: 0.0,
-                      automaticallyImplyLeading: false,
-                      pinned: true,
-                      floating: true,
-                      backgroundColor: Colors.white,
-                      centerTitle: true,
-                      title: Image.asset('assets/icons/ic_cartsini.png', height: 24, width: 108,),
-                      actions: [
-                        CircleAvatar(
-                          backgroundColor: Colors.grey[200],
-                          child: IconButton(
-                            icon: _model.isAuthenticated ? _model.getCartotal() == 0 ? Icon(LineAwesomeIcons.shopping_cart,color: Colors.black87,) : Badge(
-                              badgeColor: Colors.red,
-                              shape: BadgeShape.circle,
-                              padding: _model.getCartotal().toString().length == 1 ? EdgeInsets.all(5.5) : EdgeInsets.all(3),
-                              child: Icon(LineAwesomeIcons.shopping_cart,
-                                color: Colors.black87,
-                              ),
-                              badgeContent: Text(
-                                _model.getCartotal().toString(),
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.lato(
-                                  textStyle: TextStyle(fontSize: 9, fontWeight: FontWeight.w500, color: Colors.white),
-                                ),
-                              ),
-                            ) : Icon(LineAwesomeIcons.shopping_cart,color: Colors.black87,),
-                            onPressed: () {
-                              _model.isAuthenticated ? Navigator.push(context, SlideRightRoute(page: ShopCartPage())) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 2, right: 10,),
-                          child: CircleAvatar(
-                            backgroundColor: Colors.grey[200],
-                            child: IconButton(
-                              icon: _model.isAuthenticated ? _model.getTotalOrder() == 0 ? Icon(LineAwesomeIcons.user,color: Colors.black87,) : Badge(
-                                badgeColor: Colors.red,
-                                shape: BadgeShape.circle,
-                                padding: _model.getTotalOrder().toString().length == 1 ? EdgeInsets.all(5.5) : EdgeInsets.all(3),
-                                child: Icon(LineAwesomeIcons.user,
-                                  color: Colors.black87,
-                                ),
-                                badgeContent: Text(
-                                  _model.getTotalOrder().toString(),
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.lato(
-                                    textStyle: TextStyle(fontSize: 9, fontWeight: FontWeight.w500, color: Colors.white),
-                                  ),
-                                ),
-                              ) : Icon(LineAwesomeIcons.user, color: Colors.black87,),
-                              onPressed: () {
-                                _model.isAuthenticated ? Navigator.push(context, SlideRightRoute(page: CartsiniAccount())) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                      /*bottom: AppBar(
-                        elevation: 0,
-                        automaticallyImplyLeading: false,
-                        title: Container(
-                          height: 44,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Expanded(
-                                child: searchBarShop(context),
-                              ),
-                              SizedBox(width: 2,),
-                            ],
-                          ),
-                        ),
-                      ),*/
-                    ),
-                    SliverPersistentHeader(
-                      delegate: Delegate(Colors.white,'Search'),
-                      pinned: true,
-                    ),
-                  ];
-                },
-                body: Padding(
-                  padding: EdgeInsets.only(bottom: 16),
-                  child: _fetchBody(key: "key1"),
-                )
-              ),
-            )
-          );
-        }
-    );
-  }
-
-  Widget _fetchBody({String key}){
-    return ScopedModelDescendant<MainScopedModel>(
         builder: (context, child, model)
     {
-      return CustomScrollView(slivers: <Widget>[
+      return WillPopScope(onWillPop: () {
+        Navigator.of(context).pushReplacementNamed("/Main");
+        return Future.value(true);
+      },
+          child: Scaffold(
+            key: _scaffoldKey,
+            backgroundColor: Colors.grey[200],
+            body: _fetchBody(model),
+          )
+      );
+    });
+  }
+
+  Widget _fetchBody(MainScopedModel model){
+    return CustomScrollView(slivers: <Widget>[
+        SliverAppBar(
+          elevation: 0.0,
+          automaticallyImplyLeading: false,
+          pinned: true,
+          floating: true,
+          backgroundColor: Colors.white,
+          centerTitle: true,
+          title: Image.asset('assets/icons/ic_cartsini.png', height: 24, width: 108,),
+          actions: [
+            CircleAvatar(
+              backgroundColor: Colors.grey[200],
+              child: IconButton(
+                icon: model.isAuthenticated ? model.getCartotal() == 0 ? Icon(LineAwesomeIcons.shopping_cart,color: Colors.black87,) : Badge(
+                  badgeColor: Colors.red,
+                  shape: BadgeShape.circle,
+                  padding: model.getCartotal().toString().length == 1 ? EdgeInsets.all(5.5) : EdgeInsets.all(3),
+                  child: Icon(LineAwesomeIcons.shopping_cart,
+                    color: Colors.black87,
+                  ),
+                  badgeContent: Text(
+                    model.getCartotal().toString(),
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.lato(
+                      textStyle: TextStyle(fontSize: 9, fontWeight: FontWeight.w500, color: Colors.white),
+                    ),
+                  ),
+                ) : Icon(LineAwesomeIcons.shopping_cart,color: Colors.black87,),
+                onPressed: () {
+                  //SchedulerBinding.instance.addPostFrameCallback((_) {
+                    //model.fetchCartsFromResponse();
+                    model.isAuthenticated ? Navigator.push(context, SlideRightRoute(page: ShopCartPage())) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
+                  //});
+                },
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 3, right: 10,),
+              child: CircleAvatar(
+                backgroundColor: Colors.grey[200],
+                child: IconButton(
+                  icon: model.isAuthenticated ? model.getTotalPay() == 0 ? Icon(LineAwesomeIcons.user,color: Colors.black87,) : Badge(
+                    badgeColor: Colors.red,
+                    shape: BadgeShape.circle,
+                    padding: model.getTotalPay().toString().length == 1 ? EdgeInsets.all(5.5) : EdgeInsets.all(3),
+                    child: Icon(LineAwesomeIcons.user,
+                      color: Colors.black87,
+                    ),
+                    badgeContent: Text(
+                      model.getTotalPay().toString(),
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.lato(
+                        textStyle: TextStyle(fontSize: 9, fontWeight: FontWeight.w500, color: Colors.white),
+                      ),
+                    ),
+                  ) : Icon(LineAwesomeIcons.user, color: Colors.black87,),
+                  onPressed: () {
+                    //SchedulerBinding.instance.addPostFrameCallback((_) {
+                      model.isAuthenticated ? Navigator.push(context, SlideRightRoute(page: CartsiniAccount())) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
+                    //});
+
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+        SliverPersistentHeader(
+          delegate: Delegate(Colors.white,'Search'),
+          pinned: true,
+        ),
         SliverList(delegate: SliverChildListDelegate([
           Container(
               color: Colors.white,
@@ -270,6 +242,7 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
                                       size: 7.0,
                                     )
                                 ),
+                                controller: _controller,
                               )
                           )
                       )
@@ -432,8 +405,9 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
           padding: EdgeInsets.only(left: 7, top: 10, right: 7, bottom: 15),
           sliver: _fetchFeatures(),
         ),
-      ]);
-    });
+      ]
+    );
+
   }
 
   Widget _fetchPromoList() {
@@ -487,7 +461,7 @@ class _ShopIndexPageState extends State<ShopIndexPage> {
                       context, SlideRightRoute(page: NgoPage()));
                 }else if(data.id == 3) {
                   Navigator.push(
-                      context, SlideRightRoute(page: WebviewWidget('https://office.e-dagang.asia/cartsini/register', 'Join Us')));
+                      context, SlideRightRoute(page: WebViewPage('https://office.e-dagang.asia/cartsini/register', 'Join Us')));
                 }
               },
               child: Column(

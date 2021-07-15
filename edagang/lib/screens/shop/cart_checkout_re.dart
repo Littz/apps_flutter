@@ -1,21 +1,18 @@
 import 'dart:convert';
-
 import 'package:edagang/models/shop_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
-import 'package:edagang/scoped/scoped_reorder.dart';
-import 'package:edagang/screens/address_book.dart';
-import 'package:edagang/screens/shop/webview_fpx.dart';
 import 'package:edagang/helper/constant.dart';
 import 'package:edagang/helper/shared_prefrence_helper.dart';
+import 'package:edagang/screens/shop/webview_pay.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 
 class ReCheckoutActivity extends StatefulWidget {
@@ -35,6 +32,7 @@ class ReCheckoutActivityState extends State<ReCheckoutActivity> {
   String _bank = '';
   int _bankId = 0;
   var ship,total,subtot = '';
+  final myr = new NumberFormat("#,##0.00", "en_US");
 
   bool isLoading = false;
   double shipping, subtotal, xtotal = 0.0;
@@ -498,10 +496,176 @@ class ReCheckoutActivityState extends State<ReCheckoutActivity> {
   }
 
   _buildBottomNavigationBar() {
+    return ScopedModelDescendant(builder: (BuildContext context, Widget child, MainScopedModel model){
+      return Container(
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.all(0),
+        height: 59.0,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+              child: Container(
+                  padding: const EdgeInsets.all(2.5),
+                  alignment: Alignment.centerLeft,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            Container(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                "Subtotal:",
+                                textAlign: TextAlign.left,
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.w500,),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.topRight,
+                              child: model.getTotalCourier() != null ? Text(
+                                "RM" + myr.format(subtotal),
+                                textAlign: TextAlign.right,
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.w500,),
+                                ),
+                              ) : Text("RM0.00",
+                                textAlign: TextAlign.right,
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.w500,),
+                                ),
+                              ),
+                            ),
+                          ]
+                      ),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            Container(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                "Shipping:",
+                                textAlign: TextAlign.left,
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.w500,),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.topRight,
+                              child: model.getTotalCourier() != null ? Text(
+                                "RM" + myr.format(shipping),
+                                textAlign: TextAlign.right,
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.w500,),
+                                ),
+                              ) : Text(
+                                "RM0.00",
+                                textAlign: TextAlign.right,
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.w500,),
+                                ),
+                              ),
+                            ),
+                          ]
+                      ),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            Container(
+                              alignment: Alignment.bottomLeft,
+                              child: Text(
+                                "Total:",
+                                textAlign: TextAlign.left,
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w600,),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.bottomRight,
+                              child: model.getTotalCourier() != null ? Text(
+                                "RM" + myr.format(xtotal),
+                                textAlign: TextAlign.right,
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600,),
+                                ),
+                              ) : Text(
+                                "RM0.00",
+                                textAlign: TextAlign.right,
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600,),
+                                ),
+                              ),
+                            ),
+                          ]
+                      ),
+
+                    ],
+                  )
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                  padding: const EdgeInsets.all(2.5),
+                  child: SizedBox(
+                      height: 48,
+                      child: RaisedButton(
+                        shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(25.0)),
+                        onPressed: () async{
+                          var params = "";
+                          SharedPreferences prefs = await SharedPreferences.getInstance();
+
+                          //_addrId = prefs.getInt('addr_id');
+                          _bankId = prefs.getInt('bank_id');
+
+                          //params = params + "address_id=" + address_id;
+                          params = params + "order_id=" + _id.toString();
+                          params = params + "&bank_id=" + _bankId.toString();
+                          params = params + "&source=app";
+                          params = params + "&payment_type=2";
+                          print(Constants.postCheckout+params);
+
+                          if(_bankId == null){
+                            showAlertToast('Please select fpx banking.');
+                          } else {
+                            Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => WebViewPayment(Constants.postRepayment+params, prefs.getString('token'), _bank, total)));
+                          }
+
+
+                        },
+                        color: Colors.deepOrange.shade600,
+                        child: Text(
+                          "Pay Now",
+                          style: GoogleFonts.lato(
+                            textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.white),
+                          ),
+                        ),
+                      )
+                  )
+              ),
+            ),
+          ],
+        ),
+      );
+
+    });
+  }
+
+  /*_xbuildBottomNavigationBar() {
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.all(2.5),
-      height: 56.0,
+      height: 48.0,
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -553,6 +717,7 @@ class ReCheckoutActivityState extends State<ReCheckoutActivity> {
             child: Padding(
                 padding: const EdgeInsets.all(3.0),
                 child: RaisedButton(
+                  shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(25.0)),
                   onPressed: () async{
                     var params = "";
                     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -570,7 +735,9 @@ class ReCheckoutActivityState extends State<ReCheckoutActivity> {
                     if(_bankId == null){
                       showAlertToast('Please select fpx banking.');
                     } else {
-                      Map<String, dynamic> postData = {
+                      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => WebViewContainer(Constants.postRepayment+params, prefs.getString('token'), _bank, total)));
+
+                      *//*Map<String, dynamic> postData = {
                         'order_id': _id.toString(),
                         'bank_id': _bankId.toString(),
                         'source': 'app',
@@ -582,17 +749,16 @@ class ReCheckoutActivityState extends State<ReCheckoutActivity> {
                         headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
                         body: json.encode(postData),
                       ).then((response) {
-                        //var resBody = json.decode(response.body);
                         print(response.statusCode.toString());
                         print(response.body);
-                        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => WebViewContainer(Constants.postRepayment+params, prefs.getString('token'), _bank, total)));
-                      });
+
+                      });*//*
 
                     }
 
 
                   },
-                  color: Colors.green.shade600,
+                  color: Colors.deepOrange.shade600,
                   child: Center(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -632,7 +798,7 @@ class ReCheckoutActivityState extends State<ReCheckoutActivity> {
         ],
       ),
     );
-  }
+  }*/
 
   orderedItem(){
     return Padding(
@@ -753,7 +919,7 @@ class ReCheckoutActivityState extends State<ReCheckoutActivity> {
                                                               children: [
                                                                 Expanded(
                                                                   child: Text(
-                                                                    'RM' +hrgOri.toStringAsFixed(2),
+                                                                    'RM' +myr.format(hrgOri),
                                                                     style: GoogleFonts.lato(
                                                                       textStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.w500,),
                                                                     ),
@@ -771,7 +937,7 @@ class ReCheckoutActivityState extends State<ReCheckoutActivity> {
                                                         Container(
                                                           padding: EdgeInsets.only(top: 3),
                                                           child: Text(
-                                                            'Delivery:  RM' +hrgShip.toStringAsFixed(2),
+                                                            'Delivery:  RM' +myr.format(hrgShip),
                                                             style: GoogleFonts.lato(
                                                               textStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.w500,),
                                                             ),

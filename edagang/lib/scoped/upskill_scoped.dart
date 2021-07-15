@@ -59,23 +59,29 @@ String getCatName() {return _name;}
 
 Future<dynamic> _getSkillcat() async {
   var response = await http.get(
-      Uri.parse(Constants.tuneupAPI+'/course/category'),
+    Uri.parse(Constants.tuneupAPI+'/course/v2/category'),
   ).catchError((error) {
     print(error.toString());
     return false;
   });
+  print('GOILMU COURSE CATEGORY ==============================================');
+  print(Constants.tuneupAPI+'/course/v2/category');
+  print(response.statusCode.toString());
+  print(response.body);
   return json.decode(response.body);
 }
 
 Future<dynamic> _getSkillist() async {
   var response = await http.get(
-      Uri.parse(Constants.tuneupAPI+'/course/v2/latest'),
+    Uri.parse(Constants.tuneupAPI+'/course/v2/latest'),
   ).catchError((error) {
     print(error.toString());
     return false;
   });
   print('GOILMU COURSE LATEST ==============================================');
   print(Constants.tuneupAPI+'/course/v2/latest');
+  print(response.statusCode.toString());
+  print(response.body);
   return json.decode(response.body);
 }
 
@@ -84,7 +90,6 @@ Future fetchSkillCat() async {
   notifyListeners();
 
   var dataFromResponse = await _getSkillcat();
-
 
   dataFromResponse["data"]["category"].forEach((dataCat) {
     SkillCat _cat = new SkillCat(
@@ -150,7 +155,7 @@ Future fetchCourseList() async {
 
 Future<dynamic> _getSkillProfessional() async {
   var response = await http.post(
-      Uri.parse(Constants.tuneupAPI+'/course/v2/category?category_id=1'),
+    Uri.parse(Constants.tuneupAPI+'/course/v2/category?category_id=1'),
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
@@ -158,6 +163,8 @@ Future<dynamic> _getSkillProfessional() async {
   });
   print('GOILMU COURSE CATEGORY 1 ==============================================');
   print(Constants.tuneupAPI+'/course/v2/category?category_id=1');
+  print(response.statusCode.toString());
+  print(response.body);
   return json.decode(response.body);
 }
 
@@ -213,7 +220,7 @@ Future fetchCourseProfessional() async {
 
 Future<dynamic> _getSkillTechnical() async {
   var response = await http.post(
-      Uri.parse(Constants.tuneupAPI+'/course/v2/category?category_id=2'),
+    Uri.parse(Constants.tuneupAPI+'/course/v2/category?category_id=2'),
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
@@ -221,6 +228,8 @@ Future<dynamic> _getSkillTechnical() async {
   });
   print('GOILMU COURSE CATEGORY 2 ==============================================');
   print(Constants.tuneupAPI+'/course/v2/category?category_id=2');
+  print(response.statusCode.toString());
+  print(response.body);
   return json.decode(response.body);
 }
 
@@ -276,7 +285,7 @@ Future fetchCourseTechnical() async {
 
 Future<dynamic> _getSkillSafety() async {
   var response = await http.post(
-      Uri.parse(Constants.tuneupAPI+'/course/v2/category?category_id=3'),
+    Uri.parse(Constants.tuneupAPI+'/course/v2/category?category_id=3'),
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
@@ -284,6 +293,8 @@ Future<dynamic> _getSkillSafety() async {
   });
   print('GOILMU COURSE CATEGORY 3 ==============================================');
   print(Constants.tuneupAPI+'/course/v2/category?category_id=3');
+  print(response.statusCode.toString());
+  print(response.body);
   return json.decode(response.body);
 }
 
@@ -338,7 +349,7 @@ Future fetchCourseSafety() async {
 
 Future<dynamic> _getSkillTraining() async {
   var response = await http.post(
-      Uri.parse(Constants.tuneupAPI+'/course/v2/category?category_id=4'),
+    Uri.parse(Constants.tuneupAPI+'/course/v2/category?category_id=4'),
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
@@ -346,6 +357,8 @@ Future<dynamic> _getSkillTraining() async {
   });
   print('GOILMU COURSE CATEGORY 4 ==============================================');
   print(Constants.tuneupAPI+'/course/v2/category?category_id=4');
+  print(response.statusCode.toString());
+  print(response.body);
   return json.decode(response.body);
 }
 
@@ -404,7 +417,7 @@ void addGoilmuBannerList(Home_banner gbaner) {_gbanners.add(gbaner);}
 
 Future<dynamic> _getGoilmuJson() async {
   var response = await http.get(
-      Uri.parse('https://goilmuapp.e-dagang.asia/api/course/v2/home'),
+    Uri.parse('https://goilmuapp.e-dagang.asia/api/course/v2/home'),
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
@@ -412,6 +425,8 @@ Future<dynamic> _getGoilmuJson() async {
   });
   print('GOILMU COURSE HOME ==============================================');
   print('https://goilmuapp.e-dagang.asia/api/course/v2/home');
+  print(response.statusCode.toString());
+  print(response.body);
   return json.decode(response.body);
 }
 

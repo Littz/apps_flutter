@@ -7,7 +7,6 @@ import 'package:edagang/screens/biz/biz_vr_list.dart';
 import 'package:edagang/screens/biz/search.dart';
 import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
-import 'package:edagang/widgets/webview_bb.dart';
 import 'package:edagang/widgets/webview_f.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
@@ -39,6 +38,7 @@ class _BizIdxPageState extends State<BizPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   SharedPref sharedPref = SharedPref();
   BuildContext context;
+  SwiperController _controller;
 
   String _selectedItem = 'Notification';
   String _logType,_photo = "";
@@ -57,34 +57,12 @@ class _BizIdxPageState extends State<BizPage> {
     }
   }
 
-  ScrollController _scrollController;
-  bool lastStatus = true;
-
-  _scrollListener() {
-    if (isShrink != lastStatus) {
-      setState(() {
-        lastStatus = isShrink;
-      });
-    }
-  }
-
-  bool get isShrink {
-    return _scrollController.hasClients &&
-        _scrollController.offset > (200 - kToolbarHeight);
-  }
-
-  int _currentIndex = 0;
-  PageController _pageController = PageController(
-    viewportFraction: 0.92,
-    initialPage: 0,
-  );
-
   goToNextPage(BuildContext context, Home_banner item) {
-    String imgurl = 'https://bizapp.e-dagang.asia'+item.imageUrl;
+    String imgurl = item.imageUrl ?? '';
     String catname = item.title ?? '';
-    String catid = item.itemId.toString();
-    String ctype = item.type.toString();
-    String vrurl = item.link_url;
+    String catid = item.itemId.toString() ?? '';
+    String ctype = item.type.toString() ?? '';
+    String vrurl = item.link_url ?? '';
     if(ctype == "1") {
       print('PRODUCT #############################################');
     } else if (ctype == "2") {
@@ -99,19 +77,14 @@ class _BizIdxPageState extends State<BizPage> {
     } else if (ctype == "4") {
       FirebaseAnalytics().logEvent(name: 'Blackbixon_form',parameters:null);
       SchedulerBinding.instance.addPostFrameCallback((_) {
-        Navigator.push(context, SlideRightRoute(page: WebviewBixon(vrurl ?? '', imgurl ?? '')));
+        Navigator.push(context, SlideRightRoute(page: WebViewBb(vrurl, imgurl)));
       });
     }
   }
 
   @override
   void initState() {
-    _pageController.addListener(() {
-      setState(() => _currentIndex = _pageController.page.round());
-    });
-    _scrollController = ScrollController();
-    _scrollController.addListener(_scrollListener);
-
+    _controller = new SwiperController();
     super.initState();
     loadPhoto();
     FirebaseAnalytics().logEvent(name: 'Smartbiz_Home',parameters:null);
@@ -119,16 +92,8 @@ class _BizIdxPageState extends State<BizPage> {
 
   @override
   void dispose() {
-    _scrollController.removeListener(_scrollListener);
+    _controller.dispose();
     super.dispose();
-  }
-
-  Future launchVr(String url) async {
-    if (await canLaunch(url)) await launch(
-      url,
-      forceSafariVC: false,
-      forceWebView: false,
-    );
   }
 
   @override
@@ -136,14 +101,291 @@ class _BizIdxPageState extends State<BizPage> {
     return ScopedModelDescendant<MainScopedModel>(
         builder: (context, child, model){
           return WillPopScope(
-              key: _scaffoldKey,
               onWillPop: () {
                 SystemNavigator.pop();
                 return Future.value(true);
               },
               child: Scaffold(
-                backgroundColor: Color(0xffEEEEEE),
-                body: NestedScrollView(
+                key: _scaffoldKey,
+                backgroundColor: Colors.grey[200],
+                body: CustomScrollView(slivers: <Widget>[
+                  SliverAppBar(
+                    elevation: 0.0,
+                    expandedHeight: 210.0,
+                    floating: false,
+                    pinned: true,
+                    backgroundColor: Colors.white,
+                    automaticallyImplyLeading: false,
+                    centerTitle: true,
+                    title: Image.asset('assets/icons/ic_smartbiz.png', height: 24, width: 107,),
+                    actions: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 2, right: 10,),
+                        child: CircleAvatar(
+                          backgroundColor: Colors.grey[200],
+                          child: IconButton(
+                            icon: Icon(
+                              LineAwesomeIcons.search,
+                              color: Colors.black87,
+                            ),
+                            onPressed: () {Navigator.push(context, SlideRightRoute(page: SearchList()));},
+                          ),
+                        ),
+                      ),
+                    ],
+                    flexibleSpace: FlexibleSpaceBar(
+                      background: Container(
+                          color: Colors.white,
+                          padding: EdgeInsets.only(bottom: 5, top: 90),
+                          child: Container(
+                              margin: EdgeInsets.only(left: 8, right: 8),
+                              child: Card(
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                                  elevation: 1,
+                                  child: ClipPath(
+                                      clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                                      child: Container(
+                                          height: 150.0,
+                                          decoration: new BoxDecoration(
+                                            color: Colors.transparent,
+                                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                                          ),
+                                          child: Swiper(
+                                            controller: _controller,
+                                            autoplay: true,
+                                            itemBuilder: (BuildContext context, int index) {
+                                              return InkWell(
+                                                onTap: () {
+                                                  goToNextPage(context, model.bbanners[index]);
+                                                },
+                                                child: ClipRRect(
+                                                  borderRadius: new BorderRadius.circular(8.0),
+                                                  child: Center(
+                                                      child: CachedNetworkImage(
+                                                        placeholder: (context, url) => Container(
+                                                          alignment: Alignment.center,
+                                                          color: Colors.transparent,
+                                                          child: Image.asset('assets/logo_edagang.png', height: 90,),
+                                                        ),
+                                                        imageUrl: model.bbanners[index].imageUrl,
+                                                        fit: BoxFit.fill,
+                                                        height: 150,
+                                                        width: MediaQuery.of(context).size.width,
+                                                      )
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            itemCount: model.fbanners.length,
+                                            pagination: new SwiperPagination(
+                                                builder: new DotSwiperPaginationBuilder(
+                                                  activeColor: Colors.deepOrange.shade500,
+                                                  activeSize: 6.0,
+                                                  size: 6.0,
+                                                )
+                                            ),
+                                            //pagination: new SwiperPagination(),
+                                          )
+                                      )
+                                  )
+                              )
+                          )
+                      ),
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: Container(
+                      padding: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Biz Category',
+                            style: GoogleFonts.lato(
+                              textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  SliverToBoxAdapter(
+                    child: model.bcategory.length == 0 ? Container(
+                      height: 135,
+                      width: 100,
+                      alignment: Alignment.center,
+                      color: Colors.white,
+                      child: CupertinoActivityIndicator(radius: 15,),
+                    ) : _fetchCategories(),
+                  ),
+
+                  SliverToBoxAdapter(
+                    child: Container(
+                      padding: EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Virtual Trade',
+                            style: GoogleFonts.lato(
+                              textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 0,),
+                            child: InkWell(
+                              highlightColor: Colors.blue.shade100,
+                              splashColor: Colors.blue.shade100,
+                              onTap: () {
+                                Navigator.push(context,SlideRightRoute(page: BizVrListPage()));
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Text(
+                                    'More ',
+                                    style: GoogleFonts.lato(
+                                      textStyle: TextStyle(fontStyle: FontStyle.italic ,fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xff357FEB)),
+                                    ),
+                                  ),
+                                  Icon(
+                                    CupertinoIcons.right_chevron,
+                                    size: 17,
+                                    color: Color(0xff357FEB),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  SliverToBoxAdapter(
+                    child: model.bvirtual.length == 0 ? Container(
+                      height: MediaQuery.of(context).size.height * 0.25,
+                      width: MediaQuery.of(context).size.width * 0.6,
+                      alignment: Alignment.center,
+                      color: Colors.white,
+                      child: CupertinoActivityIndicator(radius: 15,),
+                    ) : _fetchVirtualList(),
+                  ),
+
+                  SliverToBoxAdapter(
+                    child: Container(
+                      padding: EdgeInsets.only(left: 10, right: 10, top: 24, bottom: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Highlighted Company',
+                            style: GoogleFonts.lato(
+                              textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 0,),
+                            child: InkWell(
+                              highlightColor: Colors.blue.shade100,
+                              splashColor: Colors.blue.shade100,
+                              onTap: () {
+                                Navigator.push(context, SlideRightRoute(page: MyDashboard(0, model.bcategory.length)));
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Text(
+                                    'All ('+model.getTotalCompany().toString()+') ',
+                                    style: GoogleFonts.lato(
+                                      textStyle: TextStyle(fontStyle: FontStyle.italic ,fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xff357FEB)),
+                                    ),
+                                  ),
+                                  Icon(
+                                    CupertinoIcons.right_chevron,
+                                    size: 17,
+                                    color: Color(0xff357FEB),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  topList(),
+
+                  SliverToBoxAdapter(
+                    child: Container(
+                        padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                        child: InkWell(
+                            onTap: () {
+                              Navigator.push(context, SlideRightRoute(page: MyDashboard(0, model.bcategory.length)));
+                            },
+                            child: Card(
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0),),
+                                elevation: 1,
+                                child: ClipPath(
+                                    clipper: ShapeBorderClipper(
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))
+                                    ),
+                                    child: Container(
+                                        height: 70.0,
+                                        decoration: new BoxDecoration(
+                                          color: Colors.transparent,
+                                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                                        ),
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          color: Colors.transparent,
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: <Widget>[
+                                              Expanded(
+                                                flex: 3,
+                                                child: Container(
+                                                  alignment: Alignment.center,
+                                                  child: Text('+'+model.getTotalCompanyPlus().toString()+' more companies.',
+                                                    style: GoogleFonts.lato(
+                                                      textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Color(0xff084B8C)),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                flex: 1,
+                                                child: Container(
+                                                  margin: EdgeInsets.only(right: 10.0, left: 5.0),
+                                                  alignment: Alignment.centerRight,
+                                                  child: CircleAvatar(
+                                                    backgroundColor: Colors.grey[200],
+                                                    child: Icon(
+                                                      CupertinoIcons.arrow_right,
+                                                      size: 20,
+                                                      color: Color(0xff084B8C),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    ),
+                  ),
+
+                ]),
+
+                /*body: NestedScrollView(
                     headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
                       return <Widget>[
                         SliverAppBar(
@@ -180,8 +422,7 @@ class _BizIdxPageState extends State<BizPage> {
                                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
                                         elevation: 1,
                                         child: ClipPath(
-                                            clipper: ShapeBorderClipper(
-                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                                            clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
                                             child: Container(
                                                 height: 150.0,
                                                 decoration: new BoxDecoration(
@@ -189,6 +430,7 @@ class _BizIdxPageState extends State<BizPage> {
                                                   borderRadius: BorderRadius.all(Radius.circular(8)),
                                                 ),
                                                 child: Swiper(
+                                                  controller: _controller,
                                                   autoplay: true,
                                                   itemBuilder: (BuildContext context, int index) {
                                                     return InkWell(
@@ -423,308 +665,12 @@ class _BizIdxPageState extends State<BizPage> {
                     ),
 
                   ]),
-                ),
+                ),*/
               )
           );
         }
     );
   }
-  /*Widget build(BuildContext context) {
-    return ScopedModelDescendant<MainScopedModel>(
-      builder: (context, child, model) {
-        return WillPopScope(
-          key: _scaffoldKey,
-          onWillPop: () {
-            //Navigator.of(context,rootNavigator: true).pop();
-            //Navigator.of(context).pop();
-            SystemNavigator.pop();
-            return Future.value(true);
-          },
-          child: NestedScrollView(
-            controller: _scrollController,
-            headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-              return <Widget>[
-                SliverAppBar(
-                  elevation: 0,
-                  automaticallyImplyLeading: false,
-                  centerTitle: true,
-                  title: Image.asset('assets/icons/ic_smartbiz.png', height: 24, width: 107,),
-                  pinned: true,
-                  floating: true,
-                  actions: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 2, right: 10,),
-                      child: CircleAvatar(
-                        backgroundColor: Colors.grey[200],
-                        child: IconButton(
-                          icon: Icon(
-                            LineAwesomeIcons.search,
-                            color: Colors.black87,
-                          ),
-                          onPressed: () {Navigator.push(context, SlideRightRoute(page: SearchList()));},
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ];
-            },
-            body: CustomScrollView(slivers: <Widget>[
-              SliverList(delegate: SliverChildListDelegate([
-                Container(
-                  color: Colors.white,
-                  padding: EdgeInsets.only(bottom: 5),
-                  child: Container(
-                    margin: EdgeInsets.only(left: 8, right: 8),
-                    child: Card(
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0),),
-                      elevation: 1,
-                      child: ClipPath(
-                        clipper: ShapeBorderClipper(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))
-                        ),
-                        child: Container(
-                          height: 138.0,
-                          decoration: new BoxDecoration(
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                          ),
-                          child: Swiper(
-                            autoplay: true,
-                            itemBuilder: (BuildContext context, int index) {
-                              return InkWell(
-                                onTap: () {
-                                  goToNextPage(context, model.bbanners[index]);
-                                },
-                                child: ClipRRect(
-                                  borderRadius: new BorderRadius.circular(8.0),
-                                  child: Center(
-                                    child: CachedNetworkImage(
-                                      placeholder: (context, url) => Container(
-                                        alignment: Alignment.center,
-                                        color: Colors.transparent,
-                                        child: Image.asset('assets/logo_edagang.png', height: 90,),
-                                      ),
-                                      imageUrl: 'http://bizapp.e-dagang.asia' + model.bbanners[index].imageUrl,
-                                      fit: BoxFit.fill,
-                                      height: 138,
-                                      width: MediaQuery.of(context).size.width,
-                                    )
-                                  ),
-                                ),
-                              );
-                            },
-                            itemCount: model.bbanners.length,
-                            pagination: new SwiperPagination(
-                              builder: new DotSwiperPaginationBuilder(
-                                activeColor: Colors.deepOrange.shade500,
-                                activeSize: 7.0,
-                                size: 7.0,
-                              )
-                            ),
-                          )
-                        )
-                      )
-                    )
-                  )
-                ),
-              ])),
-              SliverToBoxAdapter(
-                child: Container(
-                  padding: EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Biz Category',
-                        style: GoogleFonts.lato(
-                          textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              SliverToBoxAdapter(
-                child: model.bcategory.length == 0 ? Container(
-                  height: 135,
-                  width: 100,
-                  alignment: Alignment.center,
-                  color: Colors.white,
-                  child: CupertinoActivityIndicator(radius: 15,),
-                ) : _fetchCategories(),
-              ),
-
-              SliverToBoxAdapter(
-                child: Container(
-                  padding: EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Virtual Trade',
-                        style: GoogleFonts.lato(
-                          textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 0,),
-                        child: InkWell(
-                          highlightColor: Colors.blue.shade100,
-                          splashColor: Colors.blue.shade100,
-                          onTap: () {
-                            Navigator.push(context,SlideRightRoute(page: BizVrListPage()));
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Text(
-                                'More ',
-                                style: GoogleFonts.lato(
-                                  textStyle: TextStyle(fontStyle: FontStyle.italic ,fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xff357FEB)),
-                                ),
-                              ),
-                              Icon(
-                                CupertinoIcons.right_chevron,
-                                size: 17,
-                                color: Color(0xff357FEB),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              SliverToBoxAdapter(
-                child: model.bvirtual.length == 0 ? Container(
-                  height: MediaQuery.of(context).size.height * 0.25,
-                  width: MediaQuery.of(context).size.width * 0.6,
-                  alignment: Alignment.center,
-                  color: Colors.white,
-                  child: CupertinoActivityIndicator(radius: 15,),
-                ) : _fetchVirtualList(),
-              ),
-
-              SliverToBoxAdapter(
-                child: Container(
-                  padding: EdgeInsets.only(left: 10, right: 10, top: 24, bottom: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Highlighted Company',
-                        style: GoogleFonts.lato(
-                          textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 0,),
-                        child: InkWell(
-                          highlightColor: Colors.blue.shade100,
-                          splashColor: Colors.blue.shade100,
-                          onTap: () {
-                            Navigator.push(context, SlideRightRoute(page: MyDashboard(0, model.bcategory.length)));
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Text(
-                                'All ('+model.getTotalCompany().toString()+') ',
-                                style: GoogleFonts.lato(
-                                  textStyle: TextStyle(fontStyle: FontStyle.italic ,fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xff357FEB)),
-                                ),
-                              ),
-                              Icon(
-                                CupertinoIcons.right_chevron,
-                                size: 17,
-                                color: Color(0xff357FEB),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              topList(),
-
-              SliverToBoxAdapter(
-                child: Container(
-                    padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(context, SlideRightRoute(page: MyDashboard(0, model.bcategory.length)));
-                      },
-                      child: Card(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0),),
-                        elevation: 1,
-                        child: ClipPath(
-                            clipper: ShapeBorderClipper(
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))
-                            ),
-                            child: Container(
-                                height: 70.0,
-                                decoration: new BoxDecoration(
-                                  color: Colors.transparent,
-                                  borderRadius: BorderRadius.all(Radius.circular(8)),
-                                ),
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  color: Colors.transparent,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: <Widget>[
-                                      Expanded(
-                                        flex: 3,
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          child: Text('+'+model.getTotalCompanyPlus().toString()+' more companies.',
-                                            style: GoogleFonts.lato(
-                                              textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Color(0xff084B8C)),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 1,
-                                        child: Container(
-                                          margin: EdgeInsets.only(right: 10.0, left: 5.0),
-                                          alignment: Alignment.centerRight,
-                                          child: CircleAvatar(
-                                            backgroundColor: Colors.grey[200],
-                                            child: Icon(
-                                              CupertinoIcons.arrow_right,
-                                              size: 20,
-                                              color: Color(0xff084B8C),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                            )
-                        )
-                      )
-                    )
-                ),
-              ),
-
-            ]),
-          )
-        );
-      }
-    );
-  }*/
 
   Widget _fetchCategories() {
     return ScopedModelDescendant<MainScopedModel>(

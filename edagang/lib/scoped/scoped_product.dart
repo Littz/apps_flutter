@@ -66,16 +66,18 @@ class ProductScopedModel extends Model {
     };
 
     var response = await http.post(
-        Uri.parse(Constants.shopProductCategory),
+      Uri.parse(Constants.shopProductCategory),
       headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
       body: json.encode(postData),
-    ).catchError(
-          (error) {
+    ).catchError((error) {
         print(error.toString());
         return false;
       },
     );
-
+    print('CARTSINI PRODUCT CATEGORY ==============================================');
+    print(Constants.shopProductCategory);
+    print(response.statusCode.toString());
+    print(response.body);
     return json.decode(response.body);
   }
 
@@ -96,12 +98,15 @@ class ProductScopedModel extends Model {
         Uri.parse(Constants.shopProductMerchant),
       headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
       body: json.encode(postData),
-    ).catchError(
-          (error) {
+    ).catchError((error) {
         print(error.toString());
         return false;
       },
     );
+    print('CARTSINI MERCHANT ==============================================');
+    print(Constants.shopProductCategory);
+    print(response.statusCode.toString());
+    print(response.body);
     return json.decode(response.body);
   }
 
@@ -118,15 +123,18 @@ class ProductScopedModel extends Model {
     };
 
     var response = await http.post(
-        Uri.parse(Constants.shopAPI+'/product/promo'),
+      Uri.parse(Constants.shopAPI+'/product/promo'),
       headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
       body: json.encode(postData),
-    ).catchError(
-          (error) {
+    ).catchError((error) {
         print(error.toString());
         return false;
       },
     );
+    print('CARTSINI PROMO ==============================================');
+    print(Constants.shopAPI+'/product/promo');
+    print(response.statusCode.toString());
+    print(response.body);
     return json.decode(response.body);
   }
 
@@ -146,12 +154,15 @@ class ProductScopedModel extends Model {
         Uri.parse(Constants.shopAPI+'/product/top'),
       headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
       body: json.encode(postData),
-    ).catchError(
-          (error) {
+    ).catchError((error) {
         print(error.toString());
         return false;
       },
     );
+    print('CARTSINI POPULAR/TOP ==============================================');
+    print(Constants.shopAPI+'/product/top');
+    print(response.statusCode.toString());
+    print(response.body);
     return json.decode(response.body);
   }
 
@@ -477,11 +488,14 @@ class ProductScopedModel extends Model {
     };
 
     http.post(
-        Uri.parse(Constants.shopProductCategory),
+      Uri.parse(Constants.shopProductCategory),
       headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
       body: json.encode(postData),
     ).then((response) {
-      //print(response.body);
+      print('CARTSINI CATEGORY PRODUK ==============================================');
+      print(Constants.shopProductCategory);
+      print(response.statusCode.toString());
+      print(response.body);
       var dataFromResponse = json.decode(response.body);
       //print(dataFromResponse);
 
@@ -570,15 +584,18 @@ class ProductScopedModel extends Model {
     };
 
     var response = await http.post(
-        Uri.parse(Constants.shopNgoProduct),
+      Uri.parse(Constants.shopNgoProduct),
       headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
       body: json.encode(postData),
-    ).catchError(
-          (error) {
+    ).catchError((error) {
         print(error.toString());
         return false;
       },
     );
+    print('NGO PRODUCT ==============================================');
+    print(Constants.shopNgoProduct);
+    print(response.statusCode.toString());
+    print(response.body);
     return json.decode(response.body);
   }
 
@@ -666,12 +683,15 @@ class ProductScopedModel extends Model {
         Uri.parse(Constants.shopKoopProduct),
       headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
       body: json.encode(postData),
-    ).catchError(
-          (error) {
+    ).catchError((error) {
         print(error.toString());
         return false;
       },
     );
+    print('KOPERASI PRODUCT ==============================================');
+    print(Constants.shopKoopProduct);
+    print(response.statusCode.toString());
+    print(response.body);
     return json.decode(response.body);
   }
 

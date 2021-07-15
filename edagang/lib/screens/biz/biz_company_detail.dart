@@ -3,13 +3,14 @@ import 'package:edagang/models/biz_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/helper/constant.dart';
+import 'package:edagang/utube/video_play.dart';
 import 'package:edagang/widgets/SABTitle.dart';
 import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/photo_viewer.dart';
 import 'package:edagang/widgets/progressIndicator.dart';
-import 'package:edagang/widgets/webview.dart';
+import 'package:edagang/widgets/webview_f.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -597,7 +598,7 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                 ),
               ),
               onPressed: () {
-                model.isAuthenticated ? Navigator.push(context, SlideRightRoute(page: WebviewWidget('https://smartbiz.e-dagang.asia/biz/quot/' + model.getId().toString() + '/' + widget.bizId, widget.bizName))) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
+                model.isAuthenticated ? Navigator.push(context, SlideRightRoute(page: WebViewPage('https://smartbiz.e-dagang.asia/biz/quot/' + model.getId().toString() + '/' + widget.bizId, widget.bizName))) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
               },
             ),
           ],
@@ -646,17 +647,7 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                       var vlink = data.video_link != null ? d1[3].toString() : null;
                       return InkWell(
                           onTap: () {
-                            _viewSvcProduct(data.file_path, data.product_name, data.product_desc, widget.bizName);
-                            /*showDialog(context: context,
-                                builder: (BuildContext context){
-                                  return CustomDialogBox(
-                                    file_img: data.file_path,
-                                    title: data.product_name,
-                                    descriptions: data.product_desc,
-                                    text: '',
-                                  );
-                                }
-                            );*/
+                            _viewSvcProduct(data.file_path, data.product_name, data.product_desc, widget.bizName, vlink);
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -844,7 +835,7 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
     }
   }
 
-  _viewSvcProduct(String image, String title, String oview, String biz) {
+  _viewSvcProduct(String image, String title, String oview, String biz, String vlink) {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -915,6 +906,64 @@ class _BizCompanyDetailPageState extends State<BizCompanyDetailPage> with Ticker
                                       SizedBox(height: 10,),
                                       biz.toLowerCase().contains('ta investment') ? SizedBox(height: 0,) : Text(title, style: TextStyle(fontSize: 22,fontWeight: FontWeight.w600, color: Color(0xff2877EA)),),
                                       biz.toLowerCase().contains('ta investment') ? SizedBox(height: 0,) : SizedBox(height: 15,),
+                                      vlink != null ? Card(
+                                        margin: EdgeInsets.all(5.0),
+                                        elevation: 0.5,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8.0),
+                                        ),
+                                        child: Container(
+                                          width: MediaQuery.of(context).size.width,
+                                          height: 245,
+                                          decoration: new BoxDecoration(
+                                            color: Colors.transparent,
+                                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                                          ),
+                                          child: InkWell(
+                                            onTap: () {
+                                              Navigator.push(context, SlideRightRoute(page: VideoPlay(vlink.toString(), title)));
+                                            },
+                                            child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                children: <Widget>[
+                                                  Expanded(
+                                                    child: Container(
+                                                      width: MediaQuery.of(context).size.width,
+                                                      //height: 155,
+                                                      alignment: Alignment.center,
+                                                      child: Stack(
+                                                          children: [
+                                                            ClipRRect(
+                                                              borderRadius: BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8)),
+                                                              child: CachedNetworkImage(imageUrl: 'http://img.youtube.com/vi/' + vlink + '/0.jpg',
+                                                                placeholder: (context, url) => Container(
+                                                                  alignment: Alignment.center,
+                                                                  color: Colors.transparent,
+                                                                  child: Image.asset('assets/images/ed_logo_greys.png', width: 90,
+                                                                    height: 90,),
+                                                                ),
+                                                                errorWidget: (context, url, error) => Icon(LineAwesomeIcons.file_image_o, size: 44, color: Color(0xffcecece),),
+                                                                fit: BoxFit.fill,
+                                                                width: MediaQuery.of(context).size.width,
+                                                                //height: 260,
+                                                              ),
+                                                            ),
+                                                            Align(
+                                                              alignment: Alignment.center,
+                                                              child: Icon(
+                                                                CupertinoIcons.arrowtriangle_right_circle,
+                                                                color: Colors.white, size: 50,),
+                                                            ),
+                                                          ]
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ]
+                                            ),
+                                          ),
+                                        ),
+                                      ) : Container(),
                                       htmlText(oview),
                                       SizedBox(height: 22,),
                                     ],

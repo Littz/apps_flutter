@@ -5,22 +5,19 @@ import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewPayment extends StatefulWidget {
-  final token;
-  final url;
-  final title, nett, addrs;
-  WebViewPayment(this.url, this.token, this.title, this.nett, this.addrs);
+  final url, token, title, nett;
+  WebViewPayment(this.url, this.token, this.title, this.nett);
   @override
-  createState() => _WebViewPaymentState(this.url);
+  createState() => _WebViewPaymentState();
 }
 
 class _WebViewPaymentState extends State<WebViewPayment> {
-  var _url, _token;
-  _WebViewPaymentState(this._url);
   final _scaffoldKeyFpx = GlobalKey<ScaffoldState>();
-  String _title, _nett, _addr;
+  String _url, _token, _title, _nett, _addr;
   String selectedUrl = '';
 
   SharedPref sharedPref = SharedPref();
@@ -29,28 +26,20 @@ class _WebViewPaymentState extends State<WebViewPayment> {
   Completer<WebViewController> _controller = Completer<WebViewController>();
 
   NavigationDecision _interceptNavigation(NavigationRequest request) {
-    print('WEBVIEW url state change ################################');
+    print('webview url state change ################################');
     print(request.url.toString());
     if (request.url.contains("/order/success")) {
-      print('WEBVIEW Payment //////////////////////////////////');
+      print('Success Payment ');
       print(request.url.toString());
 
-      //String mid = request.url.toString().split('/')[4];
-      //print(mid);
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => new FpxStatus(status: 'success')),);
-      //Navigator.push(context, MaterialPageRoute(builder: (context) => ProductListMerchant(mid,'')));
       return NavigationDecision.prevent;
     }
     if (request.url.contains("/order/failed")) {
-      print('WEBVIEW Payment //////////////////////////////////');
+      print('Unsuccesful/cancel Payment');
       print(request.url.toString());
 
-      //String pid = request.url.toString().split('/')[4];
-      //print(pid);
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => new FpxStatus(status: 'failed')),);
-      //sharedPref.save("prd_id", pid);
-      //sharedPref.save("prd_title", '');
-      //Navigator.push(context, SlideRightRoute(page: ProductShowcase()));
       return NavigationDecision.prevent;
     }
     return NavigationDecision.navigate;
@@ -62,7 +51,6 @@ class _WebViewPaymentState extends State<WebViewPayment> {
     super.initState();
     _title = widget.title;
     _nett = widget.nett;
-    _addr = widget.addrs;
     _url = widget.url;
     _token = widget.token;
 
@@ -80,6 +68,41 @@ class _WebViewPaymentState extends State<WebViewPayment> {
           return null;
         },
         child: Scaffold(
+          appBar: new AppBar(
+            backgroundColor: Colors.white,
+            centerTitle: false,
+            elevation: 0.0,
+            title: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                new Text(_title.toUpperCase(),
+                  style: GoogleFonts.lato(
+                    textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, fontStyle: FontStyle.normal),
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+            leading: IconButton(
+                icon: Icon(CupertinoIcons.xmark, color: Colors.red,),
+                onPressed: () {
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => new FpxStatus(status: 'failed')),);
+                }
+            ),
+            actions: [
+              Center(
+                child: new Text('RM'+_nett,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.lato(
+                    textStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.w500,),
+                  ),
+                ),
+              ),
+              SizedBox(width: 16,),
+            ],
+          ),
           body: Stack(
             children: <Widget>[
               new WebView(
@@ -87,9 +110,6 @@ class _WebViewPaymentState extends State<WebViewPayment> {
                 initialUrl: _url,
                 //headers: {'Authorization' : 'Bearer '+ _token,},
                 javascriptMode: JavascriptMode.unrestricted,
-                /*onWebViewCreated: (webViewCreate) {
-                  _controller.complete(webViewCreate);
-                },*/
                 onWebViewCreated: (WebViewController webViewController) {
                   Map<String, String> headers = {"Authorization": "Bearer " + _token};
                   webViewController.loadUrl(_url, headers: headers);
@@ -105,27 +125,26 @@ class _WebViewPaymentState extends State<WebViewPayment> {
                   });
                 },
               ),
-              _isLoading ? Container(
-                alignment: FractionalOffset.center,
-                child: CircularProgressIndicator(strokeWidth: 1.5,),
-              ) : Stack(),
-              Positioned(
-                top: 40,
-                left: 16,
-                child: CircleAvatar(
-                  backgroundColor: Colors.grey[200],
-                  child: IconButton(
-                    icon: Icon(
-                      CupertinoIcons.xmark,
-                      color: Color(0xff084B8C),
-                    ),
-                    onPressed: () {
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => new FpxStatus(status: 'failed')),);
-                      //Navigator.of(context,rootNavigator: true).pop();
-                    },
-                  ),
-                ),
-              ),
+              _isLoading ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation(Color(0xff006FBD)),
+                            strokeWidth: 1.7
+                        ),
+                      ),
+                      Text(
+                        'Loading..',
+                        style: GoogleFonts.lato(
+                          textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Color(0xff006FBD)),
+                        ),
+                      ),
+                    ],
+                  )
+              ) : Container(),
             ],
           ),
         )

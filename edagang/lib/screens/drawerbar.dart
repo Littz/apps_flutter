@@ -5,7 +5,7 @@ import 'package:edagang/screens/change_paswd.dart';
 import 'package:edagang/screens/profile_user.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
-import 'package:edagang/widgets/webview.dart';
+import 'package:edagang/widgets/webview_f.dart';
 import 'package:flutter/material.dart';
 import 'package:edagang/helper/constant.dart';
 import 'package:flutter_share/flutter_share.dart';
@@ -95,27 +95,42 @@ class _DrawerBarMenuState extends State<DrawerBarMenu> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Container(
+              margin: EdgeInsets.only(left: 17, top: 10),
               height: 56,
               width: 56,
-              margin: EdgeInsets.only(left: 17, top: 10),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.white, width: 2),
                 borderRadius: BorderRadius.circular(28),
-                image: DecorationImage(
-                  image: customAdvanceNetworkImage(
-                    _photo ?? Constants.dummyProfilePic,
+                color: Colors.red.shade600,
+              ),
+              child: _authType == '0' ? CircleAvatar(
+                backgroundColor: Colors.red.shade600,
+                radius: 28.0,
+                child: Text(model.getFname().substring(0,1).toUpperCase() ?? "",
+                  style: GoogleFonts.sourceSansPro(
+                    textStyle: TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.w600),
                   ),
-                  fit: BoxFit.cover,
+                ),
+              ) : Container(
+                height: 54,
+                width: 54,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(27),
+                  image: DecorationImage(
+                    image: customAdvanceNetworkImage(_photo),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
+
             ListTile(
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(context,MaterialPageRoute(builder: (context) => new AccProfilePage()));
               },
-              title: Text(_name ?? "", style: TextStyle(color: Colors.white),),
-              subtitle: Text(_email ?? "", style: TextStyle(color: Colors.grey.shade200, fontSize: 12, fontStyle: FontStyle.italic),),
+              title: Text(model.getFname() ?? _name, style: TextStyle(color: Colors.white),),
+              subtitle: Text(model.getEmail() ?? _email, style: TextStyle(color: Colors.grey.shade200, fontSize: 12, fontStyle: FontStyle.italic),),
               trailing: Icon(LineAwesomeIcons.edit, color: Colors.white),
             ),
             /*Container(
@@ -173,9 +188,27 @@ class _DrawerBarMenuState extends State<DrawerBarMenu> {
       title: customText(
         title,
         style: GoogleFonts.sourceSansPro(
-          textStyle: TextStyle(fontSize: 16, color: isEnable ? AppColor.secondary : AppColor.lightGrey,),
+          textStyle: TextStyle(fontSize: 16, color: isEnable ? AppColor.secondary : AppColor.lightGrey, fontWeight: FontWeight.w500),
         ),
       ),
+    );
+  }
+
+  ListTile _menuListRowButtonX(String title, {Function onPressed, IconData icon, bool isEnable = false}) {
+    return ListTile(
+      onTap: () {
+        if (onPressed != null) {
+          onPressed();
+        }
+      },
+      leading: icon == null ? null : Icon(icon, color: isEnable ? AppColor.darkGrey : AppColor.lightGrey,),
+      title: customText(
+        title,
+        style: GoogleFonts.sourceSansPro(
+          textStyle: TextStyle(fontSize: 15, color: isEnable ? AppColor.secondary : AppColor.lightGrey,),
+        ),
+      ),
+      visualDensity: VisualDensity(horizontal: 0, vertical: -4),
     );
   }
 
@@ -188,7 +221,7 @@ class _DrawerBarMenuState extends State<DrawerBarMenu> {
         alignment: Alignment.center,
         padding: EdgeInsets.only(left: 16, bottom: 5),
         child: Text(
-          'Version: 1.1.17',
+          'Version: 1.1.7',
           style: GoogleFonts.sourceSansPro(
             textStyle: TextStyle(fontStyle: FontStyle.normal, fontSize: 13, fontWeight: FontWeight.w400, color: Colors.grey.shade600,),
           ),
@@ -268,21 +301,16 @@ class _DrawerBarMenuState extends State<DrawerBarMenu> {
                       ),
                       child: _menuHeader(model),
                     ),
+
                     model.isAuthenticated ? _menuListRowButton('Notification', icon: null, isEnable: true, onPressed: () {
                       Navigator.pop(context);
                       Navigator.push(context, SlideRightRoute(page: NotificationPage()));}) : _menuListRowButton('Notification', icon: null, isEnable: false, onPressed: null),
-                    model.isAuthenticated ? _menuListRowButton('Address Book', icon: null, isEnable: true, onPressed: () {
-                      Navigator.pop(context);
-                      Navigator.push(context, SlideRightRoute(page: AddressBook()));}) : _menuListRowButton('Address Book', icon: null, isEnable: false, onPressed: null),
-                    _authType == '0' ? model.isAuthenticated ? _menuListRowButton('Change Password', icon: null, isEnable: true, onPressed: () {
-                      Navigator.pop(context);
-                      _viewChangePaswd('Change Password');
-                      //Navigator.push(context, SlideRightRoute(page: ChangePaswd()));
-                      }) : _menuListRowButton('Change Password', icon: null, isEnable: false, onPressed: null) : _menuListRowButton('Change Password', icon: null, isEnable: false, onPressed: null),
-                    _getSeparator(1),
+                    buildManageMeExpansionTile(context, model),
+                    buildSettingExpansionTile(context, model),
+                    //_getSeparator(1),
                     _menuListRowButton('Join Us', icon: null, isEnable: true, onPressed: () {
                       Navigator.pop(context);
-                      Navigator.push(context, SlideRightRoute(page: WebviewWidget('https://smartbiz.e-dagang.asia/biz/joinwebv','Join Us')));
+                      Navigator.push(context, SlideRightRoute(page: WebViewPage('https://smartbiz.e-dagang.asia/biz/joinwebv','Join Us')));
                     }),
                     _menuListRowButton('Invite Friends', icon: null, isEnable: true, onPressed: () async {
                       await FlutterShare.share(
@@ -295,19 +323,23 @@ class _DrawerBarMenuState extends State<DrawerBarMenu> {
                     }),
                     _menuListRowButton('Privacy & Policy', icon: null, isEnable: true, onPressed: () {
                       Navigator.pop(context);
-                      Navigator.push(context, SlideRightRoute(page: WebviewWidget('https://e-dagang.asia/policy', 'Privacy Policy')));
+                      Navigator.push(context, SlideRightRoute(page: WebViewPage('https://e-dagang.asia/policy', 'Privacy Policy')));
                     }),
                     _menuListRowButton('Terms & Services', icon: null, isEnable: true, onPressed: () {
                       Navigator.pop(context);
-                      Navigator.push(context, SlideRightRoute(page: WebviewWidget('https://e-dagang.asia/tnc', 'Terms & Services')));
+                      Navigator.push(context, SlideRightRoute(page: WebViewPage('https://e-dagang.asia/tnc', 'Terms & Services')));
                     }),
                     _getSeparator(1),
-                    _menuListRowButton('Help/FAQ', icon: null, isEnable: false, onPressed: null),
+                    //_menuListRowButton('Help/FAQ', icon: null, isEnable: false, onPressed: null),
+                    _menuListRowButton('FAQ/Help', icon: null, isEnable: true, onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.push(context, SlideRightRoute(page: WebViewPage(model.getFaq(), 'FAQ')));
+                    }),
                     _menuListRowButton('Feedback', icon: null, isEnable: true, onPressed: () {
                       Navigator.pop(context);
                       model.isAuthenticated ?
-                      Navigator.push(context, SlideRightRoute(page: WebviewWidget('https://smartbiz.e-dagang.asia/biz/feedback/'+model.getId().toString(),'Feedback')))
-                          : Navigator.push(context, SlideRightRoute(page: WebviewWidget('https://smartbiz.e-dagang.asia/biz/feedback/0','Feedback')));
+                      Navigator.push(context, SlideRightRoute(page: WebViewPage('https://smartbiz.e-dagang.asia/biz/feedback/'+model.getId().toString(),'Feedback')))
+                          : Navigator.push(context, SlideRightRoute(page: WebViewPage('https://smartbiz.e-dagang.asia/biz/feedback/0','Feedback')));
                     }),
                     _menuListRowButton('Contact Us', icon: null, isEnable: true, onPressed: () {
                       Navigator.pop(context);
@@ -384,6 +416,50 @@ class _DrawerBarMenuState extends State<DrawerBarMenu> {
         ),
       );
     });
+  }
+
+  ExpansionTile buildManageMeExpansionTile(BuildContext context, MainScopedModel model) {
+    return ExpansionTile(
+      leading: null,
+      title: Text(
+        "Manage Me",
+        style: GoogleFonts.sourceSansPro(
+          textStyle: TextStyle(fontSize: 16, color: AppColor.secondary),
+        ),
+      ),
+      children: [
+        _menuListRowButtonX('Todo List', icon: null, isEnable: false, onPressed: null),
+        //model.isAuthenticated ? _menuListRowButtonX('Todo List', icon: null, isEnable: true, onPressed: () {
+        //  Navigator.pop(context);
+        //  Navigator.push(context, SlideRightRoute(page: Onboarding()));}) : _menuListRowButtonX('Todo List', icon: null, isEnable: false, onPressed: null),
+        _menuListRowButtonX('Event Calendar', icon: null, isEnable: false, onPressed: null),
+      ],
+      childrenPadding: EdgeInsets.only(left: 16,),
+    );
+  }
+
+  ExpansionTile buildSettingExpansionTile(BuildContext context, MainScopedModel model) {
+    return ExpansionTile(
+      leading: null,
+      title: Text(
+        "Settings",
+        style: GoogleFonts.sourceSansPro(
+          textStyle: TextStyle(fontSize: 16, color: AppColor.secondary),
+        ),
+      ),
+      children: [
+        model.isAuthenticated ? _menuListRowButtonX('Address Book', icon: null, isEnable: true, onPressed: () {
+        Navigator.pop(context);
+        Navigator.push(context, SlideRightRoute(page: AddressBook()));}) : _menuListRowButtonX('Address Book', icon: null, isEnable: false, onPressed: null),
+
+        _authType == '0' ? model.isAuthenticated ? _menuListRowButtonX('Change Password', icon: null, isEnable: true, onPressed: () {
+        Navigator.pop(context);
+        _viewChangePaswd('Change Password'); //Navigator.push(context, SlideRightRoute(page: ChangePaswd()));
+        }) : _menuListRowButtonX('Change Password', icon: null, isEnable: false, onPressed: null) : _menuListRowButtonX('Change Password', icon: null, isEnable: false, onPressed: null),
+
+      ],
+      childrenPadding: EdgeInsets.only(left: 16,),
+    );
   }
 
   _viewChangePaswd(String title){

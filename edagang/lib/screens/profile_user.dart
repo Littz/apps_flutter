@@ -4,6 +4,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -271,17 +272,72 @@ class _AccProfilePageState extends State<AccProfilePage> {
   }
 
   _viewForm(int type, String title, MainScopedModel model) {
-    return showModalBottomSheet(
+    /*return showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+        decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+        topLeft: const Radius.circular(20.0),
+        topRight: const Radius.circular(20.0),
+        ),
+        ),
+        child: Stack(
+        children: <Widget>[
+        Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+        Container(
+        padding: EdgeInsets.all(16),
+        child: Text(
+        title,
+        style: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+        height: 1.5,
+        ),
+        ),
+        ),
+        Padding(
+        padding: EdgeInsets.all(16),
+        child: SingleChildScrollView(
+        physics: ScrollPhysics(),
+        child: MyCustomForm(type, model.getFname(), model.getPhone(), model.getEmail(), model.getGender(), model.getDob()),
+        )
+        ),
+        ],
+        ),
+        Positioned(
+        top: 16,
+        right: 16,
+        child: Container(
+        alignment: Alignment.centerRight,
+        //padding: EdgeInsets.only(left: 16, bottom: 5),
+        child: Icon(
+        LineAwesomeIcons.close,
+        color: Colors.red[600],
+        ),
+        ),
+        )
+        ]
+        )
+        );
+      },
+    );*/
+    return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) {
+      builder: (BuildContext context) {
         return Container(
           color: Color.fromRGBO(0, 0, 0, 0.001),
           child: GestureDetector(
             onTap: () {Navigator.pop(context);},
             child: DraggableScrollableSheet(
-              initialChildSize: 0.55,
+              initialChildSize: 0.65,
               minChildSize: 0.25,
               maxChildSize: 0.85,
               builder: (_, controller) {
@@ -311,12 +367,12 @@ class _AccProfilePageState extends State<AccProfilePage> {
                                   ),
                                 ),
                               ),
-                              Container(
-                                  alignment: Alignment.center,
-                                  padding: EdgeInsets.all(24),
-                                  child: SingleChildScrollView(
-                                    child: MyCustomForm(type, model.getFname(), model.getPhone(), model.getEmail(), model.getGender(), model.getDob()),
-                                  )
+                              Padding(
+                                padding: EdgeInsets.all(16),
+                                child: SingleChildScrollView(
+                                  //physics: ScrollPhysics(),
+                                  child: MyCustomForm(type, model.getFname(), model.getPhone(), model.getEmail(), model.getGender(), model.getDob()),
+                                )
                               ),
                             ],
                           ),
@@ -384,12 +440,12 @@ class MyCustomFormState extends State<MyCustomForm> {
   @override
   void initState() {
     super.initState();
-    fullNameController = new TextEditingController(text: widget.fname);
-    mobileNoController = new TextEditingController(text: widget.phone);
-    emailController = new TextEditingController(text: widget.email);
-    genderController = new TextEditingController(text: widget.gender);
-    dobController = new TextEditingController(text: widget.dob);
-    genType = widget.gender.substring(0,1);
+    fullNameController = new TextEditingController(text: widget.fname ?? '');
+    mobileNoController = new TextEditingController(text: widget.phone ?? '');
+    emailController = new TextEditingController(text: widget.email ?? '');
+    genderController = new TextEditingController(text: widget.gender ?? '');
+    dobController = new TextEditingController(text: widget.dob ?? '');
+    genType = widget.gender == null ? 'M' : widget.gender.substring(0,1);
   }
 
   void _submitForm(MainScopedModel model) async {
@@ -459,6 +515,34 @@ class MyCustomFormState extends State<MyCustomForm> {
     });
   }
 
+  Future _chooseDate(BuildContext context, String initialDateString) async {
+    var now = new DateTime.now();
+    var initialDate = convertToDate(initialDateString) ?? now;
+    initialDate = (initialDate.year >= 1900 && initialDate.isBefore(now) ? initialDate : now);
+
+    var result = await showDatePicker(
+        context: context,
+        initialDate: initialDate,
+        firstDate: new DateTime(1900),
+        lastDate: new DateTime.now());
+
+    if (result == null) return;
+
+    setState(() {
+      dobController.text = new DateFormat("yyyy-MM-dd").format(result); //new DateFormat.yMd().format(result);
+    });
+  }
+
+  DateTime convertToDate(String sdate) {
+    try {
+      var d = new DateFormat.yMd().parseStrict(sdate);
+      var t = new DateFormat.Hms().parseStrict(sdate);
+      return d;
+    } catch (e) {
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
@@ -470,7 +554,6 @@ class MyCustomFormState extends State<MyCustomForm> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-
                 widget.ftype == 1 ? buildFullNameField() : widget.ftype == 2
                     ? buildMobileNoField()
                     : widget.ftype == 3 ? buildEmailField() : widget.ftype == 4
@@ -620,8 +703,15 @@ class MyCustomFormState extends State<MyCustomForm> {
           borderSide: BorderSide(width: 1, color: Colors.grey.shade500),
         ),
         errorText: _displayDobValid ? null : "Birthdate missing.",
-
+        suffixIcon: new IconButton(
+          icon: new Icon(Icons.calendar_today),
+          tooltip: 'Date',
+          onPressed: (() {
+            _chooseDate(context, dobController.text);
+          }),
+        ),
       ),
+
     );
   }
 

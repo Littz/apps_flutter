@@ -1,14 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:edagang/scoped/main_scoped.dart';
+import 'package:http/http.dart' as http;
+import 'package:edagang/helper/constant.dart';
 import 'package:edagang/index.dart';
 import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:native_updater/native_updater.dart';
-import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'deeplink/ads_auto_deeplink.dart';
 import 'deeplink/ads_career_deeplink.dart';
 import 'deeplink/ads_company_deeplink.dart';
@@ -32,6 +34,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final MainScopedModel _model = MainScopedModel();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   StreamSubscription _sub;
   SharedPref sharedPref = SharedPref();
@@ -43,7 +46,42 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(Duration(seconds: 3), () {
       //checkVersion();
       initDynamicLinks();
+      getDeviceInfo();
     });
+  }
+
+
+
+  void getDeviceInfo() async {
+    print('UUID & DEVICE INFO  >>>>>');
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String devId = prefs.getString('player_id').split('"')[1];
+    String devType = prefs.getString('phone_type');
+    String devOs = prefs.getString('os_version');
+
+    //if(devId.length == 0 || devId.isEmpty){
+    final Map<String, dynamic> devParams = {
+      'device_id': devId,
+      'phone_type': devType,
+      'os_version': devOs,
+    };
+
+    http.post(
+      Uri.parse('https://shopapp.e-dagang.asia/api/registerdevice'), //?device_id='+devId+'&phone_type='+devType+'&os_version='+devOs),
+      headers: {'Content-Type': 'application/json',},
+      body: json.encode(devParams)
+    ).then((response) {
+      print('DevInfo => '+response.statusCode.toString());
+      print(response.body);
+      print('#Player ID => '+devId);
+      print('#Device Type => '+devType);
+      print('#Device OSver  => '+devOs);
+      //}
+      print('<<<<<<  UUID & DEVICE INFO');
+    });
+    //}else{
+
   }
 
   void checkVersion() async {
@@ -56,7 +94,7 @@ class _SplashScreenState extends State<SplashScreen> {
     /// This could get from the API
     int serverLatestVersion = 17;
 
-    Future.delayed(Duration.zero, () {
+    /*Future.delayed(Duration.zero, () {
       print('App version updater: '+statusCode.toString());
       if (statusCode == 412) {
         NativeUpdater.displayUpdateAlert(
@@ -79,7 +117,7 @@ class _SplashScreenState extends State<SplashScreen> {
           iOSIgnoreButtonLabel: 'Later',
         );
       }
-    });
+    });*/
   }
 
   void initDynamicLinks() async {
@@ -194,9 +232,11 @@ class _SplashScreenState extends State<SplashScreen> {
     FirebaseDynamicLinks.instance.onLink(
         onSuccess: (PendingDynamicLinkData dynamicLink) async {
           final Uri deepLink = dynamicLink?.link;
-
           if (deepLink != null) {
-            Navigator.pushNamed(context, '/helloworld');
+            print(deepLink.toString());
+            //Navigator.pushNamed(context, '/helloworld');
+          }else{
+            print('depplink empty!');
           }
         }, onError: (OnLinkErrorException e) async {
           print('onLinkError');

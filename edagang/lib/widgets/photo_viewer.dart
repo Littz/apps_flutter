@@ -25,7 +25,7 @@ class PhotoViewer extends StatelessWidget {
         backgroundDecoration: BoxDecoration(
           color: Colors.black.withAlpha(240),
         ),
-        loadingBuilder: (context, event) => Center(
+        /*loadingBuilder: (context, event) => Center(
           child: Container(
             width: 20.0,
             height: 20.0,
@@ -35,13 +35,13 @@ class PhotoViewer extends StatelessWidget {
                   : event.cumulativeBytesLoaded / event.expectedTotalBytes,
             ),
           ),
-        ),
-        /*loadingChild: Center(
+        ),*/
+        loadingChild: Center(
           child: CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
             strokeWidth: 1.5,
           ),
-        ),*/
+        ),
       ),
     );
   }

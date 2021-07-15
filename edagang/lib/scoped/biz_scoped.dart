@@ -30,13 +30,15 @@ bool get isLoadingCo => _isLoadingCo;
 
 Future<dynamic> _getVisitlist() async {
   var response = await http.get(
-      Uri.parse(Constants.bizAPI+'/biz/v2/latest'),
+    Uri.parse(Constants.bizAPI+'/biz/v2/latest'),
   ).catchError((error) {
     print(error.toString());
     return false;
   });
   print('BIZ LATEST ==============================================');
   print(Constants.bizAPI+'/biz/v2/latest');
+  print(response.statusCode.toString());
+  print(response.body);
   //return json.decode(response.body);
 }
 
@@ -106,6 +108,8 @@ Future fetchVisitedList() async {
   notifyListeners();
 }
 
+String faqUrl;
+String getFaq() {return faqUrl;}
 int totCompany;
 int getTotalCompany() {return totCompany;}
 int totCompanyPlus;
@@ -113,13 +117,15 @@ int getTotalCompanyPlus() {return totCompanyPlus;}
 
 Future<dynamic> _getCompanylist() async {
   var response = await http.get(
-      Uri.parse(Constants.bizAPI+'/biz/v2/companies'),
+    Uri.parse(Constants.bizAPI+'/biz/v2/companies'),
   ).catchError((error) {
     print(error.toString());
     return false;
   });
   print('BIZ COMPANY LIST ==============================================');
   print(Constants.bizAPI+'/biz/v2/companies');
+  print(response.statusCode.toString());
+  print(response.body);
   return json.decode(response.body);
 }
 
@@ -144,7 +150,6 @@ Future fetchCompanyList() async {
 }
 
 
-
 List<Home_banner> bbanners = [];
 List<Home_banner> get _banners => bbanners;
 void addHomeBannerList(Home_banner baner) {_banners.add(baner);}
@@ -164,7 +169,7 @@ void addHomeVirtualList(Home_virtual vr) {_bvirtual.add(vr);}
 
 Future<dynamic> _getHomeBizJson() async {
   var response = await http.get(
-      Uri.parse('https://bizapp.e-dagang.asia/api/biz/v2/home'),
+    Uri.parse('https://bizapp.e-dagang.asia/api/biz/v2/home'),
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
@@ -172,6 +177,8 @@ Future<dynamic> _getHomeBizJson() async {
   });
   print('BIZ HOME #####################################');
   print('https://bizapp.e-dagang.asia/api/biz/v2/home');
+  print(response.statusCode.toString());
+  print(response.body);
   return json.decode(response.body);
 }
 
@@ -184,6 +191,7 @@ Future fetchHomeBizResponse() async {
   notifyListeners();
   var dataFromResponse = await _getHomeBizJson();
 
+  faqUrl = dataFromResponse["data"]["faq"]["url"];
   totCompany = dataFromResponse["data"]["total"];
   totCompanyPlus = dataFromResponse["data"]["total"] - 10;
 
@@ -256,14 +264,13 @@ Future fetchHomeBizResponse() async {
 }
 
 
-
 List<Home_virtual> bvirtuals = [];
 List<Home_virtual> get _bvirtuals => bvirtuals;
 void addVirtualPageList(Home_virtual vrp) {_bvirtuals.add(vrp);}
 
 Future<dynamic> _getVrBizJson() async {
   var response = await http.get(
-      Uri.parse('https://bizapp.e-dagang.asia/api/biz/v2/vr'),
+    Uri.parse('https://bizapp.e-dagang.asia/api/biz/v2/vr'),
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
@@ -271,6 +278,8 @@ Future<dynamic> _getVrBizJson() async {
   });
   print('BIZ VIRTUAL REALITY #####################################');
   print('https://bizapp.e-dagang.asia/api/biz/v2/vr');
+  print(response.statusCode.toString());
+  print(response.body);
   return json.decode(response.body);
 }
 
@@ -308,15 +317,13 @@ Future fetchVrBizResponse() async {
 }
 
 
-
-
 List<StateX> stlookup = [];
 List<StateX> get _stlookup => stlookup;
 void addStateList(StateX ste) {_stlookup.add(ste);}
 
 Future<dynamic> _getStateJson() async {
   var response = await http.get(
-      Uri.parse('http://cartsini.my/api/lookup/state'),
+    Uri.parse('http://cartsini.my/api/lookup/state'),
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
@@ -324,6 +331,8 @@ Future<dynamic> _getStateJson() async {
   });
   print('API STATE LOOKUP #####################################');
   print('http://cartsini.my/api/lookup/state');
+  print(response.statusCode.toString());
+  print(response.body);
   return json.decode(response.body);
 }
 

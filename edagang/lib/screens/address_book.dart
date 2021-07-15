@@ -67,7 +67,7 @@ class _AddressBookState extends State<AddressBook> {
               children: <Widget>[
                 InkWell(
                   onTap: () {
-                    Navigator.push(context,MaterialPageRoute(builder: (context) => AddAddress(frm: 'acc')));
+                    Navigator.push(context,MaterialPageRoute(builder: (context) => AddAddress()));
                   },
                   child: Container(
                     margin: EdgeInsets.only(left: 10.0, right: 10.0, bottom: 16),
@@ -380,8 +380,6 @@ class _AddressBookState extends State<AddressBook> {
 
 
 class AddAddress extends StatefulWidget {
-  final String frm;
-  AddAddress({this.frm});
 
   @override
   _AddAddressState createState() => _AddAddressState();
@@ -459,12 +457,7 @@ class _AddAddressState extends State<AddAddress> {
     return ScopedModelDescendant(
         builder: (BuildContext context, Widget child,MainScopedModel model)
     {
-      return new WillPopScope(
-          onWillPop: () {
-        if(widget.frm == "acc") _moveToAddressScreen(context); else _moveToCheckoutScreen(context);
-        return null;
-      },
-      child: Scaffold(
+      return Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
           centerTitle: false,
@@ -486,7 +479,7 @@ class _AddAddressState extends State<AddAddress> {
               Padding(
                 padding: EdgeInsets.only(left: 16, right: 16),
                 child: ListView(
-                  physics: BouncingScrollPhysics(),
+                  //physics: BouncingScrollPhysics(),
                   children: <Widget>[
                     Form(
                       key: _formKey,
@@ -501,32 +494,35 @@ class _AddAddressState extends State<AddAddress> {
                           buildCityField(),
                           buildPincodeField(),
 
-                          /*Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 24.0),
-                            child: new RaisedButton(
-                              shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(25.0)),
-                              onPressed: () => _submitNewAddr(model),
-                              child: new Text("SAVE",
-                                style: GoogleFonts.lato(
-                                  textStyle: TextStyle(fontWeight: FontWeight.bold,),
+                          Container(
+                            alignment: Alignment.center,
+                            padding: EdgeInsets.only(left: 0, bottom: 5, right: 0, top: 30),
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              child: new RaisedButton(
+                                shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(25.0)),
+                                onPressed: () => _submitNewAddr(model),
+                                child: new Text("SAVE",
+                                  style: GoogleFonts.lato(
+                                    textStyle: TextStyle(fontWeight: FontWeight.bold,),
+                                  ),
                                 ),
+                                color: Color(0xff006FBD),
+                                textColor: Colors.white,
+                                elevation: 5.0,
                               ),
-                              color: Color(0xff006FBD),
-                              textColor: Colors.white,
-                              elevation: 5.0,
-                            ),
-                          ),*/
+                            )
+                          ),
                         ],
                       ),
                     )
                   ]
                 )
               ),
-              _btnSave(model),
+              //_btnSave(model),
             ]
           )
         )
-      )
       );
     });
   }
@@ -538,7 +534,7 @@ class _AddAddressState extends State<AddAddress> {
       left: 0,
       child: Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.only(left: 16, bottom: 5, right: 16),
+        padding: EdgeInsets.only(left: 16, bottom: 5, right: 16, top: 30),
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
           child: new RaisedButton(
@@ -1038,7 +1034,7 @@ class _EditAddressState extends State<EditAddress> {
                         Padding(
                             padding: EdgeInsets.only(left: 16, right: 16),
                             child: ListView(
-                                physics: BouncingScrollPhysics(),
+                                //physics: BouncingScrollPhysics(),
                                 children: <Widget>[
                                   Form(
                                     key: _formKey,
@@ -1053,6 +1049,25 @@ class _EditAddressState extends State<EditAddress> {
                                         buildCityField(),
                                         buildPincodeField(),
 
+                                        Container(
+                                            alignment: Alignment.center,
+                                            padding: EdgeInsets.only(left: 0, bottom: 5, right: 0, top: 30),
+                                            child: SizedBox(
+                                              width: MediaQuery.of(context).size.width,
+                                              child: new RaisedButton(
+                                                shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(25.0)),
+                                                onPressed: () => _submitUpdateAddr(model),
+                                                child: new Text("SAVE",
+                                                  style: GoogleFonts.lato(
+                                                    textStyle: TextStyle(fontWeight: FontWeight.bold,),
+                                                  ),
+                                                ),
+                                                color: Color(0xff006FBD),
+                                                textColor: Colors.white,
+                                                elevation: 5.0,
+                                              ),
+                                            )
+                                        ),
                                         /*Padding(
                             padding: const EdgeInsets.symmetric(vertical: 24.0),
                             child: new RaisedButton(
@@ -1074,7 +1089,7 @@ class _EditAddressState extends State<EditAddress> {
                                 ]
                             )
                         ),
-                        _btnSave(model),
+                        //_btnSave(model),
                       ]
                   )
               )

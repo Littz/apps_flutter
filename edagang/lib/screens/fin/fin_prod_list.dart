@@ -10,7 +10,7 @@ import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/photo_viewer.dart';
 import 'package:edagang/widgets/progressIndicator.dart';
-import 'package:edagang/widgets/webview.dart';
+import 'package:edagang/widgets/webview_f.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -559,7 +559,7 @@ class _FinDetailPageState extends State<FinDetailPage> with TickerProviderStateM
               ),
               onPressed: () {
                 //Navigator.push(context, SlideRightRoute(page: WebviewWidget(data.webviewUrl, data.title)));
-                model.isAuthenticated ? Navigator.push(context, SlideRightRoute(page: WebviewWidget('https://fintools.e-dagang.asia/wv/reqform/' + model.getId().toString() + '/' + widget.bizId, widget.bizName))) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
+                model.isAuthenticated ? Navigator.push(context, SlideRightRoute(page: WebViewPage('https://fintools.e-dagang.asia/wv/reqform/' + model.getId().toString() + '/' + widget.bizId, widget.bizName))) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
               },
             ),
           ],
@@ -615,92 +615,6 @@ class _FinDetailPageState extends State<FinDetailPage> with TickerProviderStateM
                           child: InkWell(
                               onTap: () {
                                 _viewSvcProduct(data.file_path, data.product_name, data.overview, widget.bizName, vlink);
-                                /*showModalBottomSheet(
-                                  context: context,
-                                  isScrollControlled: true,
-                                  backgroundColor: Colors.transparent,
-                                  builder: (context) {
-                                    return Container(
-                                        color: Color.fromRGBO(0, 0, 0, 0.001),
-                                        child: GestureDetector(
-                                          onTap: () {Navigator.pop(context);},
-                                          child: DraggableScrollableSheet(
-                                            initialChildSize: 0.90,
-                                            minChildSize: 0.2,
-                                            maxChildSize: 0.95,
-                                            builder: (_, controller) {
-                                              return Container(
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius: BorderRadius.only(
-                                                    topLeft: const Radius.circular(20.0),
-                                                    topRight: const Radius.circular(20.0),
-                                                  ),
-                                                ),
-                                                child: Column(
-                                                  children: [
-                                                    Container(
-                                                      alignment: Alignment.centerLeft,
-                                                      padding: EdgeInsets.all(16),
-                                                      child: Icon(
-                                                        LineAwesomeIcons.close,
-                                                        color: Colors.red[600],
-                                                      ),
-                                                    ),
-                                                    Expanded(
-                                                      child: SingleChildScrollView(
-                                                        child: Column(
-                                                          children: [
-                                                            Container(
-                                                              padding: EdgeInsets.only(left: Constants.padding,top: 0, right: Constants.padding,bottom: Constants.padding),
-                                                              child: Column(
-                                                                mainAxisSize: MainAxisSize.min,
-                                                                children: <Widget>[
-                                                                  Card(
-                                                                    elevation: 0,
-                                                                    shape: RoundedRectangleBorder(
-                                                                      borderRadius: BorderRadius.circular(8.0),
-                                                                    ),
-                                                                    child: data.file_path == 'null' ? Container() : Container(
-                                                                        decoration: new BoxDecoration(
-                                                                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                                                                        ),
-                                                                        child: ClipRRect(
-                                                                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                                                                          child: CachedNetworkImage(
-                                                                            placeholder: (context, url) => Container(
-                                                                              alignment: Alignment.center,
-                                                                              color: Colors.transparent,
-                                                                              child: Image.asset('assets/images/ed_logo_greys.png', width: 90,
-                                                                                height: 90,),
-                                                                            ),
-                                                                            imageUrl: data.file_path,
-                                                                            fit: BoxFit.cover,
-                                                                          ),
-                                                                        )
-                                                                    ),
-                                                                  ),
-                                                                  SizedBox(height: 10,),
-                                                                  Text(data.product_name,style: TextStyle(fontSize: 22,fontWeight: FontWeight.w600, color: Color(0xff2877EA)),),
-                                                                  SizedBox(height: 15,),
-                                                                  htmlText(data.overview),
-                                                                  SizedBox(height: 22,),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      )
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                      );
-                                  },
-                                );*/
                               },
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -746,24 +660,6 @@ class _FinDetailPageState extends State<FinDetailPage> with TickerProviderStateM
                               )
                           ),
                         )
-                        /*ListTile(
-                          contentPadding: EdgeInsets.symmetric(vertical: -3, horizontal: -3),
-                          title: Text(data.product_name),
-                          subtitle: htmlText(data.product_desc),
-                          trailing: Icon(Icons.chevron_right,color: Colors.grey),
-                          onTap: () {
-                            showDialog(context: context,
-                              builder: (BuildContext context){
-                                return CustomDialogBox(
-                                  file_img: data.file_path,
-                                  title: data.product_name,
-                                  descriptions: data.overview,
-                                  text: co,
-                                );
-                              }
-                            );
-                          },
-                        )*/
                       );
                     },
                   )

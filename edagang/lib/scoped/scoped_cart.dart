@@ -1,5 +1,9 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:edagang/models/shop_model.dart';
 import 'package:edagang/helper/constant.dart';
+import 'package:retry/retry.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -116,59 +120,132 @@ void updCartQty({int cartId, int productId, int quantity}) async {
 }
 
 void removeProduct(int cartId, int prodId) async {
+  _kartsList.clear();
+  notifyListeners();
+
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   Map<dynamic, dynamic> orderParams = Map();
   orderParams = {'_method': 'DELETE', 'product_id': prodId};
-  _kartsList.clear();
-  notifyListeners();
-  http.post(Uri.parse(Constants.shopCart+'/'+cartId.toString()),
-      headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
-      body: json.encode(orderParams)
+
+  http.post(
+    Uri.parse(Constants.shopCart+'/'+cartId.toString()),
+    headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
+    body: json.encode(orderParams)
   ).then((response) {
+    print('DELETE CART >>>>');
+    print(response.statusCode.toString());
+    print(response.body);
+
     fetchCartTotal();
     fetchCartsFromResponse();
     fetchCartReload();
-    print('DELETE ITEM >>>>');
   });
 }
 
 void updateLineItem(int cartId, int productId, int quantity) async {
   Map<dynamic, dynamic> orderParams = Map();
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  orderParams = {'_method': "PUT", 'product_id': productId.toString(), 'quantity': quantity.toString()};
-  print(Constants.shopCart+"/"+cartId.toString());
+  orderParams = {'cart_id': cartId.toString(), 'product_id': productId.toString(), 'quantity': quantity.toString()};
+  print('CARTSINI UPDATE CART >>>>>');
+  print(Constants.shopCart+"/updatecart");
   print(orderParams);
 
-  http.post(Uri.parse(Constants.shopCart+"/"+cartId.toString()),
+  http.post(Uri.parse(Constants.shopCart+"/updatecart?cart_id="+cartId.toString()+"&product_id="+productId.toString()+"&quantity="+quantity.toString()),
     headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
-    body: json.encode(orderParams)
+    //body: json.encode(orderParams)
   ).then((response) {
+    print(response.statusCode.toString());
+    print(response.body);
+
     fetchCartTotal();
     fetchCartsFromResponse();
     fetchCartReload();
-    print('CARTSINI UPDATE CART >>>>>');
-    //var responseBody = json.decode(response.body);
-    print(response.statusCode.toString());
   });
 }
 
 void createNewLineItem(String params) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  //lineItemObject = {
-  //  "product_id": productId, "quantity": quantity
-  //};
   http.post(
-      Uri.parse(Constants.shopCart+'?'+params),
-      headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
-      //body: json.encode(lineItemObject)
+    Uri.parse(Constants.shopCart+'?'+params),
+    headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
+    //body: json.encode(lineItemObject)
   ).then((response) {
+    print('CARTSINI ADD TO CART >>>>>');
+    print(Constants.shopCart+'?'+params);
+    print(response.statusCode.toString());
+    print(response.body);
+
     fetchCartTotal();
     fetchCartsFromResponse();
-    fetchCartReload();
-    print('CARTSINI ADD TO CART >>>>>');
-    var responseBody = json.decode(response.body);
-    print(responseBody);
+    //var responseBody = json.decode(response.body);
+    //print(responseBody);
+    //if(response.statusCode == 200 || response.statusCode == 302){
+    //  //fetchCartReload();
+    //}
+
   });
+}
+
+Future<void> addToCart(String params) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  var response = await http.post(Constants.shopCart+'?'+params, headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',});
+  print('CARTSINI ADD TO CART >>>>>');
+  print(Constants.shopCart+'?'+params);
+  print(response.statusCode.toString());
+
+  if (response.statusCode == 200) {
+    print(response.body);
+    print('Successful added to cart.');
+    //print(await _getCartCount());
+    //print(await _getCartList());
+
+    fetchCartTotal();
+    fetchCartsFromResponse();
+    //var jsonResponse = json.decode(response.body);
+    //var itemCount = jsonResponse['totalItems'];
+
+  } else {
+    print(response.body);
+    print('Request failed with status: ${response.statusCode}.');
+  }
+}
+
+Future<void> addToCartRetry(String params) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  final client = HttpClient();
+
+  try {
+// Get statusCode by retrying a function
+    final statusCode = await retry(() async {
+// Make a HTTP request and return the status code.
+      final request = await client.postUrl(Uri.parse(Constants.shopCart+'?'+params)).timeout(Duration(seconds: 5));
+      request.headers.set(HttpHeaders.authorizationHeader, "Bearer "+prefs.getString('token'));
+      request.headers.set(HttpHeaders.contentTypeHeader, "application/json");
+      final response = await request.close().timeout(Duration(seconds: 5));
+      await response.drain();
+      return response.statusCode;
+    },
+// Retry on SocketException or TimeoutException
+      retryIf: (e) => e is SocketException || e is TimeoutException,
+    );
+// Print result from status code
+    print('CARTSINI ADD TO CART >>>>>');
+    print(statusCode.toString());
+    if (statusCode == 200) {
+      print('Successful added to cart.');
+      fetchCartTotal();
+      fetchCartsFromResponse();
+    } else {
+      print('Failed to add cart.');
+    }
+  } finally {
+// Always close an HttpClient from dart:io, to close TCP connections in the
+// connection pool. Many servers has keep-alive to reduce round-trip time
+// for additional requests and avoid that clients run out of port and
+// end up in WAIT_TIME unpleasantries...
+    client.close();
+  }
 }
 
 void updShipping({int addr_id}) async {
@@ -201,43 +278,48 @@ void setShippingAddress(int addr_id) async {
     headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
     body: json.encode(addrData)
   ).then((response) {
-    fetchCartReload();
     print('CARTSINI UPDATE SHIPPING >>>>>');
+    print(Constants.addressAPI + '/setdefault?address_id='+addr_id.toString());
     print(response.statusCode.toString());
     print(response.body);
+
+    if(response.statusCode == 200){
+      fetchCartReload();
+    }
+
   });
 }
+
 
 Future<dynamic> _getCartCount() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   var response = await http.get(
-      Uri.parse(Constants.shopAPI+'/cart/product/count'),
+    Uri.parse(Constants.shopAPI+'/cart/product/count'),
     headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
     return false;
-  },
-  );
+  });
   print('CARTSINI CART TOTAL ##########################################');
   print(Constants.shopAPI+'/cart/product/count');
+  print(response.statusCode.toString());
+  print(response.body);
   return json.decode(response.body);
 }
 
 Future fetchCartTotal() async {
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
   notifyListeners();
-  var dataFromResponse = prefs.getString('token') != null ? await _getCartCount() : null;
+  var dataFromResponse = await _getCartCount();
+  cartTot = dataFromResponse['data']['cart_total'];
 
-  cartTot = prefs.getString('token') != null ? dataFromResponse['data']['cart_total'] : 0;
-
-  _isLoading3 = false;
   notifyListeners();
 }
+
 
 Future<dynamic> _getCartList() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   var response = await http.get(
-      Uri.parse(Constants.shopCart),
+    Uri.parse(Constants.shopCart),
     headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
@@ -245,6 +327,9 @@ Future<dynamic> _getCartList() async {
   });
   print('CARTSINI CART LIST ##########################################');
   print(Constants.shopCart);
+  print(response.statusCode.toString());
+  print(response.body);
+
   return json.decode(response.body);
 }
 
@@ -252,13 +337,11 @@ Future fetchCartsFromResponse() async {
   _isLoading3 = true;
   _kartsList.clear();
   notifyListeners();
-  currentCartCount = 0;
-  var dataFromResponse = await _getCartList();
 
+  var dataFromResponse = await _getCartList();
   //print(dataFromResponse.toString());
 
   dataFromResponse['data']['cart'].forEach((newCart) {
-    currentCartCount++;
 
     List<CartProduct> cartProducts = [];
     newCart['merchant']['cart_products'].forEach((cartProd) {
@@ -325,7 +408,7 @@ Future fetchCartsFromResponse() async {
 Future<dynamic> _getCartReload() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   var response = await http.get(
-      Uri.parse(Constants.shopCart+'/reload'),
+    Uri.parse(Constants.shopCart+'/reload'),
     headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
@@ -333,14 +416,17 @@ Future<dynamic> _getCartReload() async {
   });
   print('CARTSINI CART RELOAD ##########################################');
   print(Constants.shopCart+'/reload');
+  print(response.statusCode.toString());
+  print(response.body);
+
   return json.decode(response.body);
 }
 
 Future fetchCartReload() async {
   _kartReload.clear();
   notifyListeners();
-  var dataFromResponse = await _getCartReload();
 
+  var dataFromResponse = await _getCartReload();
   //print(dataFromResponse.toString());
 
   dataFromResponse['data']['cart'].forEach((newCart) {
@@ -404,23 +490,21 @@ Future fetchCartReload() async {
 }
 
 
-
 Future fetchAddressList() async {
-  _isLoading3 = true;
   addrList_x.clear();
   notifyListeners();
-  currentCartCount = 0;
+
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   http.get(
-      Uri.parse(Constants.addressAPI),
+    Uri.parse(Constants.addressAPI),
     headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
   ).then((response) {
     //print(response.body);
     var responseBody = json.decode(response.body);
     print('CARTSINI ADDRESS >>>>');
     print(Constants.addressAPI);
-
-    //print(responseBody['data']['addresses']);
+    print(response.statusCode.toString());
+    print(response.body);
     responseBody['data']['addresses'].forEach((addr) {
 
       Address adres = new Address(
@@ -438,28 +522,26 @@ Future fetchAddressList() async {
         location_tag: addr['location_tag'],
       );
       addToAddrList(adres);
-
     });
-    _isLoading3 = false;
+
     notifyListeners();
   });
 }
 
 Future fetchBankList() async {
-  _isLoading3 = true;
   _bankList.clear();
   notifyListeners();
-  currentCartCount = 0;
+
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   http.get(Uri.parse(Constants.getFpxbank),
     headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
   ).then((response) {
-    //print(response.body);
-    var responseBody = json.decode(response.body);
     print('CARTSINI BANKING >>>>');
     print(Constants.getFpxbank);
+    print(response.statusCode.toString());
+    print(response.body);
 
-    //print(responseBody['data']);
+    var responseBody = json.decode(response.body);
     responseBody['data'].forEach((fpxbnk) {
 
       OnlineBanking bank = new OnlineBanking(
@@ -469,9 +551,8 @@ Future fetchBankList() async {
         bank_logo: fpxbnk['bank_logo'],
       );
       addToBankList(bank);
-
     });
-    _isLoading3 = false;
+
     notifyListeners();
   });
 }

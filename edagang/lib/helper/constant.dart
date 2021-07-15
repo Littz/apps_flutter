@@ -50,7 +50,7 @@ class Constants {
   static String getCity = shopAPI+"/lookup/city/";
 
   static String postReorder = shopAPI+"/order/details"; //<order_id>
-  static String postRepayment = shopAPI+"/order/makepayment"; //<order_id><payment_type><bank_id><source>
+  static String postRepayment = shopAPI+"/order/makepayment?"; //<order_id><payment_type><bank_id><source>
 
   //POST https://shopapp.e-dagang.asia/api/order/details
   //Param: order_id

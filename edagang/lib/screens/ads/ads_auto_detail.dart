@@ -9,7 +9,7 @@ import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/photo_viewer.dart';
 import 'package:edagang/widgets/progressIndicator.dart';
-import 'package:edagang/widgets/webview.dart';
+import 'package:edagang/widgets/webview_f.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -456,7 +456,7 @@ class _AutoShowcasePageState extends State<AutoShowcase> with TickerProviderStat
               ),
               onPressed: () {
                 model.isAuthenticated ? Navigator.push(context, SlideRightRoute(
-                page: WebviewWidget('https://blurb.e-dagang.asia/wv/reqform_auto/'+model.getId().toString()+'/'+_aid.toString(), atitle))) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
+                page: WebViewPage('https://blurb.e-dagang.asia/wv/reqform_auto/'+model.getId().toString()+'/'+_aid.toString(), atitle))) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
               },
             ),
           ],

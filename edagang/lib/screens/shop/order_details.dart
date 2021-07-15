@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'dart:convert' as JSON;
 
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -257,7 +257,7 @@ class _MyOrdersState extends State<MyOrders> with TickerProviderStateMixin {
           return ListView.builder(
             key: PageStorageKey(key),
             shrinkWrap: true,
-            //physics: NeverScrollableScrollPhysics(),
+            physics: ClampingScrollPhysics(),
             scrollDirection: Axis.vertical,
             itemCount: model.toPay.length,
             itemBuilder: (_, index) {
@@ -277,6 +277,7 @@ class _MyOrdersState extends State<MyOrders> with TickerProviderStateMixin {
                       padding: EdgeInsets.all(5),
                       child: ListView.builder(
                         shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
                         //physics: ClampingScrollPhysics(),
                         itemCount: data.order_group.length,
                         itemBuilder: (context, index) {
@@ -312,7 +313,7 @@ class _MyOrdersState extends State<MyOrders> with TickerProviderStateMixin {
                                               thickness: 0.0,
                                             ),
                                             shrinkWrap: true,
-                                            //physics: ClampingScrollPhysics(),
+                                            physics: NeverScrollableScrollPhysics(),
                                             itemCount: ogrp.order_items.length,
                                             itemBuilder: (context, index) {
                                               var item = ogrp.order_items[index];
@@ -489,20 +490,8 @@ class _MyOrdersState extends State<MyOrders> with TickerProviderStateMixin {
                                   textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.deepOrange.shade700),
                                 ),
                               ),
-                              onPressed: () async{
-                                SharedPreferences prefs = await SharedPreferences.getInstance();
-                                Map<String, dynamic> postData = {
-                                  'order_id': odrid,
-                                };
-
-                                http.post(Uri.parse('https://shopapp.e-dagang.asia/api/order/cancel'),
-                                  headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
-                                  body: json.encode(postData),
-                                ).then((response) {
-                                  //var resBody = json.decode(response.body);
-                                  print(response.statusCode.toString());
-                                  print(response.body);
-                                });
+                              onPressed: () {
+                                _submitCancel(model, odrid);
                               },
                             ),
                             RaisedButton(
@@ -752,7 +741,7 @@ class _MyOrdersState extends State<MyOrders> with TickerProviderStateMixin {
                             Container(
                               child: RichText(
                                 text: TextSpan(
-                                  text: 'Toral Order: ',
+                                  text: 'Total Order: ',
                                   style: GoogleFonts.lato(
                                     textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black),
                                   ),
@@ -1629,12 +1618,106 @@ class _MyOrdersState extends State<MyOrders> with TickerProviderStateMixin {
   }
 
 
+  _submitCancel(MainScopedModel model, String oid) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    Map<String, dynamic> postData = {
+      'order_id': oid,
+    };
+    print(oid);
+
+    final http.Response response = await http.post(
+      Uri.parse('https://shopapp.e-dagang.asia/api/order/cancel'),
+      body: JSON.jsonEncode(postData),
+      headers: {
+        'Authorization' : 'Bearer '+prefs.getString('token'),
+        'Content-Type': 'application/json',
+      },
+    );
+
+    model.fetchOrderStatusResponse();
+    print(response.statusCode.toString());
+    /*print("RES BODY >>>> " + response.body);
+    if(response.statusCode == 200) {
+      model.fetchOrderStatusResponse();
+    }*/
+
+    /*final Map<String, dynamic> responseData = JSON.jsonDecode(response.body);
+    String message = 'Something wrong somewhere.';
+    bool hasError = true;
+    print(responseData);
+    if (responseData["message"] == "success") {
+      message = "Successfully.";
+      hasError = false;
+    } else {
+      message = responseData["data"];
+    }
+    print("MESG >>>> " + message);
+
+    final Map<String, dynamic> successInformation = {
+      'success': !hasError,
+      'message': message
+    };
+
+    if (successInformation['success']) {
+      model.fetchOrderStatusResponse();
+      //Navigator.of(context).pushReplacementNamed("/Main");
+      print('Sukses cancel! => ' + successInformation['message']);
+    } else {
+      print('An Error Occurred! => ' + successInformation['message']);
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              'Cancellation failed.',
+              style: GoogleFonts.lato(
+                textStyle: TextStyle(
+                  color: Colors.red,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            content: Text(
+              message,
+              style: GoogleFonts.lato(
+                textStyle: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            actions: [
+              FlatButton(
+                child: Text(
+                  'Close',
+                  style: GoogleFonts.lato(
+                    textStyle: TextStyle(
+                      color: Colors.red,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }*/
+  }
+
   Widget _buildList({String key}) {
     return ListView.builder(
       key: PageStorageKey(key),
       itemBuilder: (_, i) => ListTile(title: Text("testing.. ${i}")),
     );
   }
+
 
 }
 

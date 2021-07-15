@@ -45,13 +45,16 @@ mixin UserScopedModel on Model {
   Future<dynamic> _getProfileJson() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     var response = await http.get(
-        Uri.parse(Constants.shopAPI+'/account/profile'),
+      Uri.parse(Constants.shopAPI+'/account/profile'),
       headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
     ).catchError((error) {
       print(error.toString());
       return false;
     },
     );
+    print('USER PROFILE >>>>>');
+    print(response.statusCode.toString());
+    print(response.body);
     return json.decode(response.body);
   }
 

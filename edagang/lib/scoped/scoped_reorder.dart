@@ -37,6 +37,8 @@ class ReOrderScopedModel extends Model {
 
     print('ORDER HISTORY DETAIL ==============================================');
     print('https://shopapp.e-dagang.asia/api/order/details?order_id='+odrId.toString());
+    print(response.statusCode.toString());
+    print(response.body);
     return json.decode(response.body);
 
   }

@@ -37,10 +37,11 @@ class BlurbScopedModel extends Model {
     ).catchError((error) {
       print(error.toString());
       return false;
-    },
-    );
+    });
     print('BLURB PROPERTY COMPANY DETAIL ==============================================');
     print('https://blurbapp.e-dagang.asia/api/blurb/property/v2/company?business_id='+bizId.toString());
+    print(response.statusCode.toString());
+    print(response.body);
     return json.decode(response.body);
 
   }

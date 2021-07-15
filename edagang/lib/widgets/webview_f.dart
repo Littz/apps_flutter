@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:edagang/screens/shop/product_detail.dart';
 import 'package:edagang/screens/shop/product_merchant.dart';
 import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 
@@ -58,9 +60,10 @@ class _VirtualWebViewState extends State<VirtualWebView> {
     return WebView(
       initialUrl: _url,
       javascriptMode: JavascriptMode.unrestricted,
-      onProgress: (int progress) {
+      /*onProgress: (int progress) {
         print("Loading (progress : $progress%)");
-      },
+      },*/
+
       navigationDelegate: this._interceptNavigation,
       gestureNavigationEnabled: true,
     );
@@ -165,6 +168,179 @@ class _VirtualWebViewState extends State<VirtualWebView> {
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+
+class WebViewPage extends StatefulWidget {
+  final url,title;
+  WebViewPage(this.url, this.title);
+
+  @override
+  _WebViewPageState createState() => _WebViewPageState(this.url, this.title);
+}
+
+class _WebViewPageState extends State<WebViewPage> {
+  final Completer<WebViewController> _controller = Completer<WebViewController>();
+  var _url, _title;
+  _WebViewPageState(this._url, this._title);
+  bool _isLoading;
+  final _key = UniqueKey();
+
+  @override
+  void initState() {
+    super.initState();
+    _isLoading = true;
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: new AppBar(
+        centerTitle: false,
+        elevation: 1.0,
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: true,
+        iconTheme: IconThemeData(
+          color: Color(0xff084B8C),
+        ),
+        title: new Text(_title,
+          style: GoogleFonts.lato(
+            textStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 17),
+          ),
+        ),
+      ),
+      body: MediaQuery.removePadding(
+        removeTop: true,
+        context: context,
+        child: Stack(
+          children: <Widget>[
+            new WebView(
+              key: _key,
+              initialUrl: _url,
+              javascriptMode: JavascriptMode.unrestricted,
+              onWebViewCreated: (WebViewController webViewController) {
+                _controller.complete(webViewController);
+              },
+              gestureNavigationEnabled: true,
+              onPageFinished: (finish) {
+                setState(() {
+                  _isLoading = false;
+                });
+              },
+            ),
+            _isLoading ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation(Color(0xff006FBD)),
+                        strokeWidth: 1.7
+                    ),
+                  ),
+                  Text(
+                    'Loading..',
+                    style: GoogleFonts.lato(
+                      textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Color(0xff006FBD)),
+                    ),
+                  ),
+                ],
+              )
+            ) : Container(),
+          ],
+        ),
+      )
+    );
+  }
+}
+
+
+class WebViewBb extends StatefulWidget {
+  final url,image;
+  WebViewBb(this.url, this.image);
+
+  @override
+  _WebViewBbPageState createState() => _WebViewBbPageState(this.url, this.image);
+}
+
+class _WebViewBbPageState extends State<WebViewBb> {
+  final Completer<WebViewController> _controller = Completer<WebViewController>();
+  var _url, _image;
+  _WebViewBbPageState(this._url, this._image);
+  bool _isLoading;
+  final _key = UniqueKey();
+
+  @override
+  void initState() {
+    super.initState();
+    _isLoading = true;
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: new PreferredSize(
+          preferredSize: Size.fromHeight(125.0),
+          child: new AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            automaticallyImplyLeading: true,
+            iconTheme: IconThemeData(
+              color: Colors.white,
+            ),
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: CachedNetworkImageProvider(_image),
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ),
+          )
+      ),
+      body: Stack(
+        children: <Widget>[
+          new WebView(
+            key: _key,
+            initialUrl: _url,
+            javascriptMode: JavascriptMode.unrestricted,
+            onWebViewCreated: (WebViewController webViewController) {
+              _controller.complete(webViewController);
+            },
+            gestureNavigationEnabled: true,
+            onPageFinished: (finish) {
+              setState(() {
+                _isLoading = false;
+              });
+            },
+          ),
+          _isLoading ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation(Color(0xff006FBD)),
+                        strokeWidth: 1.7
+                    ),
+                  ),
+                  Text(
+                    'Loading..',
+                    style: GoogleFonts.lato(
+                      textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Color(0xff006FBD)),
+                    ),
+                  ),
+                ],
+              )
+          ) : Container(),
         ],
       ),
     );

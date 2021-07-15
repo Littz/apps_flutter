@@ -10,7 +10,7 @@ import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
 import 'package:edagang/widgets/progressIndicator.dart';
-import 'package:edagang/widgets/webview.dart';
+import 'package:edagang/widgets/webview_f.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -548,7 +548,7 @@ class _CareerDlPageState extends State<CareerDlPage> with TickerProviderStateMix
               ),
               onPressed: () {
                 model.isAuthenticated ? Navigator.push(context, SlideRightRoute(
-                    page: WebviewWidget(
+                    page: WebViewPage(
                         'https://blurb.e-dagang.asia/wv/reqform_jobs/'+model.getId().toString()+'/'+_id.toString(), title))) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
               },
             ),

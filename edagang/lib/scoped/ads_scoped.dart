@@ -20,13 +20,15 @@ bool get isLoading => _isLoading;
 
 Future<dynamic> _getJobcat() async {
   var response = await http.get(
-      Uri.parse('https://blurbapp.e-dagang.asia/api/career/job/listing'),
+    Uri.parse('https://blurbapp.e-dagang.asia/api/career/job/listing'),
   ).catchError((error) {
     print(error.toString());
     return false;
   });
   print('JOB Category==============================================');
   print('https://blurbapp.e-dagang.asia/api/blurb/job/v2/listing');
+  print(response.statusCode.toString());
+  print(response.body);
   return json.decode(response.body);
 }
 
@@ -77,7 +79,7 @@ void addHomeOtherList(JobsCat other) {_blbothers.add(other);}
 
 Future<dynamic> _getBlurbOtherJson() async {
   var response = await http.get(
-      Uri.parse('https://blurbapp.e-dagang.asia/api/blurb/others/v2/listing'),
+    Uri.parse('https://blurbapp.e-dagang.asia/api/blurb/others/v2/listing'),
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
@@ -85,6 +87,8 @@ Future<dynamic> _getBlurbOtherJson() async {
   });
   print('BLURB OTHERS LIST #####################################');
   print('https://blurbapp.e-dagang.asia/api/blurb/others/v2/listing');
+  print(response.statusCode.toString());
+  print(response.body);
   return json.decode(response.body);
 }
 
@@ -129,7 +133,7 @@ Future fetchBlurbOtherResponse() async {
 
 Future<dynamic> _getHomeBlurbJson() async {
   var response = await http.get(
-      Uri.parse('https://blurbapp.e-dagang.asia/api/blurb/v2/home'),
+    Uri.parse('https://blurbapp.e-dagang.asia/api/blurb/v2/home'),
     headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
   ).catchError((error) {
     print(error.toString());
@@ -137,6 +141,8 @@ Future<dynamic> _getHomeBlurbJson() async {
   });
   print('BLURB HOME #####################################');
   print('https://blurbapp.e-dagang.asia/api/blurb/v2/home');
+  print(response.statusCode.toString());
+  print(response.body);
   return json.decode(response.body);
 }
 

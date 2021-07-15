@@ -82,7 +82,7 @@ mixin OrderScopedModel on Model {
   Future<dynamic> _getOrdersJson() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     var response = await http.get(
-        Uri.parse(Constants.getHistory),
+      Uri.parse(Constants.getHistory),
       headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
     ).catchError((error) {
       print(error.toString());
@@ -90,6 +90,8 @@ mixin OrderScopedModel on Model {
     });
     print('CARTSINI ORDER History @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
     print(Constants.getHistory);
+    print(response.statusCode.toString());
+    print(response.body);
     return json.decode(response.body);
   }
 
@@ -158,11 +160,10 @@ mixin OrderScopedModel on Model {
   }
 
 
-
   Future<dynamic> _getMyOrderStatusJson() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     var response = await http.get(
-        Uri.parse('http://shopapp.e-dagang.asia/api/order/statuscount'),
+      Uri.parse('http://shopapp.e-dagang.asia/api/order/statuscount'),
       headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
     ).catchError((error) {
       print(error.toString());
@@ -170,6 +171,8 @@ mixin OrderScopedModel on Model {
     });
     print('CARTSINI ORDER STATUS RESPONSE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
     print('http://shopapp.e-dagang.asia/api/order/statuscount');
+    print(response.statusCode.toString());
+    print(response.body);
     return json.decode(response.body);
   }
 

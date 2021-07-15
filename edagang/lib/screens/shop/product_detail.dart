@@ -1,5 +1,8 @@
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:connectivity/connectivity.dart';
+import 'package:edagang/helper/constant.dart';
+import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:intl/intl.dart';
 import 'package:edagang/models/shop_model.dart';
@@ -7,8 +10,6 @@ import 'package:edagang/scoped/main_scoped.dart';
 import 'package:edagang/screens/shop/product_merchant.dart';
 import 'package:edagang/screens/shop/shop_cart.dart';
 import 'package:edagang/sign_in.dart';
-import 'package:edagang/helper/constant.dart';
-import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:edagang/widgets/blur_icon.dart';
 import 'package:edagang/widgets/html2text.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
@@ -92,7 +93,7 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
         print("product NAME : "+_title);
 
         http.get(
-            Uri.parse(Constants.shopSingleProduct+id),
+          Constants.shopSingleProduct+id,
           headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
         ).then((response) {
           responseBody = json.decode(response.body);
@@ -237,7 +238,7 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
     FirebaseAnalytics().logEvent(name: 'Cartsini_product_detail',parameters:null);
   }
 
-  void showStatusToast(String mesej, bool sts) {
+  showStatusToast(String mesej, bool sts) {
     Fluttertoast.showToast(
         msg: mesej,
         toastLength: Toast.LENGTH_SHORT,
@@ -269,40 +270,40 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
             backgroundColor: Colors.white,
             expandedHeight: coverImageHeightCalc,
             leading: Hero(
-              tag: "back",
-              child: InkWell(
-                onTap: () {Navigator.pop(context);},
-                splashColor: Colors.deepOrange.shade100,
-                highlightColor: Colors.deepOrange.shade100,
-                child: BlurIcon(
-                  icon: Icon(
-                    Icons.arrow_back,
-                    color: Colors.white,
+                tag: "back",
+                child: InkWell(
+                  onTap: () {Navigator.pop(context);},
+                  splashColor: Colors.deepOrange.shade100,
+                  highlightColor: Colors.deepOrange.shade100,
+                  child: BlurIcon(
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-              )
+                )
             ),
             flexibleSpace: new FlexibleSpaceBar(
               background: _productImages(),
             ),
             actions: <Widget>[
               Hero(
-                tag: "share",
-                child: InkWell(
-                  onTap: () async {
-                    await FlutterShare.share(
-                      title: 'Cartsini',
-                      text: '',
-                      linkUrl: 'https://edagang.page.link/?link=https://shopapp.e-dagang.asia/product/'+pid.toString(),
-                      chooserTitle: _title,
-                    );
-                  },
-                  splashColor: Colors.deepOrange.shade100,
-                  highlightColor: Colors.deepOrange.shade100,
-                  child: BlurIcon(
-                    icon: Icon(Icons.share,color: Colors.white,),
-                  ),
-                )
+                  tag: "share",
+                  child: InkWell(
+                    onTap: () async {
+                      await FlutterShare.share(
+                        title: 'Cartsini',
+                        text: '',
+                        linkUrl: 'https://shopapp.e-dagang.asia/product/'+pid.toString(),
+                        chooserTitle: _title,
+                      );
+                    },
+                    splashColor: Colors.deepOrange.shade100,
+                    highlightColor: Colors.deepOrange.shade100,
+                    child: BlurIcon(
+                      icon: Icon(Icons.share,color: Colors.white,),
+                    ),
+                  )
               ),
               _shoppingCartBadge(),
             ],
@@ -322,9 +323,9 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             new Text(name ?? "",
-                                style: GoogleFonts.lato(
-                                  textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-                                ),
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                              ),
                             ),
                             new Padding(
                                 padding: const EdgeInsets.only(left: 0.0, top: 5.0),
@@ -352,15 +353,15 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
                         children: <Widget>[
                           Container(
                             child: ispromo == '1' ?
-                              Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   new Text(
-                                    'RM'+myr.format(promoPrice),
-                                    //ispromo == '1' ? 'RM'+promoPrice.toString() ?? 'RM0.00' : 'RM'+price.toString() ?? 'RM0.00',
-                                    style: GoogleFonts.lato(
-                                      textStyle: TextStyle(fontSize: 21, fontWeight: FontWeight.w600, color: Constants.darkAccent),
-                                    )
+                                      'RM'+myr.format(promoPrice),
+                                      //ispromo == '1' ? 'RM'+promoPrice.toString() ?? 'RM0.00' : 'RM'+price.toString() ?? 'RM0.00',
+                                      style: GoogleFonts.lato(
+                                        textStyle: TextStyle(fontSize: 21, fontWeight: FontWeight.w600, color: Constants.darkAccent),
+                                      )
                                   ),
                                   SizedBox(height: 2),
                                   Text(
@@ -370,14 +371,14 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
                                     ),
                                   ),
                                 ]
-                              ) :
-                              new Text(
-                                'RM'+myr.format(price),
-                                //ispromo == '1' ? 'RM'+promoPrice.toString() ?? 'RM0.00' : 'RM'+price.toString() ?? 'RM0.00',
-                                style: GoogleFonts.lato(
-                                  textStyle: TextStyle(fontSize: 21, fontWeight: FontWeight.w600, color: Constants.darkAccent),
-                                ),
+                            ) :
+                            new Text(
+                              'RM'+myr.format(price),
+                              //ispromo == '1' ? 'RM'+promoPrice.toString() ?? 'RM0.00' : 'RM'+price.toString() ?? 'RM0.00',
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(fontSize: 21, fontWeight: FontWeight.w600, color: Constants.darkAccent),
                               ),
+                            ),
                           ),
 
                           new Row(
@@ -457,9 +458,9 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
                             children: <Widget>[
                               //Icon(Icons.description),
                               Text('Summary',
-                                  style: GoogleFonts.lato(
-                                    textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
-                                  ),
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+                                ),
                               ),
                               //Icon(CupertinoIcons.chevron_forward, color: Colors.black,
                               //),
@@ -517,28 +518,31 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
                                   ),
                                 ),
                               ),
-                              InkWell(
-                                highlightColor: Colors.deepOrange.shade100,
-                                splashColor: Colors.deepOrange.shade100,
-                                onTap: () {},
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    Text(
-                                      'See all ',
-                                      style: GoogleFonts.lato(
-                                        textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Color(0xffF45432)),
+                              /*Container(
+                                child: reviews.length > 0 ? InkWell(
+                                  highlightColor: Colors.deepOrange.shade100,
+                                  splashColor: Colors.deepOrange.shade100,
+                                  onTap: () {},
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Text(
+                                        'See all ',
+                                        style: GoogleFonts.lato(
+                                          textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Color(0xffF45432)),
+                                        ),
                                       ),
-                                    ),
-                                    Icon(
-                                      CupertinoIcons.right_chevron,
-                                      size: 17,
-                                      color: Color(0xffF45432),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                      Icon(
+                                        CupertinoIcons.right_chevron,
+                                        size: 17,
+                                        color: Color(0xffF45432),
+                                      ),
+                                    ],
+                                  ),
+                                ) : Container(),
+                              ),*/
+
                             ],
                           ),
                           _productRatingReview(),
@@ -564,7 +568,7 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
     });
 
     http.get(
-        Uri.parse(Constants.shopSingleProduct+pid),
+      Constants.shopSingleProduct+pid,
       headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',},
     ).then((response) {
       print(response.body);
@@ -626,16 +630,17 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
             animationDuration: Duration(milliseconds: 300),
             animationType: BadgeAnimationType.slide,
             badgeContent: Text(
-                model.getCartotal().toString(),
-                textAlign: TextAlign.center,
-                style: GoogleFonts.lato(
-                  textStyle: TextStyle(fontSize: 9, fontWeight: FontWeight.w500, color: Colors.white),
-                ),
+              model.getCartotal().toString(),
+              textAlign: TextAlign.center,
+              style: GoogleFonts.lato(
+                textStyle: TextStyle(fontSize: 9, fontWeight: FontWeight.w500, color: Colors.white),
+              ),
             ),
             child: Hero(
                 tag: "cart",
                 child: InkWell(
                   onTap: () {
+                    //model.fetchCartsFromResponse();
                     //Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ShopCartPage()));
                     Navigator.push(context, SlideRightRoute(page: ShopCartPage()));
                   },
@@ -677,21 +682,31 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
               MaterialPageRoute(builder: (context) => PhotoViewer(imej: image,),)
           );
         },
-        child: Hero(
-          tag: "Cartsini",
-          child: CachedNetworkImage(
-            placeholder: (context, url) => Container(
-              width: 50,
-              height: 50,
-              color: Colors.transparent,
-              child: CupertinoActivityIndicator(
-                radius: 17,
-              ),
-            ),
-            imageUrl: image ?? "",
-            fit: merchant_name.contains('NI HSIN') || merchant_name.contains('Hijrah Water') ? BoxFit.fitWidth : BoxFit.cover,
-          ),
+        child: Image.network(image ?? '',
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              color: Colors.white,
+              alignment: Alignment.center,
+              child: Image.asset('assets/images/ed_logo_greys.png', width: 110, height: 110,)
+            );
+          },
         ),
+        /*CachedNetworkImage(
+          imageUrl: image ?? '',
+          placeholder: (context, url) => Container(
+            alignment: Alignment.center,
+            color: Colors.transparent,
+            child: Image.asset('assets/images/ed_logo_greys.png', width: 110,
+              height: 110,),
+          ),
+          errorWidget: (context, url, error) => Image.asset(
+            'assets/icons/ic_image_error.png',
+            fit: BoxFit.cover,
+          ),
+          fit: BoxFit.cover,
+          alignment: Alignment.center,
+        ),*/
       );
     }else{
       return Container(
@@ -713,21 +728,31 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
                       onTap:  () {
                         Navigator.push(context, SlideRightRoute(page: PhotoViewer(imej: image.imageURL,)));
                       },
-                      child: Hero(
-                          tag: "Cartsini",
-                          child: CachedNetworkImage(
-                            placeholder: (context, url) => Container(
-                              width: 50,
-                              height: 50,
-                              color: Colors.transparent,
-                              child: CupertinoActivityIndicator(
-                                radius: 17,
-                              ),
-                            ),
-                            imageUrl: image.imageURL,
-                            fit: merchant_name.contains('NI HSIN') || merchant_name.contains('Hijrah Water') ? BoxFit.fitWidth : BoxFit.cover,
-                          ),
+                      child: Image.network(image.imageURL ?? '',
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                              color: Colors.white,
+                              alignment: Alignment.center,
+                              child: Image.asset('assets/images/ed_logo_greys.png', width: 110, height: 110,)
+                          );
+                        },
+                      ),
+                      /*CachedNetworkImage(
+                        imageUrl: image.imageURL ?? '',
+                        placeholder: (context, url) => Container(
+                          alignment: Alignment.center,
+                          color: Colors.transparent,
+                          child: Image.asset('assets/images/ed_logo_greys.png', width: 110,
+                            height: 110,),
                         ),
+                        errorWidget: (context, url, error) => Image.asset(
+                          'assets/icons/ic_image_error.png',
+                          fit: BoxFit.cover,
+                        ),
+                        fit: BoxFit.cover,
+                        alignment: Alignment.center,
+                      ),*/
                     );
                   },
                 ).toList(),
@@ -939,73 +964,81 @@ class _ProductShowcasePageState extends State<ProductShowcase> with TickerProvid
               padding: EdgeInsets.all(5.0),
               width: MediaQuery.of(context).size.width,
               height: 48.0,
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    flex: 2,
-                    child: Container(),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 5.0),
-                      child: RaisedButton(
-                        onPressed: () {
-                          var params = "";
-                          if (int.parse(stock) > 0) {
-                            if (model.isAuthenticated) {
-                              if(have_variation == 'Y') {
-                                if(_value == 0){
-                                  showStatusToast('Please select '+listProdVar[0].variation_name, false);
-                                }else {
-                                  for (var i = 0; i < listProdVar.length; i++) {
-                                    params = params + ("variation[" + i.toString() + "][variation_id]=" + listProdVar[i].id.toString() + "&");
-                                    params = params + ("variation[" + i.toString() + "][option_id]=" + _value.toString() + "&");
+              child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  //mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Expanded(
+                      child: Padding(
+                          padding: const EdgeInsets.only(left: 5.0),
+                          child: RaisedButton(
+                            shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(25.0)),
+                            onPressed: () async{
+                              var params = "";
+                              var connectivityResult = await (Connectivity().checkConnectivity());
+                              if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+                                // I am connected to a mobile network.
+                                if (model.isAuthenticated) {
+                                  if (int.parse(stock) > 0) {
+                                    if(have_variation == 'Y') {
+                                      if(_value == 0){
+                                        showStatusToast('Please select '+listProdVar[0].variation_name, false);
+                                      }else {
+                                        for (var i = 0; i < listProdVar.length; i++) {
+                                          params = params + ("variation[" + i.toString() + "][variation_id]=" + listProdVar[i].id.toString() + "&");
+                                          params = params + ("variation[" + i.toString() + "][option_id]=" + _value.toString() + "&");
+                                        }
+
+                                        params = params + "product_id=" + int.parse(_id).toString();
+                                        params = params + "&quantity=" + quantity.toString();
+
+                                        //model.addProduct(param: params);
+                                        model.addToCartRetry(params);
+                                        showStatusToast('Adding '+name+' to cart', true);
+                                        //Navigator.of(context).pushReplacementNamed("/ShopCart");
+                                      }
+                                    }else{
+                                      params = params + "product_id=" + int.parse(_id).toString();
+                                      params = params + "&quantity=" + quantity.toString();
+
+                                      //model.addProduct(param: params);
+                                      model.addToCartRetry(params);
+                                      showStatusToast('Adding '+name+' to cart.', true);
+                                      //Navigator.of(context).pushReplacementNamed("/ShopCart");
+                                    }
+                                    print(params);
+                                  }else{
+                                    showStatusToast('Product out of stock.', false);
                                   }
 
-                                  params = params + "product_id=" + int.parse(_id).toString();
-                                  params = params + "&quantity=" + quantity.toString();
-
-                                  model.addProduct(param: params);
-                                  //showStatusToast('Adding '+name+' to cart', true);
-                                  Navigator.of(context).pushReplacementNamed("/ShopCart");
+                                }else{
+                                  Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
                                 }
-                              }else{
-                                params = params + "product_id=" + int.parse(_id).toString();
-                                params = params + "&quantity=" + quantity.toString();
-
-                                model.addProduct(param: params);
-                                showStatusToast('Added '+name+' to cart.', true);
-                                //Navigator.of(context).pushReplacementNamed("/ShopCart");
+                              } else {
+                                // not connected to the internet
+                                showStatusToast('No network connection.', false);
                               }
-                              print(params);
-                            }else{
-                              //_showAuthDialog();
-                              Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
-                            }
-                          }
-                        },
-                        color: Colors.green.shade600,
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                int.parse(stock) > 0 ? 'Add to Cart' : 'Out of Stock',
-                                style: GoogleFonts.lato(
-                                  textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.white),
-                                ),
+
+                            },
+                            color: Colors.deepOrange.shade600,
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    'Add to Cart',
+                                    style: GoogleFonts.lato(
+                                      textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.white),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ),
-                      )
+                            ),
+                          )
+                      ),
                     ),
-                  ),
-                ]
+                  ]
               )
 
           );

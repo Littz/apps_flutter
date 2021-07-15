@@ -1,5 +1,4 @@
 import 'package:edagang/scoped/main_scoped.dart';
-import 'package:edagang/helper/constant.dart';
 import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
@@ -53,12 +52,14 @@ class FpxStatusState extends State<FpxStatus> {
     {
       return WillPopScope(
           onWillPop: () {
-            _moveToIndexScreen(context);
+
             model.loggedInUser();
             model.fetchCartTotal();
             model.fetchCartsFromResponse();
             model.fetchCartReload();
+            model.fetchOrderStatusResponse();
 
+            widget.status == 'failed' ? _moveToPayScreen(context) : _moveToIndexScreen(context);
             return null;
           },
           child: Scaffold(
@@ -100,11 +101,13 @@ class FpxStatusState extends State<FpxStatus> {
                       shape: StadiumBorder(),
                       color: Colors.deepOrange.shade600,
                       onPressed: () {
-                        _moveToIndexScreen(context);
                         model.loggedInUser();
                         model.fetchCartTotal();
                         model.fetchCartsFromResponse();
                         model.fetchCartReload();
+                        model.fetchOrderStatusResponse();
+
+                        widget.status == 'failed' ? _moveToPayScreen(context) : _moveToIndexScreen(context);
 
                       },
                       child: new Padding(
@@ -131,6 +134,7 @@ class FpxStatusState extends State<FpxStatus> {
   }
 
   void _moveToIndexScreen(BuildContext context) => Navigator.of(context).pushReplacementNamed("/ShopIndex");
+  void _moveToPayScreen(BuildContext context) => Navigator.of(context).pushReplacementNamed("/ToPay");
 
   @override
   void dispose() {

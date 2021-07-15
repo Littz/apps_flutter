@@ -6,7 +6,7 @@ import 'package:edagang/screens/upskill/skill_detail.dart';
 import 'package:edagang/sign_in.dart';
 import 'package:edagang/helper/shared_prefrence_helper.dart';
 import 'package:edagang/widgets/page_slide_right.dart';
-import 'package:edagang/widgets/webview_bb.dart';
+import 'package:edagang/widgets/webview_f.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -63,7 +63,7 @@ class _UpskillPageState extends State<UpskillPage> {
   }
 
   goToNextPage(BuildContext context, Home_banner item) {
-    String imgurl = 'https://goilmuapp.e-dagang.asia'+item.imageUrl;
+    String imgurl = item.imageUrl;
     String catname = item.title ?? '';
     String catid = item.itemId.toString();
     String ctype = item.type.toString();
@@ -79,7 +79,7 @@ class _UpskillPageState extends State<UpskillPage> {
       //Navigator.push(context,SlideRightRoute(page: BizCompanyDetailPage(catid,'')));
     } else if (ctype == "4") {
       SchedulerBinding.instance.addPostFrameCallback((_) {
-        Navigator.push(context, SlideRightRoute(page: WebviewBixon(vrurl ?? '', imgurl ?? '')));
+        Navigator.push(context, SlideRightRoute(page: WebViewBb(vrurl ?? '', imgurl ?? '')));
       });
 
     }
