@@ -1,4 +1,3 @@
-import 'package:edagang/models/link_media_info.dart';
 import 'dart:convert';
 import 'package:edagang/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -51,7 +50,7 @@ class SharedPreferenceHelper {
     return UserModel.fromJson(json.decode(jsonString));
   }
 
-  Future<bool> saveLinkMediaInfo(String key, LinkMediaInfo model) async {
+  /*Future<bool> saveLinkMediaInfo(String key, LinkMediaInfo model) async {
     return (await SharedPreferences.getInstance())
         .setString(key, json.encode(model.toJson()));
   }
@@ -62,7 +61,7 @@ class SharedPreferenceHelper {
       return null;
     }
     return LinkMediaInfo.fromJson(json.decode(jsonString));
-  }
+  }*/
 }
 
 enum UserPreferenceKey { AccessToken, UserProfile, UserName, IsFirstTimeApp }

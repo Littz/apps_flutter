@@ -542,62 +542,149 @@ class _AdvertPageState extends State<AdvertPage> {
                               Expanded(
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 0),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Expanded(
-                                            flex: 4,
-                                            child: Container(
-                                              margin: EdgeInsets.only(left: 7.0, right: 7.0, top: 0.0),
-                                              alignment: Alignment.topLeft,
-                                              child: Text(
-                                                data.title,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: GoogleFonts.lato(
-                                                  textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w700,),
-                                                ),
-                                                maxLines: 2,
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            flex: 1,
-                                            child: Container(
-                                              margin: EdgeInsets.only(left: 0, right: 0.0, top: 0.0),
-                                              alignment: Alignment.topRight,
-                                              child: Icon(
-                                                CupertinoIcons.chevron_forward,
-                                                size: 18,
-                                                color: Colors.grey,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                  child: Stack(
+                                    children: <Widget>[
                                       Container(
-                                        margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 0.0),
-                                        child: Text(
-                                          data.location,
-                                          style: GoogleFonts.lato(
-                                            textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
+                                        margin: const EdgeInsets.all(0.0),
+                                        child: data.sale_status == 1 ? Banner(
+                                          message: "SOLD",
+                                          textStyle: GoogleFonts.lato(
+                                            textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white),
+                                          ),
+                                          location: BannerLocation.topStart,
+                                          color: Colors.red.shade400,
+                                          child: Container(
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Expanded(
+                                                      flex: 4,
+                                                      child: Container(
+                                                        margin: EdgeInsets.only(left: 7.0, right: 7.0, top: 0.0),
+                                                        alignment: Alignment.topLeft,
+                                                        child: Text(
+                                                          data.title,
+                                                          overflow: TextOverflow.ellipsis,
+                                                          style: GoogleFonts.lato(
+                                                            textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w700,),
+                                                          ),
+                                                          maxLines: 2,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Container(
+                                                        margin: EdgeInsets.only(left: 0, right: 0.0, top: 0.0),
+                                                        alignment: Alignment.topRight,
+                                                        child: Icon(
+                                                          CupertinoIcons.chevron_forward,
+                                                          size: 18,
+                                                          color: Colors.grey,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Container(
+                                                  margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 0.0),
+                                                  child: Text(
+                                                    data.location,
+                                                    style: GoogleFonts.lato(
+                                                      textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
+                                                  child: Text(
+                                                    data.price+'\n('+data.year+')',
+                                                    style: GoogleFonts.lato(
+                                                      textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500,),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ) : Container(
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Expanded(
+                                                    flex: 4,
+                                                    child: Container(
+                                                      margin: EdgeInsets.only(left: 7.0, right: 7.0, top: 0.0),
+                                                      alignment: Alignment.topLeft,
+                                                      child: Text(
+                                                        data.title,
+                                                        overflow: TextOverflow.ellipsis,
+                                                        style: GoogleFonts.lato(
+                                                          textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w700,),
+                                                        ),
+                                                        maxLines: 2,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    flex: 1,
+                                                    child: Container(
+                                                      margin: EdgeInsets.only(left: 0, right: 0.0, top: 0.0),
+                                                      alignment: Alignment.topRight,
+                                                      child: Icon(
+                                                        CupertinoIcons.chevron_forward,
+                                                        size: 18,
+                                                        color: Colors.grey,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Container(
+                                                margin: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 0.0),
+                                                child: Text(
+                                                  data.location,
+                                                  style: GoogleFonts.lato(
+                                                    textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
+                                                child: Text(
+                                                  data.price+'\n('+data.year+')',
+                                                  style: GoogleFonts.lato(
+                                                    textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500,),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: 7.0, right: 7.0, bottom: 7.0),
-                                        child: Text(
-                                          data.price+'\n('+data.year+')',
-                                          style: GoogleFonts.lato(
-                                            textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500,),
+                                      Positioned(
+                                        bottom: 0,
+                                        right: 0,
+                                        child:  data.sale_status == 1 ? Container(
+                                          alignment: Alignment.centerRight,
+                                          child: Text('SOLD',
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.red.shade400),
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                    ],
+                                        ) : Container(),
+                                      )
+                                    ]
                                   )
                                 ),
                               ),

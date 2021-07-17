@@ -42,7 +42,7 @@ class _AutoShowcasePageState extends State<AutoShowcase> with TickerProviderStat
   Color color = Color(0xff2877EA);
   String _selectedItem = '';
 
-  int _aid,_bid;
+  int _aid,_bid,sale;
   String atitle,alocation,ayear,amileage,aprice,bname,amodel,avariant,adoors,aseat;
 
   List images = List();
@@ -95,6 +95,7 @@ class _AutoShowcasePageState extends State<AutoShowcase> with TickerProviderStat
               variant: resBody['data']['auto'][0]['variant'],
               doors: resBody['data']['auto'][0]['doors'],
               seat_capacity: resBody['data']['auto'][0]['seat_capacity'],
+              sale_status: resBody['data']['auto'][0]['sale_status'],
               images: imagesPropertyList,
             );
 
@@ -110,6 +111,7 @@ class _AutoShowcasePageState extends State<AutoShowcase> with TickerProviderStat
             avariant = data.variant ?? '';
             adoors = data.doors ?? '';
             aseat = data.seat_capacity ?? '';
+            sale = data.sale_status;
             images = data.images ?? '';
 
           });
@@ -211,7 +213,7 @@ class _AutoShowcasePageState extends State<AutoShowcase> with TickerProviderStat
                               textStyle: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 17,
-                                color: color,
+                                color: sale == 1 ? Colors.grey : color,
                               ),
                             ),
                           ),
@@ -243,7 +245,50 @@ class _AutoShowcasePageState extends State<AutoShowcase> with TickerProviderStat
       return Container();
     }else{
       return Container(
+        child: sale == 1 ? Banner(
+        message: "SOLD",
+        textStyle: GoogleFonts.lato(
+          textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white),
+        ),
+        location: BannerLocation.topStart,
+        color: Colors.red.shade400,
         child: ClipRRect(
+            borderRadius: BorderRadius.all(Radius.circular(4)),
+            child: PageIndicatorContainer(
+              align: IndicatorAlign.bottom,
+              length: images.length,
+              indicatorSpace: 8.0,
+              padding: EdgeInsets.only(bottom: 10),
+              indicatorColor: Colors.grey.shade300,
+              indicatorSelectorColor: Colors.deepOrange.shade700,
+              shape: IndicatorShape.circle(size: 7),
+
+              child: PageView(
+                children: images.map(
+                      (image) {
+                    return GestureDetector(
+                      onTap:  () {
+                        Navigator.push(context, SlideRightRoute(page: PhotoViewer(imej: image.file_path,)));
+                      },
+                      child: Hero(
+                        tag: "Cartsini",
+                        child: CachedNetworkImage(
+                          placeholder: (context, url) => Container(
+                            alignment: Alignment.center,
+                            color: Colors.transparent,
+                            child: Image.asset('assets/logo_edagang.png', width: 254,
+                              height: 100,),
+                          ),
+                          imageUrl: image.file_path,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    );
+                  },
+                ).toList(),
+              ),
+            )
+        )) : ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(4)),
             child: PageIndicatorContainer(
               align: IndicatorAlign.bottom,
@@ -402,7 +447,14 @@ class _AutoShowcasePageState extends State<AutoShowcase> with TickerProviderStat
     return ScopedModelDescendant<MainScopedModel>(builder: (context, child, model){
       return Container(
         padding: EdgeInsets.only(left: 2, top: 5, right: 2),
-        child: Row(
+        child: sale == 1 ? Container(
+          alignment: Alignment.center,
+            child: Text('SOLD',
+          textAlign: TextAlign.center,
+          style: GoogleFonts.lato(
+            textStyle: TextStyle(color: Colors.red.shade400, fontSize: 23, fontWeight: FontWeight.w700,),
+          ),
+        )) : Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
@@ -445,20 +497,23 @@ class _AutoShowcasePageState extends State<AutoShowcase> with TickerProviderStat
                   ]
               ),
             ),
-            RaisedButton(
-              shape: StadiumBorder(),
-              color: color,
-              child: Text('REQUEST',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.lato(
-                  textStyle: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600,),
+            Container(
+              child: RaisedButton(
+                shape: StadiumBorder(),
+                color: color,
+                child: Text('REQUEST',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.lato(
+                    textStyle: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600,),
+                  ),
                 ),
+                onPressed: () {
+                  model.isAuthenticated ? Navigator.push(context, SlideRightRoute(
+                      page: WebViewPage('https://blurb.e-dagang.asia/wv/reqform_auto/'+model.getId().toString()+'/'+_aid.toString(), atitle))) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
+                },
               ),
-              onPressed: () {
-                model.isAuthenticated ? Navigator.push(context, SlideRightRoute(
-                page: WebViewPage('https://blurb.e-dagang.asia/wv/reqform_auto/'+model.getId().toString()+'/'+_aid.toString(), atitle))) : Navigator.push(context, SlideRightRoute(page: SignInOrRegister()));
-              },
             ),
+
           ],
         ),
       );

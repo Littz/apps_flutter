@@ -48,9 +48,6 @@ class _AddressBookState extends State<AddressBook> {
           centerTitle: false,
           elevation: 0.0,
           backgroundColor: Colors.white,
-          iconTheme: IconThemeData(
-            color: Color(0xff084B8C),
-          ),
           title: Text(
             "My Address",
             style: GoogleFonts.lato(
@@ -104,7 +101,7 @@ class _AddressBookState extends State<AddressBook> {
                       //listAddrs = data as List<Address>;
                       //listAddrs[index], onDelete: () => removeItem(index);
                       return Padding(
-                          padding: new EdgeInsets.only(left: 10, top: 5, right: 10),
+                          padding: new EdgeInsets.only(left: 10, top: 16, right: 10),
                           child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,7 +138,7 @@ class _AddressBookState extends State<AddressBook> {
                                             textAlign: TextAlign.right,
                                           ),
                                           onTap: () {
-                                            Navigator.push(context,MaterialPageRoute(builder: (context) => EditAddress(addrid: data.id, nama: data.name, fuladdr: data.address, state: data.state_id, city: data.city_id, zipcode: data.postcode, phone: data.mobile_no)));
+                                            Navigator.push(context,MaterialPageRoute(builder: (context) => EditAddress(addrid: data.id, nama: data.name, fuladdr: data.address, state: data.state_id, city: data.city_id, zipcode: data.postcode, phone: data.mobile_no, ship: data.default_shipping, bill: data.default_billing, loca: data.location_tag,)));
                                           },
                                         ),
                                       ),
@@ -152,12 +149,12 @@ class _AddressBookState extends State<AddressBook> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
                                       new Container(
-                                        padding: EdgeInsets.only(left: 5, right: 5, top: 5),
+                                        padding: EdgeInsets.only(left: 5, right: 5, top: 2),
                                         child: Icon(LineAwesomeIcons.phone, color: Color(0xff006FBD), size: 18,),
                                       ),
                                       Expanded(
                                         child: new Container(
-                                          padding: EdgeInsets.only(left: 5, right: 5, top: 5),
+                                          padding: EdgeInsets.only(left: 5, right: 5, top: 2),
                                           child:  new Text(
                                             data.mobile_no,
                                             style: GoogleFonts.lato(
@@ -173,27 +170,66 @@ class _AddressBookState extends State<AddressBook> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
                                       new Container(
-                                        padding: EdgeInsets.only(left: 5, right: 5, top: 5),
+                                        padding: EdgeInsets.only(left: 5, right: 5, top: 2),
                                         child:  Icon(LineAwesomeIcons.map_marker, color: Color(0xff006FBD), size: 18,),
                                       ),
                                       Expanded(
                                         child: new Container(
-                                          padding: EdgeInsets.only(left: 5, right: 5, top: 5),
-                                          child:  new Text(
-                                            data.full_address,
-                                            style: GoogleFonts.lato(
-                                              textStyle: TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.w400,),
-                                            ),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 3,
-                                          ),
+                                            padding: EdgeInsets.only(left: 5, right: 5, top: 2),
+                                            child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  new Text(
+                                                    data.full_address,
+                                                    style: GoogleFonts.lato(
+                                                      textStyle: TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.w400,),
+                                                    ),
+                                                    overflow: TextOverflow.ellipsis,
+                                                    maxLines: 3,
+                                                  ),
+                                                  new Text(
+                                                    '('+data.location_tag.toUpperCase()+') ',
+                                                    style: GoogleFonts.lato(
+                                                      textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
+                                                    ),
+                                                  ),
+                                                ]
+                                            )
                                         ),
                                       ),
                                     ]
                                 ),
+                                new Container(
+                                  padding: EdgeInsets.only(left: 26, right: 5, top: 2),
+                                  child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Container(
+                                          padding: EdgeInsets.only(left: 5, right: 5, top: 2),
+                                          child: data.default_shipping == 'Y' ?new Text(
+                                            'Default Shipping',
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(color: Color(0xff006FBD), fontSize: 12, fontWeight: FontWeight.w500,),
+                                            ),
+                                          ) : Container(),
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.only(left: 5, right: 5, top: 0),
+                                          child: data.default_billing == 'Y' ? new Text(
+                                            'Default Billing',
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(color: Color(0xff006FBD), fontSize: 12, fontWeight: FontWeight.w500,),
+                                            ),
+                                          ) : Container(),
+                                        ),
+                                      ]
+                                  ),
+                                ),
                                 SizedBox(height: 10.0),
                                 _getSeparator(1),
-                                SizedBox(height: 5.0),
+                                SizedBox(height: 10.0),
                                 /*new ButtonTheme(
                                   child: new ButtonBar(
                                     children: <Widget>[
@@ -401,6 +437,10 @@ class _AddAddressState extends State<AddAddress> {
   String stateInfoUrl = 'http://cartsini.my/api/lookup/state';
   String cityInfoUrl = 'http://cartsini.my/api/lookup/city/';
 
+  String locTag;
+  String defShip;
+  String defBill;
+
   Future<String> _getStateList() async {
     await http.get(Uri.parse(stateInfoUrl), headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',}).then((response) {
       var data = json.decode(response.body);
@@ -428,6 +468,9 @@ class _AddAddressState extends State<AddAddress> {
     _getStateList();
     super.initState();
     FirebaseAnalytics().logEvent(name: 'Add_New_Address',parameters:null);
+    locTag = 'home';
+    defShip = 'N';
+    defBill = 'N';
   }
 
   @override
@@ -493,6 +536,10 @@ class _AddAddressState extends State<AddAddress> {
                           buildStateField(),
                           buildCityField(),
                           buildPincodeField(),
+                          SizedBox(height: 11,),
+                          buildAddrCat(),
+                          //buildShipping(),
+                          //buildBilling(),
 
                           Container(
                             alignment: Alignment.center,
@@ -736,6 +783,159 @@ class _AddAddressState extends State<AddAddress> {
     );
   }
 
+  Column buildAddrCat() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Address Category:",
+          style: GoogleFonts.lato(
+            textStyle: TextStyle(fontSize: 12, color: Colors.grey.shade500,),
+          ),
+        ),
+        Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Radio(
+                value: 'home',
+                groupValue: locTag,
+                onChanged: (value) {
+                  setState(() {
+                    locTag = value;
+                  });
+                },
+              ),
+              Text(
+                "Home",
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                ),
+              ),
+              Radio(
+                value: 'office',
+                groupValue: locTag,
+                onChanged: (value) {
+                  setState(() {
+                    locTag = value;
+                  });
+                },
+              ),
+              Text(
+                "Office",
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                ),
+              ),
+            ]
+        ),
+      ],
+    );
+  }
+
+  Column buildShipping() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Default Shipping:",
+          style: GoogleFonts.lato(
+            textStyle: TextStyle(fontSize: 12, color: Colors.grey.shade500,),
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Radio(
+              value: 'Y',
+              groupValue: defShip,
+              onChanged: (value) {
+                setState(() {
+                  defShip = value;
+                });
+              },
+            ),
+            Text(
+              "Yes",
+              style: GoogleFonts.lato(
+                textStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+              ),
+            ),
+            Radio(
+              value: 'N',
+              groupValue: defShip,
+              onChanged: (value) {
+                setState(() {
+                  defShip = value;
+                });
+              },
+            ),
+            Text(
+              "No",
+              style: GoogleFonts.lato(
+                textStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+              ),
+            ),
+          ]
+        ),
+      ],
+    );
+  }
+
+  Column buildBilling() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Default Billing: ",
+          style: GoogleFonts.lato(
+            textStyle: TextStyle(fontSize: 12, color: Colors.grey.shade500,),
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Radio(
+              value: 'Y',
+              groupValue: defBill,
+              onChanged: (value) {
+                setState(() {
+                  defBill = value;
+                });
+              },
+            ),
+            Text(
+              "Yes",
+              style: GoogleFonts.lato(
+                textStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+              ),
+            ),
+            Radio(
+              value: 'N',
+              groupValue: defBill,
+              onChanged: (value) {
+                setState(() {
+                  defBill = value;
+                });
+              },
+            ),
+            Text(
+              "No",
+              style: GoogleFonts.lato(
+                textStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+              ),
+            ),
+          ]
+        ),
+      ],
+    );
+  }
+
   void _submitNewAddr(MainScopedModel model) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -756,9 +956,9 @@ class _AddAddressState extends State<AddAddress> {
       'city': _city.toString(),
       'postcode': pincodeFieldController.text,
       'mobile_no': phoneFieldController.text,
-      'default_shipping': 'Y',
-      'default_billing': 'Y',
-      'location_tag': 'home'
+      'default_shipping': defShip,
+      'default_billing': defBill,
+      'location_tag': locTag
     };
 
     print('fullname: '+ recipientFieldController.text);
@@ -834,9 +1034,9 @@ class _AddAddressState extends State<AddAddress> {
 
 
 class EditAddress extends StatefulWidget {
-  String nama, fuladdr, zipcode, phone, state, city;
+  String nama, fuladdr, zipcode, phone, state, city, ship, bill, loca;
   int addrid;
-  EditAddress({this.addrid, this.nama, this.fuladdr, this.state, this.city, this.zipcode, this.phone});
+  EditAddress({this.addrid, this.nama, this.fuladdr, this.state, this.city, this.zipcode, this.phone, this.ship, this.bill, this.loca});
 
   @override
   _EditAddressState createState() => new _EditAddressState();
@@ -863,6 +1063,10 @@ class _EditAddressState extends State<EditAddress> {
 
   String stateInfoUrl = 'http://cartsini.my/api/lookup/state';
   String cityInfoUrl = 'http://cartsini.my/api/lookup/city/';
+
+  String locTag;
+  String defShip;
+  String defBill;
 
   Future<String> _getStateList() async {
     await http.get(Uri.parse(stateInfoUrl), headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',}).then((response) {
@@ -896,6 +1100,9 @@ class _EditAddressState extends State<EditAddress> {
     zipcodeController = new TextEditingController(text: widget.zipcode);
     _state = widget.state;
     _city = widget.city;
+    defShip = widget.ship;
+    defBill = widget.bill;
+    locTag = widget.loca;
 
     _getCitiesList();
   }
@@ -1048,6 +1255,10 @@ class _EditAddressState extends State<EditAddress> {
                                         buildStateField(),
                                         buildCityField(),
                                         buildPincodeField(),
+                                        SizedBox(height: 11,),
+                                        buildAddrCat(),
+                                        buildShipping(),
+                                        buildBilling(),
 
                                         Container(
                                             alignment: Alignment.center,
@@ -1511,6 +1722,159 @@ class _EditAddressState extends State<EditAddress> {
     );
   }
 
+  Column buildAddrCat() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Address Category:",
+          style: GoogleFonts.lato(
+            textStyle: TextStyle(fontSize: 12, color: Colors.grey.shade500,),
+          ),
+        ),
+        Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Radio(
+                value: 'home',
+                groupValue: locTag,
+                onChanged: (value) {
+                  setState(() {
+                    locTag = value;
+                  });
+                },
+              ),
+              Text(
+                "Home",
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                ),
+              ),
+              Radio(
+                value: 'office',
+                groupValue: locTag,
+                onChanged: (value) {
+                  setState(() {
+                    locTag = value;
+                  });
+                },
+              ),
+              Text(
+                "Office",
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                ),
+              ),
+            ]
+        ),
+      ],
+    );
+  }
+
+  Column buildShipping() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Default Shipping:",
+          style: GoogleFonts.lato(
+            textStyle: TextStyle(fontSize: 12, color: Colors.grey.shade500,),
+          ),
+        ),
+        Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Radio(
+                value: 'Y',
+                groupValue: defShip,
+                onChanged: (value) {
+                  setState(() {
+                    defShip = value;
+                  });
+                },
+              ),
+              Text(
+                "Yes",
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                ),
+              ),
+              Radio(
+                value: 'N',
+                groupValue: defShip,
+                onChanged: (value) {
+                  setState(() {
+                    defShip = value;
+                  });
+                },
+              ),
+              Text(
+                "No",
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                ),
+              ),
+            ]
+        ),
+      ],
+    );
+  }
+
+  Column buildBilling() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Default Billing: ",
+          style: GoogleFonts.lato(
+            textStyle: TextStyle(fontSize: 12, color: Colors.grey.shade500,),
+          ),
+        ),
+        Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Radio(
+                value: 'Y',
+                groupValue: defBill,
+                onChanged: (value) {
+                  setState(() {
+                    defBill = value;
+                  });
+                },
+              ),
+              Text(
+                "Yes",
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                ),
+              ),
+              Radio(
+                value: 'N',
+                groupValue: defBill,
+                onChanged: (value) {
+                  setState(() {
+                    defBill = value;
+                  });
+                },
+              ),
+              Text(
+                "No",
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                ),
+              ),
+            ]
+        ),
+      ],
+    );
+  }
+
   void _submitUpdateAddr(MainScopedModel model) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -1534,9 +1898,9 @@ class _EditAddressState extends State<EditAddress> {
       'city': _city.toString(),
       'postcode': zipcodeController.text,
       'mobile_no': phoneController.text,
-      'default_billing': "y",
-      'default_shipping': "y",
-      'location_tag': "home"
+      'default_shipping': defShip,
+      'default_billing': defBill,
+      'location_tag': locTag
     };
 
     final http.Response response = await http.post(

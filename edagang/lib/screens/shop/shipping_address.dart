@@ -50,9 +50,6 @@ class _ShippingAddressState extends State<ShippingAddress> {
           centerTitle: false,
           elevation: 0.0,
           backgroundColor: Colors.white,
-          iconTheme: IconThemeData(
-            color: Color(0xff084B8C),
-          ),
           title: Text(
             "Shipping Address",
             style: GoogleFonts.lato(
@@ -77,7 +74,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
                     decoration: BoxDecoration(
                       shape: BoxShape.rectangle,
                       border: new Border.all(
-                          color: Color(0xff006FBD),
+                          color: Colors.deepOrange.shade600,
                           width: 1.0,
                           style: BorderStyle.solid
                       ),
@@ -88,7 +85,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
                       child: new Text(
                         '+ Add address',
                         style: GoogleFonts.lato(
-                          textStyle: TextStyle(color: Color(0xff006FBD), fontSize: 15, fontWeight: FontWeight.w700,),
+                          textStyle: TextStyle(color: Colors.deepOrange.shade600, fontSize: 15, fontWeight: FontWeight.w700,),
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -106,7 +103,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
                       //listAddrs = data as List<Address>;
                       //listAddrs[index], onDelete: () => removeItem(index);
                       return Padding(
-                          padding: new EdgeInsets.only(left: 10, top: 5, right: 10),
+                          padding: new EdgeInsets.only(left: 10, top: 16, right: 10),
                           child: InkWell(
                             onTap: () async{
                               SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -114,97 +111,201 @@ class _ShippingAddressState extends State<ShippingAddress> {
                               Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => CheckoutActivity()));
                               model.updShipping(addr_id: data.id);
                             },
-                            child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        new Container(
-                                          padding: EdgeInsets.only(left: 5, right: 5,),
-                                          child: Icon(LineAwesomeIcons.user, color: Color(0xff006FBD), size: 18,),
-                                        ),
-                                        Expanded(
-                                          child: new Container(
-                                            padding: EdgeInsets.only(left: 5, right: 5),
-                                            child: new Text(
-                                              data.name.toUpperCase(),
-                                              style: GoogleFonts.lato(
-                                                textStyle: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w600,),
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          new Container(
+                                            padding: EdgeInsets.only(left: 5, right: 5,),
+                                            child: Icon(LineAwesomeIcons.user, color: Colors.deepOrange.shade600, size: 18,),
+                                          ),
+                                          Expanded(
+                                            child: new Container(
+                                              padding: EdgeInsets.only(left: 5, right: 5),
+                                              child: new Text(
+                                                data.name.toUpperCase(),
+                                                style: GoogleFonts.lato(
+                                                  textStyle: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w600,),
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
                                               ),
-                                              overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
-                                        ),
-                                        Container(
-                                          padding: EdgeInsets.only(right: 5),
-                                          alignment: Alignment.centerRight,
-                                          child: InkWell(
-                                            child: Text('Edit',
-                                              style: GoogleFonts.lato(
-                                                textStyle: TextStyle(decoration: TextDecoration.underline, fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xff006FBD)),
+                                          Container(
+                                            padding: EdgeInsets.only(right: 5),
+                                            alignment: Alignment.centerRight,
+                                            child: InkWell(
+                                              child: Text('Edit',
+                                                style: GoogleFonts.lato(
+                                                  textStyle: TextStyle(decoration: TextDecoration.underline, fontSize: 12, fontWeight: FontWeight.w600, color: Colors.deepOrange.shade600),
+                                                ),
+                                                textAlign: TextAlign.right,
                                               ),
-                                              textAlign: TextAlign.right,
+                                              onTap: () {
+                                                Navigator.push(context,MaterialPageRoute(builder: (context) => EditShipAddress(addrid: data.id, nama: data.name, fuladdr: data.address, state: data.state_id, city: data.city_id, zipcode: data.postcode, phone: data.mobile_no, ship: data.default_shipping, bill: data.default_billing, loca: data.location_tag,)));
+                                              },
                                             ),
-                                            onTap: () {
-                                              Navigator.push(context,MaterialPageRoute(builder: (context) => EditShipAddress(addrid: data.id, nama: data.name, fuladdr: data.address, state: data.state_id, city: data.city_id, zipcode: data.postcode, phone: data.mobile_no)));
-                                            },
                                           ),
+                                        ]
+                                    ),
+                                    Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          new Container(
+                                            padding: EdgeInsets.only(left: 5, right: 5, top: 2),
+                                            child: Icon(LineAwesomeIcons.phone, color: Colors.deepOrange.shade600, size: 18,),
+                                          ),
+                                          Expanded(
+                                            child: new Container(
+                                              padding: EdgeInsets.only(left: 5, right: 5, top: 2),
+                                              child:  new Text(
+                                                data.mobile_no,
+                                                style: GoogleFonts.lato(
+                                                  textStyle: TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.w400,),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ]
+                                    ),
+                                    Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          new Container(
+                                            padding: EdgeInsets.only(left: 5, right: 5, top: 2),
+                                            child:  Icon(LineAwesomeIcons.map_marker, color: Colors.deepOrange.shade600, size: 18,),
+                                          ),
+                                          Expanded(
+                                            child: new Container(
+                                              padding: EdgeInsets.only(left: 5, right: 5, top: 2),
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  new Text(
+                                                    data.full_address,
+                                                    style: GoogleFonts.lato(
+                                                      textStyle: TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.w400,),
+                                                    ),
+                                                    overflow: TextOverflow.ellipsis,
+                                                    maxLines: 3,
+                                                  ),
+                                                  new Text(
+                                                    '('+data.location_tag.toUpperCase()+') ',
+                                                    style: GoogleFonts.lato(
+                                                      textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
+                                                    ),
+                                                  ),
+                                                ]
+                                              )
+                                            ),
+                                          ),
+                                        ]
+                                    ),
+                                    new Container(
+                                      padding: EdgeInsets.only(left: 26, right: 5, top: 2),
+                                      child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Container(
+                                              padding: EdgeInsets.only(left: 5, right: 5, top: 2),
+                                              child: data.default_shipping == 'Y' ?new Text(
+                                                'Default Shipping',
+                                                style: GoogleFonts.lato(
+                                                  textStyle: TextStyle(color: Colors.deepOrange.shade600, fontSize: 12, fontWeight: FontWeight.w500,),
+                                                ),
+                                              ) : Container(),
+                                            ),
+                                            Container(
+                                              padding: EdgeInsets.only(left: 5, right: 5, top: 0),
+                                              child: data.default_billing == 'Y' ? new Text(
+                                                'Default Billing',
+                                                style: GoogleFonts.lato(
+                                                  textStyle: TextStyle(color: Colors.deepOrange.shade600, fontSize: 12, fontWeight: FontWeight.w500,),
+                                                ),
+                                              ) : Container(),
+                                            ),
+                                          ]
+                                      ),
+                                    ),
+                                    SizedBox(height: 10.0),
+                                    _getSeparator(1),
+                                    SizedBox(height: 10.0),
+                                    /*new ButtonTheme(
+                                  child: new ButtonBar(
+                                    children: <Widget>[
+                                      SizedBox(
+                                        height: 20,
+                                        child: OutlineButton(
+                                          shape: StadiumBorder(),
+                                          color: Colors.transparent,
+                                          borderSide: BorderSide(color: Colors.orangeAccent.shade700),
+                                          //icon: Icon(CupertinoIcons.add, size: 24, color: Colors.orangeAccent.shade700,),
+                                          child: Text('Edit',
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(color: Colors.orangeAccent.shade700, fontSize: 13, fontWeight: FontWeight.w700,),
+                                            ),
+                                          ), //`Text` to display
+                                          onPressed: () {
+                                            //Navigator.push(context,MaterialPageRoute(builder: (context) => EditAddress()));
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => new EditAddress(addrid: data.id, nama: data.name, fuladdr: data.address, state: data.state_id, city: data.city_id, zipcode: data.postcode, phone: data.mobile_no)),
+                                            );
+                                          },
                                         ),
-                                      ]
+                                      ),
+                                      SizedBox(width: 15.0),
+                                      SizedBox(
+                                        height: 20,
+                                        child: OutlineButton(
+                                          shape: StadiumBorder(),
+                                          color: Colors.transparent,
+                                          borderSide: BorderSide(color: Colors.redAccent.shade400),
+                                          //icon: Icon(CupertinoIcons.add, size: 24, color: Colors.orangeAccent.shade700,),
+                                          child: Text('Delete',
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(color: Colors.redAccent.shade400, fontSize: 13, fontWeight: FontWeight.w700,),
+                                            ),
+                                          ), //`Text` to display
+                                          onPressed: () async {
+                                            final SharedPreferences prefs = await SharedPreferences.getInstance();
+                                            Map<dynamic, dynamic> orderParams = Map();
+                                            orderParams = {'_method': 'DELETE'};
+                                            http.post(Constants.addressAPI +'/'+data.id.toString()+"?_method=DELETE",
+                                              headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
+                                              //body: json.encode(orderParams)
+                                            ).then((response) {
+                                              print('Deleting Address.. >>>>');
+                                              print(response.body);
+                                              print('Address Deleted >>>>');
+
+                                              setState((){
+                                                //removeAddr(index,model);
+                                                listAddrs.removeWhere((item) => item == data);
+
+                                                model.fetchAddressList();
+                                                model.fetchCartReload();
+                                                Navigator.popAndPushNamed(context, '/Address');
+                                                //listAddrs.remove(data.id);
+                                              });
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        new Container(
-                                          padding: EdgeInsets.only(left: 5, right: 5, top: 5),
-                                          child: Icon(LineAwesomeIcons.phone, color: Color(0xff006FBD), size: 18,),
-                                        ),
-                                        Expanded(
-                                          child: new Container(
-                                            padding: EdgeInsets.only(left: 5, right: 5, top: 5),
-                                            child:  new Text(
-                                              data.mobile_no,
-                                              style: GoogleFonts.lato(
-                                                textStyle: TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.w400,),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ]
-                                  ),
-                                  Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        new Container(
-                                          padding: EdgeInsets.only(left: 5, right: 5, top: 5),
-                                          child:  Icon(LineAwesomeIcons.map_marker, color: Color(0xff006FBD), size: 18,),
-                                        ),
-                                        Expanded(
-                                          child: new Container(
-                                            padding: EdgeInsets.only(left: 5, right: 5, top: 5),
-                                            child:  new Text(
-                                              data.full_address,
-                                              style: GoogleFonts.lato(
-                                                textStyle: TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.w400,),
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 3,
-                                            ),
-                                          ),
-                                        ),
-                                      ]
-                                  ),
-                                  SizedBox(height: 10.0),
-                                  _getSeparator(1),
-                                  SizedBox(height: 5.0),
-                                ]
-                            ),
+                                ),*/
+                                  ]
+                              )
                           )
                       );
                     },
@@ -338,6 +439,10 @@ class _AddShipAddressState extends State<AddShipAddress> {
   String stateInfoUrl = 'http://cartsini.my/api/lookup/state';
   String cityInfoUrl = 'http://cartsini.my/api/lookup/city/';
 
+  String locTag;
+  String defShip;
+  String defBill;
+
   Future<String> _getStateList() async {
     await http.get(Uri.parse(stateInfoUrl), headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',}).then((response) {
       var data = json.decode(response.body);
@@ -365,6 +470,9 @@ class _AddShipAddressState extends State<AddShipAddress> {
     _getStateList();
     super.initState();
     FirebaseAnalytics().logEvent(name: 'Add_New_Address',parameters:null);
+    locTag = 'home';
+    defShip = 'N';
+    defBill = 'N';
   }
 
   @override
@@ -393,71 +501,79 @@ class _AddShipAddressState extends State<AddShipAddress> {
   Widget build(BuildContext context) {
     return ScopedModelDescendant(
         builder: (BuildContext context, Widget child,MainScopedModel model)
-    {
-      return Scaffold(
-        resizeToAvoidBottomInset: true,
-        appBar: AppBar(
-          centerTitle: false,
-          elevation: 0.0,
-          backgroundColor: Colors.white,
-          title: Text(
-            "Add Shipping Address",
-            style: GoogleFonts.lato(
-              textStyle: TextStyle(
-                fontSize: 17, fontWeight: FontWeight.w600,),
-            ),
-          ),
-          automaticallyImplyLeading: true,
-        ),
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: Stack(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(left: 16, right: 16),
-                child: ListView(
-                  physics: BouncingScrollPhysics(),
-                  children: <Widget>[
-                    Form(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-
-                          buildRecipientField(),
-                          buildPhoneField(),
-                          buildStreetAddrField(),
-                          buildStateField(),
-                          buildCityField(),
-                          buildPincodeField(),
-
-                          /*Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 24.0),
-                            child: new RaisedButton(
-                              shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(25.0)),
-                              onPressed: () => _submitNewAddr(model),
-                              child: new Text("SAVE",
-                                style: GoogleFonts.lato(
-                                  textStyle: TextStyle(fontWeight: FontWeight.bold,),
-                                ),
-                              ),
-                              color: Color(0xff006FBD),
-                              textColor: Colors.white,
-                              elevation: 5.0,
-                            ),
-                          ),*/
-                        ],
-                      ),
-                    )
-                  ]
-                )
+        {
+          return Scaffold(
+              resizeToAvoidBottomInset: true,
+              appBar: AppBar(
+                centerTitle: false,
+                elevation: 0.0,
+                backgroundColor: Colors.white,
+                title: Text(
+                  "Add Shipping Address",
+                  style: GoogleFonts.lato(
+                    textStyle: TextStyle(
+                      fontSize: 17, fontWeight: FontWeight.w600,),
+                  ),
+                ),
+                automaticallyImplyLeading: true,
               ),
-              _btnSave(model),
-            ]
-          )
-        )
-      );
-    });
+              backgroundColor: Colors.white,
+              body: SafeArea(
+                  child: Stack(
+                      children: <Widget>[
+                        Padding(
+                            padding: EdgeInsets.only(left: 16, right: 16),
+                            child: ListView(
+                                physics: BouncingScrollPhysics(),
+                                children: <Widget>[
+                                  Form(
+                                    key: _formKey,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      children: [
+
+                                        buildRecipientField(),
+                                        buildPhoneField(),
+                                        buildStreetAddrField(),
+                                        buildStateField(),
+                                        buildCityField(),
+                                        buildPincodeField(),
+                                        SizedBox(height: 11,),
+                                        buildAddrCat(),
+                                        //buildShipping(),
+                                        //buildBilling(),
+
+                                        Container(
+                                            alignment: Alignment.center,
+                                            padding: EdgeInsets.only(left: 0, bottom: 5, right: 0, top: 30),
+                                            child: SizedBox(
+                                              width: MediaQuery.of(context).size.width,
+                                              child: new RaisedButton(
+                                                shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(25.0)),
+                                                onPressed: () => _submitNewAddr(model),
+                                                child: new Text("SAVE",
+                                                  style: GoogleFonts.lato(
+                                                    textStyle: TextStyle(fontWeight: FontWeight.bold,),
+                                                  ),
+                                                ),
+                                                color: Colors.deepOrange.shade600,
+                                                textColor: Colors.white,
+                                                elevation: 5.0,
+                                              ),
+                                            )
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ]
+                            )
+                        ),
+                        //_btnSave(model),
+                      ]
+                  )
+              )
+          );
+        });
   }
 
   Positioned _btnSave(MainScopedModel model) {
@@ -466,23 +582,23 @@ class _AddShipAddressState extends State<AddShipAddress> {
       right: 0,
       left: 0,
       child: Container(
-        alignment: Alignment.center,
-        padding: EdgeInsets.only(left: 16, bottom: 5, right: 16),
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          child: new RaisedButton(
-            shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(25.0)),
-            onPressed: () => _submitNewAddr(model),
-            child: new Text("SAVE",
-              style: GoogleFonts.lato(
-                textStyle: TextStyle(fontWeight: FontWeight.bold,),
+          alignment: Alignment.center,
+          padding: EdgeInsets.only(left: 16, bottom: 5, right: 16),
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: new RaisedButton(
+              shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(25.0)),
+              onPressed: () => _submitNewAddr(model),
+              child: new Text("SAVE",
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(fontWeight: FontWeight.bold,),
+                ),
               ),
+              color: Color(0xff006FBD),
+              textColor: Colors.white,
+              elevation: 5.0,
             ),
-            color: Color(0xff006FBD),
-            textColor: Colors.white,
-            elevation: 5.0,
-          ),
-        )
+          )
       ),
     );
   }
@@ -612,7 +728,7 @@ class _AddShipAddressState extends State<AddShipAddress> {
           child: new Text(
             "City:",
             style: GoogleFonts.lato(
-                textStyle: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, color: Colors.grey.shade500),
+              textStyle: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, color: Colors.grey.shade500),
             ),
           ),
         ),
@@ -669,6 +785,57 @@ class _AddShipAddressState extends State<AddShipAddress> {
     );
   }
 
+  Column buildAddrCat() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Address Category:",
+          style: GoogleFonts.lato(
+            textStyle: TextStyle(fontSize: 12, color: Colors.grey.shade500,),
+          ),
+        ),
+        Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Radio(
+                value: 'home',
+                groupValue: locTag,
+                onChanged: (value) {
+                  setState(() {
+                    locTag = value;
+                  });
+                },
+              ),
+              Text(
+                "Home",
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                ),
+              ),
+              Radio(
+                value: 'office',
+                groupValue: locTag,
+                onChanged: (value) {
+                  setState(() {
+                    locTag = value;
+                  });
+                },
+              ),
+              Text(
+                "Office",
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                ),
+              ),
+            ]
+        ),
+      ],
+    );
+  }
+
   void _submitNewAddr(MainScopedModel model) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -689,9 +856,9 @@ class _AddShipAddressState extends State<AddShipAddress> {
       'city': _city.toString(),
       'postcode': pincodeFieldController.text,
       'mobile_no': phoneFieldController.text,
-      'default_shipping': 'Y',
-      'default_billing': 'Y',
-      'location_tag': 'home'
+      'default_shipping': defShip,
+      'default_billing': defBill,
+      'location_tag': locTag
     };
 
     print('fullname: '+ recipientFieldController.text);
@@ -702,7 +869,7 @@ class _AddShipAddressState extends State<AddShipAddress> {
     print('mobile_no: '+ phoneFieldController.text);
 
     final http.Response response = await http.post(
-        Uri.parse(Constants.addressAPI),
+      Uri.parse(Constants.addressAPI),
       body: json.encode(addrData), //{'fullname': 'Cartsini Sana', 'email': _formData['email'], 'password': _formData['password'], 'channel': 0},
       headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
     );
@@ -767,9 +934,9 @@ class _AddShipAddressState extends State<AddShipAddress> {
 
 
 class EditShipAddress extends StatefulWidget {
-  String nama, fuladdr, zipcode, phone, state, city;
+  String nama, fuladdr, zipcode, phone, state, city, ship, bill, loca;
   int addrid;
-  EditShipAddress({this.addrid, this.nama, this.fuladdr, this.state, this.city, this.zipcode, this.phone});
+  EditShipAddress({this.addrid, this.nama, this.fuladdr, this.state, this.city, this.zipcode, this.phone, this.ship, this.bill, this.loca});
 
   @override
   _EditShipAddressState createState() => new _EditShipAddressState();
@@ -796,6 +963,10 @@ class _EditShipAddressState extends State<EditShipAddress> {
 
   String stateInfoUrl = 'http://cartsini.my/api/lookup/state';
   String cityInfoUrl = 'http://cartsini.my/api/lookup/city/';
+
+  String locTag;
+  String defShip;
+  String defBill;
 
   Future<String> _getStateList() async {
     await http.get(Uri.parse(stateInfoUrl), headers: {'Authorization' : 'Bearer '+Constants.tokenGuest,'Content-Type': 'application/json',}).then((response) {
@@ -829,6 +1000,9 @@ class _EditShipAddressState extends State<EditShipAddress> {
     zipcodeController = new TextEditingController(text: widget.zipcode);
     _state = widget.state;
     _city = widget.city;
+    defShip = widget.ship;
+    defBill = widget.bill;
+    locTag = widget.loca;
 
     _getCitiesList();
   }
@@ -839,128 +1013,80 @@ class _EditShipAddressState extends State<EditShipAddress> {
         builder: (BuildContext context, Widget child,MainScopedModel model)
         {
           return Scaffold(
-            key: _scaffoldKey,
-            appBar: AppBar(
-              centerTitle: false,
-              elevation: 0.0,
-              backgroundColor: Colors.white,
-              title: Text(
-                "Edit Shipping Address",
-                style: GoogleFonts.lato(
-                  textStyle: TextStyle(fontSize: 17 , fontWeight: FontWeight.w600,),
+              key: _scaffoldKey,
+              appBar: AppBar(
+                centerTitle: false,
+                elevation: 0.0,
+                backgroundColor: Colors.white,
+                title: Text(
+                  "Edit Shipping Address",
+                  style: GoogleFonts.lato(
+                    textStyle: TextStyle(fontSize: 17 , fontWeight: FontWeight.w600,),
+                  ),
                 ),
-              ),
-              actions: [
-                Padding(
-                  padding: EdgeInsets.only(left: 2, right: 0,),
-                  child: FlatButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: Text("Confirmation"),
-                            content: Text("Are you sure you want to delete this Address ?"),
-                            actions: [
-                              FlatButton(
-                                child: Text("Yes"),
-                                onPressed: () async {
-                                  final SharedPreferences prefs = await SharedPreferences.getInstance();
-                                  Map<dynamic, dynamic> orderParams = Map();
-                                  orderParams = {'_method': 'DELETE'};
-                                  http.post(Uri.parse(Constants.addressAPI +'/'+widget.addrid.toString()+"?_method=DELETE"),
-                                    headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
-                                  ).then((response) {
-                                    print('Deleting Address.. >>>>');
-                                    print(response.body);
-                                    print('Address Deleted >>>>');
+                actions: [
+                  Padding(
+                      padding: EdgeInsets.only(left: 2, right: 0,),
+                      child: FlatButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text("Confirmation"),
+                                content: Text("Are you sure you want to delete this Address ?"),
+                                actions: [
+                                  FlatButton(
+                                    child: Text("Yes"),
+                                    onPressed: () async {
+                                      final SharedPreferences prefs = await SharedPreferences.getInstance();
+                                      Map<dynamic, dynamic> orderParams = Map();
+                                      orderParams = {'_method': 'DELETE'};
+                                      http.post(Uri.parse(Constants.addressAPI +'/'+widget.addrid.toString()+"?_method=DELETE"),
+                                        headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
+                                      ).then((response) {
+                                        print('Deleting Address.. >>>>');
+                                        print(response.body);
+                                        print('Address Deleted >>>>');
 
-                                    setState((){
-                                      listAddrs.removeWhere((item) => item == model.addrList);
+                                        setState((){
+                                          listAddrs.removeWhere((item) => item == model.addrList);
 
-                                      model.fetchAddressList();
-                                      model.fetchCartReload();
-                                      Navigator.popAndPushNamed(context, '/Address');
-                                      //Navigator.pop(context, true);
-                                    });
-                                  });
-                                },
-                              ),
-                              FlatButton(
-                                child: Text("No"),
-                                onPressed: () {
-                                  Navigator.pop(context, false);
-                                },
-                              ),
-                            ],
+                                          model.fetchAddressList();
+                                          model.fetchCartReload();
+                                          Navigator.popAndPushNamed(context, '/Address');
+                                          //Navigator.pop(context, true);
+                                        });
+                                      });
+                                    },
+                                  ),
+                                  FlatButton(
+                                    child: Text("No"),
+                                    onPressed: () {
+                                      Navigator.pop(context, false);
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
                           );
                         },
-                      );
-                    },
-                    /*onPressed: () async {
-                      final SharedPreferences prefs = await SharedPreferences.getInstance();
-                      Map<dynamic, dynamic> orderParams = Map();
-                      orderParams = {'_method': 'DELETE'};
-                      http.post(Constants.addressAPI +'/'+widget.addrid.toString()+"?_method=DELETE",
-                        headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
-                      ).then((response) {
-                        print('Deleting Address.. >>>>');
-                        print(response.body);
-                        print('Address Deleted >>>>');
-
-                        setState((){
-                          listAddrs.removeWhere((item) => item == widget.data);
-
-                          model.fetchAddressList();
-                          model.fetchCartReload();
-                          Navigator.popAndPushNamed(context, '/Address');
-                        });
-                      });
-                    },*/
-                    padding: EdgeInsets.only(right: 0.0),
-                    child: Text(
-                      'DELETE',
-                      style: GoogleFonts.lato(
-                        textStyle: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
+                        padding: EdgeInsets.only(right: 0.0),
+                        child: Text(
+                          'DELETE',
+                          style: GoogleFonts.lato(
+                            textStyle: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  )
-                  /*InkWell(
-                    child: Text('DELETE',
-                      style: GoogleFonts.lato(
-                        textStyle: TextStyle(decoration: TextDecoration.underline, fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xff006FBD)),
-                      ),
-                      textAlign: TextAlign.right,
-                    ),
-                    onTap: () async {
-                      final SharedPreferences prefs = await SharedPreferences.getInstance();
-                      Map<dynamic, dynamic> orderParams = Map();
-                      orderParams = {'_method': 'DELETE'};
-                      http.post(Constants.addressAPI +'/'+widget.addrid.toString()+"?_method=DELETE",
-                        headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
-                      ).then((response) {
-                        print('Deleting Address.. >>>>');
-                        print(response.body);
-                        print('Address Deleted >>>>');
-
-                        setState((){
-                          listAddrs.removeWhere((item) => item == model.addrList);
-
-                          model.fetchAddressList();
-                          model.fetchCartReload();
-                          Navigator.popAndPushNamed(context, '/Address');
-                        });
-                      });
-                    },
-                  ),*/
-                ),
-              ],
-            ),
-            backgroundColor: Colors.white,
+                      )
+                  ),
+                ],
+              ),
+              backgroundColor: Colors.white,
               body: SafeArea(
                   child: Stack(
                       children: <Widget>[
@@ -981,236 +1107,40 @@ class _EditShipAddressState extends State<EditShipAddress> {
                                         buildStateField(),
                                         buildCityField(),
                                         buildPincodeField(),
+                                        SizedBox(height: 11,),
+                                        buildAddrCat(),
+                                        buildShipping(),
+                                        buildBilling(),
 
-                                        /*Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 24.0),
-                            child: new RaisedButton(
-                              shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(25.0)),
-                              onPressed: () => _submitNewAddr(model),
-                              child: new Text("SAVE",
-                                style: GoogleFonts.lato(
-                                  textStyle: TextStyle(fontWeight: FontWeight.bold,),
-                                ),
-                              ),
-                              color: Color(0xff006FBD),
-                              textColor: Colors.white,
-                              elevation: 5.0,
-                            ),
-                          ),*/
+                                        Container(
+                                            alignment: Alignment.center,
+                                            padding: EdgeInsets.only(left: 0, bottom: 5, right: 0, top: 30),
+                                            child: SizedBox(
+                                              width: MediaQuery.of(context).size.width,
+                                              child: new RaisedButton(
+                                                shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(25.0)),
+                                                onPressed: () => _submitUpdateAddr(model),
+                                                child: new Text("SAVE",
+                                                  style: GoogleFonts.lato(
+                                                    textStyle: TextStyle(fontWeight: FontWeight.bold,),
+                                                  ),
+                                                ),
+                                                color: Colors.deepOrange.shade600,
+                                                textColor: Colors.white,
+                                                elevation: 5.0,
+                                              ),
+                                            )
+                                        ),
                                       ],
                                     ),
                                   )
                                 ]
                             )
                         ),
-                        _btnSave(model),
+                        //_btnSave(model),
                       ]
                   )
               )
-            /*body: Form(
-              key: _formKey,
-              child: ListView(
-                padding: EdgeInsets.only(left: 16.0, top: 5, right: 16, bottom: 16),
-                children: <Widget>[
-
-                  buildRecipientField(),
-                  buildPhoneField(),
-                  buildStreetAddrField(),
-                  buildStateField(),
-                  buildCityField(),
-                  buildPincodeField(),
-
-                  new Padding(
-                      padding: EdgeInsets.only(left: 0.0, top: 40.0, bottom: 20.0),
-                      child: RaisedButton(
-                        shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-                        onPressed: () {
-                          _submitUpdateAddr(model);
-                        },
-                        child: new Text(
-                          "SAVE", style: new TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        color: Color(0xff006FBD),
-                        textColor: Colors.white,
-                        elevation: 5.0,
-                        padding: EdgeInsets.only(
-                            left: 90.0,
-                            right: 90.0,
-                            top: 12.0,
-                            bottom: 12.0
-                        ),
-                      )
-                  )
-                ],
-              ),
-
-            ),*/
-            /*body: Padding(
-        padding: const EdgeInsets.only(left: 15.0, right: 15.0),
-        child: ListView(
-          children: <Widget>[
-            Padding(
-                padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                child: new Form(
-                  key: _formKeyE,
-                  autovalidate: false,
-                  child: new Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-
-                      TextFormField(
-                        controller: controllerName,
-                        decoration: new InputDecoration(
-                          labelText: "Full Name",
-                          filled: false,
-                        ),
-                        keyboardType: TextInputType.text,
-                        validator: (String value) {
-                          if (value.isEmpty) {
-                            return 'enter fullname';
-                          }
-                        },
-                        onSaved: (String value) {
-                          _formData['name'] = value;
-                        },
-                      ),
-
-                      TextFormField(
-                        controller: controllerAddress,
-                        decoration: new InputDecoration(
-                          labelText: "Full Address",
-                          filled: false,
-                        ),
-                        keyboardType: TextInputType.text,
-                        validator: (String value) {
-                          if (value.isEmpty) {
-                            return 'enter full address';
-                          }
-                        },
-                        onSaved: (String value) {
-                          _formData['fuladdr'] = value;
-                        },
-                      ),
-
-                      FormField(
-                        validator: (value) {
-                          if (value == null) {
-                            return "Select state";
-                          }
-                        },
-                        onSaved: (value) {
-                          _formData['state'] = value;
-                        },
-                        builder: (FormFieldState states) {
-                          return InputDecorator(
-                            decoration: InputDecoration(
-                              labelText: 'Select state*',
-                            ),
-                            isEmpty: _selectedNegeri == 1,
-                            child: new DropdownButtonHideUnderline(
-                              child: new DropdownButton(
-                                value: _selectedNegeri ,
-                                items: _dropdownMenuStates,
-                                onChanged: onChangeDropdownItem,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-
-                      FormField(
-                        validator: (value) {
-                          if (value == null) {
-                            return "Select city";
-                          }
-                        },
-                        onSaved: (value) {
-                          _formData['city'] = value;
-                        },
-                        builder: (FormFieldState states) {
-                          return InputDecorator(
-                              decoration: InputDecoration(
-                                labelText: 'Select city*',
-                              ),
-                              isEmpty: _selectedCity == 1,
-                              child: new DropdownButtonHideUnderline(
-                                child: new DropdownButton(
-                                  value: _selectedCity,
-                                  items: _dropDownMenuCity,
-                                  onChanged: changedDropDownCity,
-                                ),
-                              )
-                          );
-                        },
-                      ),
-
-
-                      TextFormField(
-                        controller: controllerZipcode,
-                        decoration: new InputDecoration(
-                          labelText: "Postcode",
-                          filled: false,
-                        ),
-                        keyboardType: TextInputType.number,
-                        validator: (String value) {
-                          if (value.isEmpty) {
-                            return 'enter postcode';
-                          }
-                        },
-                        onSaved: (String value) {
-                          _formData['zipcode'] = value;
-                        },
-                      ),
-
-                      TextFormField(
-                        controller: controllerPhone,
-                        decoration: new InputDecoration(
-                          labelText: "Mobile No",
-                          filled: false,
-                        ),
-                        keyboardType: TextInputType.number,
-                        validator: (String value) {
-                          if (value.isEmpty) {
-                            return 'enter mobile no';
-                          }
-                        },
-                        onSaved: (String value) {
-                          _formData['phone'] = value;
-                        },
-                      ),
-
-                      new Padding(
-                        padding: EdgeInsets.only(
-                            left: 0.0, top: 40.0, bottom: 20.0),
-                        child: new RaisedButton(
-                          shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-                          onPressed: () => _saving ? Center(
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.deepOrange),
-                            ),
-                          ) : _submitEditAddr(),
-                          child: new Text(
-                            "SAVE ADDRESS ",
-                            style: new TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          color: Colors.deepOrange,
-                          textColor: Colors.white,
-                          elevation: 5.0,
-                          padding: EdgeInsets.only(
-                              left: 90.0,
-                              right: 90.0,
-                              top: 12.0,
-                              bottom: 12.0),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-            ),
-          ],
-        ),
-      ),*/
           );
         });
   }
@@ -1425,6 +1355,159 @@ class _EditShipAddressState extends State<EditShipAddress> {
     );
   }
 
+  Column buildAddrCat() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Address Category:",
+          style: GoogleFonts.lato(
+            textStyle: TextStyle(fontSize: 12, color: Colors.grey.shade500,),
+          ),
+        ),
+        Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Radio(
+                value: 'home',
+                groupValue: locTag,
+                onChanged: (value) {
+                  setState(() {
+                    locTag = value;
+                  });
+                },
+              ),
+              Text(
+                "Home",
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                ),
+              ),
+              Radio(
+                value: 'office',
+                groupValue: locTag,
+                onChanged: (value) {
+                  setState(() {
+                    locTag = value;
+                  });
+                },
+              ),
+              Text(
+                "Office",
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                ),
+              ),
+            ]
+        ),
+      ],
+    );
+  }
+
+  Column buildShipping() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Default Shipping:",
+          style: GoogleFonts.lato(
+            textStyle: TextStyle(fontSize: 12, color: Colors.grey.shade500,),
+          ),
+        ),
+        Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Radio(
+                value: 'Y',
+                groupValue: defShip,
+                onChanged: (value) {
+                  setState(() {
+                    defShip = value;
+                  });
+                },
+              ),
+              Text(
+                "Yes",
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                ),
+              ),
+              Radio(
+                value: 'N',
+                groupValue: defShip,
+                onChanged: (value) {
+                  setState(() {
+                    defShip = value;
+                  });
+                },
+              ),
+              Text(
+                "No",
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                ),
+              ),
+            ]
+        ),
+      ],
+    );
+  }
+
+  Column buildBilling() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Default Billing: ",
+          style: GoogleFonts.lato(
+            textStyle: TextStyle(fontSize: 12, color: Colors.grey.shade500,),
+          ),
+        ),
+        Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Radio(
+                value: 'Y',
+                groupValue: defBill,
+                onChanged: (value) {
+                  setState(() {
+                    defBill = value;
+                  });
+                },
+              ),
+              Text(
+                "Yes",
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                ),
+              ),
+              Radio(
+                value: 'N',
+                groupValue: defBill,
+                onChanged: (value) {
+                  setState(() {
+                    defBill = value;
+                  });
+                },
+              ),
+              Text(
+                "No",
+                style: GoogleFonts.lato(
+                  textStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                ),
+              ),
+            ]
+        ),
+      ],
+    );
+  }
+
   void _submitUpdateAddr(MainScopedModel model) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -1448,13 +1531,13 @@ class _EditShipAddressState extends State<EditShipAddress> {
       'city': _city.toString(),
       'postcode': zipcodeController.text,
       'mobile_no': phoneController.text,
-      'default_billing': "y",
-      'default_shipping': "y",
-      'location_tag': "home"
+      'default_billing': defBill,
+      'default_shipping': defShip,
+      'location_tag': locTag
     };
 
     final http.Response response = await http.post(
-        Uri.parse(Constants.addressAPI + '/' + widget.addrid.toString()),
+      Uri.parse(Constants.addressAPI + '/' + widget.addrid.toString()),
       body: json.encode(addrData), //{'fullname': 'Cartsini Sana', 'email': _formData['email'], 'password': _formData['password'], 'channel': 0},
       headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
     );

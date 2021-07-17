@@ -39,7 +39,7 @@ class ReCheckoutActivityState extends State<ReCheckoutActivity> {
   SharedPref sharedPref = SharedPref();
 
   int _id;
-  String order_no,total_price,address_id,name,address,postcode,city_id,state_id,full_address,city_name,state_name;
+  String order_no,total_price,address_id,name,address,postcode,city_id,state_id,full_address,city_name,state_name, loca;
   String cajhantar;
 
   List<OrderGroup> ordered = [];
@@ -78,7 +78,7 @@ class ReCheckoutActivityState extends State<ReCheckoutActivity> {
         };
 
         http.post(
-            Uri.parse(Constants.postReorder),
+          Uri.parse(Constants.postReorder),
           headers: {'Authorization' : 'Bearer '+prefs.getString('token'),'Content-Type': 'application/json',},
           body: json.encode(postData),
         ).then((response) {

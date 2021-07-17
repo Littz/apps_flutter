@@ -9,6 +9,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'deeplink/ads_auto_deeplink.dart';
@@ -38,6 +39,8 @@ class _SplashScreenState extends State<SplashScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   StreamSubscription _sub;
   SharedPref sharedPref = SharedPref();
+  String _debugLabelString = "";
+  String _playerIdString = "";
 
   @override
   void initState() {
@@ -45,12 +48,32 @@ class _SplashScreenState extends State<SplashScreen> {
     FirebaseAnalytics().logEvent(name: 'Splash_Screen',parameters:null);
     Timer(Duration(seconds: 3), () {
       //checkVersion();
-      initDynamicLinks();
+      //_handleGetPermissionSubscriptionState();
+      //getOneSignalToken();
       getDeviceInfo();
+      initDynamicLinks();
     });
   }
 
-
+  static getOneSignalToken() async {
+    var statues = await OneSignal.shared.getPermissionSubscriptionState();
+    bool isSubscribed = statues.subscriptionStatus.subscribed;
+    String userId = statues.subscriptionStatus.userId;
+    if (isSubscribed == false) {
+      OneSignal.shared.promptUserForPushNotificationPermission();
+      await OneSignal.shared.init("2ee5bcc3-30a9-40cd-9de8-1aaec0d71fe3",
+          iOSSettings: {
+            OSiOSSettings.autoPrompt: true,
+            OSiOSSettings.inAppLaunchUrl: true
+          });
+      await OneSignal.shared.setSubscription(true);
+      var statues = await OneSignal.shared.getPermissionSubscriptionState();
+      isSubscribed = statues.subscriptionStatus.subscribed;
+    }
+    print('is user Subscribed ? => $isSubscribed');
+    print('One Signal Token is => $userId');
+    return statues.subscriptionStatus.userId;
+  }
 
   void getDeviceInfo() async {
     print('UUID & DEVICE INFO  >>>>>');

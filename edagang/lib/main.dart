@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:device_info/device_info.dart';
 import 'package:edagang/screens/address_book.dart';
@@ -27,16 +28,16 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:ui';
+import 'package:http/http.dart' as http;
 
 
 void main() {
-
-  WidgetsFlutterBinding.ensureInitialized(); //imp line need to be added first
+  WidgetsFlutterBinding.ensureInitialized();
   FlutterError.onError = (FlutterErrorDetails details) {
-    print("Error INSIDE FRAME_WORK");
-    print("----------------------------");
+    print("Error INSIDE FRAME_WORK ----------------------------");
     print("Error :  ${details.exception}");
     print("StackTrace :  ${details.stack}");
+    print("---------------------------- Error INSIDE FRAME_WORK");
   };
   runApp(MyApp());
 
@@ -61,8 +62,9 @@ class MyApp extends StatefulWidget {
 
 class _MyAppPageState extends State<MyApp> {
   final MainScopedModel _model = MainScopedModel();
-  bool _requireConsent = false;
+  bool _requireConsent = true;
   String _debugLabelString = "";
+  String _playerIdString = "";
   SharedPref sharedPref = SharedPref();
   bool _enableConsentButton = false;
   String _phoneType, _osVer = '';
@@ -85,34 +87,42 @@ class _MyAppPageState extends State<MyApp> {
   void initOneSignal() async {
     if (!mounted) return;
 
-    /*OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+    OneSignal.shared.consentGranted(true);
+
+    OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+
     OneSignal.shared.setRequiresUserPrivacyConsent(_requireConsent);
-    OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-      print('NOTIFICATION OPENED HANDLER CALLED WITH: ${result}');
-      this.setState(() {
-        _debugLabelString = "Opened notification: \n${result.notification.jsonRepresentation().replaceAll("\\n", "\n")}";
-      });
-    });
 
-    OneSignal.shared.setNotificationWillShowInForegroundHandler((OSNotificationReceivedEvent event) {
-      print('FOREGROUND HANDLER CALLED WITH: ${event}');
-      /// Display Notification, send null to not display
-      event.complete(null);
+    var settings = {
+      OSiOSSettings.autoPrompt: false,
+      OSiOSSettings.promptBeforeOpeningPushUrl: true
+    };
 
+    OneSignal.shared.setNotificationReceivedHandler((OSNotification notification) {
       this.setState(() {
         _debugLabelString =
-        "Notification received in foreground notification: \n${event.notification.jsonRepresentation().replaceAll("\\n", "\n")}";
+        "Received notification: \n${notification.jsonRepresentation().replaceAll("\\n", "\n")}";
       });
     });
 
-    OneSignal.shared.setInAppMessageClickedHandler((OSInAppMessageAction action) {
+    OneSignal.shared
+        .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+      this.setState(() {
+        _debugLabelString =
+        "Opened notification: \n${result.notification.jsonRepresentation().replaceAll("\\n", "\n")}";
+      });
+    });
+
+    OneSignal.shared
+        .setInAppMessageClickedHandler((OSInAppMessageAction action) {
       this.setState(() {
         _debugLabelString =
         "In App Message Clicked: \n${action.jsonRepresentation().replaceAll("\\n", "\n")}";
       });
     });
 
-    OneSignal.shared.setSubscriptionObserver((OSSubscriptionStateChanges changes) {
+    OneSignal.shared
+        .setSubscriptionObserver((OSSubscriptionStateChanges changes) {
       print("SUBSCRIPTION STATE CHANGED: ${changes.jsonRepresentation()}");
     });
 
@@ -125,75 +135,88 @@ class _MyAppPageState extends State<MyApp> {
           print("EMAIL SUBSCRIPTION STATE CHANGED ${changes.jsonRepresentation()}");
         });
 
-    OneSignal.shared.setSMSSubscriptionObserver(
-            (OSSMSSubscriptionStateChanges changes) {
-          print("SMS SUBSCRIPTION STATE CHANGED ${changes.jsonRepresentation()}");
-        });
-
     // NOTE: Replace with your own app ID from https://www.onesignal.com
-    await OneSignal.shared.setAppId("2ee5bcc3-30a9-40cd-9de8-1aaec0d71fe3");
+    await OneSignal.shared
+        .init("b2f7f966-d8cc-11e4-bed1-df8f05be55ba", iOSSettings: settings);
+
+    OneSignal.shared
+        .setInFocusDisplayType(OSNotificationDisplayType.notification);
 
     bool requiresConsent = await OneSignal.shared.requiresUserPrivacyConsent();
 
-    this.setState(() {
-    _enableConsentButton = requiresConsent;
-    });
+    /*this.setState(() {
+      requiresConsent;
+    });*/
 
-    // Some examples of how to use In App Messaging public methods with OneSignal SDK
-    //oneSignalInAppMessagingTriggerExamples();
+    //final SharedPreferences prefs = await SharedPreferences.getInstance();
+    //final status = await OneSignal.shared.getPermissionSubscriptionState();
+    //final playerId = status.subscriptionStatus.userId.toString();
+    //sharedPref.save('player_id', playerId);
+    //print('PLAYER ID: '+playerId);
 
-    OneSignal.shared.disablePush(false);
-
-    // Some examples of how to use Outcome Events public methods with OneSignal SDK
-    //oneSignalOutcomeEventsExamples();
-
-    bool userProvidedPrivacyConsent = await OneSignal.shared.userProvidedPrivacyConsent();
-    print("USER PROVIDED PRIVACY CONSENT: $userProvidedPrivacyConsent");*/
-
-
-    OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
-    OneSignal.shared.setRequiresUserPrivacyConsent(_requireConsent);
-
-    OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-      print("OPENED NOTIFICATION");
-      print(result.notification.jsonRepresentation().replaceAll("\\n", "\n"));
-      this.setState(() {
-        _debugLabelString = "Opened notification: \n${result.notification.jsonRepresentation().replaceAll("\\n", "\n")}";
-      });
-    });
-
-    OneSignal.shared.setSubscriptionObserver((OSSubscriptionStateChanges changes) {
-      print("SUBSCRIPTION STATE CHANGED: ${changes.jsonRepresentation()}");
-    });
-
-    OneSignal.shared.setPermissionObserver((OSPermissionStateChanges changes) {
-      print("PERMISSION STATE CHANGED: ${changes.jsonRepresentation()}");
-    });
-
-    OneSignal.shared.setEmailSubscriptionObserver((OSEmailSubscriptionStateChanges changes) {
-      print("EMAIL SUBSCRIPTION STATE CHANGED ${changes.jsonRepresentation()}");
-    });
-
-    OneSignal.shared.setInFocusDisplayType(OSNotificationDisplayType.notification);
-    OneSignal.shared.promptUserForPushNotificationPermission(fallbackToSettings: true);
-
-    final app_id = "2ee5bcc3-30a9-40cd-9de8-1aaec0d71fe3";
-    OneSignal.shared.init(
-        app_id,
-        iOSSettings: {
-          OSiOSSettings.autoPrompt: false,
-          OSiOSSettings.inAppLaunchUrl : true
-        }
-    );
-    final status = await OneSignal.shared.getPermissionSubscriptionState();
-    final playerId = status.subscriptionStatus.userId.toString();
-    sharedPref.save('player_id', playerId);
   }
 
-  void getDevInfo() async {
-    if (!mounted) return;
+  void _handleConsent() {
+    print("Setting consent to true");
+    OneSignal.shared.consentGranted(true);
+
+    print("Setting state");
+    this.setState(() {
+      _enableConsentButton = false;
+    });
+  }
+
+  void _handleGetPermissionSubscriptionState() {
+    print("Getting permissionSubscriptionState");
+    OneSignal.shared.getPermissionSubscriptionState().then((status) {
+      this.setState(() {
+        _debugLabelString = status.jsonRepresentation();
+        _playerIdString = status.subscriptionStatus.userId.toString();
+        sharedPref.save('player_id', _playerIdString);
+        print('PLAYER ID: '+_playerIdString);
+      });
+    });
+  }
+
+  void getDeviceInfo() async {
+    print('UUID & DEVICE INFO  >>>>>');
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String devId = prefs.getString('player_id');
+    String devType = prefs.getString('phone_type');
+    String devOs = prefs.getString('os_version');
+
+    //if(devId.length == 0 || devId.isEmpty){
+    final Map<String, dynamic> devParams = {
+      'device_id': devId,
+      'phone_type': devType,
+      'os_version': devOs,
+    };
+
+    http.post(
+        Uri.parse('https://shopapp.e-dagang.asia/api/registerdevice'), //?device_id='+devId+'&phone_type='+devType+'&os_version='+devOs),
+        headers: {'Content-Type': 'application/json',},
+        body: json.encode(devParams)
+    ).then((response) {
+      print('DevInfo => '+response.statusCode.toString());
+      print(response.body);
+      print('#Player ID => '+devId);
+      print('#Device Type => '+devType);
+      print('#Device OSver  => '+devOs);
+      //}
+      print('<<<<<<  UUID & DEVICE INFO');
+    });
+    //}else{
+
+  }
+
+  void getDevInfo() async{
+    if (!mounted) return;
+
+    //final SharedPreferences prefs = await SharedPreferences.getInstance();
+    //final status = await OneSignal.shared.getPermissionSubscriptionState();
+    //String playerId = status.subscriptionStatus.userId.toString();
+
     String deviceInfo,deviceInfo2;
 
     if (Platform.isIOS) {
@@ -217,9 +240,8 @@ class _MyAppPageState extends State<MyApp> {
     }
 
     setState(() {
-
-      prefs.setString('phone_type', deviceInfo2);
-      prefs.setString('os_version', deviceInfo);
+      sharedPref.save('phone_type', deviceInfo2);
+      sharedPref.save('os_version', deviceInfo);
 
     });
   }
@@ -227,27 +249,26 @@ class _MyAppPageState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      initOneSignal();
-      getDevInfo();
-      loadAuth();
-      _model.loggedInUser();
-      _model.fetchHomeFinResponse();
-      _model.fetchHomeBlurbResponse();
-      _model.fetchBlurbOtherResponse();
-      _model.fetchGoilmuResponse();
-      _model.fetchHomeBizResponse();
-      _model.fetchVrBizResponse();
-      _model.fetchCourseProfessional();
-      _model.fetchCourseTechnical();
-      _model.fetchCourseSafety();
-      _model.fetchCourseTraining();
-      _model.fetchHomePageResponse();
-      _model.fetchVideoListResponse();
-      _model.fetchKoopListResponse();
-      _model.fetchNgoListResponse();
+    initOneSignal();
+    getDevInfo();
+    loadAuth();
+    _model.loggedInUser();
+    _model.fetchHomeFinResponse();
+    _model.fetchHomeBlurbResponse();
+    _model.fetchBlurbOtherResponse();
+    _model.fetchGoilmuResponse();
+    _model.fetchHomeBizResponse();
+    _model.fetchVrBizResponse();
+    _model.fetchCourseProfessional();
+    _model.fetchCourseTechnical();
+    _model.fetchCourseSafety();
+    _model.fetchCourseTraining();
+    _model.fetchHomePageResponse();
+    _model.fetchVideoListResponse();
+    _model.fetchKoopListResponse();
+    _model.fetchNgoListResponse();
+    _handleGetPermissionSubscriptionState();
 
-    });
 
   }
 
@@ -262,16 +283,28 @@ class _MyAppPageState extends State<MyApp> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.asset('assets/images/ed_logo_greys.png', height: 120,),
-                SizedBox(height: 26,),
-                Icon(
-                  LineAwesomeIcons.exclamation_triangle,
-                  color: Colors.grey.shade500,
-                  size: 36,
-                ),
-                Text('Rendering widget...',
-                  style: GoogleFonts.lato(
-                    textStyle: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w600,),
+                Container(
+                  height: 120,
+                  width: 120,
+                  color: Colors.transparent,
+                  child: CircleAvatar(
+                    radius: 50.0,
+                    backgroundColor: Colors.transparent,
+                    //backgroundImage: AssetImage('assets/images/ed_logo_greys.png',),
+                    child: Column(
+                      children: <Widget>[
+                        CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation(Color(0xff2877EA)),
+                          strokeWidth: 1.7,
+                        ),
+                        SizedBox(height: 5.0,),
+                        Text('Processing..',
+                          style: GoogleFonts.lato(
+                            textStyle: TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.w400,),
+                          ),
+                        ),
+                      ],
+                    )
                   ),
                 ),
               ],
@@ -282,7 +315,7 @@ class _MyAppPageState extends State<MyApp> {
           return widget;
         },
         debugShowCheckedModeBanner: false,
-        title: 'eDagang',
+        title: 'edagang',
         theme: ThemeData(
           brightness: Brightness.light,
           primaryColor: Colors.white,
@@ -621,8 +654,7 @@ class _NewHomePageState extends State<NewHomePage> {
 }
 
 
-/*
-class MyAppx extends StatefulWidget {
+/*class MyAppx extends StatefulWidget {
   @override
   _MyAppxState createState() => new _MyAppxState();
 }
@@ -630,7 +662,6 @@ class MyAppx extends StatefulWidget {
 class _MyAppxState extends State<MyAppx> {
   String _debugLabelString = "";
   String _emailAddress;
-  String _smsNumber;
   String _externalUserId;
   bool _enableConsentButton = false;
 
@@ -651,24 +682,23 @@ class _MyAppxState extends State<MyAppx> {
 
   OneSignal.shared.setRequiresUserPrivacyConsent(_requireConsent);
 
+  var settings = {
+  OSiOSSettings.autoPrompt: false,
+  OSiOSSettings.promptBeforeOpeningPushUrl: true
+  };
+
+  OneSignal.shared.setNotificationReceivedHandler((OSNotification notification) {
+  this.setState(() {
+  _debugLabelString =
+  "Received notification: \n${notification.jsonRepresentation().replaceAll("\\n", "\n")}";
+  });
+  });
+
   OneSignal.shared
       .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-  print('NOTIFICATION OPENED HANDLER CALLED WITH: ${result}');
   this.setState(() {
   _debugLabelString =
   "Opened notification: \n${result.notification.jsonRepresentation().replaceAll("\\n", "\n")}";
-  });
-  });
-
-  OneSignal.shared
-      .setNotificationWillShowInForegroundHandler((OSNotificationReceivedEvent event) {
-  print('FOREGROUND HANDLER CALLED WITH: ${event}');
-  /// Display Notification, send null to not display
-  event.complete(null);
-
-  this.setState(() {
-  _debugLabelString =
-  "Notification received in foreground notification: \n${event.notification.jsonRepresentation().replaceAll("\\n", "\n")}";
   });
   });
 
@@ -694,13 +724,12 @@ class _MyAppxState extends State<MyAppx> {
   print("EMAIL SUBSCRIPTION STATE CHANGED ${changes.jsonRepresentation()}");
   });
 
-  OneSignal.shared.setSMSSubscriptionObserver(
-  (OSSMSSubscriptionStateChanges changes) {
-  print("SMS SUBSCRIPTION STATE CHANGED ${changes.jsonRepresentation()}");
-  });
-
   // NOTE: Replace with your own app ID from https://www.onesignal.com
-  await OneSignal.shared.setAppId("2ee5bcc3-30a9-40cd-9de8-1aaec0d71fe3");
+  await OneSignal.shared
+      .init("2ee5bcc3-30a9-40cd-9de8-1aaec0d71fe3", iOSSettings: settings);
+
+  OneSignal.shared
+      .setInFocusDisplayType(OSNotificationDisplayType.notification);
 
   bool requiresConsent = await OneSignal.shared.requiresUserPrivacyConsent();
 
@@ -711,13 +740,8 @@ class _MyAppxState extends State<MyAppx> {
   // Some examples of how to use In App Messaging public methods with OneSignal SDK
   oneSignalInAppMessagingTriggerExamples();
 
-  OneSignal.shared.disablePush(false);
-
   // Some examples of how to use Outcome Events public methods with OneSignal SDK
   oneSignalOutcomeEventsExamples();
-
-  bool userProvidedPrivacyConsent = await OneSignal.shared.userProvidedPrivacyConsent();
-  print("USER PROVIDED PRIVACY CONSENT: $userProvidedPrivacyConsent");
   }
 
   void _handleGetTags() {
@@ -741,14 +765,6 @@ class _MyAppxState extends State<MyAppx> {
   }).catchError((error) {
   print("Encountered an error sending tags: $error");
   });
-
-  print("Sending tags array");
-  var sendTags = {'test': 'value'};
-  OneSignal.shared.sendTags(sendTags).then((response) {
-  print("Successfully sent tags with response: $response");
-  }).catchError((error) {
-  print("Encountered an error sending tags: $error");
-  });
   }
 
   void _handlePromptForPushPermission() {
@@ -758,12 +774,11 @@ class _MyAppxState extends State<MyAppx> {
   });
   }
 
-  void _handleGetDeviceState() async {
-  print("Getting DeviceState");
-  OneSignal.shared.getDeviceState().then((deviceState) {
-  print("DeviceState: ${deviceState?.jsonRepresentation()}");
+  void _handleGetPermissionSubscriptionState() {
+  print("Getting permissionSubscriptionState");
+  OneSignal.shared.getPermissionSubscriptionState().then((status) {
   this.setState(() {
-  _debugLabelString = deviceState?.jsonRepresentation() ?? "Device state null";
+  _debugLabelString = status.jsonRepresentation();
   });
   });
   }
@@ -782,33 +797,10 @@ class _MyAppxState extends State<MyAppx> {
 
   void _handleLogoutEmail() {
   print("Logging out of email");
-
   OneSignal.shared.logoutEmail().then((v) {
   print("Successfully logged out of email");
   }).catchError((error) {
   print("Failed to log out of email: $error");
-  });
-  }
-
-  void _handleSetSMSNumber() {
-  if (_smsNumber == null) return;
-
-  print("Setting SMS Number");
-
-  OneSignal.shared.setSMSNumber(smsNumber: _smsNumber).then((response) {
-  print("Successfully set SMSNumber with response $response");
-  }).catchError((error) {
-  print("Failed to set SMS Number with error: $error");
-  });
-  }
-
-  void _handleLogoutSMSNumber() {
-  print("Logging out of smsNumber");
-
-  OneSignal.shared.logoutSMSNumber().then((response) {
-  print("Successfully logoutEmail with response $response");
-  }).catchError((error) {
-  print("Failed to log out of SMSNumber: $error");
   });
   }
 
@@ -834,19 +826,10 @@ class _MyAppxState extends State<MyAppx> {
   }).catchError((error) {
   print("Encountered error deleting tag: $error");
   });
-
-  print("Deleting tags array");
-  OneSignal.shared.deleteTags(['test']).then((response) {
-  print("Successfully sent tags with response: $response");
-  }).catchError((error) {
-  print("Encountered an error sending tags: $error");
-  });
   }
 
   void _handleSetExternalUserId() {
   print("Setting external user ID");
-  if (_externalUserId == null) return;
-
   OneSignal.shared.setExternalUserId(_externalUserId).then((results) {
   if (results == null) return;
 
@@ -867,15 +850,11 @@ class _MyAppxState extends State<MyAppx> {
   }
 
   void _handleSendNotification() async {
-  var deviceState = await OneSignal.shared.getDeviceState();
+  var status = await OneSignal.shared.getPermissionSubscriptionState();
 
-  if (deviceState == null || deviceState.userId == null)
-  return;
+  var playerId = status.subscriptionStatus.userId;
 
-  var playerId = deviceState.userId;
-
-  var imgUrlString =
-  "http://cdn1-www.dogtime.com/assets/uploads/gallery/30-impossibly-cute-puppies/impossibly-cute-puppy-2.jpg";
+  var imgUrlString = "http://cdn1-www.dogtime.com/assets/uploads/gallery/30-impossibly-cute-puppies/impossibly-cute-puppy-2.jpg";
 
   var notification = OSCreateNotification(
   playerIds: [playerId],
@@ -896,12 +875,9 @@ class _MyAppxState extends State<MyAppx> {
   }
 
   void _handleSendSilentNotification() async {
-  var deviceState = await OneSignal.shared.getDeviceState();
+  var status = await OneSignal.shared.getPermissionSubscriptionState();
 
-  if (deviceState == null || deviceState.userId == null)
-  return;
-
-  var playerId = deviceState.userId;
+  var playerId = status.subscriptionStatus.userId;
 
   var notification = OSCreateNotification.silentNotification(
   playerIds: [playerId], additionalData: {'test': 'value'});
@@ -933,7 +909,7 @@ class _MyAppxState extends State<MyAppx> {
 
   // Get the value for a trigger by its key
   Object triggerValue = await OneSignal.shared.getTriggerValueForKey("trigger_3");
-  print("'trigger_3' key trigger value: ${triggerValue?.toString()}");
+  print("'trigger_3' key trigger value: " + triggerValue.toString());
 
   // Create a list and bulk remove triggers based on keys supplied
   List<String> keys = ["trigger_1", "trigger_3"];
@@ -998,8 +974,8 @@ class _MyAppxState extends State<MyAppx> {
   ]),
   new TableRow(children: [
   new OneSignalButton(
-  "Print Device State",
-  _handleGetDeviceState,
+  "Print Permission Subscription State",
+  _handleGetPermissionSubscriptionState,
   !_enableConsentButton)
   ]),
   new TableRow(children: [
@@ -1028,34 +1004,6 @@ class _MyAppxState extends State<MyAppx> {
   ]),
   new TableRow(children: [
   new OneSignalButton("Logout Email", _handleLogoutEmail,
-  !_enableConsentButton)
-  ]),
-  new TableRow(children: [
-  new TextField(
-  textAlign: TextAlign.center,
-  decoration: InputDecoration(
-  hintText: "SMS Number",
-  labelStyle: TextStyle(
-  color: Color.fromARGB(255, 212, 86, 83),
-  )),
-  onChanged: (text) {
-  this.setState(() {
-  _smsNumber = text == "" ? null : text;
-  });
-  },
-  )
-  ]),
-  new TableRow(children: [
-  Container(
-  height: 8.0,
-  )
-  ]),
-  new TableRow(children: [
-  new OneSignalButton(
-  "Set SMS Number", _handleSetSMSNumber, !_enableConsentButton)
-  ]),
-  new TableRow(children: [
-  new OneSignalButton("Logout SMS Number", _handleLogoutSMSNumber,
   !_enableConsentButton)
   ]),
   new TableRow(children: [
@@ -1158,3 +1106,69 @@ class OneSignalButtonState extends State<OneSignalButton> {
     );
   }
 }*/
+
+
+class VisibilityExample extends StatefulWidget {
+  @override
+  _VisibilityExampleState createState() {
+    return _VisibilityExampleState();
+  }
+}
+
+class _VisibilityExampleState extends State {
+  bool _isVisible = true;
+
+  void showToast() {
+    setState(() {
+      _isVisible = !_isVisible;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Visibility Tutorial by Woolha.com',
+      home: Scaffold(
+          appBar: AppBar(
+            title: Text('Visibility Tutorial by Woolha.com'),
+          ),
+          body: Padding(
+            padding: EdgeInsets.all(15.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                RaisedButton(
+                  child: Text('Show/Hide Card B'),
+                  onPressed: showToast,
+                ),
+                Card(
+                  child: new ListTile(
+                    title: Center(
+                      child: new Text('A'),
+                    ),
+                  ),
+                ),
+                Visibility (
+                  visible: _isVisible,
+                  child: Card(
+                    child: new ListTile(
+                      title: Center(
+                        child: new Text('B'),
+                      ),
+                    ),
+                  ),
+                ),
+                Card(
+                  child: new ListTile(
+                    title: Center(
+                      child: new Text('C'),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+      ),
+    );
+  }
+}

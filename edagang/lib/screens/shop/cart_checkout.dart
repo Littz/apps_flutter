@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:edagang/models/shop_model.dart';
 import 'package:edagang/scoped/main_scoped.dart';
+import 'package:edagang/screens/shop/select_bank.dart';
 import 'package:edagang/screens/shop/shipping_address.dart';
 import 'package:edagang/helper/constant.dart';
 import 'package:edagang/helper/shared_prefrence_helper.dart';
@@ -12,6 +13,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -31,11 +33,12 @@ class CheckoutActivityState extends State<CheckoutActivity> {
   var selectedBank = new OnlineBanking();
   String _addr = '';
   int _addrId, adrid, ship_id;
-  String recipient, address, poscode, mobileno, emel, defship, defbill, fulladdr;
+  String recipient, address, poscode, mobileno, emel, defship, defbill, fulladdr, location;
   String _bank = '';
   int _bankId = 0;
   double subtot = 0.0;
   bool isLoading = false;
+  int method_pay;
   final myr = new NumberFormat("#,##0.00", "en_US");
 
   List<String> cartidList = new List();
@@ -62,15 +65,29 @@ class CheckoutActivityState extends State<CheckoutActivity> {
 
           setState(() {
 
-            adrid = resBody['data']['address']['id'];
-            recipient = resBody['data']['address']['name'];
-            address = resBody['data']['address']['address'];
-            poscode = resBody['data']['address']['postcode'];
-            mobileno = resBody['data']['address']['mobile_no'];
-            emel = resBody['data']['address']['email'];
-            defship = resBody['data']['address']['default_shipping'];
-            defbill = resBody['data']['address']['default_billing'];
-            fulladdr = resBody['data']['address']['full_address'];
+            var data = Address(
+              id: resBody['data']['address']['id'],
+              name: resBody['data']['address']['name'],
+              address: resBody['data']['address']['address'],
+              postcode: resBody['data']['address']['postcode'],
+              mobile_no: resBody['data']['address']['mobile_no'],
+              email: resBody['data']['address']['email'],
+              default_shipping: resBody['data']['address']['default_shipping'],
+              default_billing: resBody['data']['address']['default_billing'],
+              location_tag: resBody['data']['address']['location_tag'],
+              full_address: resBody['data']['address']['full_address'],
+            );
+
+            adrid = data.id;
+            recipient = data.name.toUpperCase();
+            address = data.address;
+            poscode = data.postcode;
+            mobileno = data.mobile_no;
+            emel = data.email;
+            defship = data.default_shipping;
+            defbill = data.default_billing;
+            location = '('+data.location_tag.toUpperCase()+')';
+            fulladdr = data.full_address;
 
           });
           isLoading = false;
@@ -199,7 +216,7 @@ class CheckoutActivityState extends State<CheckoutActivity> {
   void initState() {
     FirebaseAnalytics().logEvent(name: 'Cartsini_Cart_Checkout',parameters:null);
     super.initState();
-
+    method_pay = 1;
     _loadAddress();
     _loadCartId();
     _loadBankName();
@@ -241,7 +258,7 @@ class CheckoutActivityState extends State<CheckoutActivity> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
-                  padding: EdgeInsets.only(left: 7, right: 7),
+                  padding: EdgeInsets.only(left: 7, right: 7, top: 7),
                   child: Text(
                     'Shipping Address',
                     style: GoogleFonts.lato(
@@ -252,6 +269,7 @@ class CheckoutActivityState extends State<CheckoutActivity> {
               ),
 
               Container(
+                //color: Colors.white,
                 padding: EdgeInsets.symmetric(horizontal: 7.0, vertical: 7.0),
                 //height: model.addrList.length > 0 ? MediaQuery.of(context).size.height * 0.22 : MediaQuery.of(context).size.height * 0.14,
                 child: InkResponse(
@@ -259,10 +277,11 @@ class CheckoutActivityState extends State<CheckoutActivity> {
                       Navigator.push(context,MaterialPageRoute(builder: (context) => ShippingAddress()));
                     },
                     child: Container(
-                      padding: EdgeInsets.all(7.0),
+                      padding: EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(5)),
                         border: Border.all(color: Colors.grey.shade500,),
+                        color: Colors.white
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -275,8 +294,9 @@ class CheckoutActivityState extends State<CheckoutActivity> {
                               Expanded(
                                 child: Text(recipient ?? '',
                                   style: GoogleFonts.lato(
-                                    textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,),
+                                    textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w600,),
                                   ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                               Container(
@@ -289,14 +309,22 @@ class CheckoutActivityState extends State<CheckoutActivity> {
                               ),
                             ],
                           ),
+                          SizedBox(height: 3,),
                           Text(mobileno ?? '',
                             style: GoogleFonts.lato(
                               textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500,),
                             ),
                           ),
+                          SizedBox(height: 2,),
                           Text(fulladdr ?? '',
                             style: GoogleFonts.lato(
                               textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500,),
+                            ),
+                          ),
+                          SizedBox(height: 2,),
+                          Text(location ?? '',
+                            style: GoogleFonts.lato(
+                              textStyle: TextStyle(color: Colors.grey.shade500, fontSize: 12, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
                             ),
                           ),
                         ],
@@ -323,6 +351,11 @@ class CheckoutActivityState extends State<CheckoutActivity> {
               orderedItem(model),
 
               SizedBox(height: 16,),
+
+              /*Padding(
+                padding: EdgeInsets.only(left: 7, right: 7),
+                child: buildPayType(),
+              )*/
 
               Align(
                 alignment: Alignment.centerLeft,
@@ -372,6 +405,65 @@ class CheckoutActivityState extends State<CheckoutActivity> {
     });
   }
 
+  Column buildPayType() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(bottom: 10),
+          child: Text(
+            'Select Payment Method',
+            style: GoogleFonts.lato(
+              textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w600,),
+            ),
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              flex: 1,
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(context,MaterialPageRoute(builder: (context) => BankListPage()));
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  margin: new EdgeInsets.all(5.0),
+                  decoration: new BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                  ),
+                  child: ClipRRect(
+                      borderRadius: new BorderRadius.circular(8.0),
+                      child: Image.asset('assets/images/m2upay.png')
+                  ),
+                ),
+              )
+            ),
+            Expanded(
+              flex: 1,
+              child: Container(
+                alignment: Alignment.center,
+                margin: new EdgeInsets.all(5.0),
+                decoration: new BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                child: ClipRRect(
+                    borderRadius: new BorderRadius.circular(8.0),
+                    child: Image.asset('assets/images/m2upay.png')
+                ),
+              ),
+            )
+          ]
+        ),
+      ],
+    );
+  }
+
   _buildBottomNavigationBar() {
     return ScopedModelDescendant(builder: (BuildContext context, Widget child, MainScopedModel model){
       return Container(
@@ -388,15 +480,15 @@ class CheckoutActivityState extends State<CheckoutActivity> {
                   padding: const EdgeInsets.all(2.5),
                   alignment: Alignment.centerLeft,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
                           Container(
-                            alignment: Alignment.topLeft,
+                            alignment: Alignment.centerLeft,
                             child: Text(
                               "Subtotal:",
                               textAlign: TextAlign.left,
@@ -406,7 +498,7 @@ class CheckoutActivityState extends State<CheckoutActivity> {
                             ),
                           ),
                           Container(
-                            alignment: Alignment.topRight,
+                            alignment: Alignment.centerRight,
                             child: model.getTotalCourier() != null ? Text(
                               "RM" + myr.format(model.getTotalCostR()),
                               textAlign: TextAlign.right,
@@ -427,7 +519,7 @@ class CheckoutActivityState extends State<CheckoutActivity> {
                           mainAxisSize: MainAxisSize.max,
                           children: <Widget>[
                             Container(
-                              alignment: Alignment.topLeft,
+                              alignment: Alignment.centerLeft,
                               child: Text(
                                 "Shipping:",
                                 textAlign: TextAlign.left,
@@ -437,7 +529,7 @@ class CheckoutActivityState extends State<CheckoutActivity> {
                               ),
                             ),
                             Container(
-                              alignment: Alignment.topRight,
+                              alignment: Alignment.centerRight,
                               child: model.getTotalCourier() != null ? Text(
                                 "RM" + myr.format(model.getTotalCourierR()),
                                 textAlign: TextAlign.right,
@@ -459,7 +551,7 @@ class CheckoutActivityState extends State<CheckoutActivity> {
                           mainAxisSize: MainAxisSize.max,
                           children: <Widget>[
                             Container(
-                              alignment: Alignment.bottomLeft,
+                              alignment: Alignment.centerLeft,
                               child: Text(
                                 "Total:",
                                 textAlign: TextAlign.left,
@@ -469,7 +561,7 @@ class CheckoutActivityState extends State<CheckoutActivity> {
                               ),
                             ),
                             Container(
-                              alignment: Alignment.bottomRight,
+                              alignment: Alignment.centerRight,
                               child: model.getTotalCourier() != null ? Text(
                                 "RM" + myr.format(model.totalNettR()),
                                 textAlign: TextAlign.right,

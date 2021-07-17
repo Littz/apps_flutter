@@ -90,9 +90,10 @@ class AutoCat {
   final String variant;
   final String doors;
   final String seat_capacity;
+  final int sale_status;
   final List<Images> images;
 
-  AutoCat({this.id, this.title, this.location, this.year, this.mileage, this.price, this.brand_id, this.brand_name, this.model, this.variant, this.doors, this.seat_capacity, this.images});
+  AutoCat({this.id, this.title, this.location, this.year, this.mileage, this.price, this.brand_id, this.brand_name, this.model, this.variant, this.doors, this.seat_capacity, this.sale_status, this.images});
 }
 
 

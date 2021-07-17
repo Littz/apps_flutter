@@ -264,6 +264,7 @@ Future fetchHomeBlurbResponse() async {
       variant: dataCar['variant'],
       doors: dataCar['doors'],
       seat_capacity: dataCar['seat_capacity'],
+      sale_status: dataCar['sale_status'],
       images: imageAuto,
     );
     addHomeAutomobileList(_auto);

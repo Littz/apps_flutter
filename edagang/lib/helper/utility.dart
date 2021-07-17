@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:edagang/widgets/customWidgets.dart';
 import 'package:edagang/widgets/newWidget/customLoader.dart';
 import 'package:intl/intl.dart';
-import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:developer' as developer;
 
@@ -157,7 +156,7 @@ class Utility {
   }
 
   static void share(String message, {String subject}) {
-    Share.share(message, subject: subject);
+    //Share.share(message, subject: subject);
   }
 
   static List<String> getHashTags(String text) {
@@ -270,7 +269,7 @@ class Utility {
 
   static shareFile(List<String> path, {String text = ""}) {
     try {
-      Share.shareFiles(path, text: text);
+      //Share.shareFiles(path, text: text);
     } catch (error) {
       print(error);
     }
